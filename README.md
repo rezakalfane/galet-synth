@@ -1,4 +1,4 @@
-# Glass Touch Moog Synth
+# Glass Touch Bass Synth
 ### Daisy Seed · MPR121 · Bit-Bang I2C · C++
 
 A capacitive touch synthesiser played through a glass surface. One or two fingers control pitch, filter, distortion and detune in real time. Built on the Daisy Seed embedded audio platform using a custom bit-bang I2C driver and a software touch tracker with centroid position interpolation.
@@ -69,7 +69,7 @@ On boot you will hear a short beep confirming audio is working. The serial monit
 
 **Finger 1** controls the main voice:
 - **Position** (left → right) — pitch from 50 Hz to 300 Hz, quantised to the nearest chromatic note on touch-down, then continuous glide while sliding
-- **Pressure** — opens the Moog filter from dark/closed to wide open; also adds vibrato and drive at high pressure
+- **Pressure** — opens the low-pass filter from dark/closed to wide open; also adds vibrato and drive at high pressure
 
 **Finger 2** adds timbre modulation:
 - **Position** (left = flat, centre = unison, right = sharp) — detunes the second oscillator up to ±1.5 semitones
