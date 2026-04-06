@@ -55,6 +55,8 @@ static constexpr int32_t  MAX_POS_JUMP       = 200;
 // Frequency range: 50Hz (electrode 0) to 300Hz (electrode 11), exponential
 static constexpr float FREQ_LOW  = 50.0f;
 static constexpr float FREQ_HIGH = 300.0f;
+// Set to false to disable all quantization (fully continuous pitch)
+static constexpr bool QUANTIZE_ENABLED = false;
 // Quantize to chromatic scale (all 12 semitones)
 // Change to {0,2,4,5,7,9,11} for major scale, {0,2,3,5,7,8,10} for minor, etc.
 static const int SCALE[] = {0,1,2,3,4,5,6,7,8,9,10,11}; // chromatic
@@ -627,7 +629,7 @@ int main()
 
             float freq; // final frequency to use
 
-            if(f1_fresh)
+            if(QUANTIZE_ENABLED && f1_fresh)
             {
                 // Touch-down: snap to nearest chromatic note
                 f1_midi_base = quantize_midi(midi_raw);
@@ -638,7 +640,7 @@ int main()
             }
             else
             {
-                // Sliding: follow continuous frequency directly
+                // Sliding or quantize disabled: follow continuous frequency directly
                 f1_midi_base = f1_midi_base*0.88f + midi_raw*0.12f;
                 freq = freq_continuous;
                 f1_sliding = true;
