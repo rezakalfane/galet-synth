@@ -17,8 +17,6 @@ TARGET ?= src/main
 C_SOURCES   =
 CPP_SOURCES = $(TARGET).cpp
 
-LDFLAGS = -specs=nano.specs -specs=nosys.specs
-
 libdaisy_dir = ../libDaisy
 
 include $(libdaisy_dir)/core/Makefile

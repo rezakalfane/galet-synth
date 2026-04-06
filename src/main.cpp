@@ -36,10 +36,16 @@ static constexpr uint32_t HP       = 5;
 static constexpr int      N_CH     = 12;
 
 // ── Touch tuning ──────────────────────────────────────────────────────────────
-static constexpr int32_t  TOUCH_THRESHOLD    = 5;
-static constexpr int32_t  PRESSURE_MAX_REF   = 24; // real hard press through glass
-static constexpr int32_t  PRESSURE_DEAD_ZONE = 5;  // = TOUCH_THRESHOLD, so 0% at touch-down
-static constexpr int32_t  MIN_FINGER_SEP     = 3;
+static constexpr int32_t  TOUCH_THRESHOLD    = 10;
+static constexpr int32_t  PRESSURE_MAX_REF[12] = {
+    100,60,60,60,60,60,
+    60,60,60,60,60,100
+};
+static constexpr int32_t  PRESSURE_DEAD_ZONE[12] = {
+    30,23,13,13,13,13,
+    13,13,13,13,23,35
+};
+static constexpr int32_t  MIN_FINGER_SEP     = 4;
 static constexpr uint32_t REBASELINE_IDLE_MS = 2000;
 static constexpr int      REBASELINE_SAMPLES = 32;
 static constexpr int32_t  MAX_POS_JUMP       = 200;
@@ -175,9 +181,9 @@ int32_t centroid_window(int32_t* d,int s,int e,int32_t* pk_out,int* pkch_out)
     return p;
 }
 
-int32_t pressure_pct(int32_t pk){
-    int32_t range = PRESSURE_MAX_REF - PRESSURE_DEAD_ZONE;
-    int32_t raw   = pk - PRESSURE_DEAD_ZONE;
+int32_t pressure_pct(int32_t pk, int ch){
+    int32_t range = PRESSURE_MAX_REF[ch] - PRESSURE_DEAD_ZONE[ch];
+    int32_t raw   = pk - PRESSURE_DEAD_ZONE[ch];
     if(raw <= 0)     return 0;
     if(raw >= range) return 100;
     // Clamp raw strictly before sqrt to prevent Newton overshoot
@@ -205,7 +211,7 @@ int detect_raw(int32_t* delta,Finger out[2])
     int ws=pka-2;if(ws<0)ws=0;int we=pka+2;if(we>=N_CH)we=N_CH-1;
     int32_t pa;int pca;
     int32_t posa=centroid_window(delta,ws,we,&pa,&pca);
-    out[0]={true,posa,pressure_pct(pa),pca,pa};
+    out[0]={true,posa,pressure_pct(pa,pca),pca,pa};
 
     int32_t d2[N_CH];
     int ss=pka-2;if(ss<0)ss=0;int se=pka+2;if(se>=N_CH)se=N_CH-1;
@@ -217,7 +223,7 @@ int detect_raw(int32_t* delta,Finger out[2])
     int ws2=pkb-2;if(ws2<0)ws2=0;int we2=pkb+2;if(we2>=N_CH)we2=N_CH-1;
     int32_t pb;int pcb;
     int32_t posb=centroid_window(d2,ws2,we2,&pb,&pcb);
-    out[1]={true,posb,pressure_pct(pb),pcb,pb};
+    out[1]={true,posb,pressure_pct(pb,pcb),pcb,pb};
     return 2;
 }
 
@@ -317,7 +323,7 @@ static float s_flt[4]    = {0,0,0,0};
 
 // Slew rates (per sample at 48 kHz)
 // Lower value = faster response
-static constexpr float SLEW_FREQ   = 0.9970f; // pitch glide — tighter
+static constexpr float SLEW_FREQ   = 0.9985f; // pitch glide
 static constexpr float SLEW_CUT    = 0.9800f; // filter cutoff — fast response
 static constexpr float SLEW_MISC   = 0.9900f; // drive/vib
 // Finger 2 — asymmetric attack/release
@@ -555,10 +561,12 @@ int main()
     char     bar[32], pos_bar[52];
     Finger   raw[2];
 
-    uint32_t idle_since   = System::GetNow();
-    bool     f1_was_on    = false;
-    float    f1_midi_base = 60.0f; // last quantized note
-    bool     f1_sliding   = false; // true after first touch settles
+    uint32_t idle_since      = System::GetNow();
+    bool     f1_was_on       = false;
+    uint32_t f1_last_seen_ms = 0;
+    static constexpr uint32_t F1_REQUANTIZE_MS = 200; // re-quantize only after this long off
+    float    f1_midi_base    = 60.0f; // last quantized note
+    bool     f1_sliding      = false; // true after first touch settles
 
     // Per-frame display counter (print every N frames to reduce serial spam)
     int print_every = 1;
@@ -594,6 +602,8 @@ int main()
 
         // ── Finger 1 → Pitch + Filter cutoff + Vibrato ───────────────────────
         bool f1_on = tracked[0].alive;
+        if(f1_on) f1_last_seen_ms = System::GetNow();
+        bool f1_fresh = !f1_was_on && (System::GetNow() - f1_last_seen_ms >= F1_REQUANTIZE_MS);
 
         if(f1_on)
         {
@@ -617,7 +627,7 @@ int main()
 
             float freq; // final frequency to use
 
-            if(!f1_was_on)
+            if(f1_fresh)
             {
                 // Touch-down: snap to nearest chromatic note
                 f1_midi_base = quantize_midi(midi_raw);
