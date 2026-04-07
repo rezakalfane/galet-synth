@@ -11,6 +11,8 @@
 #   make TARGET=tools/osc_test
 #   make TARGET=tools/mpr121_glass_tuner
 #   make TARGET=tools/mpr121_glass_tuner2
+#   make TARGET=tools/mpr121_calibrate
+#   make TARGET=tools/test-slider
 
 TARGET ?= src/main
 
