@@ -1,0 +1,8 @@
+CompileFlags:
+  Add:
+    - -I/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src
+    - -I/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys
+    - -I/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy
+    - -I/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/core
+    - -I/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include
+    - -I/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Middlewares/Third_Party/FatFs/src
