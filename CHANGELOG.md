@@ -8,6 +8,13 @@ All notable changes to GaletSynth are documented here.
 
 ## 2026-04-07
 
+### Added — `feat: add test-slider diagnostic tool` (`3eabfd1`)
+- New `tools/test-slider.cpp`: sensor display tool with all audio stripped out
+- Shows live delta bars for all 12 electrodes, two-finger position bar, and per-finger pressure
+- Refreshes at 10 Hz to avoid serial stalls
+- Mirrors touch tuning constants from `src/main.cpp` — useful for tuning without reflashing the synth
+- Added `tools/test-slider` and `tools/mpr121_calibrate` to `Makefile` comments
+
 ### Added — `feat: add QUANTIZE_ENABLED flag to disable pitch quantization` (`21ae1df`)
 - New `QUANTIZE_ENABLED` constant (`true` by default) at the top of `src/main.cpp`
 - Set to `false` for fully continuous pitch from first touch — no snapping to scale
