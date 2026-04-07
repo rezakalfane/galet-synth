@@ -40,13 +40,22 @@ Daisy GND  ──── MPR121 GND
 Requires [libDaisy](https://github.com/electro-smith/libDaisy) and the Daisy toolchain.
 
 ```bash
-# In your project folder alongside libDaisy:
-make
-# Flash via DFU:
-make program-dfu
+# Set LIBDAISY to wherever libDaisy lives on your machine
+LIBDAISY=/path/to/libDaisy
+
+# Build the synth
+make TARGET=src/main libdaisy_dir=$LIBDAISY SYSTEM_FILES_DIR=$LIBDAISY/core LIBDAISY_DIR=$LIBDAISY
+
+# Flash via USB DFU (hold BOOT, tap RESET, then run):
+dfu-util -a 0 -s 0x08000000:leave -D build/src/main.bin
 ```
 
-Place `mpr121_synth.cpp` as your `main.cpp` (or adjust your `Makefile` accordingly).
+To build a diagnostic tool instead:
+
+```bash
+make TARGET=tools/test-slider ...same flags...
+dfu-util -a 0 -s 0x08000000:leave -D build/tools/test-slider.bin
+```
 
 ---
 
@@ -54,12 +63,14 @@ Place `mpr121_synth.cpp` as your `main.cpp` (or adjust your `Makefile` according
 
 | File | Purpose |
 |---|---|
-| `mpr121_synth.cpp` | Main synth — touch tracker + audio engine |
-| `mpr121_reader.cpp` | Debug tool — shows raw electrode data and deltas |
-| `i2c_scanner.cpp` | Scans I2C bus and finds MPR121 address |
-| `osc_test.cpp` | Minimal sine oscillator — confirms audio output works |
-| `mpr121_glass_tuner.cpp` | Sweeps CDC/CDT settings, finds best config for glass |
-| `mpr121_glass_tuner2.cpp` | Phase 2 tuner — sweeps FFI and ESI settings |
+| `src/main.cpp` | Main synth — touch tracker + audio engine |
+| `tools/test-slider.cpp` | Live sensor display — delta bars, position and pressure (no audio) |
+| `tools/mpr121_calibrate.cpp` | Full AFE + per-electrode pressure calibration tool |
+| `tools/mpr121_reader.cpp` | Debug tool — shows raw electrode data and deltas |
+| `tools/i2c_scanner.cpp` | Scans I2C bus and finds MPR121 address |
+| `tools/osc_test.cpp` | Minimal sine oscillator — confirms audio output works |
+| `tools/mpr121_glass_tuner.cpp` | Sweeps CDC/CDT settings, finds best config for glass |
+| `tools/mpr121_glass_tuner2.cpp` | Phase 2 tuner — sweeps FFI and ESI settings |
 
 ---
 
@@ -112,24 +123,35 @@ Osc Oct (octave above, triangle)     × 0.15
 These constants at the top of the file control touch sensitivity and finger tracking.
 
 ```cpp
-static constexpr int32_t  TOUCH_THRESHOLD    = 5;
+static constexpr int32_t  TOUCH_THRESHOLD    = 10;
 ```
-Minimum capacitance delta (counts) to register a touch. **Raise** if you get false triggers from vibration or electrical noise. **Lower** if touches are not detected reliably. Range: typically 5–20 for glass surfaces. Current value: **5** (tuned for 3mm soda-lime glass).
+Minimum capacitance delta (counts) to register a touch. **Raise** if you get false triggers from vibration or electrical noise. **Lower** if touches are not detected reliably. Range: typically 5–20 for glass surfaces. Current value: **10** (tuned for 3mm soda-lime glass).
 
 ```cpp
-static constexpr int32_t  PRESSURE_MAX_REF   = 24;
+static constexpr int32_t  PRESSURE_MAX_REF[12] = {
+    100,60,60,60,60,60,
+    60,60,60,60,60,100
+};
 ```
-Delta count that maps to 100% pressure. Tune this to your actual glass — check the serial monitor and find the peak delta when pressing firmly. Set this 1–2 counts above your real-world maximum.
+Per-electrode delta count that maps to 100% pressure. Edge channels (0 and 11) are set higher because they naturally produce larger deltas even with moderate pressure. Tune each entry by pressing firmly on that electrode and noting the peak delta in `tools/test-slider`.
 
 ```cpp
-static constexpr int32_t  PRESSURE_DEAD_ZONE = 5;
+static constexpr int32_t  PRESSURE_DEAD_ZONE[12] = {
+    30,23,13,13,13,13,
+    13,13,13,13,23,35
+};
 ```
-Delta at which pressure starts from 0%. **Must always equal `TOUCH_THRESHOLD`** so pressure begins at exactly 0% on first detection. Current value: **5**.
+Per-electrode delta below which pressure reads 0%. Edge channels have higher values to compensate for their greater sensitivity — without this, a light touch on channel 0 or 11 would immediately register as medium pressure. Should be set to roughly the delta produced by the lightest intentional touch on each electrode.
 
 ```cpp
-static constexpr int32_t  MIN_FINGER_SEP     = 3;
+static constexpr bool QUANTIZE_ENABLED = true;
 ```
-Minimum electrode separation required to recognise a second finger. Prevents a single wide finger from being misread as two fingers.
+When `true`, touch-down snaps to the nearest note in `SCALE[]`. Once sliding, pitch follows the finger continuously. Set to `false` for fully continuous pitch from first contact — no snapping at all.
+
+```cpp
+static constexpr int32_t  MIN_FINGER_SEP     = 4;
+```
+Minimum electrode separation required to recognise a second finger. Prevents a single wide finger blob from being misread as two fingers.
 
 ```cpp
 static constexpr uint32_t REBASELINE_IDLE_MS = 2000;
@@ -270,7 +292,7 @@ All slew parameters use a one-pole lowpass form: `s = s × pole + target × (1 �
 
 | Constant | Value | Response | Controls |
 |---|---|---|---|
-| `SLEW_FREQ` | 0.9970 | ~6 ms | Pitch glide between notes |
+| `SLEW_FREQ` | 0.9985 | ~14 ms | Pitch glide between notes |
 | `SLEW_CUT` | 0.9800 | ~1 ms | Filter cutoff opening speed |
 | `SLEW_MISC` | 0.9900 | ~2 ms | Drive and vibrato |
 | `SLEW_F2_A` | 0.9800 | ~10 ms | Finger 2 effect attack |
@@ -309,7 +331,9 @@ If signal is too noisy (false triggers): raise `TOUCH_THRESHOLD`, or switch to F
 
 ## Serial Monitor Output
 
-At 115200 baud the monitor shows a live display refreshed every ~60 ms:
+The main synth (`src/main.cpp`) does not print to serial during play — all serial output has been removed from the audio loop to keep touch polling fast.
+
+Use `tools/test-slider` for live sensor monitoring. Flash it and open at 115200 baud — it refreshes at ~10 Hz:
 
 ```
  CH | DELTA | BAR
@@ -356,7 +380,7 @@ POS  |----------1--------------------2----------|
 | False touches | Threshold too low | Raise `TOUCH_THRESHOLD` |
 | Pressure always 0% | `PRESSURE_MAX_REF` too high | Lower to match real peak delta seen in monitor |
 | Pressure always 100% | `PRESSURE_MAX_REF` too low | Raise to 2–3 counts above typical maximum |
-| Two fingers not detected | Fingers too close | Need at least `MIN_FINGER_SEP` (3) channels of separation |
+| Two fingers not detected | Fingers too close | Need at least `MIN_FINGER_SEP` (4) channels of separation |
 | Finger identity swaps | Fingers moving faster than `MAX_POS_JUMP` | Raise `MAX_POS_JUMP` |
 | No audio | Codec not initialised | Ensure `hw.Init()` → MPR121 init → `hw.StartAudio()` order |
 | Audio only on one side | TS jack with TRS plug | Use TRS jack or mono headphone |
