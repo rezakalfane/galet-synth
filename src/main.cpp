@@ -160,7 +160,7 @@ bool mpr_init()
     for(uint8_t ch=0;ch<12;ch++){mpr_write(0x41+ch*2,4);mpr_write(0x42+ch*2,2);}
     mpr_write(REG_DEBOUNCE,0x11);
     mpr_write(REG_CONFIG1,0x50);
-    mpr_write(REG_CONFIG2,0x7C);  // CDT=32us SFI=18 ESI=1ms
+    mpr_write(REG_CONFIG2,0x78);  // CDT=2us SFI=18 ESI=1ms
     mpr_write(REG_ECR,0x8C);
     System::Delay(100);
     uint8_t ecr=0;mpr_read(REG_ECR,&ecr,1);
@@ -209,7 +209,7 @@ int32_t centroid_window(int32_t* d,int s,int e,int32_t* pk_out,int* pkch_out)
 int32_t pressure_pct(int32_t pk){
     int32_t range = PRESSURE_MAX_REF - TOUCH_THRESHOLD;
     int32_t raw   = pk - TOUCH_THRESHOLD;
-    if(raw <= 0)     return 0;
+    if(raw < 0)      return 0;
     if(raw >= range) return 100;
     // Clamp raw strictly before sqrt to prevent Newton overshoot
     if(raw > range) raw = range;
@@ -221,7 +221,8 @@ int32_t pressure_pct(int32_t pk){
     s = (s + scaled/s) / 2;
     s = (s + scaled/s) / 2;
     s = (s + scaled/s) / 2;
-    // Hard clamp output — Newton can land at 101 due to rounding
+    // Remap [0,100] → [10,100]: threshold delta = 10%, max = 100%
+    s = 10 + s * 90 / 100;
     if(s < 0)   s = 0;
     if(s > 100) s = 100;
     return s;
@@ -522,12 +523,9 @@ int main()
 {
     hw.Init();
     hw.SetAudioBlockSize(4);
+    hw.StartLog(false); // non-blocking USB serial
 
-    // ── ADC — potentiometer on A0 (D15) ──────────────────────────────────────
-    AdcChannelConfig adcConfig;
-    adcConfig.InitSingle(A0);
-    hw.adc.Init(&adcConfig, 1);
-    hw.adc.Start();
+    g_volume = 0.9f;
 
     // ── I2C pins + MPR121 init BEFORE audio starts ────────────────────────────
     // The audio ISR firing during bit-bang I2C corrupts I2C timing.
@@ -571,8 +569,22 @@ int main()
 
     while(true)
     {
-        // ── Volume potentiometer (A0) — 0..1 ADC → 0..0.9 gain ───────────────
-        g_volume = hw.adc.GetFloat(0) * 0.9f;
+        // ── Non-blocking status print every 50ms ──────────────────────────────
+        {
+            static uint32_t last_print_ms = 0;
+            uint32_t now_ms = System::GetNow();
+            if(now_ms - last_print_ms >= 50)
+            {
+                last_print_ms = now_ms;
+                if(tracked[0].alive && tracked[1].alive)
+                    hw.PrintLine("F1:%4dHz raw=%2d %3d%% | F2:pos=%4d raw=%2d %3d%%",
+                        (int)g_target_freq, (int)tracked[0].peak_delta, (int)tracked[0].pressure,
+                        (int)tracked[1].pos, (int)tracked[1].peak_delta, (int)tracked[1].pressure);
+                else if(tracked[0].alive)
+                    hw.PrintLine("F1:%4dHz raw=%2d %3d%%",
+                        (int)g_target_freq, (int)tracked[0].peak_delta, (int)tracked[0].pressure);
+            }
+        }
 
         // ── IRQ gate: skip I2C read when idle and sensor has nothing to report ─
         // Use both edge flag (ISR wake) and pin level (MPR121 OUTA stays LOW
@@ -686,7 +698,7 @@ int main()
             float cutoff_oct = 12.0f * prs_cut;              // 12 octaves of sweep
             float oct_arg  = cutoff_oct * 0.6931f;
             float oct_mult = 1.0f + oct_arg*(1.0f + oct_arg*(0.5f + oct_arg*(0.1667f + oct_arg*0.0417f)));
-            float cutoff   = clampf(freq * 0.3f * oct_mult, 20.0f, 18000.0f); // screams
+            float cutoff   = clampf(freq * 0.3f * oct_mult, 200.0f, 18000.0f);
 
             // Vibrato: smoothstep, only activates above 60% pressure
             float vib_in = clampf((prs01 - 0.6f) / 0.4f, 0.0f, 1.0f);
