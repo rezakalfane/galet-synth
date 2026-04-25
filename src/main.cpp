@@ -36,14 +36,16 @@ static constexpr uint32_t HP       = 5;
 static constexpr int      N_CH     = 12;
 
 // ── Touch tuning ──────────────────────────────────────────────────────────────
-static constexpr int32_t  TOUCH_THRESHOLD    = 10;
+static constexpr int32_t  TOUCH_THRESHOLD    = 7;
 static constexpr int32_t  PRESSURE_MAX_REF[12] = {
-    100,60,60,60,60,60,
-    60,60,60,60,60,100
+    23,20,23,24,20,21,
+    20,20,18,18,15,22
 };
 static constexpr int32_t  PRESSURE_DEAD_ZONE[12] = {
-    30,23,13,13,13,13,
-    13,13,13,13,23,35
+    // 14,15,17,11,10,10,
+    // 10,10,10,10,10,11
+     8,8,8,8,8,8,
+     8,8,8,8,8,8
 };
 static constexpr int32_t  MIN_FINGER_SEP     = 4;
 static constexpr uint32_t REBASELINE_IDLE_MS = 2000;
@@ -137,7 +139,7 @@ bool mpr_init()
     for(uint8_t ch=0;ch<12;ch++){mpr_write(0x41+ch*2,4);mpr_write(0x42+ch*2,2);}
     mpr_write(REG_DEBOUNCE,0x11);
     mpr_write(REG_CONFIG1,0x50);
-    mpr_write(REG_CONFIG2,0x6C);
+    mpr_write(REG_CONFIG2,0x7C);  // CDT=32us SFI=18 ESI=1ms
     mpr_write(REG_ECR,0x8C);
     System::Delay(100);
     uint8_t ecr=0;mpr_read(REG_ECR,&ecr,1);
@@ -192,8 +194,8 @@ int32_t pressure_pct(int32_t pk, int ch){
     if(raw > range) raw = range;
     int32_t scaled = raw * 10000 / range; // 0..10000
     if(scaled > 10000) scaled = 10000;
-    // Integer sqrt via Newton
-    int32_t s = scaled / 2 + 1;
+    // Integer sqrt via Newton — start from 101 (max output) for guaranteed convergence
+    int32_t s = 101;
     s = (s + scaled/s) / 2;
     s = (s + scaled/s) / 2;
     s = (s + scaled/s) / 2;
@@ -302,6 +304,7 @@ volatile float g_bitcrush       = 0.0f;     // 0–1, amount of crush
 volatile float g_ringmod        = 0.0f;     // 0–1, ring mod wet
 volatile bool  g_finger_on      = false;
 volatile float g_amp_target     = 0.0f;
+volatile float g_volume         = 0.9f;  // 0–0.9, set by pot on A0
 
 // ── Audio DSP state (audio callback only) ─────────────────────────────────────
 static float s_freq      = 65.41f;
@@ -391,7 +394,7 @@ void AudioCallback(AudioHandle::InputBuffer,
     float tvib   = g_vibrato_depth;
     float tbc    = g_bitcrush;
     float trm    = g_ringmod;
-    float tamp   = g_amp_target;
+    float tamp   = g_amp_target * g_volume;
     float sr     = hw.AudioSampleRate();
 
     for(size_t i=0;i<size;i++)
@@ -521,6 +524,12 @@ int main()
     hw.Init();
     hw.SetAudioBlockSize(4);
 
+    // ── ADC — potentiometer on A0 (D15) ──────────────────────────────────────
+    AdcChannelConfig adcConfig;
+    adcConfig.InitSingle(A0);
+    hw.adc.Init(&adcConfig, 1);
+    hw.adc.Start();
+
     // ── I2C pins + MPR121 init BEFORE audio starts ────────────────────────────
     // The audio ISR firing during bit-bang I2C corrupts I2C timing.
     // Do all sensor work first, then start the audio engine.
@@ -542,11 +551,6 @@ int main()
     g_amp_target    = 0.0f;
     hw.StartAudio(AudioCallback);
 
-    // Boot beep — 200ms tone so you can confirm headphone audio is working
-    g_amp_target = 0.4f;
-    System::Delay(200);
-    g_amp_target = 0.0f;
-    System::Delay(50);
 
     // ── USB serial (blocks until host connects) ───────────────────────────────
     hw.StartLog(false); // false = don't wait for serial monitor
@@ -576,6 +580,9 @@ int main()
 
     while(true)
     {
+        // ── Volume potentiometer (A0) — 0..1 ADC → 0..0.9 gain ───────────────
+        g_volume = hw.adc.GetFloat(0) * 0.9f;
+
         read_electrodes(data);
 
         int32_t max_delta=1;

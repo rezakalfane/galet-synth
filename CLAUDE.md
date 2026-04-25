@@ -20,10 +20,15 @@ make TARGET=src/main \
   LIBDAISY_DIR=$LIBDAISY
 ```
 
-For a tool:
+For a tool (full command, same flags required):
 ```bash
-make TARGET=tools/test-slider ...same flags...
+make TARGET=tools/mpr121_calibrate \
+  libdaisy_dir=$LIBDAISY \
+  SYSTEM_FILES_DIR=$LIBDAISY/core \
+  LIBDAISY_DIR=$LIBDAISY
 ```
+
+Replace `mpr121_calibrate` with any other tool name (`test-slider`, `mpr121_reader`, etc.).
 
 After `make clean`, always recreate build directories before building:
 ```bash

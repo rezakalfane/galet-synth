@@ -31,9 +31,10 @@ static constexpr uint32_t HP       = 5;   // I2C half-period µs
 static constexpr int      N_CH     = 12;
 
 // ── Calibration constants ─────────────────────────────────────────────────────
-static constexpr int32_t CAL_TOUCH_THRESHOLD = 10;  // min delta to count as touch
-static constexpr int32_t MAX_REF_MARGIN      = 3;   // safety headroom added to measured max
-static constexpr int32_t DEFAULT_MAX_REF     = 35;  // fallback for electrodes never visited
+static constexpr int32_t  CAL_TOUCH_THRESHOLD = 10;    // min delta to count as touch
+static constexpr int32_t  MAX_REF_MARGIN      = 3;    // safety headroom added to measured max
+static constexpr int32_t  DEFAULT_MAX_REF     = 35;   // fallback for electrodes never visited
+static constexpr uint32_t TOUCH_TIMEOUT_MS    = 15000; // give up waiting for touch after 15s
 
 // ── MPR121 registers ──────────────────────────────────────────────────────────
 static constexpr uint8_t REG_ELE0_LSB  = 0x04;
@@ -166,19 +167,26 @@ static const char* ffi_str(uint8_t ffi)
     switch(ffi){case 0:return " 6";case 1:return "10";case 2:return "18";default:return "34";}
 }
 
-// ── Block until any electrode exceeds CAL_TOUCH_THRESHOLD ────────────────────
-void wait_for_touch(uint16_t* bl)
+// ── Block until any electrode exceeds CAL_TOUCH_THRESHOLD, or timeout ────────
+// Returns true if touch detected, false if timed out.
+bool wait_for_touch(uint16_t* bl)
 {
-    hw.PrintLine("  Waiting for touch...");
+    hw.PrintLine("  Waiting for touch (timeout %ds)...", (int)(TOUCH_TIMEOUT_MS / 1000));
     uint16_t v[N_CH];
-    bool hit = false;
-    while(!hit){
+    uint32_t t_start = System::GetNow();
+    while(System::GetNow() - t_start < TOUCH_TIMEOUT_MS)
+    {
         read_electrodes(v);
-        for(int i=0;i<N_CH;i++)
-            if((int32_t)bl[i]-(int32_t)v[i] >= CAL_TOUCH_THRESHOLD){hit=true;break;}
-        if(!hit) System::Delay(10);
+        for(int i = 0; i < N_CH; i++)
+            if((int32_t)bl[i] - (int32_t)v[i] >= CAL_TOUCH_THRESHOLD)
+            {
+                hw.PrintLine("  Touch detected — go!");
+                return true;
+            }
+        System::Delay(10);
     }
-    hw.PrintLine("  Touch detected — go!");
+    hw.PrintLine("  TIMEOUT — no touch detected, skipping.");
+    return false;
 }
 
 // ── Run one AFE config, measure noise + touch SNR ─────────────────────────────
@@ -201,7 +209,7 @@ void sweep_one(int idx,int total,uint8_t cdc,uint8_t cdt,uint8_t ffi,uint8_t esi
 
     // Touch — wait for actual contact before measuring
     hw.PrintLine("  >>> Press glass FIRMLY when ready <<<");
-    wait_for_touch(bl);
+    if(!wait_for_touch(bl)){hw.PrintLine("  Config skipped.");return;}
     int32_t sig=measure_peak_global(bl,60,esi_ms);
     int32_t snr=(sig*10)/noise;
     hw.PrintLine("  Touch: %d  SNR: %d.%d  %s",
@@ -261,7 +269,7 @@ void sweep_ffi_esi(uint8_t cdc,uint8_t cdt)
 // Waits for first touch before starting the timer.
 void swipe_round(uint16_t* bl,uint32_t esi_ms,int32_t* out)
 {
-    wait_for_touch(bl);
+    if(!wait_for_touch(bl)){hw.PrintLine("  Round skipped.");return;}
     hw.PrintLine("  Recording 8s — swipe across all electrodes now!");
 
     uint16_t v[N_CH];
