@@ -22,6 +22,7 @@
  */
 
 #include "daisy_seed.h"
+#include "stm32h7xx_hal.h"
 #include <math.h>
 #include <string.h>
 
@@ -32,21 +33,12 @@ using namespace daisy::seed;
 static constexpr Pin      SDA_PIN  = D12;
 static constexpr Pin      SCL_PIN  = D11;
 static constexpr uint8_t  MPR_ADDR = 0x5A;
-static constexpr uint32_t HP       = 5;
+static constexpr uint32_t HP       = 2;   // I2C half-period µs (~250kHz)
 static constexpr int      N_CH     = 12;
 
 // ── Touch tuning ──────────────────────────────────────────────────────────────
 static constexpr int32_t  TOUCH_THRESHOLD    = 7;
-static constexpr int32_t  PRESSURE_MAX_REF[12] = {
-    23,20,23,24,20,21,
-    20,20,18,18,15,22
-};
-static constexpr int32_t  PRESSURE_DEAD_ZONE[12] = {
-    // 14,15,17,11,10,10,
-    // 10,10,10,10,10,11
-     8,8,8,8,8,8,
-     8,8,8,8,8,8
-};
+static constexpr int32_t  PRESSURE_MAX_REF   = 24;
 static constexpr int32_t  MIN_FINGER_SEP     = 4;
 static constexpr uint32_t REBASELINE_IDLE_MS = 2000;
 static constexpr int      REBASELINE_SAMPLES = 32;
@@ -76,11 +68,40 @@ static constexpr uint8_t REG_ECR=0x5E,REG_SOFTRESET=0x80;
 DaisySeed hw;
 GPIO      sda, scl;
 
+// ── MPR121 IRQ — D10 = PB5, active low ───────────────────────────────────────
+static volatile bool g_mpr_irq = false;
+
+static void mpr_irq_init()
+{
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    GPIO_InitTypeDef g = {};
+    g.Pin  = GPIO_PIN_5;
+    g.Mode = GPIO_MODE_IT_FALLING;
+    g.Pull = GPIO_PULLUP;
+    HAL_GPIO_Init(GPIOB, &g);
+    HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+}
+
+extern "C" void EXTI9_5_IRQHandler(void)
+{
+    if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_5))
+    {
+        g_mpr_irq = true;
+        __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_5);
+    }
+}
+
+
 // ── Bit-bang I2C ──────────────────────────────────────────────────────────────
-inline void sda_high(){sda.Init(SDA_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
-inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
-inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
-inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+// SDA: OUTPUT_OD + PULLUP — Write(1) releases (high-Z, pulled up), Write(0) drives low.
+//      Read() works in OD mode (STM32 IDR always reflects actual pin state).
+// SCL: OUTPUT push-pull — master always drives it, never reads it.
+// Both pins inited once in main(); no mode switching in the hot path.
+inline void sda_high(){sda.Write(true);}
+inline void sda_low() {sda.Write(false);}
+inline void scl_high(){scl.Write(true);}
+inline void scl_low() {scl.Write(false);}
 inline void d(){System::DelayUs(HP);}
 
 void i2c_start(){sda_high();d();scl_high();d();sda_low();d();scl_low();d();}
@@ -185,9 +206,9 @@ int32_t centroid_window(int32_t* d,int s,int e,int32_t* pk_out,int* pkch_out)
     return p;
 }
 
-int32_t pressure_pct(int32_t pk, int ch){
-    int32_t range = PRESSURE_MAX_REF[ch] - PRESSURE_DEAD_ZONE[ch];
-    int32_t raw   = pk - PRESSURE_DEAD_ZONE[ch];
+int32_t pressure_pct(int32_t pk){
+    int32_t range = PRESSURE_MAX_REF - TOUCH_THRESHOLD;
+    int32_t raw   = pk - TOUCH_THRESHOLD;
     if(raw <= 0)     return 0;
     if(raw >= range) return 100;
     // Clamp raw strictly before sqrt to prevent Newton overshoot
@@ -215,7 +236,7 @@ int detect_raw(int32_t* delta,Finger out[2])
     int ws=pka-2;if(ws<0)ws=0;int we=pka+2;if(we>=N_CH)we=N_CH-1;
     int32_t pa;int pca;
     int32_t posa=centroid_window(delta,ws,we,&pa,&pca);
-    out[0]={true,posa,pressure_pct(pa,pca),pca,pa};
+    out[0]={true,posa,pressure_pct(pa),pca,pa};
 
     int32_t d2[N_CH];
     int ss=pka-2;if(ss<0)ss=0;int se=pka+2;if(se>=N_CH)se=N_CH-1;
@@ -227,7 +248,7 @@ int detect_raw(int32_t* delta,Finger out[2])
     int ws2=pkb-2;if(ws2<0)ws2=0;int we2=pkb+2;if(we2>=N_CH)we2=N_CH-1;
     int32_t pb;int pcb;
     int32_t posb=centroid_window(d2,ws2,we2,&pb,&pcb);
-    out[1]={true,posb,pressure_pct(pb,pcb),pcb,pb};
+    out[1]={true,posb,pressure_pct(pb),pcb,pb};
     return 2;
 }
 
@@ -495,28 +516,6 @@ void AudioCallback(AudioHandle::InputBuffer,
     }
 }
 
-// ── Bar helpers ───────────────────────────────────────────────────────────────
-void make_bar(char* out,int32_t val,int32_t max,int w)
-{
-    int n=(max>0&&val>0)?(int)((val*w+max/2)/max):0;
-    if(n>w)n=w;
-    out[0]='[';
-    for(int i=0;i<w;i++)out[1+i]=(i<n)?'#':' ';
-    out[1+w]=']';out[2+w]='\0';
-}
-
-void make_pos_bar(char* out,int w)
-{
-    out[0]='|';
-    for(int i=0;i<w;i++)out[1+i]='-';
-    out[1+w]='|';out[2+w]='\0';
-    for(int slot=0;slot<2;slot++){
-        if(!tracked[slot].alive)continue;
-        int p=(int)(((int64_t)tracked[slot].pos*(w-1)+500)/1000);
-        if(p<0)p=0;if(p>=w)p=w-1;
-        out[1+p]=(char)('1'+slot);
-    }
-}
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 int main()
@@ -533,8 +532,13 @@ int main()
     // ── I2C pins + MPR121 init BEFORE audio starts ────────────────────────────
     // The audio ISR firing during bit-bang I2C corrupts I2C timing.
     // Do all sensor work first, then start the audio engine.
-    sda_high();
-    scl_high();
+    // SDA: open-drain + internal pull-up — no mode switching needed during I2C
+    // SCL: push-pull — master always drives it
+    // VERY_HIGH speed for maximum slew rate at ~250kHz
+    sda.Init(SDA_PIN, GPIO::Mode::OUTPUT_OD, GPIO::Pull::PULLUP,  GPIO::Speed::VERY_HIGH);
+    scl.Init(SCL_PIN, GPIO::Mode::OUTPUT,    GPIO::Pull::NOPULL,  GPIO::Speed::VERY_HIGH);
+    sda.Write(true);
+    scl.Write(true);
 
     uint16_t baseline[N_CH];
     if(mpr_init())
@@ -542,6 +546,7 @@ int main()
         System::Delay(300);
         capture_baseline(baseline);
     }
+    mpr_irq_init();
     // If MPR121 fails we still start audio so the problem is audible (silence)
 
     // ── Start audio ───────────────────────────────────────────────────────────
@@ -552,48 +557,52 @@ int main()
     hw.StartAudio(AudioCallback);
 
 
-    // ── USB serial (blocks until host connects) ───────────────────────────────
-    hw.StartLog(false); // false = don't wait for serial monitor
-
-    hw.PrintLine("Glass Moog Synth");
-    hw.PrintLine("================");
-    hw.PrintLine("F1 pos=pitch  F1 prs=cutoff+vibrato");
-    hw.PrintLine("F2 pos=detune F2 prs=wavefold+ringmod");
-    hw.PrintLine("MPR121 OK — baseline captured");
-    hw.PrintLine("Ready.\n");
-
     uint16_t data[N_CH];
     int32_t  delta[N_CH];
-    char     bar[32], pos_bar[52];
     Finger   raw[2];
 
     uint32_t idle_since      = System::GetNow();
     bool     f1_was_on       = false;
     uint32_t f1_last_seen_ms = 0;
-    static constexpr uint32_t F1_REQUANTIZE_MS = 200; // re-quantize only after this long off
-    float    f1_midi_base    = 60.0f; // last quantized note
-    bool     f1_sliding      = false; // true after first touch settles
+    static constexpr uint32_t F1_REQUANTIZE_MS = 200;
+    float    f1_midi_base    = 60.0f;
 
-    // Per-frame display counter (print every N frames to reduce serial spam)
-    int print_every = 1;
-    int frame_count = 0;
+    bool currently_touching = false;
 
     while(true)
     {
         // ── Volume potentiometer (A0) — 0..1 ADC → 0..0.9 gain ───────────────
         g_volume = hw.adc.GetFloat(0) * 0.9f;
 
+        // ── IRQ gate: skip I2C read when idle and sensor has nothing to report ─
+        // Use both edge flag (ISR wake) and pin level (MPR121 OUTA stays LOW
+        // while any ELE bit is set — no mpr_clear_irq needed, level drops
+        // naturally when the finger lifts and ELE bits clear).
+        const bool irq_asserted = !(GPIOB->IDR & GPIO_PIN_5); // active-low
+        if(!g_mpr_irq && !irq_asserted && !currently_touching)
+        {
+            // Still service the rebaseline timer while idle
+            if(System::GetNow() - idle_since >= REBASELINE_IDLE_MS)
+            {
+                tracked[0].alive = tracked[1].alive = false;
+                capture_baseline(baseline);
+                idle_since = System::GetNow();
+            }
+            System::Delay(1);
+            continue;
+        }
+        g_mpr_irq = false; // consume edge flag; level check keeps us reading
+
         read_electrodes(data);
 
-        int32_t max_delta=1;
         for(int i=0;i<N_CH;i++){
             delta[i]=(int32_t)baseline[i]-(int32_t)data[i];
             if(delta[i]<0)delta[i]=0;
-            if(delta[i]>max_delta)max_delta=delta[i];
         }
 
         int n_raw=detect_raw(delta,raw);
         bool touching=(n_raw>0);
+        currently_touching = touching;
 
         // ── Auto-rebaseline ───────────────────────────────────────────────────
         if(touching){
@@ -602,7 +611,6 @@ int main()
             if(System::GetNow()-idle_since>=REBASELINE_IDLE_MS){
                 tracked[0].alive=tracked[1].alive=false;
                 capture_baseline(baseline);
-                hw.PrintLine("[rebaseline]");
                 idle_since=System::GetNow();
             }
         }
@@ -643,14 +651,12 @@ int main()
                 // Convert quantized MIDI back to Hz
                 float qe = (f1_midi_base - 69.0f) * 0.05776f;
                 freq = clampf(440.0f*(1.0f+qe*(1.0f+qe*(0.5f+qe*0.1667f))), 50.0f, 300.0f);
-                f1_sliding = false;
             }
             else
             {
                 // Sliding or quantize disabled: follow continuous frequency directly
                 f1_midi_base = f1_midi_base*0.88f + midi_raw*0.12f;
                 freq = freq_continuous;
-                f1_sliding = true;
             }
             freq = clampf(freq, 50.0f, 300.0f);
 
@@ -698,8 +704,7 @@ int main()
         }
         else
         {
-            // Finger lifted: gate off, reset slide state
-            f1_sliding = false;
+            // Finger lifted: gate off
             g_finger_on  = false;
             g_amp_target = 0.0f;
             // Do NOT reset cutoff here — let it close with the amplitude
@@ -753,49 +758,5 @@ int main()
             g_ringmod       = 0.0f;
         }
 
-        // ── Serial display ────────────────────────────────────────────────────
-        frame_count++;
-        if(frame_count < print_every){ System::Delay(10); continue; }
-        frame_count = 0;
-
-        hw.PrintLine(" CH | DELTA | BAR");
-        hw.PrintLine("----+-------+--------------------");
-        for(int i=0;i<N_CH;i++){
-            make_bar(bar,delta[i],max_delta,20);
-            char mk=' ';
-            for(int s=0;s<2;s++)
-                if(tracked[s].alive&&i==tracked[s].peak_ch)mk=(char)('1'+s);
-            hw.PrintLine(" %2d | %5d | %s %c",i,(int)delta[i],bar,mk);
-        }
-
-        make_pos_bar(pos_bar,40);
-        hw.PrintLine("\nPOS  %s",pos_bar);
-
-        // Always print both finger rows — inactive shows dashes so line count is stable
-        for(int slot=0;slot<2;slot++){
-            if(tracked[slot].alive){
-                make_bar(bar,tracked[slot].pressure,100,16);
-                hw.PrintLine("  %d  pos:%4d  prs:%3d%%  %s",
-                    slot+1,(int)tracked[slot].pos,(int)tracked[slot].pressure,bar);
-            } else {
-                hw.PrintLine("  %d  pos: ---  prs: --%%  [                ]",slot+1);
-            }
-        }
-
-        // Audio param display — fixed width, always same line count
-        int freq_i  = (int)g_target_freq;
-        int cut_i   = (int)g_target_cutoff;
-        int det_i10 = (int)(g_target_detune*10);
-        int bc_i    = (int)(g_bitcrush*100);
-        int vib_i   = (int)(g_vibrato_depth*100);
-        hw.PrintLine("  freq:%4dHz  cut:%5dHz  det:%c%d.%ds  fx:%2d%%  vib:%2d%%",
-            freq_i, cut_i,
-            det_i10<0?'-':'+',
-            det_i10<0?(-det_i10)/10:det_i10/10,
-            det_i10<0?(-det_i10)%10:det_i10%10,
-            bc_i, vib_i);
-        hw.PrintLine("--------------------------------------------");
-
-        System::Delay(60);
     }
 }
