@@ -523,8 +523,6 @@ int main()
 {
     hw.Init();
     hw.SetAudioBlockSize(4);
-    hw.StartLog(false); // non-blocking USB serial
-
     g_volume = 0.9f;
 
     // ── I2C pins + MPR121 init BEFORE audio starts ────────────────────────────
@@ -553,6 +551,7 @@ int main()
     g_target_cutoff = 100.0f;
     g_amp_target    = 0.0f;
     hw.StartAudio(AudioCallback);
+    hw.StartLog(false); // non-blocking USB serial — after audio to avoid clock interference
 
 
     uint16_t data[N_CH];
@@ -577,12 +576,14 @@ int main()
             {
                 last_print_ms = now_ms;
                 if(tracked[0].alive && tracked[1].alive)
-                    hw.PrintLine("F1:%4dHz raw=%2d %3d%% | F2:pos=%4d raw=%2d %3d%%",
+                    hw.PrintLine("F1:%4dHz raw=%2d %3d%% cut=%5d amp=%d | F2:pos=%4d raw=%2d %3d%%",
                         (int)g_target_freq, (int)tracked[0].peak_delta, (int)tracked[0].pressure,
+                        (int)g_target_cutoff, (int)(g_amp_target*100),
                         (int)tracked[1].pos, (int)tracked[1].peak_delta, (int)tracked[1].pressure);
                 else if(tracked[0].alive)
-                    hw.PrintLine("F1:%4dHz raw=%2d %3d%%",
-                        (int)g_target_freq, (int)tracked[0].peak_delta, (int)tracked[0].pressure);
+                    hw.PrintLine("F1:%4dHz raw=%2d %3d%% cut=%5d amp=%d",
+                        (int)g_target_freq, (int)tracked[0].peak_delta, (int)tracked[0].pressure,
+                        (int)g_target_cutoff, (int)(g_amp_target*100));
             }
         }
 

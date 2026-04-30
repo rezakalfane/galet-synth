@@ -38,7 +38,7 @@ void AudioCallback(AudioHandle::InputBuffer,
 
     for (size_t i = 0; i < size; i++)
     {
-        float s = sine_approx(phase_l) * 0.5f;
+        float s = sine_approx(phase_l) * 0.9f;
         // Same signal on both channels — works with TS (mono) or TRS (stereo) jack
         out[0][i] = s;
         out[1][i] = s;
