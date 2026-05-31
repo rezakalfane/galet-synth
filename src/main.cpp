@@ -833,6 +833,18 @@ void AudioCallback(AudioHandle::InputBuffer,
         s_penv_c     = ms_to_coeff(VOICE.pitch_env_ms, sr);
         s_penv_start = exp2f(VOICE.pitch_env_oct);   // 1.0 when pitch_env_oct == 0
         s_coeff_vi   = vi;
+        // New voice: snap the continuous DSP state to this voice's targets so the
+        // previous voice's settings don't bleed in (esp. the slow-closing cutoff
+        // and the ladder filter's stored energy). Voice changes only happen while
+        // silent (FSR gesture) or at a drum-tap onset, so snapping is clean and
+        // gives each MultiVoice hit a fresh start.
+        s_freq     = tfreq;
+        s_cutoff   = tcut;
+        s_drive    = tdrv;
+        s_detune   = tdet;
+        s_bitcrush = tbc;
+        s_ringmod  = trm;
+        s_flt[0] = s_flt[1] = s_flt[2] = s_flt[3] = 0.0f;
     }
 
     // Pitch-envelope trigger: on a note onset (amp target rising from silence),

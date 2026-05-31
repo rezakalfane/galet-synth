@@ -4,6 +4,15 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Fixed — `fix: snap DSP state on voice change so voices don't bleed`
+- When the active voice changed (notably between MultiVoice drum taps), the
+  continuous slewed state — cutoff (slow-closing), pitch, drive, detune,
+  bitcrush, ring-mod — and the Moog ladder filter's stored energy carried over
+  from the previous voice, so e.g. a Kick after a Hat sounded bright. On a voice
+  change these are now snapped to the new voice's targets and the filter is
+  cleared. Switches only occur while silent (gesture) or at a tap onset, so the
+  snap is click-free and gives each hit a fresh start
+
 ### Added — `feat: MultiVoice "Drums" — 4-zone playable drum kit across the slider`
 - New `VOICE_DRUMS` MultiVoice: when selected, the slider splits into 4 equal
   zones (`MULTI_ZONES[]` — Kick, Snare, Tom, Hat) and each tap triggers the
