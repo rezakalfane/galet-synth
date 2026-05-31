@@ -11,19 +11,32 @@ All notable changes to GaletSynth are documented here.
 - New `Waveform` enum (`WAVE_TRI`, `WAVE_SINE`, `WAVE_SQUARE`, `WAVE_SAW`) set
   per oscillator, so one voice can mix shapes (e.g. saw root + square fifth +
   sine sub). Sine uses a parabolic approximation; square/saw are naive
-- Four presets:
+- Seven presets:
   - `VOICE_LEAD` — original glass-Moog lead (triangle, finger-2 detune)
   - `VOICE_BASS` — round & dark power chord (osc2 = fixed perfect fifth, so every
     note sounds as root + 5th + octave + sub)
   - `VOICE_BASS_OPEN` — same chord stack, brighter base + wider pressure sweep
   - `VOICE_BASS_RICH` — mixed waveforms + dark base + huge 13-octave pressure
     sweep with high resonance for an acid-style filter "wow"
+  - `VOICE_ORGAN` — clean all-sine organ/flute in a melodic register, with a
+    1.005× detuned unison for slow chorus shimmer
+  - `VOICE_SCREAM` — aggressive detuned-saw lead, high register, heavy drive and
+    near-self-oscillation resonance
+  - `VOICE_BASS_CLOSED` — deep, muffled sub bass with the filter near the
+    fundamental and almost no pressure sweep
 - Switch sounds by editing a single line: `static constexpr Voice VOICE = ...`
   — compile-time selection, zero runtime cost (unused branches fold away)
 - Pitch range, cutoff scaling, drive, oscillator tuning, and waveform all now
   read from the active voice in both the audio callback and the touch loop
 - Boot banner prints the active voice name and range
 - Replaces the previously-dead `FREQ_LOW`/`FREQ_HIGH` constants
+
+### Fixed — `fix: smooth cutoff response under pressure`
+- Cutoff opening slew slowed from ~1 ms to ~35 ms (`SLEW_CUT` 0.9800 → 0.9994).
+  The cutoff target is only recomputed at the ~12-16 Hz touch-loop rate and
+  pressure is quantized to integer %, so the previous fast slew let each coarse
+  step through as audible zipper/stair-stepping. The slower slew interpolates
+  across the steps for a smooth filter sweep while still feeling responsive.
 
 ---
 

@@ -161,8 +161,62 @@ static constexpr Voice VOICE_BASS_RICH = {
     2.2f                  // generous drive — grit blooms with pressure
 };
 
+// ── Voice 4: clean sine organ / flute (a melodic, non-bass departure) ─────────
+//   Pure sine oscillators stacked like organ drawbars: octave-down body, root,
+//   octave-up air, plus a second osc tuned a hair sharp (1.005×) for a slow,
+//   warm chorus shimmer instead of a chord. Higher register than the basses, a
+//   mostly-open clean filter, and just a touch of drive so pressure adds gentle
+//   harmonic warmth. Sines never alias, so it stays smooth all the way up.
+static constexpr Voice VOICE_ORGAN = {
+    "Organ",
+    65.0f, 520.0f, 2.07944f,   // 65–520 Hz, ln(8) — a melodic keyboard register
+    1.0f,    0.45f, WAVE_SINE,  // osc1  — root (8')
+    1.005f,  0.40f, WAVE_SINE,  // osc2  — slightly sharp unison → slow chorus shimmer
+    0.5f,    0.30f, WAVE_SINE,  // sub   — octave-down body (16')
+    2.0f,    0.28f, WAVE_SINE,  // oct   — octave-up air (4')
+    false,                      // osc2 is a fixed chorus detune, not finger-2 detune
+    2.0f, 5.0f, 0.20f,          // mostly-open clean filter, gentle pressure lift, low res
+    0.8f                        // light drive — pressure adds subtle warmth, stays pure
+};
+
+// ── Voice 5: screaming aggressive lead ────────────────────────────────────────
+//   Detuned sawtooth stack (root + a hair-sharp twin + octave) for a thick,
+//   buzzing supersaw bite, pushed up into a cutting register. Heavy drive and a
+//   very high filter resonance make the cutoff whistle and scream as pressure
+//   sweeps it wide open. Finger-2 pressure piles on ring-mod + wavefold for
+//   extra snarl. Loud and nasty — the output soft-clip keeps it from blowing up.
+static constexpr Voice VOICE_SCREAM = {
+    "Scream",
+    90.0f, 720.0f, 2.07944f,   // 90–720 Hz, ln(8) — high, cutting register
+    1.0f,    0.42f, WAVE_SAW,   // osc1  — saw root
+    1.008f,  0.38f, WAVE_SAW,   // osc2  — slightly sharp twin → thick beating buzz
+    0.5f,    0.20f, WAVE_SAW,   // sub   — a little weight underneath
+    2.0f,    0.30f, WAVE_SAW,   // oct   — octave up for bright, cutting scream
+    false,                      // osc2 is a fixed detune, not finger-2 controlled
+    3.0f, 11.0f, 0.90f,         // bright base + wide sweep + near-self-osc resonance
+    4.0f                        // heavy drive — saturated and aggressive
+};
+
+// ── Voice 6: very closed, dark sub bass ───────────────────────────────────────
+//   The opposite of the scream: a deep, muffled power-chord bass. A clean sine
+//   sub carries the weight under a mellow triangle root; the fifth and octave
+//   are dialed right back. The filter sits down around the fundamental and only
+//   creeps open a couple of octaves at full pressure, so it stays dark and
+//   muted — felt more than heard. Low resonance, almost no drive.
+static constexpr Voice VOICE_BASS_CLOSED = {
+    "ClosedBass",
+    35.0f, 140.0f, 1.38629f,   // 35–140 Hz, ln(4) — deep
+    1.0f,        0.42f, WAVE_TRI,    // osc1  — mellow triangle root
+    RATIO_FIFTH, 0.18f, WAVE_TRI,    // osc2  — fifth, dialed back
+    0.5f,        0.44f, WAVE_SINE,   // sub   — clean sine carries the weight
+    2.0f,        0.10f, WAVE_TRI,    // oct   — barely there, keep it dark
+    false,                      // osc2 is a fixed fifth, not finger-2 detune
+    1.0f, 2.0f, 0.30f,          // cutoff sits near the fundamental, tiny sweep, low res
+    0.5f                        // minimal drive — stays clean and round
+};
+
 // ── Active voice — change this one line to switch sounds ──────────────────────
-static constexpr Voice VOICE = VOICE_BASS_RICH;
+static constexpr Voice VOICE = VOICE_BASS_CLOSED;
 
 // ── Musical mapping ───────────────────────────────────────────────────────────
 // Set to false to disable all quantization (fully continuous pitch)
@@ -440,7 +494,11 @@ static float s_flt[4]    = {0,0,0,0};
 // Slew rates (per sample at 48 kHz)
 // Lower value = faster response
 static constexpr float SLEW_FREQ   = 0.9985f; // pitch glide
-static constexpr float SLEW_CUT    = 0.9800f; // filter cutoff — fast response
+// Cutoff opening slew. The target is recomputed only at the touch-loop rate
+// (~12-16 Hz) and pressure is quantized to integer %, so a too-fast slew lets
+// each coarse step through as zipper/stair-stepping. ~35 ms interpolates across
+// those steps for a smooth filter sweep while still feeling responsive.
+static constexpr float SLEW_CUT    = 0.9994f; // filter cutoff — ~35 ms smooth
 static constexpr float SLEW_MISC   = 0.9900f; // drive/vib
 // Finger 2 — asymmetric attack/release
 static constexpr float SLEW_F2_A   = 0.9800f; // attack  (~10ms)
@@ -834,7 +892,7 @@ int main()
     if(VOICE.osc2_detune)
         hw.PrintLine("F2 pos=detune F2 prs=wavefold+ringmod");
     else
-        hw.PrintLine("F2 prs=wavefold+ringmod (osc2=fixed 5th)");
+        hw.PrintLine("F2 prs=wavefold+ringmod (osc2=fixed)");
     hw.PrintLine("MPR121 OK — baseline captured");
     hw.PrintLine("Ready.\n");
 
