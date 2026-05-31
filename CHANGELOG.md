@@ -4,6 +4,19 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Changed — `feat: faster control loop + per-voice velocity sensitivity`
+- **Decoupled the control loop from the serial display.** The display now prints
+  throttled (`PRINT_INTERVAL_MS`, ~8 Hz) instead of every frame with a 60 ms
+  delay, so the control loop runs as fast as the sensor allows (~150–200 Hz,
+  capped by `CONTROL_DELAY_MS`). ~10× finer tap-onset timing and pitch/cutoff
+  updates — tight drum rolls, snappier response
+- **Per-voice velocity (`vel_sens`, 0..1):** the onset hit strength (peak
+  pressure, latched at the tap — `VEL_WINDOW_MS`, currently 0 = instant) scales
+  loudness; floor = `1 - vel_sens`. Drums set 0.85 for accents / ghost notes;
+  default 0 keeps the sustained instruments at fixed loudness
+- Note: the faster loop makes the position LEDs' per-frame smoothing snappier
+  (it was tuned for the old ~15 Hz rate) — cosmetic, can be made rate-independent
+
 ### Added — `feat: per-voice no_cycle flag — exclude voices from the FSR cycle`
 - New `no_cycle` Voice field: voices with it set are skipped by the FSR-hold
   gesture (still reachable as the boot voice or via the Drums MultiVoice)

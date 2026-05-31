@@ -134,7 +134,8 @@ Each voice controls, per oscillator: pitch ratio, mix level and **waveform**
 (`WAVE_TRI` / `WAVE_SINE` / `WAVE_SQUARE` / `WAVE_SAW`); plus filter base cutoff,
 sweep depth, resonance, **keytracking**, drive, **noise** (white or high-passed
 "tsss"), **ring-mod carrier ratio** and ceilings, a **pitch envelope** (the
-drop/“boom” at note onset), and per-voice **attack / release / glide** (in ms).
+drop/“boom” at note onset), **velocity sensitivity** (`vel_sens` — tap strength
+→ loudness, for dynamic drumming), and per-voice **attack / release / glide** (in ms).
 The noise + short envelopes + pitch envelope are what make the tap-to-play
 percussion voices (Kick/Snare/Tom/Hi-Hat). To add a voice, copy a `VOICE_*`
 block, retune, and add it to `VOICES[]`. Full reference: `CLAUDE.md` → *Voices*.
@@ -380,7 +381,7 @@ These remaining constants are **global** (shared by all voices):
 
 | Constant | Value | Response | Controls |
 |---|---|---|---|
-| `SLEW_CUT` | 0.9994 | ~35 ms | Filter cutoff opening speed — smooths the stepped, integer-quantised pressure targets coming from the ~12–16 Hz touch loop |
+| `SLEW_CUT` | 0.9994 | ~35 ms | Filter cutoff opening speed — smooths the stepped, integer-quantised pressure targets from the control loop |
 | `SLEW_MISC` | 0.9900 | ~2 ms | Drive and vibrato |
 | `SLEW_F2_A` | 0.9800 | ~10 ms | Finger 2 effect attack |
 | `SLEW_F2_R` | 0.9990 | ~200 ms | Finger 2 effect release |

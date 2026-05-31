@@ -48,8 +48,11 @@ The `dfu-util: Error during download get_status` at the end is normal — the de
 screen /dev/tty.usbmodem* 115200
 ```
 
-The main synth does **not** print to serial during play (removed to keep the touch loop fast).
-Use `tools/test-slider` for live sensor display.
+The main synth prints a live status display (voice, electrode bars, finger
+pos/pressure, FSR, audio params) — but **throttled to ~8 Hz** so it can't slow
+the control loop. The control loop itself runs as fast as the sensor allows
+(~150–200 Hz, capped by `CONTROL_DELAY_MS`) for tight timing; the display rate
+is `PRINT_INTERVAL_MS`. `tools/test-slider` is still handy for sensor-only view.
 
 ## Known gotcha — Makefile LDFLAGS
 
@@ -154,6 +157,7 @@ membership, reorder `VOICES[]` or flip `no_cycle`.
 | `pitch_env_ms` | Time the pitch envelope takes to settle to the note |
 | `noise_hp` | Noise tone: 0 = white ("shhh"), 1 = high-passed ("tsss", for hi-hats/cymbals). Uses the global `NOISE_HP_COEF` corner |
 | `no_cycle` | `true` = skip this voice in the FSR-gesture cycle (still reachable as boot voice or via the Drums MultiVoice). The 4 raw drums set this. Default `false` = in cycle |
+| `vel_sens` | 0..1 velocity sensitivity: onset hit strength (peak pressure, latched at the tap) scales loudness; loudness floor = `1 - vel_sens`. Drums = 0.85; default 0 = fixed loudness (the sustained instruments) |
 
 Envelope/glide are in **milliseconds**, converted to per-sample slew
 coefficients (`ms_to_coeff`) in the audio callback, recomputed on voice change.

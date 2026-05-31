@@ -117,6 +117,12 @@ struct Voice {
     // as the boot voice or via the Drums MultiVoice). Default false = in cycle.
     // The raw drums set this so the gesture cycles instruments + Drums only.
     bool no_cycle;
+
+    // Velocity sensitivity 0..1: how much the onset hit strength (peak pressure
+    // in the first few ms) scales loudness. 0 = fixed loudness (default — the
+    // sustained instruments); ~0.85 on drums for accents/ghost notes. Loudness
+    // floor = (1 - vel_sens), so soft taps stay audible.
+    float vel_sens;
 };
 
 // Perfect-fifth frequency ratio = 2^(7/12).
@@ -294,7 +300,8 @@ static constexpr Voice VOICE_TOM = {
     // pitch_env_oct, pitch_env_ms — tom "boww": start 1 oct up, drop in 80 ms
     1.0f, 80.0f,
     0.0f,        // noise_hp
-    true         // no_cycle — reached via the Drums MultiVoice, not the gesture
+    true,        // no_cycle — reached via the Drums MultiVoice, not the gesture
+    0.85f        // vel_sens — dynamic taps
 };
 
 // ── Voice 9: kick drum (noise-driven) ────────────────────────────────────────
@@ -318,7 +325,8 @@ static constexpr Voice VOICE_KICK = {
     // pitch_env_oct, pitch_env_ms — the kick "boom": start 2 oct up, drop in 45 ms
     2.0f, 45.0f,
     0.0f,        // noise_hp
-    true         // no_cycle — reached via the Drums MultiVoice
+    true,        // no_cycle — reached via the Drums MultiVoice
+    0.85f        // vel_sens — dynamic taps
 };
 
 // ── Voice 10: snare (noise-driven) ───────────────────────────────────────────
@@ -342,7 +350,8 @@ static constexpr Voice VOICE_SNARE = {
     // pitch_env_oct, pitch_env_ms — quick subtle snap
     0.7f, 30.0f,
     0.0f,        // noise_hp
-    true         // no_cycle — reached via the Drums MultiVoice
+    true,        // no_cycle — reached via the Drums MultiVoice
+    0.85f        // vel_sens — dynamic taps
 };
 
 // ── Voice 11: hi-hat (noise-driven) ──────────────────────────────────────────
@@ -365,7 +374,8 @@ static constexpr Voice VOICE_HIHAT = {
     0.80f, 0.2f, 1.0f, 0.0f, 0.05f, 1.0f, 160.0f, 3.0f, // noise-led, instant, sizzly tail
     // pitch_env_oct, pitch_env_ms, noise_hp — high-passed bright "tsss"
     0.0f, 0.0f, 1.0f,
-    true         // no_cycle — reached via the Drums MultiVoice
+    true,        // no_cycle — reached via the Drums MultiVoice
+    0.85f        // vel_sens — dynamic taps
 };
 
 // ── Voice 12: MultiVoice "Drums" ──────────────────────────────────────────────
@@ -1224,9 +1234,19 @@ int main()
     bool     f1_sliding      = false; // true after first touch settles
     float    multi_freq      = 60.0f; // MultiVoice: pitch latched at tap onset
 
-    // Per-frame display counter (print every N frames to reduce serial spam)
-    int print_every = 1;
-    int frame_count = 0;
+    // Control loop runs as fast as the sensor allows (~150-200 Hz) for tight
+    // timing; the serial display is throttled to a readable rate independently.
+    static constexpr uint32_t PRINT_INTERVAL_MS = 120;  // ~8 display refreshes/sec
+    static constexpr uint32_t CONTROL_DELAY_MS  = 3;    // small cap so we don't hammer I2C
+    uint32_t last_print_ms = System::GetNow();
+
+    // Velocity: capture peak pressure over a short window at each tap onset, then
+    // hold it for the note. Scales loudness by the voice's vel_sens.
+    static constexpr uint32_t VEL_WINDOW_MS = 0;   // latch velocity on the onset frame — snappiest
+    float    vel         = 1.0f;   // latched hit velocity 0..1
+    float    vel_peak    = 0.0f;   // running peak pressure during the window
+    uint32_t vel_start   = 0;      // window start
+    bool     vel_active  = false;  // capturing
 
     // Smoothed LED brightness state (0..1), slewed toward per-frame targets.
     // LED1 = DAC1 (pos 0 end), LED2 = DAC2 (middle), LED3 = PWM A0 (pos 1000 end).
@@ -1438,12 +1458,22 @@ int main()
             // Drive: smoothstep — clean at low, progressively warmer (voice-defined max)
             float drive = 1.0f + smoothstep(prs01) * VOICE.drive_max;
 
+            // ── Velocity → loudness ──────────────────────────────────────────
+            // Capture peak pressure for a short window at onset, then hold it.
+            if(!f1_was_on){ vel_active = true; vel_peak = prs01; vel_start = System::GetNow(); }
+            if(vel_active){
+                if(prs01 > vel_peak) vel_peak = prs01;
+                if(System::GetNow() - vel_start >= VEL_WINDOW_MS) vel_active = false;
+                vel = vel_peak;
+            }
+            float vel_scale = (1.0f - VOICE.vel_sens) + VOICE.vel_sens * vel;
+
             g_target_freq    = freq;
             g_target_cutoff  = cutoff;
             g_vibrato_depth  = vib;
             g_target_drive   = drive;
             g_finger_on      = true;
-            g_amp_target     = 0.72f;
+            g_amp_target     = 0.72f * vel_scale;
 
         }
         else
@@ -1539,10 +1569,12 @@ int main()
             g_ringmod       = 0.0f;
         }
 
-        // ── Serial display ────────────────────────────────────────────────────
-        frame_count++;
-        if(frame_count < print_every){ System::Delay(10); continue; }
-        frame_count = 0;
+        // ── Serial display (throttled; the control loop above runs much faster) ─
+        if(System::GetNow() - last_print_ms < PRINT_INTERVAL_MS){
+            System::Delay(CONTROL_DELAY_MS);
+            continue;
+        }
+        last_print_ms = System::GetNow();
 
         if(g_voice_idx == MULTI_IDX)
             hw.PrintLine("VOICE %d/%d  Drums [Kick|Snare|Tom|Hat]  -> %s",
@@ -1595,6 +1627,6 @@ int main()
             bc_i, vib_i);
         hw.PrintLine("--------------------------------------------");
 
-        System::Delay(60);
+        System::Delay(CONTROL_DELAY_MS);
     }
 }
