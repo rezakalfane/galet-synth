@@ -101,7 +101,7 @@ firmware ships several presets in a `VOICES[]` bank and switches between them
 
 ```cpp
 static constexpr Voice VOICES[] = { VOICE_LEAD, VOICE_BASS, /* … */ };
-static volatile int    g_voice_idx = 7;   // ← boot voice (index into VOICES[]; 7 = Pad)
+static volatile int    g_voice_idx = 8;   // ← boot voice (index into VOICES[]; 8 = Tom)
 ```
 
 | # | Preset | Character |
@@ -114,6 +114,7 @@ static volatile int    g_voice_idx = 7;   // ← boot voice (index into VOICES[]
 | 6 | `VOICE_SCREAM` | Aggressive detuned saws, heavy drive, near-self-oscillating resonance, inharmonic metallic ring-mod |
 | 7 | `VOICE_BASS_CLOSED` | Deep, muffled sub — filter near the fundamental, soft attack, long tail |
 | 8 | `VOICE_PAD` | Warm ensemble pad — detuned saws + sine top, dark filter, very slow swell and long tail |
+| 9 | `VOICE_TOM` | Noise-driven percussion — **tap to play**; dark/round tom, position tunes 40–400 Hz |
 
 **Switching voices live — FSR-hold gesture:** press and hold the FSR (down to
 the mute floor). After **5 seconds** the voice advances to the next in the bank,

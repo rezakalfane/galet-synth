@@ -259,6 +259,26 @@ static constexpr Voice VOICE_PAD = {
     0.015f, 1.0f, 1.0f, 0.0f, 0.08f, 2200.0f, 2000.0f, 80.0f   // long swell, long tail
 };
 
+// ── Voice 8: tom / percussion (noise-driven) ─────────────────────────────────
+//   A drum, not a sustained note — PLAY IT BY TAPPING the glass. Noise over two
+//   low sine modes (body + an inharmonic 1.6× ring) and a little sub thump. An
+//   instant attack and a short ~150 ms release make each tap a percussive hit.
+//   A closed, dark filter keeps it round and muffled (tom, not bright snare);
+//   harder presses open it a touch. Finger-1 position tunes the drum.
+static constexpr Voice VOICE_TOM = {
+    "Tom",
+    40.0f, 400.0f, 2.30259f,    // 40–400 Hz, ln(10) — finger-1 tunes from kick/tom up
+    1.0f,    0.22f, WAVE_SINE,   // osc1  — body (lower mode)
+    1.6f,    0.15f, WAVE_SINE,   // osc2  — upper mode (inharmonic ring)
+    0.5f,    0.10f, WAVE_SINE,   // sub   — a little thump
+    2.0f,    0.0f,  WAVE_SINE,   // oct   — off
+    false,                       // osc2 is a fixed ratio, not finger-2 detune
+    6.0f, 3.0f, 0.30f,           // dark/round tom, opened slightly for a touch more body
+    1.5f,                        // drive — snap and saturation on hard hits
+    // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
+    0.70f, 0.3f, 1.0f, 0.0f, 0.10f, 1.0f, 150.0f, 5.0f   // noise-dominant, instant hit, short tail
+};
+
 // ── Voice bank ────────────────────────────────────────────────────────────────
 // All voices, in cycle order. Holding the FSR pressed steps through these live
 // (see the voice-switch gesture in the main loop). Edit the order here to taste.
@@ -271,12 +291,13 @@ static constexpr Voice VOICES[] = {
     VOICE_SCREAM,
     VOICE_BASS_CLOSED,
     VOICE_PAD,
+    VOICE_TOM,
 };
 static constexpr int NUM_VOICES = (int)(sizeof(VOICES) / sizeof(VOICES[0]));
 
 // Active voice index — written by the touch loop (gesture), read by the audio
 // callback each block. Change the initial value to pick the boot voice.
-static volatile int g_voice_idx = 7;   // 7 = Pad
+static volatile int g_voice_idx = 8;   // 8 = Tom
 
 // FSR voice-switch gesture: hold the FSR pressed (volume at/near 0) to cycle.
 // First advance after FIRST_MS; while still held, keep advancing every REPEAT_MS.

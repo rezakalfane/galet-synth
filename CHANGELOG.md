@@ -4,6 +4,15 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: VOICE_TOM — noise-driven percussion`
+- New `VOICE_TOM`: a tap-to-play drum built around the noise oscillator over two
+  low sine modes (body + an inharmonic 1.6× ring) and a sub thump. Instant
+  attack + short ~150 ms release make each tap a hit; a dark, fairly closed
+  filter keeps it round (tom, not a bright snare). Finger-1 position tunes the
+  drum across 40–400 Hz (kick/tom up). Boot voice set to Tom (`g_voice_idx = 8`)
+- Note: this synth's envelope sustains while held, so it's a *tap* instrument —
+  holding gives a noise wash, not a decaying one-shot
+
 ### Added — `feat: VOICE_PAD — warm ensemble pad`
 - New `VOICE_PAD`: two detuned saws (1.006×) for ensemble/chorus width, a soft
   triangle sub and an airy sine octave, through a dark low-resonance filter. The
