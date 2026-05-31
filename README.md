@@ -100,8 +100,8 @@ firmware ships several presets in a `VOICES[]` bank and switches between them
 **live** (see the gesture below); `g_voice_idx` selects the boot voice:
 
 ```cpp
-static constexpr Voice VOICES[] = { VOICE_LEAD, VOICE_BASS, /* … */ };
-static volatile int    g_voice_idx = 11;  // ← boot voice (index into VOICES[]; 11 = HiHat)
+static constexpr Voice VOICES[] = { VOICE_LEAD, VOICE_BASS, /* … */, VOICE_DRUMS };
+static volatile int    g_voice_idx = MULTI_IDX;  // ← boot voice (here: the Drums MultiVoice)
 ```
 
 | # | Preset | Character |
@@ -118,6 +118,7 @@ static volatile int    g_voice_idx = 11;  // ← boot voice (index into VOICES[]
 | 10 | `VOICE_KICK` | **Tap** — deep punchy kick, low sine + a 2-octave pitch "boom", very closed; tunes 30–80 Hz |
 | 11 | `VOICE_SNARE` | **Tap** — bright noisy rattle + tonal body, quick pitch snap, open filter; tunes 150–500 Hz |
 | 12 | `VOICE_HIHAT` | **Tap** — crisp high "tsss" from high-passed noise + a metallic edge, short sizzle tail |
+| 13 | `VOICE_DRUMS` | **MultiVoice** — the glass becomes a 4-zone drum kit (see below) |
 
 **Switching voices live — FSR-hold gesture:** press and hold the FSR (down to
 the mute floor). After **5 seconds** the voice advances to the next in the bank,
@@ -135,6 +136,23 @@ drop/“boom” at note onset), and per-voice **attack / release / glide** (in m
 The noise + short envelopes + pitch envelope are what make the tap-to-play
 percussion voices (Kick/Snare/Tom/Hi-Hat). To add a voice, copy a `VOICE_*`
 block, retune, and add it to `VOICES[]`. Full reference: `CLAUDE.md` → *Voices*.
+
+### MultiVoice — "Drums"
+
+`VOICE_DRUMS` turns the glass into a **4-zone drum kit**. Each zone triggers one
+drum on tap, and the fine position within a zone snaps the pitch to an interval:
+
+```
+|  KICK   |  SNARE  |   TOM   |   HAT   |   ← four equal zones, left to right
+|root 4 5 8|...      |...      |...      |   ← fine position snaps to root/4th/5th/octave
+```
+
+Each tap latches its drum and pitch for the whole hit (drifting your finger
+won't change it), and pressure still drives that drum's brightness/punch. The
+zone-to-drum map (`MULTI_ZONES[]`) and the interval set (`MULTI_INTERVALS[]`)
+are constants at the top of `src/main.cpp`. Internally a tap routes the
+**active** voice (`g_active_voice`) to the zone's real drum voice, while the
+selected voice (`g_voice_idx`, shown in the header) stays "Drums".
 
 > The parameter sections below describe the **DSP mechanics** and the default
 > (`VOICE_LEAD`) values. The specific numbers — oscillator levels/waveforms,

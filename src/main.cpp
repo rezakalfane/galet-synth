@@ -356,6 +356,25 @@ static constexpr Voice VOICE_HIHAT = {
     0.0f, 0.0f, 1.0f
 };
 
+// ── Voice 12: MultiVoice "Drums" ──────────────────────────────────────────────
+//   A meta-voice: when selected, the slider splits into 4 equal zones, each
+//   triggering one drum on tap, with the fine position snapping the pitch to an
+//   interval (see MULTI_* below). This struct is just a placeholder so it lives
+//   in the bank / FSR cycle and shows "Drums" in the header — the actual audio
+//   per tap comes from the zone's real drum voice (g_active_voice). Kick-like so
+//   it's harmless if briefly active before the first tap.
+static constexpr Voice VOICE_DRUMS = {
+    "Drums",
+    30.0f, 80.0f, 0.98083f,
+    1.0f, 0.55f, WAVE_SINE,  1.0f, 0.0f, WAVE_SINE,
+    0.5f, 0.0f,  WAVE_SINE,  2.0f, 0.0f, WAVE_SINE,
+    false,
+    3.0f, 2.0f, 0.20f,
+    1.0f,
+    0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 160.0f, 5.0f,
+    0.0f, 0.0f, 0.0f
+};
+
 // ── Voice bank ────────────────────────────────────────────────────────────────
 // All voices, in cycle order. Holding the FSR pressed steps through these live
 // (see the voice-switch gesture in the main loop). Edit the order here to taste.
@@ -372,12 +391,27 @@ static constexpr Voice VOICES[] = {
     VOICE_KICK,
     VOICE_SNARE,
     VOICE_HIHAT,
+    VOICE_DRUMS,   // MultiVoice — must stay last (MULTI_IDX = NUM_VOICES-1)
 };
 static constexpr int NUM_VOICES = (int)(sizeof(VOICES) / sizeof(VOICES[0]));
 
-// Active voice index — written by the touch loop (gesture), read by the audio
-// callback each block. Change the initial value to pick the boot voice.
-static volatile int g_voice_idx = 11;  // 11 = HiHat
+// ── MultiVoice "Drums" config ─────────────────────────────────────────────────
+// MULTI_IDX is the bank slot of VOICE_DRUMS (kept last). When that voice is
+// selected, the slider splits into 4 equal zones mapped to these drum voices
+// (left→right), and the fine position within a zone snaps the pitch to one of
+// MULTI_INTERVALS above the drum's base pitch (freq_low).
+static constexpr int   MULTI_IDX        = NUM_VOICES - 1;
+static constexpr int   MULTI_ZONES[4]   = { 9, 10, 8, 11 };  // Kick, Snare, Tom, HiHat (bank indices)
+static constexpr float MULTI_INTERVALS[] = { 1.0f, 1.33484f, 1.49831f, 2.0f }; // root, 4th, 5th, octave
+static constexpr int   MULTI_NINTERVALS = (int)(sizeof(MULTI_INTERVALS) / sizeof(MULTI_INTERVALS[0]));
+
+// Selected voice index — set by the FSR-hold gesture, shown in the header.
+// Change the initial value to pick the boot voice.
+static volatile int g_voice_idx = MULTI_IDX;   // boot into the Drums MultiVoice
+
+// Active voice index — what the audio engine actually plays. Normally tracks
+// g_voice_idx; in MultiVoice mode the touch loop routes it per tap to a drum.
+static volatile int g_active_voice = 9;        // 9 = Kick (a sane default)
 
 // FSR voice-switch gesture: hold the FSR pressed (volume at/near 0) to cycle.
 // First advance after FIRST_MS; while still held, keep advancing every REPEAT_MS.
@@ -780,8 +814,9 @@ void AudioCallback(AudioHandle::InputBuffer,
 
     // Snapshot the active voice once per block, so a mid-block switch from the
     // touch loop can't tear fields across the block. All VOICE.* reads below
-    // resolve against this reference.
-    int vi = g_voice_idx;
+    // resolve against this reference. g_active_voice tracks g_voice_idx except in
+    // MultiVoice mode, where the touch loop routes it per tap to a drum.
+    int vi = g_active_voice;
     if(vi < 0 || vi >= NUM_VOICES) vi = 0;
     const Voice& VOICE = VOICES[vi];
 
@@ -1140,6 +1175,7 @@ int main()
     static constexpr uint32_t F1_REQUANTIZE_MS = 200; // re-quantize only after this long off
     float    f1_midi_base    = 60.0f; // last quantized note
     bool     f1_sliding      = false; // true after first touch settles
+    float    multi_freq      = 60.0f; // MultiVoice: pitch latched at tap onset
 
     // Per-frame display counter (print every N frames to reduce serial spam)
     int print_every = 1;
@@ -1204,9 +1240,6 @@ int main()
             }
         }
 
-        // Bind the (possibly just-changed) active voice for the rest of this frame.
-        const Voice& VOICE = VOICES[g_voice_idx];
-
         read_electrodes(data);
 
         int32_t max_delta=1;
@@ -1248,6 +1281,26 @@ int main()
         if(f1_on) f1_last_seen_ms = System::GetNow();
         bool f1_fresh = !f1_was_on && (System::GetNow() - f1_last_seen_ms >= F1_REQUANTIZE_MS);
 
+        // ── MultiVoice routing ───────────────────────────────────────────────
+        // In Drums mode each fresh tap latches a drum (by slider zone) and a
+        // pitch (interval by fine position within the zone); both hold for the
+        // whole tap. Otherwise the active voice just tracks the selected one.
+        bool multi = (g_voice_idx == MULTI_IDX);
+        if(!multi){
+            g_active_voice = g_voice_idx;
+        } else if(f1_on && !f1_was_on){
+            float p    = clampf((float)tracked[0].pos / 1000.0f, 0.0f, 1.0f);
+            int   zone = (int)(p * 4.0f); if(zone > 3) zone = 3;
+            g_active_voice = MULTI_ZONES[zone];
+            float subp = p * 4.0f - (float)zone;                 // 0..1 within the zone
+            int   step = (int)(subp * (float)MULTI_NINTERVALS);
+            if(step >= MULTI_NINTERVALS) step = MULTI_NINTERVALS - 1;
+            multi_freq = VOICES[g_active_voice].freq_low * MULTI_INTERVALS[step];
+        }
+
+        // Bind the active voice (a drum in MultiVoice mode) for the rest of the frame.
+        const Voice& VOICE = VOICES[g_active_voice];
+
         if(f1_on)
         {
             float pos01 = clampf((float)tracked[0].pos / 1000.0f, 0.0f, 1.0f);
@@ -1270,7 +1323,13 @@ int main()
 
             float freq; // final frequency to use
 
-            if(QUANTIZE_ENABLED && f1_fresh)
+            if(multi)
+            {
+                // MultiVoice: use the pitch latched at tap onset (zone interval).
+                freq = multi_freq;
+                f1_sliding = false;
+            }
+            else if(QUANTIZE_ENABLED && f1_fresh)
             {
                 // Touch-down: snap to nearest chromatic note
                 f1_midi_base = quantize_midi(midi_raw);
@@ -1437,9 +1496,13 @@ int main()
         if(frame_count < print_every){ System::Delay(10); continue; }
         frame_count = 0;
 
-        hw.PrintLine("VOICE %d/%d  %s  (%d-%dHz)",
-            g_voice_idx + 1, NUM_VOICES, VOICE.name,
-            (int)VOICE.freq_low, (int)VOICE.freq_high);
+        if(g_voice_idx == MULTI_IDX)
+            hw.PrintLine("VOICE %d/%d  Drums [Kick|Snare|Tom|Hat]  -> %s",
+                g_voice_idx + 1, NUM_VOICES, VOICE.name);
+        else
+            hw.PrintLine("VOICE %d/%d  %s  (%d-%dHz)",
+                g_voice_idx + 1, NUM_VOICES, VOICE.name,
+                (int)VOICE.freq_low, (int)VOICE.freq_high);
         hw.PrintLine(" CH | DELTA | BAR");
         hw.PrintLine("----+-------+--------------------");
         for(int i=0;i<N_CH;i++){

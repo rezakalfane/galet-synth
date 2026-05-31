@@ -89,15 +89,30 @@ the tone lives in one `Voice` struct (`src/main.cpp:71`). All presets sit in the
 
 ```cpp
 static constexpr Voice VOICES[] = { VOICE_LEAD, VOICE_BASS, ... };
-static volatile int    g_voice_idx = 11;  // active voice — boot value here (11 = HiHat)
+static volatile int    g_voice_idx   = MULTI_IDX;  // SELECTED voice (gesture/header); boot value here
+static volatile int    g_active_voice = 9;         // ACTIVE voice the engine plays
 ```
 
-The audio callback **snapshots the voice once per block** (`const Voice& VOICE =
-VOICES[vi]`) so a mid-block switch can't tear fields; the touch loop rebinds its
-own `VOICE` each frame. Envelope/glide coefficients (`ms_to_coeff`) recompute
-only when the index changes. Because selection is now runtime, the per-sample
-waveform dispatch / noise / keytrack / osc2 branches no longer fold away — a
-negligible cost on the H750.
+Two indices: **`g_voice_idx`** is what the FSR gesture selects and the header
+shows; **`g_active_voice`** is what the audio engine actually plays. They're
+equal except in MultiVoice mode (below), where the touch loop routes
+`g_active_voice` per tap. The audio callback **snapshots `g_active_voice` once
+per block** (`const Voice& VOICE = VOICES[vi]`) so a mid-block switch can't tear
+fields; the touch loop rebinds its own `VOICE` each frame after MultiVoice
+resolution. Envelope/glide coefficients (`ms_to_coeff`) recompute only when the
+index changes. Because selection is runtime, the per-sample waveform dispatch /
+noise / keytrack / osc2 branches no longer fold away — negligible on the H750.
+
+### MultiVoice — "Drums" (`src/main.cpp` `VOICE_DRUMS`, `MULTI_*`)
+
+`VOICE_DRUMS` (kept **last** in the bank, `MULTI_IDX = NUM_VOICES-1`) is a meta-
+voice: when selected, the slider splits into 4 equal zones (`MULTI_ZONES[]` —
+Kick, Snare, Tom, Hat by bank index) and each fresh tap latches the zone's drum
+into `g_active_voice` plus a pitch — the fine position within the zone snaps to
+`MULTI_INTERVALS[]` (root / 4th / 5th / octave) above that drum's `freq_low`.
+Drum + pitch hold for the whole tap; pressure still drives per-drum brightness.
+The `VOICE_DRUMS` struct itself is just a Kick-like placeholder so it appears in
+the bank/gesture/header ("Drums"); its fields aren't used for audio.
 
 ### Switching voices live — FSR-hold gesture
 
@@ -168,6 +183,7 @@ silence). All three fields default to 0 (off) for voices that omit them.
 | `KICK` | **Tap** — deep punchy thud, low sine + sub, 2-oct/45 ms pitch "boom", very closed filter; tunes 30–80 Hz |
 | `SNARE` | **Tap** — bright noisy rattle over two tonal modes, open filter, quick 0.7-oct/30 ms snap; tunes 150–500 Hz |
 | `HIHAT` | **Tap** — crisp high "tsss": high-passed noise (`noise_hp=1`) + faint metallic squares, short sizzle tail; tunes 4–11 kHz |
+| `DRUMS` | **MultiVoice** — slider splits into 4 zones (Kick/Snare/Tom/Hat); each tap triggers the zone's drum, fine position snaps pitch to root/4th/5th/octave (see the MultiVoice subsection above) |
 
 ## Hardware
 

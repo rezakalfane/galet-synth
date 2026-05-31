@@ -4,6 +4,20 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: MultiVoice "Drums" — 4-zone playable drum kit across the slider`
+- New `VOICE_DRUMS` MultiVoice: when selected, the slider splits into 4 equal
+  zones (`MULTI_ZONES[]` — Kick, Snare, Tom, Hat) and each tap triggers the
+  zone's drum. The fine position within a zone snaps the pitch to one of
+  `MULTI_INTERVALS[]` (root / 4th / 5th / octave) above the drum's base
+- Split the active voice into two indices: `g_voice_idx` (selected — gesture /
+  header) and `g_active_voice` (what the engine plays). They match except in
+  MultiVoice mode, where each tap routes `g_active_voice` to the zone's drum and
+  latches drum + pitch for the whole hit; pressure still drives per-drum brightness
+- `VOICE_DRUMS` is a Kick-like placeholder bank entry (kept last, `MULTI_IDX =
+  NUM_VOICES-1`) so it appears in the FSR cycle and header as "Drums"
+- Serial header shows `Drums [Kick|Snare|Tom|Hat] -> <active drum>`
+- Boot voice set to the Drums MultiVoice
+
 ### Added — `feat: drum kit (Kick/Snare/Hi-Hat) + pitch-envelope and noise high-pass params`
 - New per-voice **pitch envelope** (`pitch_env_oct` / `pitch_env_ms`): the pitch
   starts N octaves above the note at onset and decays back — the kick "boom",
