@@ -89,8 +89,8 @@ the tone lives in one `Voice` struct (`src/main.cpp:71`). All presets sit in the
 
 ```cpp
 static constexpr Voice VOICES[] = { VOICE_LEAD, VOICE_BASS, ... };
-static volatile int    g_voice_idx   = MULTI_IDX;  // SELECTED voice (gesture/header); boot value here
-static volatile int    g_active_voice = 9;         // ACTIVE voice the engine plays
+static volatile int    g_voice_idx   = 2;   // SELECTED voice (gesture/header); boot value here (OpenBass)
+static volatile int    g_active_voice = 2;  // ACTIVE voice the engine plays
 ```
 
 Two indices: **`g_voice_idx`** is what the FSR gesture selects and the header

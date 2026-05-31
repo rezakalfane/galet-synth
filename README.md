@@ -101,7 +101,7 @@ firmware ships several presets in a `VOICES[]` bank and switches between them
 
 ```cpp
 static constexpr Voice VOICES[] = { VOICE_LEAD, VOICE_BASS, /* … */, VOICE_DRUMS };
-static volatile int    g_voice_idx = MULTI_IDX;  // ← boot voice (here: the Drums MultiVoice)
+static volatile int    g_voice_idx = 2;  // ← boot voice (index into VOICES[]; 2 = OpenBass)
 ```
 
 | # | Preset | Character |

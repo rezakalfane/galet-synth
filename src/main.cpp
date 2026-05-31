@@ -407,11 +407,11 @@ static constexpr int   MULTI_NINTERVALS = (int)(sizeof(MULTI_INTERVALS) / sizeof
 
 // Selected voice index — set by the FSR-hold gesture, shown in the header.
 // Change the initial value to pick the boot voice.
-static volatile int g_voice_idx = MULTI_IDX;   // boot into the Drums MultiVoice
+static volatile int g_voice_idx = 2;           // 2 = OpenBass
 
 // Active voice index — what the audio engine actually plays. Normally tracks
 // g_voice_idx; in MultiVoice mode the touch loop routes it per tap to a drum.
-static volatile int g_active_voice = 9;        // 9 = Kick (a sane default)
+static volatile int g_active_voice = 2;        // matches the boot voice
 
 // FSR voice-switch gesture: hold the FSR pressed (volume at/near 0) to cycle.
 // First advance after FIRST_MS; while still held, keep advancing every REPEAT_MS.
