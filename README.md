@@ -101,7 +101,7 @@ firmware ships several presets in a `VOICES[]` bank and switches between them
 
 ```cpp
 static constexpr Voice VOICES[] = { VOICE_LEAD, VOICE_BASS, /* … */ };
-static volatile int    g_voice_idx = 8;   // ← boot voice (index into VOICES[]; 8 = Tom)
+static volatile int    g_voice_idx = 11;  // ← boot voice (index into VOICES[]; 11 = HiHat)
 ```
 
 | # | Preset | Character |
@@ -114,7 +114,10 @@ static volatile int    g_voice_idx = 8;   // ← boot voice (index into VOICES[]
 | 6 | `VOICE_SCREAM` | Aggressive detuned saws, heavy drive, near-self-oscillating resonance, inharmonic metallic ring-mod |
 | 7 | `VOICE_BASS_CLOSED` | Deep, muffled sub — filter near the fundamental, soft attack, long tail |
 | 8 | `VOICE_PAD` | Warm ensemble pad — detuned saws + sine top, dark filter, very slow swell and long tail |
-| 9 | `VOICE_TOM` | Noise-driven percussion — **tap to play**; dark/round tom, position tunes 40–400 Hz |
+| 9 | `VOICE_TOM` | Noise-driven percussion — **tap to play**; dark/round tom with a pitch-drop, tunes 40–400 Hz |
+| 10 | `VOICE_KICK` | **Tap** — deep punchy kick, low sine + a 2-octave pitch "boom", very closed; tunes 30–80 Hz |
+| 11 | `VOICE_SNARE` | **Tap** — bright noisy rattle + tonal body, quick pitch snap, open filter; tunes 150–500 Hz |
+| 12 | `VOICE_HIHAT` | **Tap** — crisp high "tsss" from high-passed noise + a metallic edge, short sizzle tail |
 
 **Switching voices live — FSR-hold gesture:** press and hold the FSR (down to
 the mute floor). After **5 seconds** the voice advances to the next in the bank,
@@ -126,10 +129,12 @@ release.)
 
 Each voice controls, per oscillator: pitch ratio, mix level and **waveform**
 (`WAVE_TRI` / `WAVE_SINE` / `WAVE_SQUARE` / `WAVE_SAW`); plus filter base cutoff,
-sweep depth, resonance, **keytracking**, drive, **noise**, **ring-mod carrier
-ratio** and ceilings, and per-voice **attack / release / glide** (in ms). To add
-a voice, copy a `VOICE_*` block, retune the fields, and add it to `VOICES[]`. The
-field-by-field reference lives in `CLAUDE.md` → *Voices*.
+sweep depth, resonance, **keytracking**, drive, **noise** (white or high-passed
+"tsss"), **ring-mod carrier ratio** and ceilings, a **pitch envelope** (the
+drop/“boom” at note onset), and per-voice **attack / release / glide** (in ms).
+The noise + short envelopes + pitch envelope are what make the tap-to-play
+percussion voices (Kick/Snare/Tom/Hi-Hat). To add a voice, copy a `VOICE_*`
+block, retune, and add it to `VOICES[]`. Full reference: `CLAUDE.md` → *Voices*.
 
 > The parameter sections below describe the **DSP mechanics** and the default
 > (`VOICE_LEAD`) values. The specific numbers — oscillator levels/waveforms,

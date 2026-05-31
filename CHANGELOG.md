@@ -4,6 +4,20 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: drum kit (Kick/Snare/Hi-Hat) + pitch-envelope and noise high-pass params`
+- New per-voice **pitch envelope** (`pitch_env_oct` / `pitch_env_ms`): the pitch
+  starts N octaves above the note at onset and decays back — the kick "boom",
+  tom thump, snare snap. Retriggers each note onset; a no-op when octaves = 0
+- New per-voice **`noise_hp`**: blends the noise oscillator from full white
+  ("shhh") to high-passed ("tsss") via a one-pole high-pass (global corner
+  `NOISE_HP_COEF`) — gives hi-hats/cymbals their crisp top
+- New tap-to-play percussion voices completing a drum kit:
+  - `VOICE_KICK` — deep punchy kick, low sine + sub, 2-oct/45 ms pitch boom
+  - `VOICE_SNARE` — bright noisy rattle + tonal modes, open filter, quick snap
+  - `VOICE_HIHAT` — high-passed "tsss" + faint metallic squares, short sizzle
+  - `VOICE_TOM` also gains a 1-oct/80 ms pitch drop
+- Boot voice set to Hi-Hat (`g_voice_idx = 11`); FSR gesture cycles all 12
+
 ### Added — `feat: VOICE_TOM — noise-driven percussion`
 - New `VOICE_TOM`: a tap-to-play drum built around the noise oscillator over two
   low sine modes (body + an inharmonic 1.6× ring) and a sub thump. Instant

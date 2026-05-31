@@ -103,6 +103,15 @@ struct Voice {
     float attack_ms;       // amp envelope attack time
     float release_ms;      // amp envelope + filter-close release time
     float glide_ms;        // portamento (pitch glide) time
+
+    // Pitch envelope — a fast downward pitch sweep at note onset (kick "boom",
+    // zap, tom thump). Left at 0 (the default for voices that omit them) = off.
+    float pitch_env_oct;   // octaves the pitch starts ABOVE the note at onset (0 = none)
+    float pitch_env_ms;    // time the pitch sweep takes to settle to the note
+
+    // Noise tone: 0 = full white noise ("shhh"), 1 = high-passed/bright ("tsss",
+    // for hi-hats/cymbals). Default 0 leaves the noise white. See NOISE_HP_COEF.
+    float noise_hp;
 };
 
 // Perfect-fifth frequency ratio = 2^(7/12).
@@ -276,7 +285,75 @@ static constexpr Voice VOICE_TOM = {
     6.0f, 3.0f, 0.30f,           // dark/round tom, opened slightly for a touch more body
     1.5f,                        // drive — snap and saturation on hard hits
     // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
-    0.70f, 0.3f, 1.0f, 0.0f, 0.10f, 1.0f, 150.0f, 5.0f   // noise-dominant, instant hit, short tail
+    0.70f, 0.3f, 1.0f, 0.0f, 0.10f, 1.0f, 150.0f, 5.0f,  // noise-dominant, instant hit, short tail
+    // pitch_env_oct, pitch_env_ms — tom "boww": start 1 oct up, drop in 80 ms
+    1.0f, 80.0f
+};
+
+// ── Voice 9: kick drum (noise-driven) ────────────────────────────────────────
+//   A deep, punchy thud — PLAY IT BY TAPPING. A low sine body with a sub-octave
+//   for weight and a quiet octave "click" for beater attack; a whisper of noise
+//   adds beater texture. Very closed dark filter + a little drive keep it round
+//   and punchy. Instant attack, short tail. Finger-1 position tunes the kick.
+//   A pitch envelope (start 2 oct up, drop in 45 ms) gives the classic "boom".
+static constexpr Voice VOICE_KICK = {
+    "Kick",
+    30.0f, 80.0f, 0.98083f,     // 30–80 Hz, ln(2.67) — deep, position tunes the kick
+    1.0f,    0.55f, WAVE_SINE,   // osc1  — deep sine body
+    2.0f,    0.10f, WAVE_SINE,   // osc2  — octave "click" for attack punch
+    0.5f,    0.15f, WAVE_SINE,   // sub   — sub-octave rumble
+    2.0f,    0.0f,  WAVE_SINE,   // oct   — off
+    false,                       // osc2 is a fixed ratio, not finger-2 detune
+    3.0f, 2.0f, 0.20f,           // very closed/dark — round; tiny pressure sweep
+    1.8f,                        // drive — punch and saturation
+    // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
+    0.08f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 160.0f, 5.0f,  // soft beater click, instant, short
+    // pitch_env_oct, pitch_env_ms — the kick "boom": start 2 oct up, drop in 45 ms
+    2.0f, 45.0f
+};
+
+// ── Voice 10: snare (noise-driven) ───────────────────────────────────────────
+//   The bright, noisy cousin of the Tom — PLAY IT BY TAPPING. Broadband noise
+//   (the "wires" rattle) dominates over two tonal modes (body + a 1.8× ring); a
+//   wide-open filter keeps it crisp and cracking. Instant attack, short tail,
+//   and a quick subtle pitch snap (0.7 oct in 30 ms) for the hit. Harder presses
+//   open it further. Finger-1 position tunes the drum.
+static constexpr Voice VOICE_SNARE = {
+    "Snare",
+    150.0f, 500.0f, 1.20397f,   // 150–500 Hz, ln(3.33) — snare tuning range
+    1.0f,    0.18f, WAVE_SINE,   // osc1  — body (lower mode)
+    1.8f,    0.14f, WAVE_TRI,    // osc2  — upper mode/ring (triangle = more harmonics)
+    0.5f,    0.06f, WAVE_SINE,   // sub   — slight body weight
+    2.0f,    0.0f,  WAVE_SINE,   // oct   — off
+    false,                       // osc2 is a fixed ratio, not finger-2 detune
+    18.0f, 4.0f, 0.30f,          // wide open & bright — the noise rattle cracks through
+    1.5f,                        // drive — snap
+    // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
+    0.85f, 0.3f, 1.0f, 0.0f, 0.10f, 1.0f, 140.0f, 5.0f,  // noise-dominant rattle, instant, short
+    // pitch_env_oct, pitch_env_ms — quick subtle snap
+    0.7f, 30.0f
+};
+
+// ── Voice 11: hi-hat (noise-driven) ──────────────────────────────────────────
+//   A crisp "tss" — PLAY IT BY TAPPING. Almost pure high-frequency noise through
+//   a wide-open filter, with three inharmonic square partials for metallic edge
+//   and no low end. Instant attack and a very short ~55 ms tail = a tight closed
+//   hat. Finger-1 position tunes the metallic pitch. (Raise release_ms for an
+//   open-hat feel.)
+static constexpr Voice VOICE_HIHAT = {
+    "HiHat",
+    4000.0f, 11000.0f, 1.01160f, // 4000–11000 Hz, ln(2.75) — metallic edge pitch
+    1.0f,    0.10f, WAVE_SQUARE,  // osc1  — quiet metallic edge (the tss noise leads)
+    1.68f,   0.08f, WAVE_SQUARE,  // osc2  — inharmonic metallic partial
+    0.5f,    0.0f,  WAVE_SINE,    // sub   — off (no low end on a hat)
+    2.0f,    0.06f, WAVE_SQUARE,  // oct   — high partial (2.0× keeps it under Nyquist)
+    false,                        // osc2 is a fixed ratio, not finger-2 detune
+    25.0f, 2.0f, 0.20f,           // wide open
+    1.2f,                         // light drive
+    // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
+    0.80f, 0.2f, 1.0f, 0.0f, 0.05f, 1.0f, 160.0f, 3.0f, // noise-led, instant, sizzly tail
+    // pitch_env_oct, pitch_env_ms, noise_hp — high-passed bright "tsss"
+    0.0f, 0.0f, 1.0f
 };
 
 // ── Voice bank ────────────────────────────────────────────────────────────────
@@ -292,12 +369,15 @@ static constexpr Voice VOICES[] = {
     VOICE_BASS_CLOSED,
     VOICE_PAD,
     VOICE_TOM,
+    VOICE_KICK,
+    VOICE_SNARE,
+    VOICE_HIHAT,
 };
 static constexpr int NUM_VOICES = (int)(sizeof(VOICES) / sizeof(VOICES[0]));
 
 // Active voice index — written by the touch loop (gesture), read by the audio
 // callback each block. Change the initial value to pick the boot voice.
-static volatile int g_voice_idx = 8;   // 8 = Tom
+static volatile int g_voice_idx = 11;  // 11 = HiHat
 
 // FSR voice-switch gesture: hold the FSR pressed (volume at/near 0) to cycle.
 // First advance after FIRST_MS; while still held, keep advancing every REPEAT_MS.
@@ -579,6 +659,10 @@ static float s_flt[4]    = {0,0,0,0};
 
 // White-noise generator state (xorshift32) for the per-voice noise oscillator.
 static uint32_t s_noise_rng = 0x1234567u;
+// One-pole low-pass state used to derive high-passed ("tsss") noise from white.
+static float    s_noise_lp  = 0.0f;
+// High-pass corner coefficient: higher = brighter/higher "tsss" for hi-hats.
+static constexpr float NOISE_HP_COEF = 0.8f;
 
 // Slew rates (per sample at 48 kHz)
 // Lower value = faster response.
@@ -705,12 +789,23 @@ void AudioCallback(AudioHandle::InputBuffer,
     // only when the active voice changes.
     static int   s_coeff_vi = -1;
     static float s_glide_c, s_atk_c, s_rel_c;
+    static float s_penv_c;      // pitch-env decay coefficient
+    static float s_penv_start;  // pitch multiplier at onset = 2^pitch_env_oct
     if(s_coeff_vi != vi){
-        s_glide_c = ms_to_coeff(VOICE.glide_ms,   sr);
-        s_atk_c   = ms_to_coeff(VOICE.attack_ms,  sr);
-        s_rel_c   = ms_to_coeff(VOICE.release_ms, sr);
-        s_coeff_vi = vi;
+        s_glide_c    = ms_to_coeff(VOICE.glide_ms,     sr);
+        s_atk_c      = ms_to_coeff(VOICE.attack_ms,    sr);
+        s_rel_c      = ms_to_coeff(VOICE.release_ms,   sr);
+        s_penv_c     = ms_to_coeff(VOICE.pitch_env_ms, sr);
+        s_penv_start = exp2f(VOICE.pitch_env_oct);   // 1.0 when pitch_env_oct == 0
+        s_coeff_vi   = vi;
     }
+
+    // Pitch-envelope trigger: on a note onset (amp target rising from silence),
+    // jump the pitch multiplier up; it decays back to 1.0 over pitch_env_ms.
+    static float s_pmult     = 1.0f;
+    static float s_prev_tamp = 0.0f;
+    if(tamp > 0.001f && s_prev_tamp <= 0.001f) s_pmult = s_penv_start;
+    s_prev_tamp = tamp;
 
     for(size_t i=0;i<size;i++)
     {
@@ -733,6 +828,8 @@ void AudioCallback(AudioHandle::InputBuffer,
         s_amp = s_amp * slew_amp + tamp * (1.0f - slew_amp);
         // Master volume slew (smooths FSR jitter / 16 Hz update steps).
         s_master_vol = s_master_vol * SLEW_MISC + tmvol * (1.0f - SLEW_MISC);
+        // Pitch envelope decays toward 1.0 (no-op when pitch_env_oct == 0).
+        s_pmult = 1.0f + (s_pmult - 1.0f) * s_penv_c;
 
         // Bleed filter state toward zero when silent
         // Prevents stale filter energy from clicking on next note onset
@@ -759,7 +856,7 @@ void AudioCallback(AudioHandle::InputBuffer,
         // Vibrato: modulate frequency by ±1 semitone * depth
         // powf(2, semitones/12) — approx for small values: exp(x*0.0578)
         float vib_amt = lfo * s_vibdepth * 0.05f; // max ±~0.05 semitones*depth
-        float freq_vib = s_freq * (1.0f + vib_amt);
+        float freq_vib = s_freq * (1.0f + vib_amt) * s_pmult;  // s_pmult: pitch-env sweep
 
         // Osc 2 frequency. Lead: finger-2 detune around the base ratio.
         // Bass (and any fixed-interval voice): hold osc2_ratio (e.g. a 5th).
@@ -786,14 +883,21 @@ void AudioCallback(AudioHandle::InputBuffer,
         float sub     = osc(s_phase_sub,VOICE.sub_wave)  * VOICE.sub_level;
         float osc_oct = osc(s_phase_oct,VOICE.oct_wave)  * VOICE.oct_level;
 
-        // White noise (xorshift32 → -1..1), voice-defined level. Adds breath /
-        // chiff / hiss. The `if` folds away when a voice sets noise_level = 0.
+        // Noise (xorshift32 → -1..1), voice-defined level. Adds breath / chiff /
+        // hiss. noise_hp blends from full white ("shhh") to high-passed ("tsss",
+        // for hi-hats). The `if` folds away when a voice sets noise_level = 0.
         float noise = 0.0f;
         if(VOICE.noise_level > 0.0f){
             s_noise_rng ^= s_noise_rng << 13;
             s_noise_rng ^= s_noise_rng >> 17;
             s_noise_rng ^= s_noise_rng << 5;
-            noise = ((float)(int32_t)s_noise_rng * (1.0f/2147483648.0f)) * VOICE.noise_level;
+            float white = (float)(int32_t)s_noise_rng * (1.0f/2147483648.0f);
+            // One-pole high-pass = white minus its low-frequency content.
+            s_noise_lp += NOISE_HP_COEF * (white - s_noise_lp);
+            float bright = white - s_noise_lp;
+            // Blend white → high-passed by noise_hp (×2 to make up lost level).
+            float n = white + (bright * 2.0f - white) * VOICE.noise_hp;
+            noise = n * VOICE.noise_level;
         }
 
         // Mix oscillator stack + noise

@@ -74,6 +74,7 @@ If this error appears, remove the `LDFLAGS` line from `Makefile`.
 | `MIN_FINGER_SEP` | 44 | Min electrode gap for two-finger detection |
 | `QUANTIZE_ENABLED` | ~247 | `false` = fully continuous pitch, no snapping |
 | `SLEW_CUT` | ~525 | Cutoff opening slew (~35 ms — smooths stepped pressure targets) |
+| `NOISE_HP_COEF` | ~660 | High-pass corner for `noise_hp` voices (higher = brighter "tsss") |
 | `REG_CONFIG1 / CONFIG2` | ~270 | MPR121 AFE registers (FFI, CDC, CDT, ESI) |
 
 > Pitch glide and the amp attack/release used to be the global `SLEW_FREQ` /
@@ -88,7 +89,7 @@ the tone lives in one `Voice` struct (`src/main.cpp:71`). All presets sit in the
 
 ```cpp
 static constexpr Voice VOICES[] = { VOICE_LEAD, VOICE_BASS, ... };
-static volatile int    g_voice_idx = 8;   // active voice — boot value here (8 = Tom)
+static volatile int    g_voice_idx = 11;  // active voice — boot value here (11 = HiHat)
 ```
 
 The audio callback **snapshots the voice once per block** (`const Voice& VOICE =
@@ -131,9 +132,14 @@ rebaseline timers while held. To change the **boot** voice, edit the
 | `attack_ms` | Amp envelope attack time |
 | `release_ms` | Amp envelope + filter-close release time |
 | `glide_ms` | Portamento between pitches |
+| `pitch_env_oct` | Pitch envelope: octaves the pitch starts ABOVE the note at onset, decaying back (0 = off). Kick "boom", tom thump, zap |
+| `pitch_env_ms` | Time the pitch envelope takes to settle to the note |
+| `noise_hp` | Noise tone: 0 = white ("shhh"), 1 = high-passed ("tsss", for hi-hats/cymbals). Uses the global `NOISE_HP_COEF` corner |
 
 Envelope/glide are in **milliseconds**, converted to per-sample slew
 coefficients (`ms_to_coeff`) in the audio callback, recomputed on voice change.
+The pitch envelope retriggers on each note onset (amp target rising from
+silence). All three fields default to 0 (off) for voices that omit them.
 
 ### Notes
 
@@ -158,7 +164,10 @@ coefficients (`ms_to_coeff`) in the audio callback, recomputed on voice change.
 | `SCREAM` | Aggressive detuned saws, high register, heavy drive, near-self-osc res, inharmonic (2.5×) metallic ring-mod |
 | `BASS_CLOSED` | Deep muffled sub — filter near the fundamental, tiny sweep, reduced keytrack, long tail |
 | `PAD` | Warm ensemble pad — detuned saws + tri sub + sine top, dark filter, very slow ~2.2 s swell, long tail |
-| `TOM` | Noise-driven percussion — **tap to play**. Dark/round tom: noise + low sine body, instant attack, short tail; position tunes 40–400 Hz |
+| `TOM` | Noise-driven percussion — **tap to play**. Dark/round tom: noise + low sine body, pitch env (1 oct/80 ms), short tail; position tunes 40–400 Hz |
+| `KICK` | **Tap** — deep punchy thud, low sine + sub, 2-oct/45 ms pitch "boom", very closed filter; tunes 30–80 Hz |
+| `SNARE` | **Tap** — bright noisy rattle over two tonal modes, open filter, quick 0.7-oct/30 ms snap; tunes 150–500 Hz |
+| `HIHAT` | **Tap** — crisp high "tsss": high-passed noise (`noise_hp=1`) + faint metallic squares, short sizzle tail; tunes 4–11 kHz |
 
 ## Hardware
 
