@@ -3177,194 +3177,195 @@ LOAD /Library/DaisyToolchain/0.2.0/arm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb
                 0x000000000800232c       0xe8 build/main.o
                 0x000000000800232c                update_tracked(Finger*, int)
  .text.startup.main
-                0x0000000008002414     0x1548 build/main.o
+                0x0000000008002414     0x1544 build/main.o
                 0x0000000008002414                main
  .text.startup._GLOBAL__sub_I_hw
-                0x000000000800395c       0x54 build/main.o
+                0x0000000008003958       0x54 build/main.o
  .text._ZN5daisy9DaisySeed10StartAudioEPFvPKPKfPPfjE
-                0x00000000080039b0        0x8 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(daisy_seed.o)
-                0x00000000080039b0                daisy::DaisySeed::StartAudio(void (*)(float const* const*, float**, unsigned int))
+                0x00000000080039ac        0x8 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(daisy_seed.o)
+                0x00000000080039ac                daisy::DaisySeed::StartAudio(void (*)(float const* const*, float**, unsigned int))
  .text._ZN5daisy9DaisySeed15AudioSampleRateEv
-                0x00000000080039b8        0x8 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(daisy_seed.o)
-                0x00000000080039b8                daisy::DaisySeed::AudioSampleRate()
+                0x00000000080039b4        0x8 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(daisy_seed.o)
+                0x00000000080039b4                daisy::DaisySeed::AudioSampleRate()
  .text._ZN5daisy9DaisySeed17SetAudioBlockSizeEj
-                0x00000000080039c0       0x38 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(daisy_seed.o)
-                0x00000000080039c0                daisy::DaisySeed::SetAudioBlockSize(unsigned int)
+                0x00000000080039bc       0x38 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(daisy_seed.o)
+                0x00000000080039bc                daisy::DaisySeed::SetAudioBlockSize(unsigned int)
  .text._ZN5daisy9DaisySeed17CheckBoardVersionEv
-                0x00000000080039f8       0x6c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(daisy_seed.o)
-                0x00000000080039f8                daisy::DaisySeed::CheckBoardVersion()
+                0x00000000080039f4       0x6c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(daisy_seed.o)
+                0x00000000080039f4                daisy::DaisySeed::CheckBoardVersion()
  .text._ZN5daisy9DaisySeed14ConfigureAudioEv
-                0x0000000008003a64      0x10c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(daisy_seed.o)
-                0x0000000008003a64                daisy::DaisySeed::ConfigureAudio()
+                0x0000000008003a60      0x10c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(daisy_seed.o)
+                0x0000000008003a60                daisy::DaisySeed::ConfigureAudio()
  .text._ZN5daisy9DaisySeed4InitEb
-                0x0000000008003b70      0x108 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(daisy_seed.o)
-                0x0000000008003b70                daisy::DaisySeed::Init(bool)
+                0x0000000008003b6c      0x108 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(daisy_seed.o)
+                0x0000000008003b6c                daisy::DaisySeed::Init(bool)
  .text._ZN5daisy6Ak45564InitE12dsy_gpio_pin
-                0x0000000008003c78       0x44 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(codec_ak4556.o)
-                0x0000000008003c78                daisy::Ak4556::Init(dsy_gpio_pin)
+                0x0000000008003c74       0x44 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(codec_ak4556.o)
+                0x0000000008003c74                daisy::Ak4556::Init(dsy_gpio_pin)
  .text._ZN5daisy6Wm873120WriteControlRegisterEht
-                0x0000000008003cbc       0x3c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(codec_wm8731.o)
-                0x0000000008003cbc                daisy::Wm8731::WriteControlRegister(unsigned char, unsigned short)
+                0x0000000008003cb8       0x3c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(codec_wm8731.o)
+                0x0000000008003cb8                daisy::Wm8731::WriteControlRegister(unsigned char, unsigned short)
  .text._ZN5daisy6Wm87314InitERKNS0_6ConfigENS_9I2CHandleE
-                0x0000000008003cf8      0x1bc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(codec_wm8731.o)
-                0x0000000008003cf8                daisy::Wm8731::Init(daisy::Wm8731::Config const&, daisy::I2CHandle)
+                0x0000000008003cf4      0x1bc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(codec_wm8731.o)
+                0x0000000008003cf4                daisy::Wm8731::Init(daisy::Wm8731::Config const&, daisy::I2CHandle)
  .text._ZN11SdramHandle10DeviceInitEv
-                0x0000000008003eb4       0x98 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(sdram.o)
-                0x0000000008003eb4                SdramHandle::DeviceInit()
+                0x0000000008003eb0       0x98 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(sdram.o)
+                0x0000000008003eb0                SdramHandle::DeviceInit()
  .text._ZN11SdramHandle4InitEv
-                0x0000000008003f4c       0x7c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(sdram.o)
-                0x0000000008003f4c                SdramHandle::Init()
+                0x0000000008003f48       0x7c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(sdram.o)
+                0x0000000008003f48                SdramHandle::Init()
  .text.HAL_SDRAM_MspInit
-                0x0000000008003fc8      0x1a8 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(sdram.o)
-                0x0000000008003fc8                HAL_SDRAM_MspInit
+                0x0000000008003fc4      0x1a8 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(sdram.o)
+                0x0000000008003fc4                HAL_SDRAM_MspInit
  .text._ZN5daisy11AudioHandle4Impl16InternalCallbackEPlS2_j
-                0x0000000008004170      0xbbc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(audio.o)
-                0x0000000008004170                daisy::AudioHandle::Impl::InternalCallback(long*, long*, unsigned int)
+                0x000000000800416c      0xbbc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(audio.o)
+                0x000000000800416c                daisy::AudioHandle::Impl::InternalCallback(long*, long*, unsigned int)
  .text._ZN5daisy11AudioHandle4InitERKNS0_6ConfigENS_9SaiHandleE
-                0x0000000008004d2c       0x70 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(audio.o)
-                0x0000000008004d2c                daisy::AudioHandle::Init(daisy::AudioHandle::Config const&, daisy::SaiHandle)
+                0x0000000008004d28       0x70 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(audio.o)
+                0x0000000008004d28                daisy::AudioHandle::Init(daisy::AudioHandle::Config const&, daisy::SaiHandle)
  .text._ZNK5daisy11AudioHandle9GetConfigEv
-                0x0000000008004d9c        0x8 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(audio.o)
-                0x0000000008004d9c                daisy::AudioHandle::GetConfig() const
+                0x0000000008004d98        0x8 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(audio.o)
+                0x0000000008004d98                daisy::AudioHandle::GetConfig() const
  .text._ZN5daisy11AudioHandle12SetBlockSizeEj
-                0x0000000008004da4       0x1c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(audio.o)
-                0x0000000008004da4                daisy::AudioHandle::SetBlockSize(unsigned int)
+                0x0000000008004da0       0x1c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(audio.o)
+                0x0000000008004da0                daisy::AudioHandle::SetBlockSize(unsigned int)
  .text._ZN5daisy11AudioHandle13GetSampleRateEv
-                0x0000000008004dc0        0x8 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(audio.o)
-                0x0000000008004dc0                daisy::AudioHandle::GetSampleRate()
+                0x0000000008004dbc        0x8 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(audio.o)
+                0x0000000008004dbc                daisy::AudioHandle::GetSampleRate()
  .text._ZN5daisy11AudioHandle5StartEPFvPKPKfPPfjE
-                0x0000000008004dc8       0x44 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(audio.o)
-                0x0000000008004dc8                daisy::AudioHandle::Start(void (*)(float const* const*, float**, unsigned int))
+                0x0000000008004dc4       0x44 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(audio.o)
+                0x0000000008004dc4                daisy::AudioHandle::Start(void (*)(float const* const*, float**, unsigned int))
  .text.startup._GLOBAL__sub_I__ZN5daisy11AudioHandle4Impl4InitENS0_6ConfigENS_9SaiHandleE
-                0x0000000008004e0c       0x24 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(audio.o)
+                0x0000000008004e08       0x24 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(audio.o)
  .text._ZN5daisy9UsbHandleD2Ev
-                0x0000000008004e30        0x4 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(logger.o)
-                0x0000000008004e30                daisy::UsbHandle::~UsbHandle()
-                0x0000000008004e30                daisy::UsbHandle::~UsbHandle()
+                0x0000000008004e2c        0x4 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(logger.o)
+                0x0000000008004e2c                daisy::UsbHandle::~UsbHandle()
+                0x0000000008004e2c                daisy::UsbHandle::~UsbHandle()
  .text._ZN5daisy6LoggerILNS_17LoggerDestinationE1EE11TransmitBufEv
-                0x0000000008004e34       0x60 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(logger.o)
-                0x0000000008004e34                daisy::Logger<(daisy::LoggerDestination)1>::TransmitBuf()
+                0x0000000008004e30       0x60 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(logger.o)
+                0x0000000008004e30                daisy::Logger<(daisy::LoggerDestination)1>::TransmitBuf()
  .text._ZN5daisy6LoggerILNS_17LoggerDestinationE1EE13AppendNewLineEv
-                0x0000000008004e94       0x60 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(logger.o)
-                0x0000000008004e94                daisy::Logger<(daisy::LoggerDestination)1>::AppendNewLine()
+                0x0000000008004e90       0x60 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(logger.o)
+                0x0000000008004e90                daisy::Logger<(daisy::LoggerDestination)1>::AppendNewLine()
  .text._ZN5daisy6LoggerILNS_17LoggerDestinationE1EE10PrintLineVEPKcSt9__va_list
-                0x0000000008004ef4       0x30 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(logger.o)
-                0x0000000008004ef4                daisy::Logger<(daisy::LoggerDestination)1>::PrintLineV(char const*, std::__va_list)
+                0x0000000008004ef0       0x30 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(logger.o)
+                0x0000000008004ef0                daisy::Logger<(daisy::LoggerDestination)1>::PrintLineV(char const*, std::__va_list)
  .text._ZN5daisy6LoggerILNS_17LoggerDestinationE1EE9PrintLineEPKcz
-                0x0000000008004f24       0x1c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(logger.o)
-                0x0000000008004f24                daisy::Logger<(daisy::LoggerDestination)1>::PrintLine(char const*, ...)
+                0x0000000008004f20       0x1c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(logger.o)
+                0x0000000008004f20                daisy::Logger<(daisy::LoggerDestination)1>::PrintLine(char const*, ...)
  .text._ZN5daisy6LoggerILNS_17LoggerDestinationE1EE8StartLogEb
-                0x0000000008004f40       0x40 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(logger.o)
-                0x0000000008004f40                daisy::Logger<(daisy::LoggerDestination)1>::StartLog(bool)
+                0x0000000008004f3c       0x40 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(logger.o)
+                0x0000000008004f3c                daisy::Logger<(daisy::LoggerDestination)1>::StartLog(bool)
  .text.startup._GLOBAL__sub_I__ZN5daisy10LoggerImplILNS_17LoggerDestinationE1EE11usb_handle_E
-                0x0000000008004f80       0x2c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(logger.o)
+                0x0000000008004f7c       0x2c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(logger.o)
  .text.DummyRxCallback
-                0x0000000008004fac        0x4 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(usb.o)
-                0x0000000008004fac                DummyRxCallback
+                0x0000000008004fa8        0x4 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(usb.o)
+                0x0000000008004fa8                DummyRxCallback
  .text._ZN5daisy9UsbHandle4InitENS0_9UsbPeriphE
-                0x0000000008004fb0      0x10c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(usb.o)
-                0x0000000008004fb0                daisy::UsbHandle::Init(daisy::UsbHandle::UsbPeriph)
+                0x0000000008004fac      0x10c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(usb.o)
+                0x0000000008004fac                daisy::UsbHandle::Init(daisy::UsbHandle::UsbPeriph)
  .text._ZN5daisy9UsbHandle16TransmitInternalEPhj
-                0x00000000080050bc       0x14 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(usb.o)
-                0x00000000080050bc                daisy::UsbHandle::TransmitInternal(unsigned char*, unsigned int)
+                0x00000000080050b8       0x14 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(usb.o)
+                0x00000000080050b8                daisy::UsbHandle::TransmitInternal(unsigned char*, unsigned int)
  .text.OTG_FS_EP1_OUT_IRQHandler
-                0x00000000080050d0        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(usb.o)
-                0x00000000080050d0                OTG_FS_EP1_OUT_IRQHandler
+                0x00000000080050cc        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(usb.o)
+                0x00000000080050cc                OTG_FS_EP1_OUT_IRQHandler
  .text.OTG_FS_EP1_IN_IRQHandler
-                0x00000000080050dc        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(usb.o)
-                0x00000000080050dc                OTG_FS_EP1_IN_IRQHandler
+                0x00000000080050d8        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(usb.o)
+                0x00000000080050d8                OTG_FS_EP1_IN_IRQHandler
  .text.OTG_FS_IRQHandler
-                0x00000000080050e8        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(usb.o)
-                0x00000000080050e8                OTG_FS_IRQHandler
+                0x00000000080050e4        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(usb.o)
+                0x00000000080050e4                OTG_FS_IRQHandler
  .text._ZN5daisy16AdcChannelConfig10InitSingleE12dsy_gpio_pinNS0_15ConversionSpeedE
-                0x00000000080050f4       0x28 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(adc.o)
-                0x00000000080050f4                daisy::AdcChannelConfig::InitSingle(dsy_gpio_pin, daisy::AdcChannelConfig::ConversionSpeed)
+                0x00000000080050f0       0x28 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(adc.o)
+                0x00000000080050f0                daisy::AdcChannelConfig::InitSingle(dsy_gpio_pin, daisy::AdcChannelConfig::ConversionSpeed)
  .text._ZN5daisy9AdcHandle4InitEPNS_16AdcChannelConfigEjNS0_12OverSamplingE
-                0x000000000800511c      0x41c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(adc.o)
-                0x000000000800511c                daisy::AdcHandle::Init(daisy::AdcChannelConfig*, unsigned int, daisy::AdcHandle::OverSampling)
+                0x0000000008005118      0x41c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(adc.o)
+                0x0000000008005118                daisy::AdcHandle::Init(daisy::AdcChannelConfig*, unsigned int, daisy::AdcHandle::OverSampling)
  .text._ZN5daisy9AdcHandle5StartEv
-                0x0000000008005538       0x2c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(adc.o)
-                0x0000000008005538                daisy::AdcHandle::Start()
+                0x0000000008005534       0x2c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(adc.o)
+                0x0000000008005534                daisy::AdcHandle::Start()
  .text._ZNK5daisy9AdcHandle3GetEh
-                0x0000000008005564       0x18 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(adc.o)
-                0x0000000008005564                daisy::AdcHandle::Get(unsigned char) const
+                0x0000000008005560       0x18 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(adc.o)
+                0x0000000008005560                daisy::AdcHandle::Get(unsigned char) const
  .text.HAL_ADC_MspInit
-                0x000000000800557c       0x98 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(adc.o)
-                0x000000000800557c                HAL_ADC_MspInit
+                0x0000000008005578       0x98 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(adc.o)
+                0x0000000008005578                HAL_ADC_MspInit
  .text.DMA1_Stream2_IRQHandler
-                0x0000000008005614        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(adc.o)
-                0x0000000008005614                DMA1_Stream2_IRQHandler
+                0x0000000008005610        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(adc.o)
+                0x0000000008005610                DMA1_Stream2_IRQHandler
  .text.HAL_ADC_ConvCpltCallback
-                0x0000000008005620      0x148 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(adc.o)
-                0x0000000008005620                HAL_ADC_ConvCpltCallback
+                0x000000000800561c      0x148 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(adc.o)
+                0x000000000800561c                HAL_ADC_ConvCpltCallback
  .text.HAL_ADC_ErrorCallback
-                0x0000000008005768        0x4 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(adc.o)
-                0x0000000008005768                HAL_ADC_ErrorCallback
+                0x0000000008005764        0x4 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(adc.o)
+                0x0000000008005764                HAL_ADC_ErrorCallback
  .text.HAL_DAC_MspInit
-                0x000000000800576c      0x15c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(dac.o)
-                0x000000000800576c                HAL_DAC_MspInit
+                0x0000000008005768      0x15c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(dac.o)
+                0x0000000008005768                HAL_DAC_MspInit
  .text.DMA2_Stream0_IRQHandler
-                0x00000000080058c8        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(dac.o)
-                0x00000000080058c8                DMA2_Stream0_IRQHandler
+                0x00000000080058c4        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(dac.o)
+                0x00000000080058c4                DMA2_Stream0_IRQHandler
  .text.DMA2_Stream1_IRQHandler
-                0x00000000080058d4        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(dac.o)
-                0x00000000080058d4                DMA2_Stream1_IRQHandler
+                0x00000000080058d0        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(dac.o)
+                0x00000000080058d0                DMA2_Stream1_IRQHandler
  .text.TIM6_DAC_IRQHandler
-                0x00000000080058e0       0x1c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(dac.o)
-                0x00000000080058e0                TIM6_DAC_IRQHandler
+                0x00000000080058dc       0x1c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(dac.o)
+                0x00000000080058dc                TIM6_DAC_IRQHandler
  .text._ZN5daisy9DacHandle4InitERKNS0_6ConfigE
-                0x00000000080058fc       0xfc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(dac.o)
-                0x00000000080058fc                daisy::DacHandle::Init(daisy::DacHandle::Config const&)
+                0x00000000080058f8       0xfc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(dac.o)
+                0x00000000080058f8                daisy::DacHandle::Init(daisy::DacHandle::Config const&)
  .text._ZN5daisy9DacHandle10WriteValueENS0_7ChannelEt
-                0x00000000080059f8       0x70 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(dac.o)
-                0x00000000080059f8                daisy::DacHandle::WriteValue(daisy::DacHandle::Channel, unsigned short)
+                0x00000000080059f4       0x70 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(dac.o)
+                0x00000000080059f4                daisy::DacHandle::WriteValue(daisy::DacHandle::Channel, unsigned short)
  .text._ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
-                0x0000000008005a68      0x1cc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(gpio.o)
-                0x0000000008005a68                daisy::GPIO::Init(daisy::Pin, daisy::GPIO::Mode, daisy::GPIO::Pull, daisy::GPIO::Speed)
+                0x0000000008005a64      0x1cc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(gpio.o)
+                0x0000000008005a64                daisy::GPIO::Init(daisy::Pin, daisy::GPIO::Mode, daisy::GPIO::Pull, daisy::GPIO::Speed)
  .text._ZN5daisy4GPIO4ReadEv
-                0x0000000008005c34       0x18 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(gpio.o)
-                0x0000000008005c34                daisy::GPIO::Read()
+                0x0000000008005c30       0x18 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(gpio.o)
+                0x0000000008005c30                daisy::GPIO::Read()
  .text._ZN5daisy4GPIO5WriteEb
-                0x0000000008005c4c       0x14 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(gpio.o)
-                0x0000000008005c4c                daisy::GPIO::Write(bool)
+                0x0000000008005c48       0x14 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(gpio.o)
+                0x0000000008005c48                daisy::GPIO::Write(bool)
  .text.dsy_gpio_init
-                0x0000000008005c60      0x1b8 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(gpio.o)
-                0x0000000008005c60                dsy_gpio_init
+                0x0000000008005c5c      0x1b8 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(gpio.o)
+                0x0000000008005c5c                dsy_gpio_init
  .text.dsy_gpio_write
-                0x0000000008005e18       0x24 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(gpio.o)
-                0x0000000008005e18                dsy_gpio_write
+                0x0000000008005e14       0x24 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(gpio.o)
+                0x0000000008005e14                dsy_gpio_write
  .text._ZN5daisy9I2CHandle4Impl8InitPinsEv
-                0x0000000008005e3c       0x58 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
-                0x0000000008005e3c                daisy::I2CHandle::Impl::InitPins()
+                0x0000000008005e38       0x58 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
+                0x0000000008005e38                daisy::I2CHandle::Impl::InitPins()
  .text.HAL_I2C_MspInit
-                0x0000000008005e94      0x1b4 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
-                0x0000000008005e94                HAL_I2C_MspInit
+                0x0000000008005e90      0x1b4 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
+                0x0000000008005e90                HAL_I2C_MspInit
  .text.dsy_i2c_global_init
-                0x0000000008006048       0x78 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
-                0x0000000008006048                dsy_i2c_global_init
+                0x0000000008006044       0x78 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
+                0x0000000008006044                dsy_i2c_global_init
  .text.DMA1_Stream6_IRQHandler
-                0x00000000080060c0       0x34 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
-                0x00000000080060c0                DMA1_Stream6_IRQHandler
+                0x00000000080060bc       0x34 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
+                0x00000000080060bc                DMA1_Stream6_IRQHandler
  .text.I2C1_EV_IRQHandler
-                0x00000000080060f4        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
-                0x00000000080060f4                I2C1_EV_IRQHandler
+                0x00000000080060f0        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
+                0x00000000080060f0                I2C1_EV_IRQHandler
  .text.I2C2_EV_IRQHandler
-                0x0000000008006100        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
-                0x0000000008006100                I2C2_EV_IRQHandler
+                0x00000000080060fc        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
+                0x00000000080060fc                I2C2_EV_IRQHandler
  .text.I2C3_EV_IRQHandler
-                0x000000000800610c        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
-                0x000000000800610c                I2C3_EV_IRQHandler
+                0x0000000008006108        0xc /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
+                0x0000000008006108                I2C3_EV_IRQHandler
  .text._ZN5daisy9I2CHandle4InitERKNS0_6ConfigE
-                0x0000000008006118      0x12c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
-                0x0000000008006118                daisy::I2CHandle::Init(daisy::I2CHandle::Config const&)
+                0x0000000008006114      0x12c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
+                0x0000000008006114                daisy::I2CHandle::Init(daisy::I2CHandle::Config const&)
  .text._ZN5daisy9I2CHandle16TransmitBlockingEtPhtm
-                0x0000000008006244       0x50 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
-                0x0000000008006244                daisy::I2CHandle::TransmitBlocking(unsigned short, unsigned char*, unsigned short, unsigned long)
+                0x0000000008006240       0x50 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
+                0x0000000008006240                daisy::I2CHandle::TransmitBlocking(unsigned short, unsigned char*, unsigned short, unsigned long)
  .text.startup._GLOBAL__sub_I__ZN5daisy9I2CHandle4Impl10GlobalInitEv
-                0x0000000008006294       0x18 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
+                0x0000000008006290       0x18 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(i2c.o)
  .text._ZN5daisy10QSPIHandle4Impl11WriteEnableEv
-                0x00000000080062ac       0x8c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(qspi.o)
-                0x00000000080062ac                daisy::QSPIHandle::Impl::WriteEnable()
+                0x00000000080062a8       0x8c /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(qspi.o)
+                0x00000000080062a8                daisy::QSPIHandle::Impl::WriteEnable()
+ *fill*         0x0000000008006334        0x4 
  .text._ZN5daisy10QSPIHandle4Impl17DummyCyclesConfigENS0_6Config6DeviceE
                 0x0000000008006338      0x118 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/build/libdaisy.a(qspi.o)
                 0x0000000008006338                daisy::QSPIHandle::Impl::DummyCyclesConfig(daisy::QSPIHandle::Config::Device)

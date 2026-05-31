@@ -460,7 +460,7 @@ static volatile int g_active_voice = 2;        // matches the boot voice
 
 // FSR voice-switch gesture: hold the FSR pressed (volume at/near 0) to cycle.
 // First advance after FIRST_MS; while still held, keep advancing every REPEAT_MS.
-static constexpr uint32_t VOICE_SWITCH_FIRST_MS  = 5000;
+static constexpr uint32_t VOICE_SWITCH_FIRST_MS  = 3000;
 static constexpr uint32_t VOICE_SWITCH_REPEAT_MS = 2000;
 
 // ── Musical mapping ───────────────────────────────────────────────────────────
@@ -1216,7 +1216,7 @@ int main()
         hw.PrintLine("F2 pos=detune F2 prs=wavefold+ringmod");
     else
         hw.PrintLine("F2 prs=wavefold+ringmod (osc2=fixed)");
-    hw.PrintLine("Hold FSR pressed 5s to change voice (then every 2s)");
+    hw.PrintLine("Hold FSR pressed 3s to change voice (then every 2s)");
     hw.PrintLine("MPR121 OK — baseline captured");
     hw.PrintLine("Ready.\n");
 
@@ -1283,8 +1283,8 @@ int main()
 
         // ── FSR-hold voice-switch gesture ───────────────────────────────────
         // Pressing the FSR to (near) silence and holding cycles the voice: first
-        // advance after 5 s, then every 2 s while still held. LEDs flash the new
-        // voice number. Releasing re-arms the 5 s wait.
+        // advance after 3 s, then every 2 s while still held. LEDs flash the new
+        // voice number. Releasing re-arms the 3 s wait.
         bool fsr_pressed = (fsr_raw <= FSR_MIN);   // "low value" = at the mute floor
         if(!fsr_pressed){
             fsr_hold_start = 0;                    // released → disarm

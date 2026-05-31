@@ -70,7 +70,7 @@ If this error appears, remove the `LDFLAGS` line from `Makefile`.
 | Constant | Line ~| Purpose |
 |---|---|---|
 | `VOICES[]` / `g_voice_idx` | ~243 | **Voice bank** + active index. Cycled live by the FSR-hold gesture; `g_voice_idx` initializer = boot voice. See [Voices](#voices) |
-| `VOICE_SWITCH_FIRST_MS` / `_REPEAT_MS` | ~263 | FSR-hold gesture timing (5 s to first switch, then every 2 s) |
+| `VOICE_SWITCH_FIRST_MS` / `_REPEAT_MS` | ~263 | FSR-hold gesture timing (3 s to first switch, then every 2 s) |
 | `TOUCH_THRESHOLD` | 39 | Min delta to register touch |
 | `PRESSURE_MAX_REF[12]` | 40 | Per-electrode 100% pressure delta |
 | `PRESSURE_MIN_REF[12]` | 40 | Per-electrode 0% pressure delta (was `PRESSURE_DEAD_ZONE`) |
@@ -120,8 +120,8 @@ the bank/gesture/header ("Drums"); its fields aren't used for audio.
 ### Switching voices live — FSR-hold gesture
 
 Hold the FSR pressed to the mute floor (`fsr_raw <= FSR_MIN`): the first voice
-advance fires after `VOICE_SWITCH_FIRST_MS` (5 s), then it keeps advancing every
-`VOICE_SWITCH_REPEAT_MS` (2 s) while still held; releasing re-arms the 5 s wait.
+advance fires after `VOICE_SWITCH_FIRST_MS` (3 s), then it keeps advancing every
+`VOICE_SWITCH_REPEAT_MS` (2 s) while still held; releasing re-arms the 3 s wait.
 The cycle **skips voices flagged `no_cycle`** (`cycle_next`) — so the raw drums
 are out, and the gesture steps through the instruments + the Drums MultiVoice.
 Each switch flashes all three LEDs **N times = position in the cycle**
