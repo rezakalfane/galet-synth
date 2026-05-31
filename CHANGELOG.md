@@ -4,6 +4,27 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: Voice abstraction with switchable presets and per-oscillator waveforms`
+- New `Voice` struct bundles a sound's full definition: oscillator stack (per-osc
+  pitch ratio, mix level, and waveform), filter character (base cutoff, sweep
+  depth, resonance), drive amount, and pitch range
+- New `Waveform` enum (`WAVE_TRI`, `WAVE_SINE`, `WAVE_SQUARE`, `WAVE_SAW`) set
+  per oscillator, so one voice can mix shapes (e.g. saw root + square fifth +
+  sine sub). Sine uses a parabolic approximation; square/saw are naive
+- Four presets:
+  - `VOICE_LEAD` — original glass-Moog lead (triangle, finger-2 detune)
+  - `VOICE_BASS` — round & dark power chord (osc2 = fixed perfect fifth, so every
+    note sounds as root + 5th + octave + sub)
+  - `VOICE_BASS_OPEN` — same chord stack, brighter base + wider pressure sweep
+  - `VOICE_BASS_RICH` — mixed waveforms + dark base + huge 13-octave pressure
+    sweep with high resonance for an acid-style filter "wow"
+- Switch sounds by editing a single line: `static constexpr Voice VOICE = ...`
+  — compile-time selection, zero runtime cost (unused branches fold away)
+- Pitch range, cutoff scaling, drive, oscillator tuning, and waveform all now
+  read from the active voice in both the audio callback and the touch loop
+- Boot banner prints the active voice name and range
+- Replaces the previously-dead `FREQ_LOW`/`FREQ_HIGH` constants
+
 ---
 
 ## 2026-04-07

@@ -55,11 +55,116 @@ static constexpr float    LED3_INTENSITY     = 0.1f;
 // than LED_SMOOTH = faster fade-out on lift. 0.0 = instant snap to 0.
 static constexpr float    LED3_RELEASE_SMOOTH = 0.10f;
 
+// ── Voices ──────────────────────────────────────────────────────────────────
+// A "Voice" bundles everything that defines a sound: the oscillator stack
+// (which pitches sound and at what level), the filter/drive character, and the
+// pitch range finger-1 sweeps across. Add a preset below, then point ACTIVE
+// VOICE at it — selection is a compile-time constant, so there is zero runtime
+// cost (the unused branches fold away).
+
+// Oscillator shape — set per oscillator, so one voice can mix (e.g. saw root +
+// square fifth + sine sub). SQUARE and SAW are naive (not band-limited) — they
+// alias at high pitch, but on a low bass voice that just reads as rich harmonics
+// for the filter to chew.
+enum Waveform { WAVE_TRI, WAVE_SINE, WAVE_SQUARE, WAVE_SAW };
+
+struct Voice {
+    const char* name;
+
+    // Pitch range. Finger-1 position 0–1000 maps exponentially across this.
+    float freq_low;
+    float freq_high;
+    float log_freq_ratio;   // = ln(freq_high / freq_low), precomputed (logf isn't constexpr)
+
+    // Oscillator stack. Each oscillator's pitch = fundamental * ratio, and each
+    // has its own waveform. Set a level to 0 to silence an oscillator.
+    float osc1_ratio, osc1_level;  Waveform osc1_wave;   // primary
+    float osc2_ratio, osc2_level;  Waveform osc2_wave;   // second osc (see osc2_detune)
+    float sub_ratio,  sub_level;   Waveform sub_wave;    // weight below
+    float oct_ratio,  oct_level;   Waveform oct_wave;    // shimmer / chord top
+    bool  osc2_detune;              // true  → finger-2 detune controls osc2 pitch (lead)
+                                    // false → osc2 stays at osc2_ratio (e.g. a fixed 5th)
+
+    // Filter character. Base cutoff = freq * cutoff_mult; pressure opens it
+    // by up to cutoff_oct_max octaves on top.
+    float cutoff_mult;
+    float cutoff_oct_max;
+    float resonance;
+
+    // Drive — pressure-controlled waveshaper gain added on top of 1.0.
+    float drive_max;
+};
+
+// Perfect-fifth frequency ratio = 2^(7/12).
+static constexpr float RATIO_FIFTH = 1.49831f;
+
+// ── Voice 0: the original glass-Moog lead ─────────────────────────────────────
+//   F1 pos→pitch, F1 prs→cutoff+vibrato; F2 pos→detune, F2 prs→wavefold+ringmod.
+static constexpr Voice VOICE_LEAD = {
+    "Lead",
+    50.0f, 300.0f, 1.79176f,   // 50–300 Hz, ln(6)
+    1.0f, 0.50f, WAVE_TRI,   // osc1  — root
+    1.0f, 0.22f, WAVE_TRI,   // osc2  — detune-controlled, ratio is just the base
+    0.5f, 0.18f, WAVE_TRI,   // sub   — one octave below
+    2.0f, 0.15f, WAVE_TRI,   // oct   — one octave above
+    true,          // osc2 follows finger-2 detune
+    0.3f, 12.0f, 0.75f,
+    2.5f
+};
+
+// ── Voice 1: round & dark power-chord bass (root + 5th + octave + sub) ─────────
+//   Same touch mappings, but osc2 is a fixed perfect fifth instead of a detune,
+//   so every note sounds as a power chord. Lower range, gentler filter, less
+//   drive → deep and round rather than bright and screaming.
+static constexpr Voice VOICE_BASS = {
+    "Bass",
+    40.0f, 160.0f, 1.38629f,   // 40–160 Hz, ln(4) — sits under the lead
+    1.0f,        0.45f, WAVE_TRI,   // osc1  — root
+    RATIO_FIFTH, 0.30f, WAVE_TRI,   // osc2  — fixed perfect fifth (the power chord)
+    0.5f,        0.34f, WAVE_TRI,   // sub   — extra weight for a round bottom
+    2.0f,        0.20f, WAVE_TRI,   // oct   — top of the power chord
+    false,                // osc2 is a fixed fifth, not finger-2 detune
+    0.25f, 7.0f, 0.50f,   // darker: lower base cutoff, gentler sweep, less resonance
+    1.0f                  // less drive — keep it clean and round
+};
+
+// ── Voice 2: open power-chord bass ────────────────────────────────────────────
+//   Same chord stack as VOICE_BASS, but the filter starts brighter and sweeps
+//   much further with pressure — light touch is still warm, hard press opens it
+//   wide. A touch more resonance and drive for presence as it opens.
+static constexpr Voice VOICE_BASS_OPEN = {
+    "OpenBass",
+    40.0f, 180.0f, 1.50408f,   // 40–180 Hz, ln(4.5) — a little more reach up top
+    1.0f,        0.45f, WAVE_TRI,   // osc1  — root
+    RATIO_FIFTH, 0.30f, WAVE_TRI,   // osc2  — fixed perfect fifth (the power chord)
+    0.5f,        0.30f, WAVE_TRI,   // sub   — slightly less so the openness reads
+    2.0f,        0.22f, WAVE_TRI,   // oct   — top of the power chord
+    false,                // osc2 is a fixed fifth, not finger-2 detune
+    0.5f, 10.0f, 0.65f,   // brighter base + wider pressure sweep + more resonance
+    1.8f                  // more drive — grit comes in as you press
+};
+
+// ── Voice 3: rich power-chord bass with mixed waveforms + huge filter sweep ────
+//   Mixed shapes for body: saw root (harmonic-rich), square fifth (hollow), a
+//   clean sine sub (tight low end), saw octave on top. Starts dark, then
+//   pressure opens the cutoff dramatically (13 octaves) with high resonance —
+//   a vocal, acid-style "wow" as you press harder.
+static constexpr Voice VOICE_BASS_RICH = {
+    "RichBass",
+    40.0f, 160.0f, 1.38629f,   // 40–160 Hz, ln(4)
+    1.0f,        0.40f, WAVE_SAW,    // osc1  — saw root (rich harmonics)
+    RATIO_FIFTH, 0.26f, WAVE_SQUARE, // osc2  — square fifth (hollow contrast)
+    0.5f,        0.32f, WAVE_SINE,   // sub   — clean sine for a tight low end
+    2.0f,        0.18f, WAVE_SAW,    // oct   — saw top of the power chord
+    false,                // osc2 is a fixed fifth, not finger-2 detune
+    0.2f, 13.0f, 0.82f,   // dark base + enormous pressure sweep + high resonance
+    2.2f                  // generous drive — grit blooms with pressure
+};
+
+// ── Active voice — change this one line to switch sounds ──────────────────────
+static constexpr Voice VOICE = VOICE_BASS_RICH;
+
 // ── Musical mapping ───────────────────────────────────────────────────────────
-// Finger 1 position 0–1000 maps across MIDI notes LOW_NOTE to HIGH_NOTE
-// Frequency range: 50Hz (electrode 0) to 300Hz (electrode 11), exponential
-static constexpr float FREQ_LOW  = 50.0f;
-static constexpr float FREQ_HIGH = 300.0f;
 // Set to false to disable all quantization (fully continuous pitch)
 static constexpr bool QUANTIZE_ENABLED = false;
 // Quantize to chromatic scale (all 12 semitones)
@@ -347,9 +452,33 @@ static constexpr float SLEW_F2_R   = 0.9990f; // release (~200ms smooth fade)
 static constexpr float SLEW_AMP_A  = 0.9700f; // attack  (~3ms — snappy but click-free)
 static constexpr float SLEW_AMP_R  = 0.999971f; // release (~5 seconds)
 
+// ── Oscillator waveforms (phase ph in [0,1) → sample in [-1,1]) ───────────────
 // Triangle wave
 static inline float tri(float ph){
     return ph<0.5f?(4.0f*ph-1.0f):(3.0f-4.0f*ph);
+}
+// Sine via parabolic approximation (no libm call) — matches sin(2π·ph).
+static inline float osc_sine(float ph){
+    constexpr float PI = 3.14159265f;
+    float x = ph*2.0f*PI - PI;                 // -π..π (angle shifted by π)
+    float y = 1.27323954f*x - 0.405284735f*x*(x<0?-x:x);
+    y = 0.225f*(y*(y<0?-y:y) - y) + y;         // one refinement pass
+    return -y;                                 // undo the π shift: sin(x+π) = -sin(x)
+}
+// Naive square / saw — alias at high pitch but sound rich on a bass voice.
+static inline float osc_square(float ph){ return ph<0.5f ? 1.0f : -1.0f; }
+static inline float osc_saw(float ph){ return 2.0f*ph - 1.0f; }
+
+// Dispatch on the voice's waveform. VOICE.wave is a compile-time constant, so at
+// -O2 this folds to a single waveform call with no branch.
+static inline float osc(float ph, Waveform w){
+    switch(w){
+        case WAVE_SINE:   return osc_sine(ph);
+        case WAVE_SQUARE: return osc_square(ph);
+        case WAVE_SAW:    return osc_saw(ph);
+        case WAVE_TRI:
+        default:          return tri(ph);
+    }
 }
 
 // Moog 4-pole ladder
@@ -464,24 +593,29 @@ void AudioCallback(AudioHandle::InputBuffer,
         float vib_amt = lfo * s_vibdepth * 0.05f; // max ±~0.05 semitones*depth
         float freq_vib = s_freq * (1.0f + vib_amt);
 
-        // Osc 2 frequency: detuned by s_detune semitones
-        // pow2(s_detune/12) approximated
-        float det_ratio = 1.0f + s_detune * 0.05776f; // linear approx, good for ±1 oct
-        float freq2 = freq_vib * det_ratio;
+        // Osc 2 frequency. Lead: finger-2 detune around the base ratio.
+        // Bass (and any fixed-interval voice): hold osc2_ratio (e.g. a 5th).
+        // VOICE is constexpr, so only the taken branch is compiled in.
+        float freq2;
+        if(VOICE.osc2_detune) {
+            float det_ratio = 1.0f + s_detune * 0.05776f; // linear approx, good for ±1 oct
+            freq2 = freq_vib * VOICE.osc2_ratio * det_ratio;
+        } else {
+            freq2 = freq_vib * VOICE.osc2_ratio;
+        }
 
-        // Sub osc: one octave down
-        float freq_sub = freq_vib * 0.5f;
-        // Octave-up osc: one octave above fundamental — adds air and sparkle
-        float freq_oct = freq_vib * 2.0f;
+        // Sub and octave oscillators (ratios are voice-defined).
+        float freq_sub = freq_vib * VOICE.sub_ratio;
+        float freq_oct = freq_vib * VOICE.oct_ratio;
 
         // Ring mod carrier: slightly above fundamental for metallic beating
         float freq_rm = freq_vib * 1.0f; // unison ring mod (can offset for effect)
 
-        // Oscillators
-        float osc1    = tri(s_phase1)   * 0.50f;
-        float osc2    = tri(s_phase2)   * 0.22f; // detuned copy
-        float sub     = tri(s_phase_sub)* 0.18f; // one octave below
-        float osc_oct = tri(s_phase_oct)* 0.15f; // one octave above — bright shimmer
+        // Oscillators (mix levels are voice-defined).
+        float osc1    = osc(s_phase1,   VOICE.osc1_wave) * VOICE.osc1_level;
+        float osc2    = osc(s_phase2,   VOICE.osc2_wave) * VOICE.osc2_level;
+        float sub     = osc(s_phase_sub,VOICE.sub_wave)  * VOICE.sub_level;
+        float osc_oct = osc(s_phase_oct,VOICE.oct_wave)  * VOICE.oct_level;
 
         // Mix — reduce osc1 slightly to make room for the new octave osc
         float mix = osc1 + osc2 + sub + osc_oct;
@@ -495,7 +629,7 @@ void AudioCallback(AudioHandle::InputBuffer,
 
         // Moog ladder filter — no attack boost (was causing onset clicks)
         float eff_cutoff = clampf(s_cutoff, 20.0f, 20000.0f);
-        float filtered = moog(mix, eff_cutoff, 0.75f, sr);
+        float filtered = moog(mix, eff_cutoff, VOICE.resonance, sr);
 
         // Wavefold distortion (finger 2 pressure)
         float crushed = wavefold(filtered, s_bitcrush);
@@ -507,7 +641,7 @@ void AudioCallback(AudioHandle::InputBuffer,
         out[1][i] = sample;
 
         // Advance phases
-        s_phase1   += freq_vib/sr;  if(s_phase1  >=1.0f)s_phase1  -=1.0f;
+        s_phase1   += freq_vib*VOICE.osc1_ratio/sr;  if(s_phase1  >=1.0f)s_phase1  -=1.0f;
         s_phase2   += freq2   /sr;  if(s_phase2  >=1.0f)s_phase2  -=1.0f;
         s_phase_sub+= freq_sub/sr;  if(s_phase_sub>=1.0f)s_phase_sub-=1.0f;
         s_phase_oct+= freq_oct/sr;  if(s_phase_oct>=1.0f)s_phase_oct-=1.0f;
@@ -677,8 +811,8 @@ int main()
     calibrate_fsr_silent();
 
     // ── Start audio ───────────────────────────────────────────────────────────
-    // Set initial targets before callback fires
-    g_target_freq   = 130.81f;  // C3
+    // Set initial targets before callback fires (voice-relative starting pitch)
+    g_target_freq   = VOICE.freq_low * 2.0f;
     g_target_cutoff = 100.0f;
     g_amp_target    = 0.0f;
     hw.StartAudio(AudioCallback);
@@ -694,8 +828,13 @@ int main()
 
     hw.PrintLine("Glass Moog Synth");
     hw.PrintLine("================");
+    hw.PrintLine("Voice: %s  (%d-%dHz)",
+                 VOICE.name, (int)VOICE.freq_low, (int)VOICE.freq_high);
     hw.PrintLine("F1 pos=pitch  F1 prs=cutoff+vibrato");
-    hw.PrintLine("F2 pos=detune F2 prs=wavefold+ringmod");
+    if(VOICE.osc2_detune)
+        hw.PrintLine("F2 pos=detune F2 prs=wavefold+ringmod");
+    else
+        hw.PrintLine("F2 prs=wavefold+ringmod (osc2=fixed 5th)");
     hw.PrintLine("MPR121 OK — baseline captured");
     hw.PrintLine("Ready.\n");
 
@@ -776,12 +915,12 @@ int main()
             float pos01 = clampf((float)tracked[0].pos / 1000.0f, 0.0f, 1.0f);
             float prs01 = clampf((float)tracked[0].pressure / 100.0f, 0.0f, 1.0f); // hard clamp
 
-            // ── Direct exponential frequency mapping: 50Hz to 300Hz ─────────
-            // freq = 50 * (300/50)^pos01 = 50 * 6^pos01
-            // Using e^x approx: 6^x = e^(x*ln6), ln6=1.7918
-            float earg = pos01 * 1.7918f;
+            // ── Direct exponential frequency mapping across the voice range ──
+            // freq = freq_low * (freq_high/freq_low)^pos01
+            //      = freq_low * e^(pos01 * log_freq_ratio)
+            float earg = pos01 * VOICE.log_freq_ratio;
             float ex   = 1.0f + earg*(1.0f + earg*(0.5f + earg*0.1667f));
-            float freq_continuous = clampf(50.0f * ex, 50.0f, 300.0f);
+            float freq_continuous = clampf(VOICE.freq_low * ex, VOICE.freq_low, VOICE.freq_high);
 
             // Convert to MIDI for quantizer: midi = 69 + 12*log2(freq/440)
             // log2(x) = ln(x)/ln(2); ln approx via y=(x-1)/(x+1) series
@@ -799,7 +938,7 @@ int main()
                 f1_midi_base = quantize_midi(midi_raw);
                 // Convert quantized MIDI back to Hz
                 float qe = (f1_midi_base - 69.0f) * 0.05776f;
-                freq = clampf(440.0f*(1.0f+qe*(1.0f+qe*(0.5f+qe*0.1667f))), 50.0f, 300.0f);
+                freq = clampf(440.0f*(1.0f+qe*(1.0f+qe*(0.5f+qe*0.1667f))), VOICE.freq_low, VOICE.freq_high);
                 f1_sliding = false;
             }
             else
@@ -809,7 +948,7 @@ int main()
                 freq = freq_continuous;
                 f1_sliding = true;
             }
-            freq = clampf(freq, 50.0f, 300.0f);
+            freq = clampf(freq, VOICE.freq_low, VOICE.freq_high);
 
             // Cutoff: base tracks 2× pitch, pressure opens it up
             // Light press = 1× pitch (dark, Moog-like tracking)
@@ -832,19 +971,20 @@ int main()
                 return x*x*x*(x*(x*6.0f - 15.0f) + 10.0f);
             };
 
-            // Cutoff: smootherstep — very dark at low, dramatic in mid, eases at top
+            // Cutoff: smootherstep — very dark at low, dramatic in mid, eases at top.
+            // Base cutoff and sweep depth are voice-defined.
             float prs_cut  = smootherstep(prs01);
-            float cutoff_oct = 12.0f * prs_cut;              // 12 octaves of sweep
+            float cutoff_oct = VOICE.cutoff_oct_max * prs_cut;
             float oct_arg  = cutoff_oct * 0.6931f;
             float oct_mult = 1.0f + oct_arg*(1.0f + oct_arg*(0.5f + oct_arg*(0.1667f + oct_arg*0.0417f)));
-            float cutoff   = clampf(freq * 0.3f * oct_mult, 20.0f, 18000.0f); // screams
+            float cutoff   = clampf(freq * VOICE.cutoff_mult * oct_mult, 20.0f, 18000.0f);
 
             // Vibrato: smoothstep, only activates above 60% pressure
             float vib_in = clampf((prs01 - 0.6f) / 0.4f, 0.0f, 1.0f);
             float vib    = smoothstep(vib_in) * 0.8f;
 
-            // Drive: smoothstep — clean at low, progressively warmer
-            float drive = 1.0f + smoothstep(prs01) * 2.5f;
+            // Drive: smoothstep — clean at low, progressively warmer (voice-defined max)
+            float drive = 1.0f + smoothstep(prs01) * VOICE.drive_max;
 
             g_target_freq    = freq;
             g_target_cutoff  = cutoff;

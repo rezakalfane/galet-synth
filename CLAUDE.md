@@ -66,6 +66,7 @@ If this error appears, remove the `LDFLAGS` line from `Makefile`.
 
 | Constant | Line ~| Purpose |
 |---|---|---|
+| `VOICE` | ~125 | Active sound — `VOICE_LEAD` or `VOICE_BASS`. Change this one line to switch voices |
 | `TOUCH_THRESHOLD` | 39 | Min delta to register touch |
 | `PRESSURE_MAX_REF[12]` | 40 | Per-electrode 100% pressure delta |
 | `PRESSURE_MIN_REF[12]` | 40 | Per-electrode 0% pressure delta (was `PRESSURE_DEAD_ZONE`) |
