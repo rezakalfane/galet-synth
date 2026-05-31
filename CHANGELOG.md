@@ -4,6 +4,11 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Changed — `feat: show active voice and FSR pressure on the serial screen`
+- Serial display gains a `VOICE n/total  Name  (lo-hiHz)` header (updates live as
+  the FSR gesture cycles voices) and an `FSR pressure NNN%` row with a bar
+  (inverse of master volume: 0% unpressed, 100% pressed to the mute floor)
+
 ### Added — `feat: live voice switching via FSR-hold gesture`
 - Voices are now **runtime-switchable** (were compile-time `constexpr`). All
   presets live in a `VOICES[]` bank selected by a `volatile g_voice_idx`

@@ -1291,6 +1291,9 @@ int main()
         if(frame_count < print_every){ System::Delay(10); continue; }
         frame_count = 0;
 
+        hw.PrintLine("VOICE %d/%d  %s  (%d-%dHz)",
+            g_voice_idx + 1, NUM_VOICES, VOICE.name,
+            (int)VOICE.freq_low, (int)VOICE.freq_high);
         hw.PrintLine(" CH | DELTA | BAR");
         hw.PrintLine("----+-------+--------------------");
         for(int i=0;i<N_CH;i++){
@@ -1314,6 +1317,12 @@ int main()
                 hw.PrintLine("  %d  pos: ---  prs: --%%  [                ]",slot+1);
             }
         }
+
+        // FSR (master-volume) pressure: unpressed = 0%, pressed to mute = 100%.
+        int fsr_pct = (int)((1.0f - vol) * 100.0f + 0.5f);
+        if(fsr_pct < 0) fsr_pct = 0; else if(fsr_pct > 100) fsr_pct = 100;
+        make_bar(bar, fsr_pct, 100, 16);
+        hw.PrintLine(" FSR pressure  %3d%%  %s", fsr_pct, bar);
 
         // Audio param display — fixed width, always same line count
         int freq_i  = (int)g_target_freq;
