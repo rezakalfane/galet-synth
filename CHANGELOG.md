@@ -4,6 +4,14 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: per-voice no_cycle flag — exclude voices from the FSR cycle`
+- New `no_cycle` Voice field: voices with it set are skipped by the FSR-hold
+  gesture (still reachable as the boot voice or via the Drums MultiVoice)
+- The four raw drums (Tom/Kick/Snare/Hi-Hat) are now `no_cycle` — the gesture
+  cycles the 8 instruments + the Drums MultiVoice (9 stops) instead of all 13
+- LED flash count and the serial voice number are now the **position in the
+  cycle** (`cycle_pos` / `cycle_total`), not the raw bank index
+
 ### Fixed — `fix: snap DSP state on voice change so voices don't bleed`
 - When the active voice changed (notably between MultiVoice drum taps), the
   continuous slewed state — cutoff (slow-closing), pitch, drive, detune,

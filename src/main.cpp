@@ -112,6 +112,11 @@ struct Voice {
     // Noise tone: 0 = full white noise ("shhh"), 1 = high-passed/bright ("tsss",
     // for hi-hats/cymbals). Default 0 leaves the noise white. See NOISE_HP_COEF.
     float noise_hp;
+
+    // FSR-gesture cycling: true = skip this voice in the cycle (still reachable
+    // as the boot voice or via the Drums MultiVoice). Default false = in cycle.
+    // The raw drums set this so the gesture cycles instruments + Drums only.
+    bool no_cycle;
 };
 
 // Perfect-fifth frequency ratio = 2^(7/12).
@@ -287,7 +292,9 @@ static constexpr Voice VOICE_TOM = {
     // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
     0.70f, 0.3f, 1.0f, 0.0f, 0.10f, 1.0f, 150.0f, 5.0f,  // noise-dominant, instant hit, short tail
     // pitch_env_oct, pitch_env_ms — tom "boww": start 1 oct up, drop in 80 ms
-    1.0f, 80.0f
+    1.0f, 80.0f,
+    0.0f,        // noise_hp
+    true         // no_cycle — reached via the Drums MultiVoice, not the gesture
 };
 
 // ── Voice 9: kick drum (noise-driven) ────────────────────────────────────────
@@ -309,7 +316,9 @@ static constexpr Voice VOICE_KICK = {
     // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
     0.08f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 160.0f, 5.0f,  // soft beater click, instant, short
     // pitch_env_oct, pitch_env_ms — the kick "boom": start 2 oct up, drop in 45 ms
-    2.0f, 45.0f
+    2.0f, 45.0f,
+    0.0f,        // noise_hp
+    true         // no_cycle — reached via the Drums MultiVoice
 };
 
 // ── Voice 10: snare (noise-driven) ───────────────────────────────────────────
@@ -331,7 +340,9 @@ static constexpr Voice VOICE_SNARE = {
     // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
     0.85f, 0.3f, 1.0f, 0.0f, 0.10f, 1.0f, 140.0f, 5.0f,  // noise-dominant rattle, instant, short
     // pitch_env_oct, pitch_env_ms — quick subtle snap
-    0.7f, 30.0f
+    0.7f, 30.0f,
+    0.0f,        // noise_hp
+    true         // no_cycle — reached via the Drums MultiVoice
 };
 
 // ── Voice 11: hi-hat (noise-driven) ──────────────────────────────────────────
@@ -353,7 +364,8 @@ static constexpr Voice VOICE_HIHAT = {
     // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
     0.80f, 0.2f, 1.0f, 0.0f, 0.05f, 1.0f, 160.0f, 3.0f, // noise-led, instant, sizzly tail
     // pitch_env_oct, pitch_env_ms, noise_hp — high-passed bright "tsss"
-    0.0f, 0.0f, 1.0f
+    0.0f, 0.0f, 1.0f,
+    true         // no_cycle — reached via the Drums MultiVoice
 };
 
 // ── Voice 12: MultiVoice "Drums" ──────────────────────────────────────────────
@@ -404,6 +416,29 @@ static constexpr int   MULTI_IDX        = NUM_VOICES - 1;
 static constexpr int   MULTI_ZONES[4]   = { 9, 10, 8, 11 };  // Kick, Snare, Tom, HiHat (bank indices)
 static constexpr float MULTI_INTERVALS[] = { 1.0f, 1.33484f, 1.49831f, 2.0f }; // root, 4th, 5th, octave
 static constexpr int   MULTI_NINTERVALS = (int)(sizeof(MULTI_INTERVALS) / sizeof(MULTI_INTERVALS[0]));
+
+// ── Voice cycling ─────────────────────────────────────────────────────────────
+// Voices with no_cycle = true are skipped by the FSR-hold gesture. These helpers
+// give the count of cyclable voices and the 1-based position of an index among
+// them (used for the LED flash count and the serial display).
+static int cycle_total(){
+    int n = 0;
+    for(int i = 0; i < NUM_VOICES; i++) if(!VOICES[i].no_cycle) n++;
+    return n;
+}
+static int cycle_pos(int idx){
+    int p = 0;
+    for(int i = 0; i <= idx && i < NUM_VOICES; i++) if(!VOICES[i].no_cycle) p++;
+    return p;
+}
+// Next cyclable voice index after `idx` (wraps). Falls back to idx if none.
+static int cycle_next(int idx){
+    for(int step = 1; step <= NUM_VOICES; step++){
+        int n = (idx + step) % NUM_VOICES;
+        if(!VOICES[n].no_cycle) return n;
+    }
+    return idx;
+}
 
 // Selected voice index — set by the FSR-hold gesture, shown in the header.
 // Change the initial value to pick the boot voice.
@@ -1164,7 +1199,7 @@ int main()
     hw.PrintLine("Glass Moog Synth");
     hw.PrintLine("================");
     hw.PrintLine("Voice %d/%d: %s  (%d-%dHz)",
-                 g_voice_idx + 1, NUM_VOICES,
+                 cycle_pos(g_voice_idx), cycle_total(),
                  VOICE.name, (int)VOICE.freq_low, (int)VOICE.freq_high);
     hw.PrintLine("F1 pos=pitch  F1 prs=cutoff+vibrato");
     if(VOICE.osc2_detune)
@@ -1244,10 +1279,11 @@ int main()
             idle_since    = now;
             last_touch_ms = now;
             if((int32_t)(now - fsr_next_switch) >= 0){
-                g_voice_idx = (g_voice_idx + 1) % NUM_VOICES;
+                g_voice_idx = cycle_next(g_voice_idx);         // skip no_cycle voices
+                int pos = cycle_pos(g_voice_idx);
                 hw.PrintLine("[voice %d/%d] %s",
-                             g_voice_idx + 1, NUM_VOICES, VOICES[g_voice_idx].name);
-                flash_voice_leds(g_voice_idx + 1);            // count = voice number
+                             pos, cycle_total(), VOICES[g_voice_idx].name);
+                flash_voice_leds(pos);                         // count = position in the cycle
                 fsr_next_switch = System::GetNow() + VOICE_SWITCH_REPEAT_MS; // re-time after flash
             }
         }
@@ -1510,10 +1546,10 @@ int main()
 
         if(g_voice_idx == MULTI_IDX)
             hw.PrintLine("VOICE %d/%d  Drums [Kick|Snare|Tom|Hat]  -> %s",
-                g_voice_idx + 1, NUM_VOICES, VOICE.name);
+                cycle_pos(g_voice_idx), cycle_total(), VOICE.name);
         else
             hw.PrintLine("VOICE %d/%d  %s  (%d-%dHz)",
-                g_voice_idx + 1, NUM_VOICES, VOICE.name,
+                cycle_pos(g_voice_idx), cycle_total(), VOICE.name,
                 (int)VOICE.freq_low, (int)VOICE.freq_high);
         hw.PrintLine(" CH | DELTA | BAR");
         hw.PrintLine("----+-------+--------------------");

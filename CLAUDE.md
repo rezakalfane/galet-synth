@@ -119,10 +119,13 @@ the bank/gesture/header ("Drums"); its fields aren't used for audio.
 Hold the FSR pressed to the mute floor (`fsr_raw <= FSR_MIN`): the first voice
 advance fires after `VOICE_SWITCH_FIRST_MS` (5 s), then it keeps advancing every
 `VOICE_SWITCH_REPEAT_MS` (2 s) while still held; releasing re-arms the 5 s wait.
-Each switch flashes all three LEDs **N times = voice number** (`flash_voice_leds`)
-and prints `[voice n/total] name`. The gesture freezes the idle-chase /
-rebaseline timers while held. To change the **boot** voice, edit the
-`g_voice_idx` initializer; to change cycle order, reorder `VOICES[]`.
+The cycle **skips voices flagged `no_cycle`** (`cycle_next`) — so the raw drums
+are out, and the gesture steps through the instruments + the Drums MultiVoice.
+Each switch flashes all three LEDs **N times = position in the cycle**
+(`cycle_pos`, via `flash_voice_leds`) and prints `[voice n/total] name`. The
+gesture freezes the idle-chase / rebaseline timers while held. To change the
+**boot** voice, edit the `g_voice_idx` initializer; to change cycle order or
+membership, reorder `VOICES[]` or flip `no_cycle`.
 
 ### Voice struct fields
 
@@ -150,6 +153,7 @@ rebaseline timers while held. To change the **boot** voice, edit the
 | `pitch_env_oct` | Pitch envelope: octaves the pitch starts ABOVE the note at onset, decaying back (0 = off). Kick "boom", tom thump, zap |
 | `pitch_env_ms` | Time the pitch envelope takes to settle to the note |
 | `noise_hp` | Noise tone: 0 = white ("shhh"), 1 = high-passed ("tsss", for hi-hats/cymbals). Uses the global `NOISE_HP_COEF` corner |
+| `no_cycle` | `true` = skip this voice in the FSR-gesture cycle (still reachable as boot voice or via the Drums MultiVoice). The 4 raw drums set this. Default `false` = in cycle |
 
 Envelope/glide are in **milliseconds**, converted to per-sample slew
 coefficients (`ms_to_coeff`) in the audio callback, recomputed on voice change.

@@ -121,10 +121,12 @@ static volatile int    g_voice_idx = 2;  // ← boot voice (index into VOICES[];
 | 13 | `VOICE_DRUMS` | **MultiVoice** — the glass becomes a 4-zone drum kit (see below) |
 
 **Switching voices live — FSR-hold gesture:** press and hold the FSR (down to
-the mute floor). After **5 seconds** the voice advances to the next in the bank,
-and while you keep holding it advances **every 2 seconds**; releasing re-arms the
-5 s wait. Each switch **flashes the LEDs N times** where N is the new voice
-number (voice 1 = 1 flash … voice 7 = 7 flashes), and prints `[voice n/total]`
+the mute floor). After **5 seconds** the voice advances to the next in the
+cycle, and while you keep holding it advances **every 2 seconds**; releasing
+re-arms the 5 s wait. The cycle **skips voices flagged `no_cycle`** — the four
+raw drums are excluded (you play them via the Drums MultiVoice), so the gesture
+steps through the 8 instruments + Drums. Each switch **flashes the LEDs N times**
+where N is the new voice's position in the cycle, and prints `[voice n/total]`
 to serial. (You're at zero volume while holding, so you hear the new voice on
 release.)
 
