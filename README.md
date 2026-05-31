@@ -79,39 +79,78 @@ dfu-util -a 0 -s 0x08000000:leave -D build/tools/test-slider.bin
 On boot you will hear a short beep confirming audio is working. The serial monitor then shows electrode data and finger positions.
 
 **Finger 1** controls the main voice:
-- **Position** (left → right) — pitch from 50 Hz to 300 Hz, quantised to the nearest chromatic note on touch-down, then continuous glide while sliding
+- **Position** (left → right) — pitch across the active voice's range (e.g. 50–300 Hz for `VOICE_LEAD`), continuous, with optional quantise-on-touch-down
 - **Pressure** — opens the low-pass filter from dark/closed to wide open; also adds vibrato and drive at high pressure
 
 **Finger 2** adds timbre modulation:
-- **Position** (left = flat, centre = unison, right = sharp) — detunes the second oscillator up to ±1.5 semitones
-- **Pressure** — adds wavefold distortion (subtle warmth at medium, gritty at high); also gates how much detune is applied
+- **Position** — on voices with `osc2_detune` (e.g. `VOICE_LEAD`), detunes the second oscillator (left = flat, centre = unison, right = sharp); on the others osc2 holds a fixed interval (e.g. a perfect 5th) so position is unused
+- **Pressure** — adds wavefold distortion and, above ~85%, ring modulation (amounts capped per voice by `fold_max` / `ringmod_max`)
+
+The exact character — range, waveforms, filter, drive, effects, envelope — depends on the active **Voice** (see below).
 
 **Calibration:** keep fingers off the glass for 2 seconds after power-on — the baseline is captured automatically. It recaptures every 2 seconds of idle time to compensate for drift.
+
+---
+
+## Voices
+
+The whole sound is defined by a **Voice** — one `constexpr Voice` struct holding
+the oscillator stack, filter character, drive, effect amounts and envelope. The
+firmware ships several presets; the active one is chosen at the top of
+`src/main.cpp` and baked in at compile time (switching requires a rebuild +
+reflash):
+
+```cpp
+static constexpr Voice VOICE = VOICE_BASS_CLOSED;   // ← change to any VOICE_*
+```
+
+| Preset | Character |
+|---|---|
+| `VOICE_LEAD` | Glass-Moog lead — triangle oscillators, finger-2 detune, expressive |
+| `VOICE_BASS` | Round, dark power chord (osc2 = fixed perfect 5th → root + 5th + octave + sub) |
+| `VOICE_BASS_OPEN` | Same chord stack, brighter base and a wider pressure sweep |
+| `VOICE_BASS_RICH` | Mixed saw/square/sine waveforms, dark base, huge acid-style filter sweep |
+| `VOICE_ORGAN` | Clean all-sine organ/flute, higher register, slow chorus shimmer, breath noise |
+| `VOICE_SCREAM` | Aggressive detuned saws, heavy drive, near-self-oscillating resonance, inharmonic metallic ring-mod |
+| `VOICE_BASS_CLOSED` | Deep, muffled sub — filter near the fundamental, soft attack, long tail |
+
+Each voice controls, per oscillator: pitch ratio, mix level and **waveform**
+(`WAVE_TRI` / `WAVE_SINE` / `WAVE_SQUARE` / `WAVE_SAW`); plus filter base cutoff,
+sweep depth, resonance, **keytracking**, drive, **noise**, **ring-mod carrier
+ratio** and ceilings, and per-voice **attack / release / glide** (in ms). To add
+a voice, copy a `VOICE_*` block, retune the fields, and point `VOICE` at it. The
+field-by-field reference lives in `CLAUDE.md` → *Voices*.
+
+> The parameter sections below describe the **DSP mechanics** and the default
+> (`VOICE_LEAD`) values. The specific numbers — oscillator levels/waveforms,
+> cutoff base/sweep, resonance, drive, detune/fold/ring-mod amounts, attack,
+> release and glide — are now **per-voice fields**, not global constants.
 
 ---
 
 ## Signal Chain
 
 ```
-Osc 1  (fundamental, triangle)      × 0.50
-Osc 2  (detuned copy, triangle)     × 0.22   ← finger 2 position controls detune
-Sub    (octave below, triangle)      × 0.18
-Osc Oct (octave above, triangle)     × 0.15
+Osc 1  (root,         per-voice wave)  × osc1_level
+Osc 2  (5th / detune, per-voice wave)  × osc2_level   ← fixed ratio, or finger-2 detune
+Sub    (octave below, per-voice wave)  × sub_level
+Osc Oct (octave above, per-voice wave) × oct_level
+Noise  (white)                          × noise_level
          │
          ▼
     Oscillator mix
          │
-    Ring modulator  ← finger 2 extreme pressure
+    Ring modulator  ← finger 2 extreme pressure (carrier = ringmod_ratio × freq)
          │
-    Waveshaper (fast_tanh drive)  ← finger 1 pressure
+    Waveshaper (fast_tanh drive)  ← finger 1 pressure × drive_max
          │
-    Moog 4-pole ladder filter  ← finger 1 pressure (exponential cutoff sweep)
+    Moog 4-pole ladder filter  ← finger 1 pressure (exponential cutoff sweep, keytracked)
          │
-    Wavefold distortion  ← finger 2 pressure
+    Wavefold distortion  ← finger 2 pressure × fold_max
          │
     Output soft clip (fast_tanh × 1.3)
          │
-    Amplitude envelope
+    Amplitude envelope  (per-voice attack_ms / release_ms)
          │
     L + R out (identical / mono)
 ```
@@ -173,10 +212,16 @@ Number of electrode readings averaged for each baseline capture. Higher = more a
 ## Musical Mapping
 
 ```cpp
-static constexpr float FREQ_LOW  = 50.0f;   // Hz at electrode 0 (left)
-static constexpr float FREQ_HIGH = 300.0f;  // Hz at electrode 11 (right)
+float freq_low;        // Hz at electrode 0 (left)  — per-voice
+float freq_high;       // Hz at electrode 11 (right) — per-voice
+float log_freq_ratio;  // = ln(freq_high / freq_low), precomputed
 ```
-Frequency range of the instrument. The mapping is **exponential** (equal musical intervals per unit of travel), so the spacing feels even as you slide.
+Frequency range of the instrument, **per voice** (`VOICE_BASS` is 40–160 Hz,
+`VOICE_ORGAN` 65–520 Hz, `VOICE_SCREAM` 90–720 Hz, …). The mapping is
+**exponential** (equal musical intervals per unit of travel), so the spacing
+feels even as you slide. `log_freq_ratio` is the precomputed `ln(high/low)` used
+by the mapping (`logf` isn't `constexpr`), so keep it in sync if you change the
+range.
 
 ```cpp
 static const int SCALE[] = {0,1,2,3,4,5,6,7,8,9,10,11}; // chromatic
@@ -199,71 +244,71 @@ After quantising on touch-down, sliding the finger continuously tracks the raw p
 
 ## Envelope Parameters
 
-```cpp
-static constexpr float SLEW_AMP_A  = 0.9700f;  // attack  (~3ms)
-```
-Amplitude attack speed. **Lower** = faster (more percussive). **Higher** = slower fade-in (more organ-like). Range 0.80–0.99. Below 0.95 you may hear onset clicks.
+The amplitude envelope and pitch glide are **per-voice**, specified in
+milliseconds and converted to slew coefficients once at startup
+(`ms_to_coeff`). They live in the `Voice` struct, not as global constants:
 
 ```cpp
-static constexpr float SLEW_AMP_R  = 0.999971f; // release (~5 seconds)
+float attack_ms;    // amp attack  — low = percussive, high = organ-like fade-in
+float release_ms;   // amp release — how long the note sustains after lift-off
+float glide_ms;     // portamento  — pitch glide time between notes
 ```
-Amplitude release speed. This controls how long notes sustain after lifting the finger. Reference values:
 
-| Value | Approximate release time |
-|---|---|
-| `0.9990f` | ~100 ms |
-| `0.9995f` | ~200 ms |
-| `0.9998f` | ~500 ms |
-| `0.99993f` | ~2 seconds |
-| `0.999971f` | ~5 seconds |
-| `0.999986f` | ~10 seconds |
+Rough feel: `attack_ms` 2–10 ms is snappy/plucky, 20–50 ms is soft;
+`release_ms` 100–300 ms is tight, 500 ms+ leaves a long tail; `glide_ms` ~8 ms
+feels immediate (organ), ~40 ms gives smooth lead slides. Very short attacks
+(<1 ms) can click. Per-voice values are listed in each `VOICE_*` block.
 
 ---
 
 ## Filter Parameters
 
-```cpp
-float cutoff_oct = 12.0f * prs_cut;   // octaves of sweep
-```
-Total filter sweep range in octaves. At 12 octaves and a base of `0.3 × freq`, full pressure opens the filter from near-silent to 18 kHz at any pitch. **Raise** for more dramatic sweep; the practical ceiling is about 14 octaves before the filter becomes numerically unstable.
+The cutoff is a Moog 4-pole ladder swept by finger-1 pressure. Its shape is set
+by per-voice fields:
 
 ```cpp
-float cutoff = clampf(freq * 0.3f * oct_mult, 20.0f, 18000.0f);
+float cutoff_oct = VOICE.cutoff_oct_max * prs_cut;            // octaves of sweep
+float track_freq = freq;                                     // scaled by VOICE.keytrack
+float cutoff     = clampf(track_freq * VOICE.cutoff_mult * oct_mult, 20.0f, 18000.0f);
+float filtered   = moog(mix, eff_cutoff, VOICE.resonance, sr);
 ```
-- `0.3f` — base multiplier. Sets where the filter sits at zero pressure relative to the played note. `0.25` is very dark; `0.5` is slightly brighter at rest.
-- `18000.0f` — hard ceiling in Hz. Raise to `20000.0f` to allow the filter to scream at its absolute maximum.
 
-```cpp
-float filtered = moog(mix, eff_cutoff, 0.75f, sr);
-```
-Filter resonance (Q). At `0.75` the filter peak is very audible and approaching self-oscillation. **Raise toward 1.0** for more resonance scream (will self-oscillate above ~0.85 depending on cutoff frequency). **Lower toward 0.3** for a smoother, warmer sound.
+- **`cutoff_mult`** — base cutoff relative to the (keytracked) note. `0.25` very
+  dark, `0.5`+ brighter at rest, `~1.0` sits right on the fundamental (muffled).
+- **`cutoff_oct_max`** — total sweep in octaves. `2` barely opens (closed bass);
+  `13` is an explosive acid sweep. Practical ceiling ~14 before instability.
+- **`resonance`** — ladder Q. `0.3` smooth/warm, `0.75` very vocal, `~0.9`
+  whistles near self-oscillation (scream).
+- **`keytrack`** (0..1) — how much the cutoff base follows pitch. `1.0` = full
+  tracking; lower values hold the cutoff down as you play higher, for a more
+  consistent tone across the range.
 
-```cpp
-float prs_exp  = prs01 * prs01 * prs01;   // power-3 pressure curve for cutoff
-```
-Pressure curve shape for the filter. Power-3 (cubic) stays dark through the first half of pressure and opens explosively in the upper range. **Power-2** is more responsive at low pressure. **Power-4** stays even darker until you really press.
+The pressure→cutoff curve itself is a fixed `smootherstep` (6x⁵−15x⁴+10x³) —
+dark at low pressure, steep through the middle, easing at the top.
 
 ---
 
 ## Oscillator Mix
 
-All oscillators are triangle waves. Adjust amplitudes to taste:
+Each oscillator's level, pitch ratio and **waveform** are per-voice fields; the
+audio engine reads them from the active `VOICE`:
 
 ```cpp
-float osc1    = tri(s_phase1)   * 0.50f;   // fundamental
-float osc2    = tri(s_phase2)   * 0.22f;   // detuned copy (finger 2 position)
-float sub     = tri(s_phase_sub)* 0.18f;   // one octave below
-float osc_oct = tri(s_phase_oct)* 0.15f;   // one octave above
+float osc1    = osc(s_phase1,   VOICE.osc1_wave) * VOICE.osc1_level;   // root
+float osc2    = osc(s_phase2,   VOICE.osc2_wave) * VOICE.osc2_level;   // 5th / detune
+float sub     = osc(s_phase_sub,VOICE.sub_wave)  * VOICE.sub_level;    // octave below
+float osc_oct = osc(s_phase_oct,VOICE.oct_wave)  * VOICE.oct_level;    // octave above
+// + white noise × VOICE.noise_level
 ```
 
-Total mix amplitude = 0.50 + 0.22 + 0.18 + 0.15 = 1.05. Keep the sum below ~1.2 to avoid driving the waveshaper too hard by default.
+Keep the sum of the levels (the `VOICE_LEAD` default is 0.50 + 0.22 + 0.18 +
+0.15 = 1.05) below ~1.2 to avoid driving the waveshaper too hard by default.
 
-Oscillator frequencies:
-- **osc1**: fundamental + vibrato
-- **osc2**: fundamental × `det_ratio` (detune from finger 2)
-- **sub**: fundamental × 0.5 (one octave below)
-- **osc_oct**: fundamental × 2.0 (one octave above)
-- **rm_carrier**: fundamental (ring mod only, not summed into mix directly)
+Oscillator frequencies = `freq_vib × ratio`:
+- **osc1**: `osc1_ratio` (usually 1.0) + vibrato
+- **osc2**: `osc2_ratio` — a fixed interval (e.g. `RATIO_FIFTH`, or a 1.005–1.008 chorus/scream detune), or finger-2 detune when `osc2_detune` is `true`
+- **sub** / **osc_oct**: `sub_ratio` (0.5) / `oct_ratio` (2.0)
+- **rm_carrier**: `ringmod_ratio × freq` (ring mod only; non-integer = bell/metallic)
 
 ---
 
@@ -275,14 +320,20 @@ float detune_pos  = (pos01 - 0.5f) * 3.0f;   // ±1.5 semitones
 Maximum detune range. Finger 2 at centre = no detune. Left = flat, right = sharp. Range `3.0f` = ±1.5 semitones (subtle chorus). Raise to `12.0f` for a full ±6 semitone spread.
 
 ```cpp
-float bc  = smootherstep2(ss3) * 0.15f;
+float bc  = smootherstep2(ss3) * VOICE.fold_max;   // per-voice ceiling
 ```
-Wavefold distortion maximum amount. `0.15` = subtle warmth at maximum pressure. Raise to `0.35` for audible grit, `0.60` for heavy distortion. The triple-smootherstep curve means the effect only arrives at high pressure regardless of this cap.
+Wavefold distortion maximum amount (`fold_max`). `0.15` = subtle warmth at
+maximum pressure; `0.35` is audible grit, `0.60` heavy. `0.0` disables it. The
+triple-smootherstep curve means the effect only arrives at high pressure
+regardless of the ceiling.
 
 ```cpp
-float rm = smoothstep2(rm_in) * 0.15f;   // ring mod cap
+float rm = smoothstep2(rm_in) * VOICE.ringmod_max;   // per-voice ceiling
 ```
-Ring modulation maximum wet level. Only activates above 85% finger 2 pressure. `0.15` is barely perceptible — raise to `0.40` for a more metallic character.
+Ring modulation maximum wet level (`ringmod_max`). Only activates above 85%
+finger-2 pressure. `0.15` is subtle; `0.40` is strongly metallic. The carrier
+pitch is `ringmod_ratio × freq` — set it non-integer (e.g. `2.5`) for
+inharmonic, clangorous bell tones (as `VOICE_SCREAM` does).
 
 ---
 
@@ -290,15 +341,18 @@ Ring modulation maximum wet level. Only activates above 85% finger 2 pressure. `
 
 All slew parameters use a one-pole lowpass form: `s = s × pole + target × (1 − pole)`. Higher pole value = slower response.
 
+These remaining constants are **global** (shared by all voices):
+
 | Constant | Value | Response | Controls |
 |---|---|---|---|
-| `SLEW_FREQ` | 0.9985 | ~14 ms | Pitch glide between notes |
-| `SLEW_CUT` | 0.9800 | ~1 ms | Filter cutoff opening speed |
+| `SLEW_CUT` | 0.9994 | ~35 ms | Filter cutoff opening speed — smooths the stepped, integer-quantised pressure targets coming from the ~12–16 Hz touch loop |
 | `SLEW_MISC` | 0.9900 | ~2 ms | Drive and vibrato |
 | `SLEW_F2_A` | 0.9800 | ~10 ms | Finger 2 effect attack |
 | `SLEW_F2_R` | 0.9990 | ~200 ms | Finger 2 effect release |
-| `SLEW_AMP_A` | 0.9700 | ~3 ms | Amplitude attack |
-| `SLEW_AMP_R` | 0.999971 | ~5 s | Amplitude release |
+
+Pitch glide and the amplitude attack/release are now **per-voice** (`glide_ms`,
+`attack_ms`, `release_ms`) rather than the former global `SLEW_FREQ` /
+`SLEW_AMP_A` / `SLEW_AMP_R` — see [Voices](#voices) and Envelope Parameters.
 
 ---
 
@@ -374,7 +428,7 @@ POS  |----------1--------------------2----------|
 | MPR121 not found (scanner works) | Audio ISR interfering with I2C | Ensure MPR121 init is before `StartAudio()` |
 | All deltas stuck at 0 | Wrong register address | Electrode data starts at 0x04, not 0x1C |
 | Baseline much lower than raw | Baseline not settled | Increase post-init delay or use software baseline |
-| Clicks on note start | Attack too fast | Raise `SLEW_AMP_A` toward 0.97 |
+| Clicks on note start | Attack too fast | Raise the active voice's `attack_ms` (e.g. to 3–5 ms) |
 | False touches at threshold 5 | Glass vibration noise | Raise `TOUCH_THRESHOLD` to 7–10 (update `PRESSURE_DEAD_ZONE` to match) |
 | Clicks on note end | Cutoff jumps on lift | Cutoff should track amplitude during release — check the release coupling code |
 | False touches | Threshold too low | Raise `TOUCH_THRESHOLD` |
@@ -391,8 +445,10 @@ POS  |----------1--------------------2----------|
 
 - **MIDI output** — map finger 1 position to MIDI note + pitch bend, pressure to aftertouch
 - **Reverb** — a simple Schroeder reverb or plate reverb tail would suit the long release
-- **Different waveforms** — swap `tri()` for a sawtooth or add a square wave to osc1 for more edge
-- **Vibrato LFO sync** — tie LFO rate to tempo from an external clock input
+- **Runtime voice switching** — voices are compile-time today; a gesture or extra electrode could select among the `VOICE_*` presets live
+- **Per-voice vibrato / LFO routing** — LFO rate, depth and destination (filter/amp) are still global; moving them into the `Voice` would unlock auto-wah / tremolo
+- **Pitch envelope** — a fast pitch blip on attack for kick/zap/pluck transients
+- **More voices** — the `Voice` struct makes new presets cheap; bells, pads, leads all fit
 - **Second glass slider** — add a second MPR121 for a two-dimensional control surface
 - **Custom slumped glass** — kiln-formed glass (borosilicate, Bullseye 96) with controlled thickness gives stronger and more uniform signal than drinking glass walls
 

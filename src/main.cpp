@@ -93,6 +93,16 @@ struct Voice {
 
     // Drive — pressure-controlled waveshaper gain added on top of 1.0.
     float drive_max;
+
+    // ── Extras (appended so existing field order stays stable) ────────────────
+    float noise_level;     // white noise mixed into the oscillator stack (0 = none)
+    float keytrack;        // 0..1 — how much the cutoff follows pitch (1 = full)
+    float ringmod_ratio;   // ring-mod carrier pitch ratio (1.0 = unison; non-int = bell/metallic)
+    float ringmod_max;     // max ring-mod wet from finger-2 pressure
+    float fold_max;        // max wavefold amount from finger-2 pressure
+    float attack_ms;       // amp envelope attack time
+    float release_ms;      // amp envelope + filter-close release time
+    float glide_ms;        // portamento (pitch glide) time
 };
 
 // Perfect-fifth frequency ratio = 2^(7/12).
@@ -109,7 +119,9 @@ static constexpr Voice VOICE_LEAD = {
     2.0f, 0.15f, WAVE_TRI,   // oct   — one octave above
     true,          // osc2 follows finger-2 detune
     0.3f, 12.0f, 0.75f,
-    2.5f
+    2.5f,
+    // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
+    0.0f, 1.0f, 1.0f, 0.15f, 0.18f, 4.0f, 400.0f, 40.0f
 };
 
 // ── Voice 1: round & dark power-chord bass (root + 5th + octave + sub) ─────────
@@ -125,7 +137,9 @@ static constexpr Voice VOICE_BASS = {
     2.0f,        0.20f, WAVE_TRI,   // oct   — top of the power chord
     false,                // osc2 is a fixed fifth, not finger-2 detune
     0.25f, 7.0f, 0.50f,   // darker: lower base cutoff, gentler sweep, less resonance
-    1.0f                  // less drive — keep it clean and round
+    1.0f,                 // less drive — keep it clean and round
+    // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
+    0.0f, 1.0f, 1.0f, 0.12f, 0.12f, 6.0f, 300.0f, 25.0f
 };
 
 // ── Voice 2: open power-chord bass ────────────────────────────────────────────
@@ -141,7 +155,9 @@ static constexpr Voice VOICE_BASS_OPEN = {
     2.0f,        0.22f, WAVE_TRI,   // oct   — top of the power chord
     false,                // osc2 is a fixed fifth, not finger-2 detune
     0.5f, 10.0f, 0.65f,   // brighter base + wider pressure sweep + more resonance
-    1.8f                  // more drive — grit comes in as you press
+    1.8f,                 // more drive — grit comes in as you press
+    // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
+    0.0f, 1.0f, 1.0f, 0.15f, 0.15f, 5.0f, 350.0f, 25.0f
 };
 
 // ── Voice 3: rich power-chord bass with mixed waveforms + huge filter sweep ────
@@ -158,7 +174,9 @@ static constexpr Voice VOICE_BASS_RICH = {
     2.0f,        0.18f, WAVE_SAW,    // oct   — saw top of the power chord
     false,                // osc2 is a fixed fifth, not finger-2 detune
     0.2f, 13.0f, 0.82f,   // dark base + enormous pressure sweep + high resonance
-    2.2f                  // generous drive — grit blooms with pressure
+    2.2f,                 // generous drive — grit blooms with pressure
+    // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
+    0.0f, 1.0f, 1.0f, 0.20f, 0.20f, 3.0f, 250.0f, 18.0f   // snappy + fast acid glide
 };
 
 // ── Voice 4: clean sine organ / flute (a melodic, non-bass departure) ─────────
@@ -176,7 +194,9 @@ static constexpr Voice VOICE_ORGAN = {
     2.0f,    0.28f, WAVE_SINE,  // oct   — octave-up air (4')
     false,                      // osc2 is a fixed chorus detune, not finger-2 detune
     2.0f, 5.0f, 0.20f,          // mostly-open clean filter, gentle pressure lift, low res
-    0.8f                        // light drive — pressure adds subtle warmth, stays pure
+    0.8f,                       // light drive — pressure adds subtle warmth, stays pure
+    // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
+    0.03f, 1.0f, 1.0f, 0.05f, 0.0f, 8.0f, 120.0f, 8.0f   // breath chiff, fast on/off, no glide
 };
 
 // ── Voice 5: screaming aggressive lead ────────────────────────────────────────
@@ -194,7 +214,9 @@ static constexpr Voice VOICE_SCREAM = {
     2.0f,    0.30f, WAVE_SAW,   // oct   — octave up for bright, cutting scream
     false,                      // osc2 is a fixed detune, not finger-2 controlled
     3.0f, 11.0f, 0.90f,         // bright base + wide sweep + near-self-osc resonance
-    4.0f                        // heavy drive — saturated and aggressive
+    4.0f,                       // heavy drive — saturated and aggressive
+    // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
+    0.05f, 1.0f, 2.5f, 0.40f, 0.30f, 2.0f, 200.0f, 35.0f // hiss + inharmonic metallic ring-mod
 };
 
 // ── Voice 6: very closed, dark sub bass ───────────────────────────────────────
@@ -212,11 +234,13 @@ static constexpr Voice VOICE_BASS_CLOSED = {
     2.0f,        0.10f, WAVE_TRI,    // oct   — barely there, keep it dark
     false,                      // osc2 is a fixed fifth, not finger-2 detune
     1.0f, 2.0f, 0.30f,          // cutoff sits near the fundamental, tiny sweep, low res
-    0.5f                        // minimal drive — stays clean and round
+    0.5f,                       // minimal drive — stays clean and round
+    // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
+    0.0f, 0.6f, 1.0f, 0.0f, 0.0f, 10.0f, 500.0f, 30.0f   // soft, long tail, less keytrack, clean
 };
 
 // ── Active voice — change this one line to switch sounds ──────────────────────
-static constexpr Voice VOICE = VOICE_BASS_CLOSED;
+static constexpr Voice VOICE = VOICE_BASS_RICH;
 
 // ── Musical mapping ───────────────────────────────────────────────────────────
 // Set to false to disable all quantization (fully continuous pitch)
@@ -491,9 +515,14 @@ static float s_lfo_phase = 0.0f;
 // Moog ladder filter state
 static float s_flt[4]    = {0,0,0,0};
 
+// White-noise generator state (xorshift32) for the per-voice noise oscillator.
+static uint32_t s_noise_rng = 0x1234567u;
+
 // Slew rates (per sample at 48 kHz)
-// Lower value = faster response
-static constexpr float SLEW_FREQ   = 0.9985f; // pitch glide
+// Lower value = faster response.
+// NOTE: pitch glide and the amp attack/release are now per-voice (see Voice
+// glide_ms / attack_ms / release_ms), converted to coefficients in the audio
+// callback. The constants below are the ones still shared by all voices.
 // Cutoff opening slew. The target is recomputed only at the touch-loop rate
 // (~12-16 Hz) and pressure is quantized to integer %, so a too-fast slew lets
 // each coarse step through as zipper/stair-stepping. ~35 ms interpolates across
@@ -504,11 +533,12 @@ static constexpr float SLEW_MISC   = 0.9900f; // drive/vib
 static constexpr float SLEW_F2_A   = 0.9800f; // attack  (~10ms)
 static constexpr float SLEW_F2_R   = 0.9990f; // release (~200ms smooth fade)
 
-// Separate attack and release for amplitude envelope
-// Attack: very fast (~0.5ms) — snappy pluck feel
-// Release: moderate (~80ms) — clean tail when finger lifts
-static constexpr float SLEW_AMP_A  = 0.9700f; // attack  (~3ms — snappy but click-free)
-static constexpr float SLEW_AMP_R  = 0.999971f; // release (~5 seconds)
+// Convert a one-pole time constant in milliseconds to a per-sample slew
+// coefficient: y += (1-coeff)*(target-y) reaches ~63% after `ms`.
+static inline float ms_to_coeff(float ms, float sr){
+    if(ms <= 0.0f) return 0.0f;            // instant
+    return expf(-1.0f / (ms * 0.001f * sr));
+}
 
 // ── Oscillator waveforms (phase ph in [0,1) → sample in [-1,1]) ───────────────
 // Triangle wave
@@ -602,12 +632,23 @@ void AudioCallback(AudioHandle::InputBuffer,
     float tmvol  = g_master_vol;
     float sr     = hw.AudioSampleRate();
 
+    // Per-voice envelope/glide coefficients. VOICE is a compile-time constant,
+    // so these only need computing once (expf isn't constexpr).
+    static bool  s_coeff_init = false;
+    static float s_glide_c, s_atk_c, s_rel_c;
+    if(!s_coeff_init){
+        s_glide_c = ms_to_coeff(VOICE.glide_ms,   sr);
+        s_atk_c   = ms_to_coeff(VOICE.attack_ms,  sr);
+        s_rel_c   = ms_to_coeff(VOICE.release_ms, sr);
+        s_coeff_init = true;
+    }
+
     for(size_t i=0;i<size;i++)
     {
         // Slew all parameters
-        s_freq    = s_freq   *SLEW_FREQ + tfreq*(1.0f-SLEW_FREQ);
-        // Cutoff: fast when opening (attack), slow when closing (release)
-        { float sc = (tcut > s_cutoff) ? SLEW_CUT : SLEW_AMP_R;
+        s_freq    = s_freq   *s_glide_c + tfreq*(1.0f-s_glide_c);
+        // Cutoff: fast when opening (smoothed), slow when closing (with release)
+        { float sc = (tcut > s_cutoff) ? SLEW_CUT : s_rel_c;
           s_cutoff = s_cutoff * sc + tcut * (1.0f - sc); }
         s_drive   = s_drive   * SLEW_MISC + tdrv * (1.0f - SLEW_MISC);
         s_vibdepth= s_vibdepth* SLEW_MISC + tvib * (1.0f - SLEW_MISC);
@@ -618,8 +659,8 @@ void AudioCallback(AudioHandle::InputBuffer,
           s_bitcrush = s_bitcrush * sa + tbc  * (1.0f - sa); }
         { float sa = trm      > s_ringmod  ? SLEW_F2_A : SLEW_F2_R;
           s_ringmod  = s_ringmod  * sa + trm  * (1.0f - sa); }
-        // Asymmetric envelope: fast attack, slower release
-        float slew_amp = (tamp > s_amp) ? SLEW_AMP_A : SLEW_AMP_R;
+        // Asymmetric envelope: per-voice attack (rising) and release (falling)
+        float slew_amp = (tamp > s_amp) ? s_atk_c : s_rel_c;
         s_amp = s_amp * slew_amp + tamp * (1.0f - slew_amp);
         // Master volume slew (smooths FSR jitter / 16 Hz update steps).
         s_master_vol = s_master_vol * SLEW_MISC + tmvol * (1.0f - SLEW_MISC);
@@ -666,8 +707,9 @@ void AudioCallback(AudioHandle::InputBuffer,
         float freq_sub = freq_vib * VOICE.sub_ratio;
         float freq_oct = freq_vib * VOICE.oct_ratio;
 
-        // Ring mod carrier: slightly above fundamental for metallic beating
-        float freq_rm = freq_vib * 1.0f; // unison ring mod (can offset for effect)
+        // Ring mod carrier. ringmod_ratio=1.0 is unison; non-integer ratios give
+        // inharmonic bell/metallic tones.
+        float freq_rm = freq_vib * VOICE.ringmod_ratio;
 
         // Oscillators (mix levels are voice-defined).
         float osc1    = osc(s_phase1,   VOICE.osc1_wave) * VOICE.osc1_level;
@@ -675,8 +717,18 @@ void AudioCallback(AudioHandle::InputBuffer,
         float sub     = osc(s_phase_sub,VOICE.sub_wave)  * VOICE.sub_level;
         float osc_oct = osc(s_phase_oct,VOICE.oct_wave)  * VOICE.oct_level;
 
-        // Mix — reduce osc1 slightly to make room for the new octave osc
-        float mix = osc1 + osc2 + sub + osc_oct;
+        // White noise (xorshift32 → -1..1), voice-defined level. Adds breath /
+        // chiff / hiss. The `if` folds away when a voice sets noise_level = 0.
+        float noise = 0.0f;
+        if(VOICE.noise_level > 0.0f){
+            s_noise_rng ^= s_noise_rng << 13;
+            s_noise_rng ^= s_noise_rng >> 17;
+            s_noise_rng ^= s_noise_rng << 5;
+            noise = ((float)(int32_t)s_noise_rng * (1.0f/2147483648.0f)) * VOICE.noise_level;
+        }
+
+        // Mix oscillator stack + noise
+        float mix = osc1 + osc2 + sub + osc_oct + noise;
 
         // Ring modulation (finger 2 pressure → metallic/bell edge)
         float rm_carrier = tri(s_phase_rm);
@@ -1035,7 +1087,14 @@ int main()
             float cutoff_oct = VOICE.cutoff_oct_max * prs_cut;
             float oct_arg  = cutoff_oct * 0.6931f;
             float oct_mult = 1.0f + oct_arg*(1.0f + oct_arg*(0.5f + oct_arg*(0.1667f + oct_arg*0.0417f)));
-            float cutoff   = clampf(freq * VOICE.cutoff_mult * oct_mult, 20.0f, 18000.0f);
+            // Keytracking: how much the cutoff base follows pitch. keytrack=1 is
+            // full tracking (cutoff ∝ freq); <1 holds the cutoff lower as pitch
+            // rises, for a more consistent tone across the range. (constexpr →
+            // the common keytrack=1 case folds to no powf.)
+            float track_freq = (VOICE.keytrack >= 0.999f)
+                ? freq
+                : VOICE.freq_low * powf(freq / VOICE.freq_low, VOICE.keytrack);
+            float cutoff   = clampf(track_freq * VOICE.cutoff_mult * oct_mult, 20.0f, 18000.0f);
 
             // Vibrato: smoothstep, only activates above 60% pressure
             float vib_in = clampf((prs01 - 0.6f) / 0.4f, 0.0f, 1.0f);
@@ -1119,7 +1178,7 @@ int main()
             // with real deliberate pressure, stays subtle even at max
             float ss2 = smootherstep2(prs01);
             float ss3 = smootherstep2(ss2);   // triple smootherstep — very lazy
-            float bc  = smootherstep2(ss3) * 0.15f; // needs real deliberate pressure
+            float bc  = smootherstep2(ss3) * VOICE.fold_max; // ceiling is voice-defined
 
             // Detune: smoothstep on position offset from centre
             auto smoothstep2 = [](float x) -> float {
@@ -1129,9 +1188,9 @@ int main()
             // Detune amount scales with pressure via smoothstep — no detune at low pressure
             float det_prs = smoothstep2(prs01);
 
-            // Ring mod: smoothstep, only above 85% pressure
+            // Ring mod: smoothstep, only above 85% pressure (ceiling voice-defined)
             float rm_in = clampf((prs01 - 0.85f) / 0.15f, 0.0f, 1.0f);
-            float rm    = smoothstep2(rm_in) * 0.15f;
+            float rm    = smoothstep2(rm_in) * VOICE.ringmod_max;
 
             g_target_detune = detune_pos * det_prs; // pressure gates detune amount
             g_bitcrush      = bc;

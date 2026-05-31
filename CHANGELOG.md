@@ -4,6 +4,25 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: per-voice envelope/glide/keytracking and new effect colors`
+- Amp **attack/release** and pitch **glide** are now per-voice (`attack_ms`,
+  `release_ms`, `glide_ms`), specified in milliseconds and converted to slew
+  coefficients once at startup (`ms_to_coeff`). Previously global constants
+  (`SLEW_FREQ`/`SLEW_AMP_A`/`SLEW_AMP_R`) shared by every voice — so plucks,
+  pads and stabs now feel distinct
+- **Filter keytracking** per voice (`keytrack`, 0..1) — how much the cutoff base
+  follows pitch; <1 keeps the tone consistent across the range
+- New per-voice effect parameters:
+  - `noise_level` — white noise (xorshift32) mixed into the stack for breath /
+    chiff / hiss
+  - `ringmod_ratio` — ring-mod carrier pitch ratio; non-integer values give
+    inharmonic bell/metallic tones (was hardcoded to unison)
+  - `ringmod_max` / `fold_max` — per-voice ceilings for the finger-2 effects
+- Preset voicing applied: e.g. `ORGAN` gains breath noise + fast on/off,
+  `SCREAM` gains an inharmonic 2.5× metallic ring-mod + snappy attack,
+  `BASS_CLOSED` gains a soft attack, long tail and reduced keytracking
+- The `noise` and `keytrack == 1` paths fold away at compile time when unused
+
 ### Added — `feat: Voice abstraction with switchable presets and per-oscillator waveforms`
 - New `Voice` struct bundles a sound's full definition: oscillator stack (per-osc
   pitch ratio, mix level, and waveform), filter character (base cutoff, sweep
