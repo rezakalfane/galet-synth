@@ -239,6 +239,26 @@ static constexpr Voice VOICE_BASS_CLOSED = {
     0.0f, 0.6f, 1.0f, 0.0f, 0.0f, 10.0f, 500.0f, 30.0f   // soft, long tail, less keytrack, clean
 };
 
+// ── Voice 7: warm ensemble pad ────────────────────────────────────────────────
+//   A lush, evolving pad. Two saws a hair apart (1.006×) give an ensemble/chorus
+//   width, a soft triangle sub adds body, an airy sine octave sits on top. A
+//   moderate, low-resonance filter keeps it warm rather than bright. The pad
+//   character comes from the envelope: a slow ~500 ms swell in and a long ~2 s
+//   tail, so notes bloom and linger. A whisper of noise adds air.
+static constexpr Voice VOICE_PAD = {
+    "Pad",
+    70.0f, 560.0f, 2.07944f,   // 70–560 Hz, ln(8) — mid melodic register
+    1.0f,    0.32f, WAVE_SAW,   // osc1  — saw root
+    1.006f,  0.30f, WAVE_SAW,   // osc2  — detuned saw → lush ensemble width
+    0.5f,    0.22f, WAVE_TRI,   // sub   — soft triangle body
+    2.0f,    0.18f, WAVE_SINE,  // oct   — airy sine top
+    false,                      // osc2 is a fixed chorus detune, not finger-2
+    1.2f, 3.0f, 0.20f,          // warm & closed: low base cutoff, gentle sweep, low res
+    0.6f,                       // gentle drive — stays smooth
+    // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
+    0.015f, 1.0f, 1.0f, 0.0f, 0.08f, 2200.0f, 2000.0f, 80.0f   // long swell, long tail
+};
+
 // ── Voice bank ────────────────────────────────────────────────────────────────
 // All voices, in cycle order. Holding the FSR pressed steps through these live
 // (see the voice-switch gesture in the main loop). Edit the order here to taste.
@@ -250,12 +270,13 @@ static constexpr Voice VOICES[] = {
     VOICE_ORGAN,
     VOICE_SCREAM,
     VOICE_BASS_CLOSED,
+    VOICE_PAD,
 };
 static constexpr int NUM_VOICES = (int)(sizeof(VOICES) / sizeof(VOICES[0]));
 
 // Active voice index — written by the touch loop (gesture), read by the audio
 // callback each block. Change the initial value to pick the boot voice.
-static volatile int g_voice_idx = 0;   // 0 = Lead
+static volatile int g_voice_idx = 7;   // 7 = Pad
 
 // FSR voice-switch gesture: hold the FSR pressed (volume at/near 0) to cycle.
 // First advance after FIRST_MS; while still held, keep advancing every REPEAT_MS.

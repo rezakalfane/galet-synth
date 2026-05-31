@@ -88,7 +88,7 @@ the tone lives in one `Voice` struct (`src/main.cpp:71`). All presets sit in the
 
 ```cpp
 static constexpr Voice VOICES[] = { VOICE_LEAD, VOICE_BASS, ... };
-static volatile int    g_voice_idx = 0;   // active voice — boot value here
+static volatile int    g_voice_idx = 7;   // active voice — boot value here (7 = Pad)
 ```
 
 The audio callback **snapshots the voice once per block** (`const Voice& VOICE =
@@ -157,6 +157,7 @@ coefficients (`ms_to_coeff`) in the audio callback, recomputed on voice change.
 | `ORGAN` | Clean all-sine organ/flute, melodic register, 1.005× chorus, breath noise |
 | `SCREAM` | Aggressive detuned saws, high register, heavy drive, near-self-osc res, inharmonic (2.5×) metallic ring-mod |
 | `BASS_CLOSED` | Deep muffled sub — filter near the fundamental, tiny sweep, reduced keytrack, long tail |
+| `PAD` | Warm ensemble pad — detuned saws + tri sub + sine top, dark filter, very slow ~2.2 s swell, long tail |
 
 ## Hardware
 

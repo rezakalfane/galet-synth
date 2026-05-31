@@ -4,6 +4,13 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: VOICE_PAD — warm ensemble pad`
+- New `VOICE_PAD`: two detuned saws (1.006×) for ensemble/chorus width, a soft
+  triangle sub and an airy sine octave, through a dark low-resonance filter. The
+  pad character is in the envelope — a very slow ~2.2 s attack swell and a ~2 s
+  release tail — plus a whisper of noise for air
+- Boot voice set to Pad (`g_voice_idx = 7`); the FSR gesture still cycles all 8
+
 ### Changed — `feat: show active voice and FSR pressure on the serial screen`
 - Serial display gains a `VOICE n/total  Name  (lo-hiHz)` header (updates live as
   the FSR gesture cycles voices) and an `FSR pressure NNN%` row with a bar
