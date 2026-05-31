@@ -266,10 +266,11 @@ int main()
             int32_t peak_on = measure_peak(baseline, 60);
             hw.PrintLine("  Touch peak: %d counts", (int)peak_on);
 
-            // SNR = peak_on / peak_off, stored as *10 for 1 decimal without floats
-            int32_t snr_x10 = 0;
-            if (peak_off > 0)
-                snr_x10 = (peak_on * 10) / peak_off;
+            // SNR = peak_on / peak_off, stored as *10 for 1 decimal without floats.
+            // peak_off==0 means noise was below the 1-count resolution, so substitute
+            // 1 to avoid div-by-zero and to score zero-noise configs by raw touch peak.
+            int32_t denom = peak_off > 0 ? peak_off : 1;
+            int32_t snr_x10 = (peak_on * 10) / denom;
 
             hw.PrintLine("  SNR: %d.%d  %s",
                          (int)(snr_x10/10), (int)(snr_x10%10),

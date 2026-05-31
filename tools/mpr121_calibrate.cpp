@@ -35,6 +35,13 @@ static constexpr int32_t CAL_TOUCH_THRESHOLD = 10;  // min delta to count as tou
 static constexpr int32_t MAX_REF_MARGIN      = 3;   // safety headroom added to measured max
 static constexpr int32_t DEFAULT_MAX_REF     = 35;  // fallback for electrodes never visited
 
+// ── Fixed AFE config — skips Phase 1a/1b sweeps ──────────────────────────────
+// Matches src/main.cpp (CONFIG1=0xF0, CONFIG2=0x4C). Update if tuner1/2 finds better.
+static constexpr uint8_t CAL_CDC = 48;  // µA
+static constexpr uint8_t CAL_CDT = 4;   // index 4 = 4µs
+static constexpr uint8_t CAL_FFI = 3;   // index 3 = 34 iterations
+static constexpr uint8_t CAL_ESI = 0;   // index 0 = 1ms
+
 // ── MPR121 registers ──────────────────────────────────────────────────────────
 static constexpr uint8_t REG_ELE0_LSB  = 0x04;
 static constexpr uint8_t REG_MHDR=0x2B, REG_NHDR=0x2C, REG_NCLR=0x2D, REG_FDLR=0x2E;
@@ -403,36 +410,17 @@ int main()
     hw.StartLog(true);
     sda_high();scl_high();
 
-    hw.PrintLine("GaletSynth — Full Sensor Calibration");
+    hw.PrintLine("GaletSynth — Pressure Calibration");
     hw.PrintLine("=====================================");
-    hw.PrintLine("Phase 1a  CDC x CDT   (9 configs, ~2 min)");
-    hw.PrintLine("Phase 1b  FFI x ESI  (12 configs, ~3 min)");
-    hw.PrintLine("Phase 2   Pressure per electrode (3 x 8s swipes)");
+    hw.PrintLine("AFE sweeps skipped — using fixed config:");
+    hw.PrintLine("  CDC=%duA CDT=%s FFI=%siters ESI=%dms",
+                 (int)CAL_CDC,cdt_us(CAL_CDT),ffi_str(CAL_FFI),
+                 (int)(1u<<CAL_ESI));
     hw.PrintLine("TOUCH_THRESHOLD fixed at %d",(int)CAL_TOUCH_THRESHOLD);
     hw.PrintLine("");
 
-    // ── Phase 1a: CDC x CDT ───────────────────────────────────────────────────
-    sweep_cdc_cdt();
-
-    int b1=find_best();
-    uint8_t best_cdc=afe_results[b1].cdc;
-    uint8_t best_cdt=afe_results[b1].cdt;
-    hw.PrintLine("Phase 1a best: CDC=%duA CDT=%s SNR=%d.%d",
-                 (int)best_cdc,cdt_us(best_cdt),
-                 (int)(afe_results[b1].snr_x10/10),(int)(afe_results[b1].snr_x10%10));
-    hw.PrintLine("");
-
-    // ── Phase 1b: FFI x ESI ───────────────────────────────────────────────────
-    sweep_ffi_esi(best_cdc,best_cdt);
-
-    int b2=find_best();
-    AfeResult& best=afe_results[b2];
+    AfeResult best{CAL_CDC,CAL_CDT,CAL_FFI,CAL_ESI,0,0};
     uint32_t best_esi_ms=(uint32_t)(1u<<best.esi);
-
-    hw.PrintLine("Overall best: CDC=%duA CDT=%s FFI=%siters ESI=%dms SNR=%d.%d",
-                 (int)best.cdc,cdt_us(best.cdt),ffi_str(best.ffi),(int)best_esi_ms,
-                 (int)(best.snr_x10/10),(int)(best.snr_x10%10));
-    hw.PrintLine("");
 
     // ── Phase 2: per-electrode pressure calibration ───────────────────────────
     hw.PrintLine("=====================================");

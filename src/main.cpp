@@ -38,17 +38,22 @@ static constexpr int      N_CH     = 12;
 // ── Touch tuning ──────────────────────────────────────────────────────────────
 static constexpr int32_t  TOUCH_THRESHOLD    = 10;
 static constexpr int32_t  PRESSURE_MAX_REF[12] = {
-    100,60,60,60,60,60,
-    60,60,60,60,60,100
-};
-static constexpr int32_t  PRESSURE_DEAD_ZONE[12] = {
-    30,23,13,13,13,13,
-    13,13,13,13,23,35
+    42,35,34,34,34,34,
+    34,34,33,32,29,30
 };
 static constexpr int32_t  MIN_FINGER_SEP     = 4;
 static constexpr uint32_t REBASELINE_IDLE_MS = 2000;
 static constexpr int      REBASELINE_SAMPLES = 32;
 static constexpr int32_t  MAX_POS_JUMP       = 200;
+
+// LED slew at ~60Hz touch loop. Closer to 1.0 = smoother/slower fade.
+// 0.0 = no smoothing (snap), 0.7 = ~80ms fade, 0.9 = ~250ms fade.
+static constexpr float    LED_SMOOTH         = 0.45f;
+// LED3 (software sigma-delta PWM on A0 / ADC0 / pin 22) max-brightness scale.
+static constexpr float    LED3_INTENSITY     = 0.1f;
+// Smoothing coefficient used for LED3 only when no finger is touching. Smaller
+// than LED_SMOOTH = faster fade-out on lift. 0.0 = instant snap to 0.
+static constexpr float    LED3_RELEASE_SMOOTH = 0.10f;
 
 // ── Musical mapping ───────────────────────────────────────────────────────────
 // Finger 1 position 0–1000 maps across MIDI notes LOW_NOTE to HIGH_NOTE
@@ -73,6 +78,7 @@ static constexpr uint8_t REG_ECR=0x5E,REG_SOFTRESET=0x80;
 // ── Globals ───────────────────────────────────────────────────────────────────
 DaisySeed hw;
 GPIO      sda, scl;
+GPIO      led3;  // software-PWM LED on A0 (ADC0 / D15 / pin 22)
 
 // ── Bit-bang I2C ──────────────────────────────────────────────────────────────
 inline void sda_high(){sda.Init(SDA_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
@@ -136,8 +142,8 @@ bool mpr_init()
     mpr_write(REG_NHDT,0x00);mpr_write(REG_NCLT,0x00);mpr_write(REG_FDLT,0x00);
     for(uint8_t ch=0;ch<12;ch++){mpr_write(0x41+ch*2,4);mpr_write(0x42+ch*2,2);}
     mpr_write(REG_DEBOUNCE,0x11);
-    mpr_write(REG_CONFIG1,0x50);
-    mpr_write(REG_CONFIG2,0x6C);
+    mpr_write(REG_CONFIG1,0xF0);  // FFI=34 | CDC=48uA
+    mpr_write(REG_CONFIG2,0x4C);  // CDT=4us | SFI=18 | ESI=1ms
     mpr_write(REG_ECR,0x8C);
     System::Delay(100);
     uint8_t ecr=0;mpr_read(REG_ECR,&ecr,1);
@@ -184,8 +190,8 @@ int32_t centroid_window(int32_t* d,int s,int e,int32_t* pk_out,int* pkch_out)
 }
 
 int32_t pressure_pct(int32_t pk, int ch){
-    int32_t range = PRESSURE_MAX_REF[ch] - PRESSURE_DEAD_ZONE[ch];
-    int32_t raw   = pk - PRESSURE_DEAD_ZONE[ch];
+    int32_t range = PRESSURE_MAX_REF[ch] - TOUCH_THRESHOLD;
+    int32_t raw   = pk - TOUCH_THRESHOLD;
     if(raw <= 0)     return 0;
     if(raw >= range) return 100;
     // Clamp raw strictly before sqrt to prevent Newton overshoot
@@ -302,6 +308,8 @@ volatile float g_bitcrush       = 0.0f;     // 0–1, amount of crush
 volatile float g_ringmod        = 0.0f;     // 0–1, ring mod wet
 volatile bool  g_finger_on      = false;
 volatile float g_amp_target     = 0.0f;
+volatile float g_led3_duty      = 0.0f;     // 0–1, sigma-delta'd to LED3 in audio cb
+volatile float g_master_vol     = 1.0f;     // 0–1, master volume from FSR on A1
 
 // ── Audio DSP state (audio callback only) ─────────────────────────────────────
 static float s_freq      = 65.41f;
@@ -312,6 +320,7 @@ static float s_vibdepth  = 0.0f;
 static float s_bitcrush  = 0.0f;
 static float s_ringmod   = 0.0f;
 static float s_amp       = 0.0f;
+static float s_master_vol= 1.0f;
 
 static float s_phase1    = 0.0f;
 static float s_phase2    = 0.0f;
@@ -383,6 +392,17 @@ static inline float wavefold(float in, float amount)
 void AudioCallback(AudioHandle::InputBuffer,
                    AudioHandle::OutputBuffer out, size_t size)
 {
+    // LED3 fixed-frequency PWM (200 Hz, 240 levels). Per-sample duty smoother
+    // (~20 ms TC) interpolates between the main loop's 16 Hz updates so the
+    // brightness transitions look continuous even at low intensity.
+    static float    led3_duty_smooth = 0.0f;
+    static uint32_t pwm_counter      = 0;
+    static bool     led3_state       = false;
+    constexpr uint32_t PWM_LEVELS = 240;        // 48 kHz / 240 = 200 Hz PWM
+    constexpr float    DUTY_TC    = 0.001f;     // ~20 ms time constant per sample
+    float           duty_target = g_led3_duty;
+    if(duty_target < 0.0f) duty_target = 0.0f; else if(duty_target > 1.0f) duty_target = 1.0f;
+
     // Snapshot targets
     float tfreq  = g_target_freq;
     float tcut   = g_target_cutoff;
@@ -392,6 +412,7 @@ void AudioCallback(AudioHandle::InputBuffer,
     float tbc    = g_bitcrush;
     float trm    = g_ringmod;
     float tamp   = g_amp_target;
+    float tmvol  = g_master_vol;
     float sr     = hw.AudioSampleRate();
 
     for(size_t i=0;i<size;i++)
@@ -413,6 +434,8 @@ void AudioCallback(AudioHandle::InputBuffer,
         // Asymmetric envelope: fast attack, slower release
         float slew_amp = (tamp > s_amp) ? SLEW_AMP_A : SLEW_AMP_R;
         s_amp = s_amp * slew_amp + tamp * (1.0f - slew_amp);
+        // Master volume slew (smooths FSR jitter / 16 Hz update steps).
+        s_master_vol = s_master_vol * SLEW_MISC + tmvol * (1.0f - SLEW_MISC);
 
         // Bleed filter state toward zero when silent
         // Prevents stale filter energy from clicking on next note onset
@@ -478,7 +501,7 @@ void AudioCallback(AudioHandle::InputBuffer,
         float crushed = wavefold(filtered, s_bitcrush);
 
         // Soft clip output
-        float sample = fast_tanh(crushed * 1.3f) * s_amp;
+        float sample = fast_tanh(crushed * 1.3f) * s_amp * s_master_vol;
 
         out[0][i] = sample;
         out[1][i] = sample;
@@ -489,6 +512,14 @@ void AudioCallback(AudioHandle::InputBuffer,
         s_phase_sub+= freq_sub/sr;  if(s_phase_sub>=1.0f)s_phase_sub-=1.0f;
         s_phase_oct+= freq_oct/sr;  if(s_phase_oct>=1.0f)s_phase_oct-=1.0f;
         s_phase_rm += freq_rm /sr;  if(s_phase_rm >=1.0f)s_phase_rm -=1.0f;
+
+        // LED3 PWM tick. Smooth duty, recompute threshold, compare counter.
+        led3_duty_smooth += (duty_target - led3_duty_smooth) * DUTY_TC;
+        uint32_t threshold = (uint32_t)(led3_duty_smooth * (float)PWM_LEVELS + 0.5f);
+        if(threshold > PWM_LEVELS) threshold = PWM_LEVELS;
+        if(++pwm_counter >= PWM_LEVELS) pwm_counter = 0;
+        bool desired = (pwm_counter < threshold);
+        if(desired != led3_state){ led3.Write(desired); led3_state = desired; }
     }
 }
 
@@ -521,6 +552,9 @@ int main()
     hw.Init();
     hw.SetAudioBlockSize(4);
 
+    // Power-on grace period so the lid can be closed before baseline capture.
+    System::Delay(5000);
+
     // ── I2C pins + MPR121 init BEFORE audio starts ────────────────────────────
     // The audio ISR firing during bit-bang I2C corrupts I2C timing.
     // Do all sensor work first, then start the audio engine.
@@ -534,6 +568,113 @@ int main()
         capture_baseline(baseline);
     }
     // If MPR121 fails we still start audio so the problem is audible (silence)
+
+    // ── DAC LEDs (pin 30 = DAC1, pin 31 = DAC2) + PWM LED (A0 = pin 22) ──────
+    DacHandle::Config dac_cfg;
+    dac_cfg.bitdepth   = DacHandle::BitDepth::BITS_12;
+    dac_cfg.buff_state = DacHandle::BufferState::ENABLED;
+    dac_cfg.mode       = DacHandle::Mode::POLLING;
+    dac_cfg.chn        = DacHandle::Channel::BOTH;
+    hw.dac.Init(dac_cfg);
+    hw.dac.WriteValue(DacHandle::Channel::BOTH, 0);
+
+    led3.Init(seed::A0, GPIO::Mode::OUTPUT, GPIO::Pull::NOPULL);
+    led3.Write(false);
+
+    // ── FSR (A1 / ADC1) ───────────────────────────────────────────────────────
+    // Wired so unpressed reads ~max (3.3V). Press pulls ADC down. Fixed
+    // thresholds: raw ≤ FSR_MIN → 0%, raw ≥ FSR_MAX → 100%, linear between.
+    AdcChannelConfig fsr_cfg;
+    fsr_cfg.InitSingle(seed::A1);
+    hw.adc.Init(&fsr_cfg, 1);
+    hw.adc.Start();
+
+    constexpr uint16_t FSR_MIN       = 8000;
+    uint16_t           fsr_max       = 55000;
+    float              fsr_range_inv = 1.0f / (float)(fsr_max - FSR_MIN);
+
+    auto commit_fsr_avg = [&](uint32_t acc, int n) {
+        if(n == 0) return;
+        uint16_t avg = (uint16_t)(acc / n);
+        // Sanity floor — without enough headroom over FSR_MIN the volume curve
+        // becomes hyper-sensitive to noise.
+        if(avg < FSR_MIN + 500) avg = FSR_MIN + 500;
+        fsr_max       = avg;
+        fsr_range_inv = 1.0f / (float)(fsr_max - FSR_MIN);
+    };
+
+    // Startup calibration: 2 s silent FSR average → fsr_max.
+    auto calibrate_fsr_silent = [&]() {
+        uint32_t start = System::GetNow();
+        uint32_t acc = 0; int n = 0;
+        while(System::GetNow() - start < 2000) {
+            acc += hw.adc.Get(0);
+            n++;
+            System::Delay(10);
+        }
+        commit_fsr_avg(acc, n);
+    };
+
+    // Idle behaviour: sweep a virtual position 0→1000→0 through the same
+    // LED-tent math as the pitch mapping (LED2=pos 0, LED1=middle, LED3=pos 1),
+    // recalibrate fsr_max during the first 2 s, then keep sweeping until any
+    // electrode crosses TOUCH_THRESHOLD.
+    auto idle_chase_and_calibrate = [&]() {
+        uint32_t start = System::GetNow();
+        uint32_t acc = 0; int n = 0;
+        bool     calibrated = false;
+        constexpr uint32_t SWEEP_PERIOD_MS = 12000;  // one 0→1→0 cycle
+        constexpr float    TAU             = 6.2831853f;
+        uint16_t scan[N_CH];
+
+        while(true) {
+            uint32_t elapsed = System::GetNow() - start;
+
+            // Sinusoidal position 0→1→0 over SWEEP_PERIOD_MS — eases at the
+            // endpoints so the reversal is gentle instead of a triangle kink.
+            float phase = (float)(elapsed % SWEEP_PERIOD_MS) / (float)SWEEP_PERIOD_MS;
+            float p01   = 0.5f * (1.0f - cosf(phase * TAU));
+
+            // Same tent + gamma-0.25 math as the pitch LED mapping.
+            float l1_raw = 1.0f - 2.0f * p01;                 if(l1_raw < 0) l1_raw = 0;
+            float l3_raw = 2.0f * p01 - 1.0f;                 if(l3_raw < 0) l3_raw = 0;
+            float l2_raw = 1.0f - 2.0f * fabsf(p01 - 0.5f);   if(l2_raw < 0) l2_raw = 0;
+            float led1   = sqrtf(sqrtf(l2_raw));              // middle (DAC1)
+            float led2   = sqrtf(sqrtf(l1_raw));              // pos 0  (DAC2)
+            float led3   = sqrtf(sqrtf(l3_raw)) * LED3_INTENSITY; // pos 1 (PWM A0)
+            hw.dac.WriteValue(DacHandle::Channel::ONE, (uint16_t)(led1 * 4095.0f));
+            hw.dac.WriteValue(DacHandle::Channel::TWO, (uint16_t)(led2 * 4095.0f));
+            g_led3_duty = led3;
+
+            // FSR calibration window: first 2 s only.
+            if(!calibrated) {
+                acc += hw.adc.Get(0);
+                n++;
+                if(elapsed >= 2000) {
+                    commit_fsr_avg(acc, n);
+                    calibrated = true;
+                }
+            }
+
+            // Exit on any touch.
+            read_electrodes(scan);
+            int32_t max_d = 0;
+            for(int i = 0; i < N_CH; i++) {
+                int32_t d = (int32_t)baseline[i] - (int32_t)scan[i];
+                if(d > max_d) max_d = d;
+            }
+            if(max_d >= TOUCH_THRESHOLD) break;
+
+            System::Delay(10);
+        }
+
+        // Clean handoff back to the main loop's LED writer.
+        hw.dac.WriteValue(DacHandle::Channel::ONE, 0);
+        hw.dac.WriteValue(DacHandle::Channel::TWO, 0);
+        g_led3_duty = 0.0f;
+    };
+
+    calibrate_fsr_silent();
 
     // ── Start audio ───────────────────────────────────────────────────────────
     // Set initial targets before callback fires
@@ -564,6 +705,7 @@ int main()
     Finger   raw[2];
 
     uint32_t idle_since      = System::GetNow();
+    uint32_t last_touch_ms   = System::GetNow();
     bool     f1_was_on       = false;
     uint32_t f1_last_seen_ms = 0;
     static constexpr uint32_t F1_REQUANTIZE_MS = 200; // re-quantize only after this long off
@@ -574,8 +716,20 @@ int main()
     int print_every = 1;
     int frame_count = 0;
 
+    // Smoothed LED brightness state (0..1), slewed toward per-frame targets.
+    // LED1 = DAC1 (pos 0 end), LED2 = DAC2 (middle), LED3 = PWM A0 (pos 1000 end).
+    float s_led1 = 0.0f, s_led2 = 0.0f, s_led3 = 0.0f;
+
     while(true)
     {
+        // ── FSR → master volume (no pressure = 100%, press attenuates) ───────
+        uint16_t fsr_raw = hw.adc.Get(0);
+        float    vol;
+        if(fsr_raw <= FSR_MIN)      vol = 0.0f;
+        else if(fsr_raw >= fsr_max) vol = 1.0f;
+        else                        vol = (float)(fsr_raw - FSR_MIN) * fsr_range_inv;
+        g_master_vol = vol;
+
         read_electrodes(data);
 
         int32_t max_delta=1;
@@ -598,6 +752,16 @@ int main()
                 hw.PrintLine("[rebaseline]");
                 idle_since=System::GetNow();
             }
+        }
+
+        // ── 5 s idle → chase + FSR recalibration, loops until touch ──────────
+        if(touching){
+            last_touch_ms = System::GetNow();
+        } else if(System::GetNow() - last_touch_ms >= 5000){
+            idle_chase_and_calibrate();
+            last_touch_ms = System::GetNow();
+            idle_since    = System::GetNow();
+            hw.PrintLine("[fsr recal] fsr_max=%d", (int)fsr_max);
         }
 
         update_tracked(raw,n_raw);
@@ -688,6 +852,7 @@ int main()
             g_target_drive   = drive;
             g_finger_on      = true;
             g_amp_target     = 0.72f;
+
         }
         else
         {
@@ -698,6 +863,42 @@ int main()
             // Do NOT reset cutoff here — let it close with the amplitude
             // in the audio callback to avoid discontinuity clicks
         }
+
+        // ── LED targets + slew ────────────────────────────────────────────────
+        // Three-LED position indicator. Linear "tents" hand off cleanly:
+        //   LED1 (DAC1, middle)       → 1 - 2*|p - 0.5|
+        //   LED2 (DAC2, pos 0 end)    → max(0, 1 - 2*p)
+        //   LED3 (PWM A0, pos 1 end)  → max(0, 2*p - 1)
+        // Fourth-root curve (gamma=0.25) keeps each LED above its forward-voltage
+        // floor at the handoff points (50% raw → ~84% drive). Pressure adds a
+        // subtle ~75%→100% intensity scale.
+        float led1_target = 0.0f, led2_target = 0.0f, led3_target = 0.0f;
+        if(f1_on) {
+            float p01      = clampf((float)tracked[0].pos / 1000.0f, 0.0f, 1.0f);
+            float pr01     = clampf((float)tracked[0].pressure / 100.0f, 0.0f, 1.0f);
+            float prs_mult = 0.75f + 0.25f * pr01;
+            float l1_raw   = 1.0f - 2.0f * p01;                 if(l1_raw < 0) l1_raw = 0;
+            float l3_raw   = 2.0f * p01 - 1.0f;                 if(l3_raw < 0) l3_raw = 0;
+            float l2_raw   = 1.0f - 2.0f * fabsf(p01 - 0.5f);   if(l2_raw < 0) l2_raw = 0;
+            led1_target    = sqrtf(sqrtf(l2_raw)) * prs_mult;  // middle tent
+            led2_target    = sqrtf(sqrtf(l1_raw)) * prs_mult;  // pos 0 ramp
+            led3_target    = sqrtf(sqrtf(l3_raw)) * prs_mult * LED3_INTENSITY;
+        }
+        // Snap on touch onset so the LEDs respond instantly to the initial touch;
+        // smooth during sustained touch and on lift-off.
+        if(f1_on && !f1_was_on) {
+            s_led1 = led1_target;
+            s_led2 = led2_target;
+            s_led3 = led3_target;
+        } else {
+            float smooth3 = f1_on ? LED_SMOOTH : LED3_RELEASE_SMOOTH;
+            s_led1 = s_led1 * LED_SMOOTH + led1_target * (1.0f - LED_SMOOTH);
+            s_led2 = s_led2 * LED_SMOOTH + led2_target * (1.0f - LED_SMOOTH);
+            s_led3 = s_led3 * smooth3   + led3_target * (1.0f - smooth3);
+        }
+        hw.dac.WriteValue(DacHandle::Channel::ONE, (uint16_t)(s_led1 * 4095.0f));
+        hw.dac.WriteValue(DacHandle::Channel::TWO, (uint16_t)(s_led2 * 4095.0f));
+        g_led3_duty = s_led3;  // audio callback sigma-delta's this onto A0
 
         f1_was_on = f1_on;
 

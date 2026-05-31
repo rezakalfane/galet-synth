@@ -41,8 +41,8 @@ static constexpr uint8_t REG_ECR       = 0x5E;
 static constexpr uint8_t REG_SOFTRESET = 0x80;
 
 // Fixed from phase 1
-static constexpr uint8_t BEST_CDC = 16;  // µA
-static constexpr uint8_t BEST_CDT = 6;  // index 6 = 16µs
+static constexpr uint8_t BEST_CDC = 48;  // µA
+static constexpr uint8_t BEST_CDT = 4;  // index 4 = 4µs
 
 DaisySeed hw;
 GPIO      sda, scl;
@@ -214,7 +214,7 @@ int main()
 
     hw.PrintLine("MPR121 Glass Tuner — Phase 2");
     hw.PrintLine("============================");
-    hw.PrintLine("Fixed: CDC=16uA  CDT=16us");
+    hw.PrintLine("Fixed: CDC=48uA  CDT=4us");
     hw.PrintLine("Sweep: FFI x ESI (4x4 = 16 configs)");
     hw.PrintLine("");
 
@@ -319,8 +319,8 @@ int main()
                  (int)b.peak_on);
     hw.PrintLine("");
     hw.PrintLine("Final recommended registers:");
-    hw.PrintLine("  CONFIG1 = 0x%02X   // %s | CDC=16uA", config1, ffi_str(b.ffi));
-    hw.PrintLine("  CONFIG2 = 0x%02X   // CDT=16us | SFI=18 | %s", config2, esi_str(b.esi));
+    hw.PrintLine("  CONFIG1 = 0x%02X   // %s | CDC=48uA", config1, ffi_str(b.ffi));
+    hw.PrintLine("  CONFIG2 = 0x%02X   // CDT=4us | SFI=18 | %s", config2, esi_str(b.esi));
     hw.PrintLine("  Touch threshold   = 4");
     hw.PrintLine("  Release threshold = 2");
     hw.PrintLine("  NCLR/NCLF = 0xFF  // slow baseline filter");

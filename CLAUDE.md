@@ -68,7 +68,7 @@ If this error appears, remove the `LDFLAGS` line from `Makefile`.
 |---|---|---|
 | `TOUCH_THRESHOLD` | 39 | Min delta to register touch |
 | `PRESSURE_MAX_REF[12]` | 40 | Per-electrode 100% pressure delta |
-| `PRESSURE_DEAD_ZONE[12]` | 44 | Per-electrode 0% pressure delta |
+| `PRESSURE_MIN_REF[12]` | 40 | Per-electrode 0% pressure delta (was `PRESSURE_DEAD_ZONE`) |
 | `MIN_FINGER_SEP` | 48 | Min electrode gap for two-finger detection |
 | `QUANTIZE_ENABLED` | 59 | `false` = fully continuous pitch, no snapping |
 | `SLEW_FREQ` | ~323 | Pitch glide speed (higher = slower) |
