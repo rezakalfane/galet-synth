@@ -58,9 +58,9 @@ static constexpr float    LED3_RELEASE_SMOOTH = 0.10f;
 // ── Voices ──────────────────────────────────────────────────────────────────
 // A "Voice" bundles everything that defines a sound: the oscillator stack
 // (which pitches sound and at what level), the filter/drive character, and the
-// pitch range finger-1 sweeps across. Add a preset below, then point ACTIVE
-// VOICE at it — selection is a compile-time constant, so there is zero runtime
-// cost (the unused branches fold away).
+// pitch range finger-1 sweeps across. Presets live in the VOICES[] bank below;
+// the active one is `g_voice_idx`, which the FSR-hold gesture cycles live. The
+// audio callback snapshots it once per block.
 
 // Oscillator shape — set per oscillator, so one voice can mix (e.g. saw root +
 // square fifth + sine sub). SQUARE and SAW are naive (not band-limited) — they
@@ -239,8 +239,28 @@ static constexpr Voice VOICE_BASS_CLOSED = {
     0.0f, 0.6f, 1.0f, 0.0f, 0.0f, 10.0f, 500.0f, 30.0f   // soft, long tail, less keytrack, clean
 };
 
-// ── Active voice — change this one line to switch sounds ──────────────────────
-static constexpr Voice VOICE = VOICE_BASS_RICH;
+// ── Voice bank ────────────────────────────────────────────────────────────────
+// All voices, in cycle order. Holding the FSR pressed steps through these live
+// (see the voice-switch gesture in the main loop). Edit the order here to taste.
+static constexpr Voice VOICES[] = {
+    VOICE_LEAD,
+    VOICE_BASS,
+    VOICE_BASS_OPEN,
+    VOICE_BASS_RICH,
+    VOICE_ORGAN,
+    VOICE_SCREAM,
+    VOICE_BASS_CLOSED,
+};
+static constexpr int NUM_VOICES = (int)(sizeof(VOICES) / sizeof(VOICES[0]));
+
+// Active voice index — written by the touch loop (gesture), read by the audio
+// callback each block. Change the initial value to pick the boot voice.
+static volatile int g_voice_idx = 0;   // 0 = Lead
+
+// FSR voice-switch gesture: hold the FSR pressed (volume at/near 0) to cycle.
+// First advance after FIRST_MS; while still held, keep advancing every REPEAT_MS.
+static constexpr uint32_t VOICE_SWITCH_FIRST_MS  = 5000;
+static constexpr uint32_t VOICE_SWITCH_REPEAT_MS = 2000;
 
 // ── Musical mapping ───────────────────────────────────────────────────────────
 // Set to false to disable all quantization (fully continuous pitch)
@@ -557,8 +577,8 @@ static inline float osc_sine(float ph){
 static inline float osc_square(float ph){ return ph<0.5f ? 1.0f : -1.0f; }
 static inline float osc_saw(float ph){ return 2.0f*ph - 1.0f; }
 
-// Dispatch on the voice's waveform. VOICE.wave is a compile-time constant, so at
-// -O2 this folds to a single waveform call with no branch.
+// Dispatch on a per-oscillator waveform (runtime, since the active voice can be
+// switched live). A small jump table — cheap at audio rate on the H750.
 static inline float osc(float ph, Waveform w){
     switch(w){
         case WAVE_SINE:   return osc_sine(ph);
@@ -632,15 +652,22 @@ void AudioCallback(AudioHandle::InputBuffer,
     float tmvol  = g_master_vol;
     float sr     = hw.AudioSampleRate();
 
-    // Per-voice envelope/glide coefficients. VOICE is a compile-time constant,
-    // so these only need computing once (expf isn't constexpr).
-    static bool  s_coeff_init = false;
+    // Snapshot the active voice once per block, so a mid-block switch from the
+    // touch loop can't tear fields across the block. All VOICE.* reads below
+    // resolve against this reference.
+    int vi = g_voice_idx;
+    if(vi < 0 || vi >= NUM_VOICES) vi = 0;
+    const Voice& VOICE = VOICES[vi];
+
+    // Per-voice envelope/glide coefficients (expf isn't constexpr). Recompute
+    // only when the active voice changes.
+    static int   s_coeff_vi = -1;
     static float s_glide_c, s_atk_c, s_rel_c;
-    if(!s_coeff_init){
+    if(s_coeff_vi != vi){
         s_glide_c = ms_to_coeff(VOICE.glide_ms,   sr);
         s_atk_c   = ms_to_coeff(VOICE.attack_ms,  sr);
         s_rel_c   = ms_to_coeff(VOICE.release_ms, sr);
-        s_coeff_init = true;
+        s_coeff_vi = vi;
     }
 
     for(size_t i=0;i<size;i++)
@@ -920,6 +947,11 @@ int main()
 
     calibrate_fsr_silent();
 
+    // Boot-voice snapshot for the startup banner / initial targets. The main
+    // loop rebinds its own `VOICE` each frame so it always reflects the current
+    // voice index (which the FSR gesture can change live).
+    const Voice& VOICE = VOICES[g_voice_idx];
+
     // ── Start audio ───────────────────────────────────────────────────────────
     // Set initial targets before callback fires (voice-relative starting pitch)
     g_target_freq   = VOICE.freq_low * 2.0f;
@@ -938,13 +970,15 @@ int main()
 
     hw.PrintLine("Glass Moog Synth");
     hw.PrintLine("================");
-    hw.PrintLine("Voice: %s  (%d-%dHz)",
+    hw.PrintLine("Voice %d/%d: %s  (%d-%dHz)",
+                 g_voice_idx + 1, NUM_VOICES,
                  VOICE.name, (int)VOICE.freq_low, (int)VOICE.freq_high);
     hw.PrintLine("F1 pos=pitch  F1 prs=cutoff+vibrato");
     if(VOICE.osc2_detune)
         hw.PrintLine("F2 pos=detune F2 prs=wavefold+ringmod");
     else
         hw.PrintLine("F2 prs=wavefold+ringmod (osc2=fixed)");
+    hw.PrintLine("Hold FSR pressed 5s to change voice (then every 2s)");
     hw.PrintLine("MPR121 OK — baseline captured");
     hw.PrintLine("Ready.\n");
 
@@ -969,6 +1003,25 @@ int main()
     // LED1 = DAC1 (pos 0 end), LED2 = DAC2 (middle), LED3 = PWM A0 (pos 1000 end).
     float s_led1 = 0.0f, s_led2 = 0.0f, s_led3 = 0.0f;
 
+    // FSR voice-switch gesture state.
+    uint32_t fsr_hold_start  = 0;   // when the current press began (0 = released)
+    uint32_t fsr_next_switch = 0;   // timestamp of the next allowed switch
+
+    // Flash all three LEDs `count` times to confirm a voice change (count = voice
+    // number). Blocks the touch loop briefly — fine, we're mid-gesture and silent.
+    auto flash_voice_leds = [&](int count){
+        for(int f = 0; f < count; f++){
+            hw.dac.WriteValue(DacHandle::Channel::ONE, 4095);
+            hw.dac.WriteValue(DacHandle::Channel::TWO, 4095);
+            g_led3_duty = LED3_INTENSITY;
+            System::Delay(110);
+            hw.dac.WriteValue(DacHandle::Channel::ONE, 0);
+            hw.dac.WriteValue(DacHandle::Channel::TWO, 0);
+            g_led3_duty = 0.0f;
+            System::Delay(140);
+        }
+    };
+
     while(true)
     {
         // ── FSR → master volume (no pressure = 100%, press attenuates) ───────
@@ -978,6 +1031,35 @@ int main()
         else if(fsr_raw >= fsr_max) vol = 1.0f;
         else                        vol = (float)(fsr_raw - FSR_MIN) * fsr_range_inv;
         g_master_vol = vol;
+
+        // ── FSR-hold voice-switch gesture ───────────────────────────────────
+        // Pressing the FSR to (near) silence and holding cycles the voice: first
+        // advance after 5 s, then every 2 s while still held. LEDs flash the new
+        // voice number. Releasing re-arms the 5 s wait.
+        bool fsr_pressed = (fsr_raw <= FSR_MIN);   // "low value" = at the mute floor
+        if(!fsr_pressed){
+            fsr_hold_start = 0;                    // released → disarm
+        } else {
+            uint32_t now = System::GetNow();
+            if(fsr_hold_start == 0){
+                fsr_hold_start  = now;
+                fsr_next_switch = now + VOICE_SWITCH_FIRST_MS;
+            }
+            // Holding the FSR means no glass touch — freeze the idle/rebaseline
+            // timers so they don't fire mid-gesture.
+            idle_since    = now;
+            last_touch_ms = now;
+            if((int32_t)(now - fsr_next_switch) >= 0){
+                g_voice_idx = (g_voice_idx + 1) % NUM_VOICES;
+                hw.PrintLine("[voice %d/%d] %s",
+                             g_voice_idx + 1, NUM_VOICES, VOICES[g_voice_idx].name);
+                flash_voice_leds(g_voice_idx + 1);            // count = voice number
+                fsr_next_switch = System::GetNow() + VOICE_SWITCH_REPEAT_MS; // re-time after flash
+            }
+        }
+
+        // Bind the (possibly just-changed) active voice for the rest of this frame.
+        const Voice& VOICE = VOICES[g_voice_idx];
 
         read_electrodes(data);
 

@@ -4,6 +4,20 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: live voice switching via FSR-hold gesture`
+- Voices are now **runtime-switchable** (were compile-time `constexpr`). All
+  presets live in a `VOICES[]` bank selected by a `volatile g_voice_idx`
+- **FSR-hold gesture**: press and hold the FSR to the mute floor — the voice
+  advances after 5 s (`VOICE_SWITCH_FIRST_MS`), then every 2 s while held
+  (`VOICE_SWITCH_REPEAT_MS`); releasing re-arms. Each switch **flashes the LEDs
+  N times** (N = voice number) and prints `[voice n/total] name`
+- Audio callback snapshots the voice once per block (no field tearing on a
+  mid-block switch); envelope/glide coefficients recompute on voice change
+- Gesture freezes the idle-chase / rebaseline timers while held
+- Boot voice = the `g_voice_idx` initializer; cycle order = `VOICES[]` order
+- Trade-off: the per-sample waveform/noise/keytrack/osc2 branches no longer fold
+  at compile time (negligible on the H750); flash usage ~71.6% → ~74.8%
+
 ### Added — `feat: per-voice envelope/glide/keytracking and new effect colors`
 - Amp **attack/release** and pitch **glide** are now per-voice (`attack_ms`,
   `release_ms`, `glide_ms`), specified in milliseconds and converted to slew

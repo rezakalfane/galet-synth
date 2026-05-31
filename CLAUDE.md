@@ -66,7 +66,8 @@ If this error appears, remove the `LDFLAGS` line from `Makefile`.
 
 | Constant | Line ~| Purpose |
 |---|---|---|
-| `VOICE` | ~243 | **Active sound.** One line — set to any `VOICE_*` preset. See [Voices](#voices) |
+| `VOICES[]` / `g_voice_idx` | ~243 | **Voice bank** + active index. Cycled live by the FSR-hold gesture; `g_voice_idx` initializer = boot voice. See [Voices](#voices) |
+| `VOICE_SWITCH_FIRST_MS` / `_REPEAT_MS` | ~263 | FSR-hold gesture timing (5 s to first switch, then every 2 s) |
 | `TOUCH_THRESHOLD` | 39 | Min delta to register touch |
 | `PRESSURE_MAX_REF[12]` | 40 | Per-electrode 100% pressure delta |
 | `PRESSURE_MIN_REF[12]` | 40 | Per-electrode 0% pressure delta (was `PRESSURE_DEAD_ZONE`) |
@@ -82,17 +83,30 @@ If this error appears, remove the `LDFLAGS` line from `Makefile`.
 ## Voices
 
 A **Voice** bundles everything that defines a sound. Every parameter that shapes
-the tone lives in one `constexpr Voice` struct (`src/main.cpp:71`); there is one
-active voice, selected at compile time:
+the tone lives in one `Voice` struct (`src/main.cpp:71`). All presets sit in the
+`VOICES[]` bank (`src/main.cpp ~243`); the active one is a **runtime** index:
 
 ```cpp
-// src/main.cpp ~243 — change this one line to switch sounds
-static constexpr Voice VOICE = VOICE_BASS_CLOSED;
+static constexpr Voice VOICES[] = { VOICE_LEAD, VOICE_BASS, ... };
+static volatile int    g_voice_idx = 0;   // active voice — boot value here
 ```
 
-Because `VOICE` is `constexpr`, selection has **zero runtime cost** — unused
-branches (waveform dispatch, noise, keytrack, the osc2 detune-vs-fixed path)
-fold away at `-O2`. Switching voices requires a rebuild + reflash.
+The audio callback **snapshots the voice once per block** (`const Voice& VOICE =
+VOICES[vi]`) so a mid-block switch can't tear fields; the touch loop rebinds its
+own `VOICE` each frame. Envelope/glide coefficients (`ms_to_coeff`) recompute
+only when the index changes. Because selection is now runtime, the per-sample
+waveform dispatch / noise / keytrack / osc2 branches no longer fold away — a
+negligible cost on the H750.
+
+### Switching voices live — FSR-hold gesture
+
+Hold the FSR pressed to the mute floor (`fsr_raw <= FSR_MIN`): the first voice
+advance fires after `VOICE_SWITCH_FIRST_MS` (5 s), then it keeps advancing every
+`VOICE_SWITCH_REPEAT_MS` (2 s) while still held; releasing re-arms the 5 s wait.
+Each switch flashes all three LEDs **N times = voice number** (`flash_voice_leds`)
+and prints `[voice n/total] name`. The gesture freezes the idle-chase /
+rebaseline timers while held. To change the **boot** voice, edit the
+`g_voice_idx` initializer; to change cycle order, reorder `VOICES[]`.
 
 ### Voice struct fields
 
@@ -119,15 +133,15 @@ fold away at `-O2`. Switching voices requires a rebuild + reflash.
 | `glide_ms` | Portamento between pitches |
 
 Envelope/glide are in **milliseconds**, converted to per-sample slew
-coefficients once at startup (`ms_to_coeff`, in `AudioCallback`).
+coefficients (`ms_to_coeff`) in the audio callback, recomputed on voice change.
 
 ### Notes
 
 - **Waveforms** (`enum Waveform`, `src/main.cpp:69`): sine uses a parabolic
   approximation; square/saw are naive (they alias at high pitch, fine on bass).
-- **Adding a voice**: copy a `VOICE_*` block, retune, then point `VOICE` at it.
-  Fields are positional — keep the trailing `// noise, keytrack, ...` extras
-  line in the right order.
+- **Adding a voice**: copy a `VOICE_*` block, retune, then add it to `VOICES[]`
+  (it joins the FSR cycle). Fields are positional — keep the trailing
+  `// noise, keytrack, ...` extras line in the right order.
 - The finger-2 effect *mappings* (ring-mod gated >85% pressure, wavefold curve,
   detune range) are still shared by all voices; only their **ceilings**
   (`ringmod_max`, `fold_max`) and the carrier ratio are per-voice.

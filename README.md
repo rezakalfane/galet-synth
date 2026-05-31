@@ -94,31 +94,39 @@ The exact character — range, waveforms, filter, drive, effects, envelope — d
 
 ## Voices
 
-The whole sound is defined by a **Voice** — one `constexpr Voice` struct holding
-the oscillator stack, filter character, drive, effect amounts and envelope. The
-firmware ships several presets; the active one is chosen at the top of
-`src/main.cpp` and baked in at compile time (switching requires a rebuild +
-reflash):
+The whole sound is defined by a **Voice** — one `Voice` struct holding the
+oscillator stack, filter character, drive, effect amounts and envelope. The
+firmware ships several presets in a `VOICES[]` bank and switches between them
+**live** (see the gesture below); `g_voice_idx` selects the boot voice:
 
 ```cpp
-static constexpr Voice VOICE = VOICE_BASS_CLOSED;   // ← change to any VOICE_*
+static constexpr Voice VOICES[] = { VOICE_LEAD, VOICE_BASS, /* … */ };
+static volatile int    g_voice_idx = 0;   // ← boot voice (index into VOICES[])
 ```
 
-| Preset | Character |
-|---|---|
-| `VOICE_LEAD` | Glass-Moog lead — triangle oscillators, finger-2 detune, expressive |
-| `VOICE_BASS` | Round, dark power chord (osc2 = fixed perfect 5th → root + 5th + octave + sub) |
-| `VOICE_BASS_OPEN` | Same chord stack, brighter base and a wider pressure sweep |
-| `VOICE_BASS_RICH` | Mixed saw/square/sine waveforms, dark base, huge acid-style filter sweep |
-| `VOICE_ORGAN` | Clean all-sine organ/flute, higher register, slow chorus shimmer, breath noise |
-| `VOICE_SCREAM` | Aggressive detuned saws, heavy drive, near-self-oscillating resonance, inharmonic metallic ring-mod |
-| `VOICE_BASS_CLOSED` | Deep, muffled sub — filter near the fundamental, soft attack, long tail |
+| # | Preset | Character |
+|---|---|---|
+| 1 | `VOICE_LEAD` | Glass-Moog lead — triangle oscillators, finger-2 detune, expressive |
+| 2 | `VOICE_BASS` | Round, dark power chord (osc2 = fixed perfect 5th → root + 5th + octave + sub) |
+| 3 | `VOICE_BASS_OPEN` | Same chord stack, brighter base and a wider pressure sweep |
+| 4 | `VOICE_BASS_RICH` | Mixed saw/square/sine waveforms, dark base, huge acid-style filter sweep |
+| 5 | `VOICE_ORGAN` | Clean all-sine organ/flute, higher register, slow chorus shimmer, breath noise |
+| 6 | `VOICE_SCREAM` | Aggressive detuned saws, heavy drive, near-self-oscillating resonance, inharmonic metallic ring-mod |
+| 7 | `VOICE_BASS_CLOSED` | Deep, muffled sub — filter near the fundamental, soft attack, long tail |
+
+**Switching voices live — FSR-hold gesture:** press and hold the FSR (down to
+the mute floor). After **5 seconds** the voice advances to the next in the bank,
+and while you keep holding it advances **every 2 seconds**; releasing re-arms the
+5 s wait. Each switch **flashes the LEDs N times** where N is the new voice
+number (voice 1 = 1 flash … voice 7 = 7 flashes), and prints `[voice n/total]`
+to serial. (You're at zero volume while holding, so you hear the new voice on
+release.)
 
 Each voice controls, per oscillator: pitch ratio, mix level and **waveform**
 (`WAVE_TRI` / `WAVE_SINE` / `WAVE_SQUARE` / `WAVE_SAW`); plus filter base cutoff,
 sweep depth, resonance, **keytracking**, drive, **noise**, **ring-mod carrier
 ratio** and ceilings, and per-voice **attack / release / glide** (in ms). To add
-a voice, copy a `VOICE_*` block, retune the fields, and point `VOICE` at it. The
+a voice, copy a `VOICE_*` block, retune the fields, and add it to `VOICES[]`. The
 field-by-field reference lives in `CLAUDE.md` → *Voices*.
 
 > The parameter sections below describe the **DSP mechanics** and the default
@@ -445,7 +453,7 @@ POS  |----------1--------------------2----------|
 
 - **MIDI output** — map finger 1 position to MIDI note + pitch bend, pressure to aftertouch
 - **Reverb** — a simple Schroeder reverb or plate reverb tail would suit the long release
-- **Runtime voice switching** — voices are compile-time today; a gesture or extra electrode could select among the `VOICE_*` presets live
+- **Save the selected voice** — persist `g_voice_idx` to QSPI/flash so the FSR-chosen voice survives a power cycle
 - **Per-voice vibrato / LFO routing** — LFO rate, depth and destination (filter/amp) are still global; moving them into the `Voice` would unlock auto-wah / tremolo
 - **Pitch envelope** — a fast pitch blip on attack for kick/zap/pluck transients
 - **More voices** — the `Voice` struct makes new presets cheap; bells, pads, leads all fit
