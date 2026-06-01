@@ -4,6 +4,18 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Changed — `refactor: split main.cpp into modules (phase 3 — audio engine unit)`
+- Extracted the **audio engine** into `engine.{h,cpp}`: the `g_*` control params,
+  the per-sample DSP state, `moog()`, the polyphonic drum voices (`DrumHit`,
+  `g_hits[]`, `drum_trigger`, `drum_render`), and the `AudioCallback`
+- The `g_*` params are now the explicit control-loop ↔ audio-callback seam
+  (`extern` in `engine.h`); `hw`/`led3`/`g_voice_idx`/`g_active_voice` stay in
+  `main.cpp` and are `extern`'d to the engine
+- `main.cpp` is now just the app: init, persistence, the touch→params control
+  loop, and the serial display — **1855 → 768 lines** across the three phases.
+  Behavior unchanged, verified on hardware (flash 106756 → 108460 B; the audio
+  params crossing the TU boundary cost a little whole-program optimization)
+
 ### Changed — `refactor: split main.cpp into modules (phase 2 — mpr121 + touch units)`
 - Extracted the **MPR121 bit-bang driver** (`mpr121.{h,cpp}` — I2C, `mpr_init`,
   `read_electrodes`, `capture_baseline`, owns the SDA/SCL `GPIO`) and the **touch

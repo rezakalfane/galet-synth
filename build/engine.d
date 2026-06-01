@@ -1,4 +1,4 @@
-build/main.o: src/main.cpp \
+build/engine.o: src/engine.cpp \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h \
@@ -93,6 +93,7 @@ build/main.o: src/main.cpp \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_hcd.h \
+ src/engine.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h \
@@ -179,7 +180,7 @@ build/main.o: src/main.cpp \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/WaveTableLoader.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/fatfs.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/WavWriter.h \
- src/config.h src/dsp.h src/voice.h src/mpr121.h src/touch.h src/engine.h
+ src/voice.h src/dsp.h src/touch.h
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h:
@@ -274,6 +275,7 @@ build/main.o: src/main.cpp \
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_hcd.h:
+src/engine.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h:
@@ -360,9 +362,6 @@ build/main.o: src/main.cpp \
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/WaveTableLoader.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/fatfs.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/WavWriter.h:
-src/config.h:
-src/dsp.h:
 src/voice.h:
-src/mpr121.h:
+src/dsp.h:
 src/touch.h:
-src/engine.h:

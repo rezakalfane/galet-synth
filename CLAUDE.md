@@ -10,7 +10,11 @@ Glass touch bass synth for Daisy Seed + MPR121 capacitive sensor.
   - `voice.h` — `Voice` struct, all presets, `VOICES[]` bank, `MULTI_*`, cycle helpers
   - `mpr121.{h,cpp}` — bit-bang I2C + MPR121 driver (`mpr_init`, `read_electrodes`, `capture_baseline`)
   - `touch.{h,cpp}` — finger detection/tracking (`detect_raw`, `update_tracked`, `tracked[]`)
-  - (planned: `engine.{h,cpp}` — audio callback + drum engine + `g_*` state)
+  - `engine.{h,cpp}` — audio engine: synth state, drum voices, `AudioCallback`, the `g_*` control params
+- The **`g_*` params** (in `engine.h`, defined in `engine.cpp`) are the seam: the
+  control loop in `main.cpp` writes them, the audio callback reads them. `hw`,
+  `led3`, `g_voice_idx`, `g_active_voice` are defined in `main.cpp` and `extern`'d
+  to the engine.
 - `.cpp` modules are added to the build by the Makefile (only for `TARGET=src/main`);
   tools stay standalone. Diagnostic / calibration tools: `tools/*.cpp`
 
