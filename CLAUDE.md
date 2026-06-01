@@ -3,7 +3,12 @@
 ## Project
 
 Glass touch bass synth for Daisy Seed + MPR121 capacitive sensor.
-- Main firmware: `src/main.cpp`
+- Firmware (`src/`), being split into modules (header-only so far; one translation unit):
+  - `main.cpp` — app: init, persistence, MPR121 bit-bang I2C, the control loop, audio callback
+  - `config.h` — tuning constants (touch, LEDs, musical mapping)
+  - `dsp.h` — pure DSP/math: oscillators, filters (`moog_st`), `fast_tanh`, `ms_to_coeff`, `Waveform`
+  - `voice.h` — `Voice` struct, all presets, `VOICES[]` bank, `MULTI_*`, cycle helpers
+  - (planned: `touch.{h,cpp}`, `mpr121.{h,cpp}`, `engine.{h,cpp}` — see CHANGELOG)
 - Diagnostic / calibration tools: `tools/*.cpp`
 
 ## Build

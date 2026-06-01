@@ -178,7 +178,8 @@ build/main.o: src/main.cpp \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/VoctCalibration.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/WaveTableLoader.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/fatfs.h \
- /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/WavWriter.h
+ /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/WavWriter.h \
+ src/config.h src/dsp.h src/voice.h
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h:
@@ -359,3 +360,6 @@ build/main.o: src/main.cpp \
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/WaveTableLoader.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/fatfs.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/WavWriter.h:
+src/config.h:
+src/dsp.h:
+src/voice.h:

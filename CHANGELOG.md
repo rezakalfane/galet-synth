@@ -4,6 +4,15 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Changed — `refactor: split main.cpp into modules (phase 1 — config/dsp/voice headers)`
+- Extracted three header-only modules from `main.cpp`: `config.h` (tuning
+  constants), `dsp.h` (oscillators, filters, math, `Waveform`), `voice.h`
+  (`Voice` struct, presets, bank, cycling). `main.cpp`: 1855 → 1327 lines
+- Still a single translation unit (headers `#include`d by `main.cpp`), so the
+  built binary is **byte-identical** — pure code reorganization, no behavior
+  change. Later phases will move touch detection, the MPR121 driver, and the
+  audio engine into their own `.cpp` units (+ host unit tests)
+
 ### Added — `feat: persist the selected voice across power cycles`
 - The FSR-selected voice is saved to QSPI flash (`PersistentStorage<PersistSettings>`)
   and restored on boot — turn the synth off and on and it comes back on the last
