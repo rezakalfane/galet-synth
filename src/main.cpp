@@ -123,6 +123,13 @@ struct Voice {
     // sustained instruments); ~0.85 on drums for accents/ghost notes. Loudness
     // floor = (1 - vel_sens), so soft taps stay audible.
     float vel_sens;
+
+    // Re-attack speed on hold: minimum ms between bounce-retriggers (the cap on
+    // how fast a held finger can repeat by pulsing pressure). SMALLER = faster
+    // repeats allowed; LARGER = slower. 0 = off (only a full lift + re-tap
+    // retriggers). A full lift always retriggers regardless. Default 0 keeps the
+    // melodic voices free of accidental re-articulation; drums set a value.
+    float retrig_ms;
 };
 
 // Perfect-fifth frequency ratio = 2^(7/12).
@@ -293,7 +300,7 @@ static constexpr Voice VOICE_TOM = {
     0.5f,    0.10f, WAVE_SINE,   // sub   — a little thump
     2.0f,    0.0f,  WAVE_SINE,   // oct   — off
     false,                       // osc2 is a fixed ratio, not finger-2 detune
-    6.0f, 3.0f, 0.30f,           // dark/round tom, opened slightly for a touch more body
+    3.0f, 3.0f, 0.30f,           // tom — low 1-pole cutoff for a dark, round body
     1.5f,                        // drive — snap and saturation on hard hits
     // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
     0.70f, 0.3f, 1.0f, 0.0f, 0.10f, 1.0f, 150.0f, 5.0f,  // noise-dominant, instant hit, short tail
@@ -301,7 +308,8 @@ static constexpr Voice VOICE_TOM = {
     1.0f, 80.0f,
     0.0f,        // noise_hp
     true,        // no_cycle — reached via the Drums MultiVoice, not the gesture
-    0.85f        // vel_sens — dynamic taps
+    0.85f,       // vel_sens — dynamic taps
+    400.0f       // retrig_ms — dedupe strike + cap repeat rate
 };
 
 // ── Voice 9: kick drum (noise-driven) ────────────────────────────────────────
@@ -326,7 +334,8 @@ static constexpr Voice VOICE_KICK = {
     2.0f, 45.0f,
     0.0f,        // noise_hp
     true,        // no_cycle — reached via the Drums MultiVoice
-    0.85f        // vel_sens — dynamic taps
+    0.85f,       // vel_sens — dynamic taps
+    400.0f        // retrig_ms — dedupe strike + cap repeat rate
 };
 
 // ── Voice 10: snare (noise-driven) ───────────────────────────────────────────
@@ -338,20 +347,21 @@ static constexpr Voice VOICE_KICK = {
 static constexpr Voice VOICE_SNARE = {
     "Snare",
     150.0f, 500.0f, 1.20397f,   // 150–500 Hz, ln(3.33) — snare tuning range
-    1.0f,    0.18f, WAVE_SINE,   // osc1  — body (lower mode)
-    1.8f,    0.14f, WAVE_TRI,    // osc2  — upper mode/ring (triangle = more harmonics)
-    0.5f,    0.06f, WAVE_SINE,   // sub   — slight body weight
+    1.0f,    0.15f, WAVE_SINE,   // osc1  — body (lower mode)
+    1.8f,    0.12f, WAVE_TRI,    // osc2  — upper mode/ring (triangle = more harmonics)
+    0.5f,    0.05f, WAVE_SINE,   // sub   — slight body weight
     2.0f,    0.0f,  WAVE_SINE,   // oct   — off
     false,                       // osc2 is a fixed ratio, not finger-2 detune
     18.0f, 4.0f, 0.30f,          // wide open & bright — the noise rattle cracks through
     1.5f,                        // drive — snap
     // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
-    0.85f, 0.3f, 1.0f, 0.0f, 0.10f, 1.0f, 140.0f, 5.0f,  // noise-dominant rattle, instant, short
+    0.72f, 0.3f, 1.0f, 0.0f, 0.10f, 1.0f, 140.0f, 5.0f,  // noise-dominant rattle (trimmed ~15%)
     // pitch_env_oct, pitch_env_ms — quick subtle snap
     0.7f, 30.0f,
     0.0f,        // noise_hp
     true,        // no_cycle — reached via the Drums MultiVoice
-    0.85f        // vel_sens — dynamic taps
+    0.85f,       // vel_sens — dynamic taps
+    400.0f       // retrig_ms — dedupe strike + cap repeat rate
 };
 
 // ── Voice 11: hi-hat (noise-driven) ──────────────────────────────────────────
@@ -375,7 +385,8 @@ static constexpr Voice VOICE_HIHAT = {
     // pitch_env_oct, pitch_env_ms, noise_hp — high-passed bright "tsss"
     0.0f, 0.0f, 1.0f,
     true,        // no_cycle — reached via the Drums MultiVoice
-    0.85f        // vel_sens — dynamic taps
+    0.85f,       // vel_sens — dynamic taps
+    400.0f        // retrig_ms — dedupe strike + cap repeat rate
 };
 
 // ── Voice 12: MultiVoice "Drums" ──────────────────────────────────────────────
@@ -426,6 +437,11 @@ static constexpr int   MULTI_IDX        = NUM_VOICES - 1;
 static constexpr int   MULTI_ZONES[4]   = { 9, 10, 8, 11 };  // Kick, Snare, Tom, HiHat (bank indices)
 static constexpr float MULTI_INTERVALS[] = { 1.0f, 1.33484f, 1.49831f, 2.0f }; // root, 4th, 5th, octave
 static constexpr int   MULTI_NINTERVALS = (int)(sizeof(MULTI_INTERVALS) / sizeof(MULTI_INTERVALS[0]));
+
+// Drums: when true, every tap is treated as full (100%) pressure — consistent
+// hits regardless of how hard the glass reads. Set false for velocity dynamics
+// (uses the drum's vel_sens). Drums only.
+static constexpr bool  FIX_DRUM = true;
 
 // ── Voice cycling ─────────────────────────────────────────────────────────────
 // Voices with no_cycle = true are skipped by the FSR-hold gesture. These helpers
@@ -574,9 +590,12 @@ void capture_baseline(uint16_t* bl)
 }
 
 // ── Touch structs ─────────────────────────────────────────────────────────────
+// Up to 4 fingers tracked (for the polyphonic Drums MultiVoice). The mono
+// melodic path still only uses tracked[0] (pitch) and tracked[1] (effects).
+static constexpr int MAX_FINGERS = 4;
 struct Finger { bool active; int32_t pos,pressure,peak_ch,peak_delta; };
 struct TrackedFinger { bool alive; int32_t pos,pressure; int peak_ch; int32_t peak_delta; };
-static TrackedFinger tracked[2]={};
+static TrackedFinger tracked[MAX_FINGERS]={};
 
 int32_t centroid_window(int32_t* d,int s,int e,int32_t* pk_out,int* pkch_out)
 {
@@ -614,35 +633,43 @@ int32_t pressure_pct(int32_t pk, int ch){
     return s;
 }
 
-int detect_raw(int32_t* delta,Finger out[2])
+// Find up to `maxf` fingers: repeatedly take the strongest remaining peak, and
+// if it's far enough from the peaks already found, record its centroid; then
+// zero a ±2 window around it and look again. The first two peaks come out
+// identical to the old 2-finger detector, so the mono path is unchanged.
+int detect_raw(int32_t* delta, Finger* out, int maxf)
 {
-    out[0].active=out[1].active=false;
-    int pka=0;int32_t da=0;
-    for(int i=0;i<N_CH;i++)if(delta[i]>da){da=delta[i];pka=i;}
-    if(da<TOUCH_THRESHOLD)return 0;
-    int ws=pka-2;if(ws<0)ws=0;int we=pka+2;if(we>=N_CH)we=N_CH-1;
-    int32_t pa;int pca;
-    int32_t posa=centroid_window(delta,ws,we,&pa,&pca);
-    out[0]={true,posa,pressure_pct(pa,pca),pca,pa};
+    for(int i=0;i<maxf;i++) out[i].active=false;
+    int32_t work[N_CH];
+    for(int i=0;i<N_CH;i++) work[i]=delta[i];
 
-    int32_t d2[N_CH];
-    int ss=pka-2;if(ss<0)ss=0;int se=pka+2;if(se>=N_CH)se=N_CH-1;
-    for(int i=0;i<N_CH;i++)d2[i]=(i>=ss&&i<=se)?0:delta[i];
-    int pkb=0;int32_t db=0;
-    for(int i=0;i<N_CH;i++)if(d2[i]>db){db=d2[i];pkb=i;}
-    int sep=pkb-pka;if(sep<0)sep=-sep;
-    if(db<TOUCH_THRESHOLD||sep<MIN_FINGER_SEP)return 1;
-    int ws2=pkb-2;if(ws2<0)ws2=0;int we2=pkb+2;if(we2>=N_CH)we2=N_CH-1;
-    int32_t pb;int pcb;
-    int32_t posb=centroid_window(d2,ws2,we2,&pb,&pcb);
-    out[1]={true,posb,pressure_pct(pb,pcb),pcb,pb};
-    return 2;
+    int peaks[MAX_FINGERS];
+    int found=0;
+    for(int attempt=0; attempt<maxf && found<maxf; attempt++){
+        int pk=0; int32_t mx=0;
+        for(int i=0;i<N_CH;i++) if(work[i]>mx){ mx=work[i]; pk=i; }
+        if(mx<TOUCH_THRESHOLD) break;                 // nothing left above threshold
+
+        bool sep_ok=true;
+        for(int j=0;j<found;j++){ int s=pk-peaks[j]; if(s<0)s=-s; if(s<MIN_FINGER_SEP){ sep_ok=false; break; } }
+        if(sep_ok){
+            int ws=pk-2; if(ws<0)ws=0; int we=pk+2; if(we>=N_CH)we=N_CH-1;
+            int32_t pkv; int pkc;
+            int32_t pos=centroid_window(work,ws,we,&pkv,&pkc);
+            out[found]={true,pos,pressure_pct(pkv,pkc),pkc,pkv};
+            peaks[found]=pk;
+            found++;
+        }
+        // Zero this peak's window so the next pass finds a different finger.
+        for(int i=pk-2;i<=pk+2;i++) if(i>=0 && i<N_CH) work[i]=0;
+    }
+    return found;
 }
 
 void update_tracked(Finger* raw,int n)
 {
-    bool ra[2]={false,false};
-    for(int slot=0;slot<2;slot++){
+    bool ra[MAX_FINGERS]={};
+    for(int slot=0;slot<MAX_FINGERS;slot++){
         if(!tracked[slot].alive)continue;
         int32_t best=MAX_POS_JUMP+1;int br=-1;
         for(int r=0;r<n;r++){
@@ -658,7 +685,7 @@ void update_tracked(Finger* raw,int n)
     }
     for(int r=0;r<n;r++){
         if(ra[r])continue;
-        for(int slot=0;slot<2;slot++){
+        for(int slot=0;slot<MAX_FINGERS;slot++){
             if(!tracked[slot].alive){
                 tracked[slot]={true,raw[r].pos,raw[r].pressure,raw[r].peak_ch,raw[r].peak_delta};
                 ra[r]=true;break;
@@ -670,6 +697,12 @@ void update_tracked(Finger* raw,int n)
 // ── Maths helpers ─────────────────────────────────────────────────────────────
 static inline float clampf(float v,float lo,float hi){
     return v<lo?lo:v>hi?hi:v;
+}
+static inline float smoothstep_f(float x){
+    x = x<0?0:x>1?1:x; return x*x*(3.0f - 2.0f*x);
+}
+static inline float smootherstep_f(float x){
+    x = x<0?0:x>1?1:x; return x*x*x*(x*(x*6.0f - 15.0f) + 10.0f);
 }
 
 // Fast tanh approximation (Padé)
@@ -712,6 +745,7 @@ volatile float g_bitcrush       = 0.0f;     // 0–1, amount of crush
 volatile float g_ringmod        = 0.0f;     // 0–1, ring mod wet
 volatile bool  g_finger_on      = false;
 volatile float g_amp_target     = 0.0f;
+volatile bool  g_retrig         = false;    // mono: re-articulate the note (re-attack)
 volatile float g_led3_duty      = 0.0f;     // 0–1, sigma-delta'd to LED3 in audio cb
 volatile float g_master_vol     = 1.0f;     // 0–1, master volume from FSR on A1
 
@@ -794,19 +828,25 @@ static inline float osc(float ph, Waveform w){
     }
 }
 
-// Moog 4-pole ladder
-static inline float moog(float in, float cutoff, float res, float sr)
+// Moog 4-pole ladder, operating on a caller-supplied state array (so multiple
+// voices can each have their own filter).
+static inline float moog_st(float in, float cutoff, float res, float sr, float st[4])
 {
     float f = 2.0f*cutoff/sr;
     if(f>0.98f)f=0.98f;
     float k  = 3.8f*res;
-    float fb = k*s_flt[3];
+    float fb = k*st[3];
     float x  = in - fb;
-    s_flt[0]+=f*(fast_tanh(x)      -fast_tanh(s_flt[0]));
-    s_flt[1]+=f*(fast_tanh(s_flt[0])-fast_tanh(s_flt[1]));
-    s_flt[2]+=f*(fast_tanh(s_flt[1])-fast_tanh(s_flt[2]));
-    s_flt[3]+=f*(fast_tanh(s_flt[2])-fast_tanh(s_flt[3]));
-    return s_flt[3];
+    st[0]+=f*(fast_tanh(x)    -fast_tanh(st[0]));
+    st[1]+=f*(fast_tanh(st[0])-fast_tanh(st[1]));
+    st[2]+=f*(fast_tanh(st[1])-fast_tanh(st[2]));
+    st[3]+=f*(fast_tanh(st[2])-fast_tanh(st[3]));
+    return st[3];
+}
+// Mono ladder using the shared global state (the monophonic melodic engine).
+static inline float moog(float in, float cutoff, float res, float sr)
+{
+    return moog_st(in, cutoff, res, sr, s_flt);
 }
 
 // Wavefolder distortion
@@ -829,6 +869,77 @@ static inline float wavefold(float in, float amount)
     }
     // Blend dry/wet so at low amounts it stays subtle
     return in*(1.0f-amount) + x*amount;
+}
+
+// ── Polyphonic drum engine (Drums MultiVoice only) ────────────────────────────
+// A pool of independent drum voices, one per finger. Each is a self-contained
+// slice of the synth (oscillators + noise + ladder filter + amp & pitch
+// envelopes) with its own state, so up to POLY drums sound at once. Params are
+// latched at the tap (drum, pitch, velocity-scaled level, cutoff, drive); the
+// note plays its attack while the finger is down and releases when it lifts.
+static constexpr int POLY = MAX_FINGERS;
+struct DrumHit {
+    bool  active=false, gate=false;
+    int   vidx=9;
+    float freq=80.0f, amp_tgt=0.0f, cutoff=200.0f, drive=1.0f;
+    float ph1=0,ph2=0,phs=0,pho=0;
+    float amp=0.0f, pmult=1.0f, noise_lp=0.0f;
+    float lp_state=0.0f, lp_coeff=1.0f;   // per-drum 1-pole lowpass
+    float atk_c=0, rel_c=0, penv_c=0, penv_start=1.0f;
+};
+static DrumHit g_hits[POLY];
+
+static void drum_trigger(DrumHit& h, int vidx, float freq, float amp_tgt,
+                         float cutoff, float drive, float sr)
+{
+    const Voice& V = VOICES[vidx];
+    h.active=true; h.gate=true; h.vidx=vidx;
+    h.freq=freq; h.amp_tgt=amp_tgt; h.cutoff=cutoff; h.drive=drive;
+    h.ph1=h.ph2=h.phs=h.pho=0.0f;
+    h.amp=0.0f; h.noise_lp=0.0f;
+    // 1-pole lowpass coefficient from the (latched) cutoff: a = 1 - e^(-2π·fc/sr).
+    h.lp_state = 0.0f;
+    h.lp_coeff = clampf(1.0f - expf(-6.2831853f * cutoff / sr), 0.0f, 1.0f);
+    h.atk_c      = ms_to_coeff(V.attack_ms,    sr);
+    h.rel_c      = ms_to_coeff(V.release_ms,   sr);
+    h.penv_c     = ms_to_coeff(V.pitch_env_ms, sr);
+    h.penv_start = exp2f(V.pitch_env_oct);
+    h.pmult      = h.penv_start;
+}
+
+static float drum_render(DrumHit& h, float sr)
+{
+    if(!h.active) return 0.0f;
+    const Voice& V = VOICES[h.vidx];
+    // Amp envelope: attack while gated, release on lift; free the slot when done.
+    float tgt = h.gate ? h.amp_tgt : 0.0f;
+    float c   = (tgt > h.amp) ? h.atk_c : h.rel_c;
+    h.amp = h.amp*c + tgt*(1.0f-c);
+    if(!h.gate && h.amp < 0.0004f){ h.active=false; return 0.0f; }
+    // Pitch envelope decays to 1.0.
+    h.pmult = 1.0f + (h.pmult - 1.0f) * h.penv_c;
+    float f = h.freq * h.pmult;
+    // Oscillators + noise
+    float mix = osc(h.ph1,V.osc1_wave)*V.osc1_level
+              + osc(h.ph2,V.osc2_wave)*V.osc2_level
+              + osc(h.phs,V.sub_wave )*V.sub_level
+              + osc(h.pho,V.oct_wave )*V.oct_level;
+    if(V.noise_level > 0.0f){
+        s_noise_rng ^= s_noise_rng<<13; s_noise_rng ^= s_noise_rng>>17; s_noise_rng ^= s_noise_rng<<5;
+        float white  = (float)(int32_t)s_noise_rng * (1.0f/2147483648.0f);
+        h.noise_lp  += NOISE_HP_COEF * (white - h.noise_lp);
+        float bright = white - h.noise_lp;
+        mix += (white + (bright*2.0f - white)*V.noise_hp) * V.noise_level;
+    }
+    mix = fast_tanh(mix * h.drive);
+    // Per-drum 1-pole lowpass (cheap — one multiply-add — instead of the 4-pole
+    // Moog) at the drum's own cutoff: keeps Kick/Tom dark, Snare/Hat bright.
+    h.lp_state += h.lp_coeff * (mix - h.lp_state);
+    h.ph1 += f*V.osc1_ratio/sr; if(h.ph1>=1.0f)h.ph1-=1.0f;
+    h.ph2 += f*V.osc2_ratio/sr; if(h.ph2>=1.0f)h.ph2-=1.0f;
+    h.phs += f*V.sub_ratio /sr; if(h.phs>=1.0f)h.phs-=1.0f;
+    h.pho += f*V.oct_ratio /sr; if(h.pho>=1.0f)h.pho-=1.0f;
+    return fast_tanh(h.lp_state*1.3f) * h.amp;
 }
 
 void AudioCallback(AudioHandle::InputBuffer,
@@ -865,6 +976,10 @@ void AudioCallback(AudioHandle::InputBuffer,
     if(vi < 0 || vi >= NUM_VOICES) vi = 0;
     const Voice& VOICE = VOICES[vi];
 
+    // In the Drums MultiVoice the polyphonic drum engine plays instead of the
+    // mono path (which the touch loop holds silent). Decided once per block.
+    bool poly_drums = (g_voice_idx == MULTI_IDX);
+
     // Per-voice envelope/glide coefficients (expf isn't constexpr). Recompute
     // only when the active voice changes.
     static int   s_coeff_vi = -1;
@@ -896,7 +1011,12 @@ void AudioCallback(AudioHandle::InputBuffer,
     // jump the pitch multiplier up; it decays back to 1.0 over pitch_env_ms.
     static float s_pmult     = 1.0f;
     static float s_prev_tamp = 0.0f;
-    if(tamp > 0.001f && s_prev_tamp <= 0.001f) s_pmult = s_penv_start;
+    bool onset = (tamp > 0.001f && s_prev_tamp <= 0.001f);
+    // Mono re-articulation: a re-attack while the note is held restarts the amp
+    // envelope from zero and retriggers the pitch envelope (poly drums handle
+    // their own retrigger via drum_trigger, so ignore it here).
+    if(g_retrig){ g_retrig = false; if(!poly_drums){ onset = true; s_amp = 0.0f; } }
+    if(onset) s_pmult = s_penv_start;
     s_prev_tamp = tamp;
 
     for(size_t i=0;i<size;i++)
@@ -1012,6 +1132,14 @@ void AudioCallback(AudioHandle::InputBuffer,
         // Soft clip output
         float sample = fast_tanh(crushed * 1.3f) * s_amp * s_master_vol;
 
+        // Drums MultiVoice: replace the (silent) mono output with the summed
+        // polyphonic drum voices, soft-clipped, at master volume.
+        if(poly_drums){
+            float m = 0.0f;
+            for(int k = 0; k < POLY; k++) m += drum_render(g_hits[k], sr);
+            sample = fast_tanh(m) * s_master_vol;
+        }
+
         out[0][i] = sample;
         out[1][i] = sample;
 
@@ -1047,7 +1175,7 @@ void make_pos_bar(char* out,int w)
     out[0]='|';
     for(int i=0;i<w;i++)out[1+i]='-';
     out[1+w]='|';out[2+w]='\0';
-    for(int slot=0;slot<2;slot++){
+    for(int slot=0;slot<MAX_FINGERS;slot++){
         if(!tracked[slot].alive)continue;
         int p=(int)(((int64_t)tracked[slot].pos*(w-1)+500)/1000);
         if(p<0)p=0;if(p>=w)p=w-1;
@@ -1223,7 +1351,7 @@ int main()
     uint16_t data[N_CH];
     int32_t  delta[N_CH];
     char     bar[32], pos_bar[52];
-    Finger   raw[2];
+    Finger   raw[MAX_FINGERS];
 
     uint32_t idle_since      = System::GetNow();
     uint32_t last_touch_ms   = System::GetNow();
@@ -1232,7 +1360,6 @@ int main()
     static constexpr uint32_t F1_REQUANTIZE_MS = 200; // re-quantize only after this long off
     float    f1_midi_base    = 60.0f; // last quantized note
     bool     f1_sliding      = false; // true after first touch settles
-    float    multi_freq      = 60.0f; // MultiVoice: pitch latched at tap onset
 
     // Control loop runs as fast as the sensor allows (~150-200 Hz) for tight
     // timing; the serial display is throttled to a readable rate independently.
@@ -1269,6 +1396,44 @@ int main()
             g_led3_duty = 0.0f;
             System::Delay(140);
         }
+    };
+
+    // ── Polyphonic Drums state ────────────────────────────────────────────────
+    bool     hit_was_alive[MAX_FINGERS] = {};   // debounced-alive, previous frame
+    uint32_t hit_last_alive[MAX_FINGERS]= {};   // last RAW-alive time (for lift debounce)
+    float    prs_sm[MAX_FINGERS]        = {};   // lightly-smoothed pressure
+    uint32_t last_retrig[MAX_FINGERS]   = {};   // last held re-attack time (refractory)
+    // Genuine taps (a real lift + re-tap) retrigger with NO limit. A tracker
+    // dropout shorter than TAP_GAP_MS is treated as a flicker — the note keeps
+    // holding, no spurious retrigger. While HELD, a sharp pressure rise
+    // re-attacks but is rate-limited by the voice's retrig_ms.
+    static constexpr uint32_t TAP_GAP_MS  = 40;    // min off-time to count as a real lift
+    static constexpr float    PRS_SMOOTH  = 0.5f;  // light smoothing (preserve the attack edge)
+    static constexpr float    RISE_THRESH = 18.0f; // % pressure rise/frame = a held re-attack
+
+    // Trigger drum slot `s` from a tap at (pos, pressure): zone → drum, fine
+    // position → interval pitch, pressure → velocity (loudness/brightness/drive).
+    auto trigger_drum = [&](int s, int32_t pos, int32_t pressure){
+        float p    = clampf((float)pos / 1000.0f, 0.0f, 1.0f);
+        int   zone = (int)(p * 4.0f); if(zone > 3) zone = 3;
+        int   vidx = MULTI_ZONES[zone];
+        const Voice& V = VOICES[vidx];
+        float subp = p * 4.0f - (float)zone;
+        int   step = (int)(subp * (float)MULTI_NINTERVALS);
+        if(step >= MULTI_NINTERVALS) step = MULTI_NINTERVALS - 1;
+        float freq = V.freq_low * MULTI_INTERVALS[step];
+        float v    = FIX_DRUM ? 1.0f : clampf((float)pressure / 100.0f, 0.0f, 1.0f);
+        float amp  = 0.72f * ((1.0f - V.vel_sens) + V.vel_sens * v);
+        // Cutoff from velocity, same curve as the mono path.
+        float cutoff_oct = V.cutoff_oct_max * smootherstep_f(v);
+        float oa = cutoff_oct * 0.6931f;
+        float om = 1.0f + oa*(1.0f + oa*(0.5f + oa*(0.1667f + oa*0.0417f)));
+        float tf = (V.keytrack >= 0.999f) ? freq
+                   : V.freq_low * powf(freq / V.freq_low, V.keytrack);
+        float cutoff = clampf(tf * V.cutoff_mult * om, 20.0f, 18000.0f);
+        float drive  = 1.0f + smoothstep_f(v) * V.drive_max;
+        drum_trigger(g_hits[s], vidx, freq, amp, cutoff, drive, hw.AudioSampleRate());
+        g_active_voice = vidx;   // header shows the last-hit drum
     };
 
     while(true)
@@ -1317,7 +1482,7 @@ int main()
             if(delta[i]>max_delta)max_delta=delta[i];
         }
 
-        int n_raw=detect_raw(delta,raw);
+        int n_raw=detect_raw(delta,raw,MAX_FINGERS);
         bool touching=(n_raw>0);
 
         // ── Auto-rebaseline ───────────────────────────────────────────────────
@@ -1350,26 +1515,69 @@ int main()
         bool f1_fresh = !f1_was_on && (System::GetNow() - f1_last_seen_ms >= F1_REQUANTIZE_MS);
 
         // ── MultiVoice routing ───────────────────────────────────────────────
-        // In Drums mode each fresh tap latches a drum (by slider zone) and a
-        // pitch (interval by fine position within the zone); both hold for the
-        // whole tap. Otherwise the active voice just tracks the selected one.
+        // Drums mode is polyphonic: each of up to 4 fingers drives its own drum
+        // slot — a fresh touch triggers the zone's drum (pitch from the fine
+        // position), lifting it releases that slot. The mono engine is held
+        // silent. Other voices stay monophonic and use the finger-1 path below.
         bool multi = (g_voice_idx == MULTI_IDX);
-        if(!multi){
-            g_active_voice = g_voice_idx;
-        } else if(f1_on && !f1_was_on){
-            float p    = clampf((float)tracked[0].pos / 1000.0f, 0.0f, 1.0f);
-            int   zone = (int)(p * 4.0f); if(zone > 3) zone = 3;
-            g_active_voice = MULTI_ZONES[zone];
-            float subp = p * 4.0f - (float)zone;                 // 0..1 within the zone
-            int   step = (int)(subp * (float)MULTI_NINTERVALS);
-            if(step >= MULTI_NINTERVALS) step = MULTI_NINTERVALS - 1;
-            multi_freq = VOICES[g_active_voice].freq_low * MULTI_INTERVALS[step];
+        if(!multi) g_active_voice = g_voice_idx;
+
+        // ── Re-attack detector (all fingers, with lift debounce) ─────────────
+        // deb_alive[] = alive after debouncing brief dropouts. A debounced
+        // rising edge is a genuine tap (fires with NO limit); a sharp pressure
+        // rise while held re-attacks (rate-limited by retrig_ms).
+        bool     reatk[MAX_FINGERS] = {};
+        bool     deb_alive[MAX_FINGERS] = {};
+        uint32_t now_ms = System::GetNow();
+        for(int i = 0; i < MAX_FINGERS; i++){
+            bool raw = tracked[i].alive;
+            if(raw) hit_last_alive[i] = now_ms;
+            // Bridge sub-TAP_GAP_MS dropouts so a flicker isn't seen as a lift.
+            bool deb = raw || (int32_t)(now_ms - hit_last_alive[i]) < (int32_t)TAP_GAP_MS;
+            deb_alive[i] = deb;
+            if(!deb) continue;                              // truly lifted
+
+            int vidx;
+            if(multi){
+                int z = (int)(clampf((float)tracked[i].pos/1000.0f,0.0f,1.0f) * 4.0f);
+                if(z > 3) z = 3; vidx = MULTI_ZONES[z];
+            } else vidx = g_active_voice;
+            float rms = VOICES[vidx].retrig_ms;
+            float prs = (float)tracked[i].pressure;
+
+            if(!hit_was_alive[i]){
+                // Genuine new tap (after a real lift) — fire immediately, no cap.
+                prs_sm[i] = prs; reatk[i] = true; last_retrig[i] = now_ms;
+            } else if(raw){
+                // Held: re-attack on a sharp pressure rise, capped by retrig_ms.
+                float prev = prs_sm[i];
+                prs_sm[i] = prev*PRS_SMOOTH + prs*(1.0f - PRS_SMOOTH);
+                if(rms > 0.0f && (prs_sm[i] - prev) > RISE_THRESH
+                   && (int32_t)(now_ms - last_retrig[i]) >= (int32_t)rms){
+                    reatk[i] = true; last_retrig[i] = now_ms;
+                }
+            }
         }
 
-        // Bind the active voice (a drum in MultiVoice mode) for the rest of the frame.
+        if(multi){
+            // Poly drums: each finger drives its own slot.
+            for(int i = 0; i < POLY; i++){
+                if(reatk[i])                                  trigger_drum(i, tracked[i].pos, tracked[i].pressure);
+                else if(!deb_alive[i] && hit_was_alive[i])    g_hits[i].gate = false;  // lifted → release
+            }
+            g_amp_target = 0.0f;   // mono engine silent; the poly drums play in the callback
+        } else {
+            // Mono: a re-attack mid-note re-articulates it (initial touch is
+            // handled by the amp gate below).
+            if(reatk[0] && hit_was_alive[0]) g_retrig = true;
+        }
+
+        for(int i = 0; i < MAX_FINGERS; i++) hit_was_alive[i] = deb_alive[i];
+
+        // Bind the active voice (last-hit drum in MultiVoice mode) for finger-2 / header.
         const Voice& VOICE = VOICES[g_active_voice];
 
-        if(f1_on)
+        if(f1_on && !multi)
         {
             float pos01 = clampf((float)tracked[0].pos / 1000.0f, 0.0f, 1.0f);
             float prs01 = clampf((float)tracked[0].pressure / 100.0f, 0.0f, 1.0f); // hard clamp
@@ -1391,13 +1599,7 @@ int main()
 
             float freq; // final frequency to use
 
-            if(multi)
-            {
-                // MultiVoice: use the pitch latched at tap onset (zone interval).
-                freq = multi_freq;
-                f1_sliding = false;
-            }
-            else if(QUANTIZE_ENABLED && f1_fresh)
+            if(QUANTIZE_ENABLED && f1_fresh)
             {
                 // Touch-down: snap to nearest chromatic note
                 f1_midi_base = quantize_midi(midi_raw);
@@ -1476,7 +1678,7 @@ int main()
             g_amp_target     = 0.72f * vel_scale;
 
         }
-        else
+        else if(!multi)
         {
             // Finger lifted: gate off, reset slide state
             f1_sliding = false;
@@ -1524,8 +1726,8 @@ int main()
 
         f1_was_on = f1_on;
 
-        // ── Finger 2 → Detune + Bitcrush + Ring mod ──────────────────────────
-        if(tracked[1].alive)
+        // ── Finger 2 → Detune + Bitcrush + Ring mod (mono voices only) ───────
+        if(tracked[1].alive && !multi)
         {
             float pos01 = clampf((float)tracked[1].pos / 1000.0f, 0.0f, 1.0f);
             float prs01 = clampf((float)tracked[1].pressure / 100.0f, 0.0f, 1.0f); // hard clamp

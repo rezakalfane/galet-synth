@@ -140,22 +140,29 @@ The noise + short envelopes + pitch envelope are what make the tap-to-play
 percussion voices (Kick/Snare/Tom/Hi-Hat). To add a voice, copy a `VOICE_*`
 block, retune, and add it to `VOICES[]`. Full reference: `CLAUDE.md` → *Voices*.
 
-### MultiVoice — "Drums"
+### MultiVoice — "Drums" (4-voice polyphonic kit)
 
-`VOICE_DRUMS` turns the glass into a **4-zone drum kit**. Each zone triggers one
-drum on tap, and the fine position within a zone snaps the pitch to an interval:
+`VOICE_DRUMS` turns the glass into a **4-zone drum kit you can play with up to 4
+fingers at once** (kick + snare + hat together). Each zone triggers one drum on
+tap, and the fine position within a zone snaps the pitch to an interval:
 
 ```
 |  KICK   |  SNARE  |   TOM   |   HAT   |   ← four equal zones, left to right
 |root 4 5 8|...      |...      |...      |   ← fine position snaps to root/4th/5th/octave
 ```
 
-Each tap latches its drum and pitch for the whole hit (drifting your finger
-won't change it), and pressure still drives that drum's brightness/punch. The
-zone-to-drum map (`MULTI_ZONES[]`) and the interval set (`MULTI_INTERVALS[]`)
-are constants at the top of `src/main.cpp`. Internally a tap routes the
-**active** voice (`g_active_voice`) to the zone's real drum voice, while the
-selected voice (`g_voice_idx`, shown in the header) stays "Drums".
+Each finger drives its own independent drum voice (own oscillators, filter and
+envelopes), so hits overlap and ring freely. Playing:
+
+- **Tap** a zone for a hit — tap as fast as you like, **no rate limit**.
+- **Velocity**: `FIX_DRUM` (default on) makes every tap a consistent full hit;
+  turn it off for pressure-velocity dynamics (`vel_sens`).
+- **Hold + bounce**: while a finger stays down, a deliberate pressure pulse
+  re-attacks, rate-limited per drum by `retrig_ms` (a steady hold stays quiet).
+
+The zone-to-drum map (`MULTI_ZONES[]`), intervals (`MULTI_INTERVALS[]`),
+`FIX_DRUM`, and each drum's `retrig_ms` are all editable near the top of
+`src/main.cpp`. Other voices remain monophonic.
 
 > The parameter sections below describe the **DSP mechanics** and the default
 > (`VOICE_LEAD`) values. The specific numbers — oscillator levels/waveforms,

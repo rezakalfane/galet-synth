@@ -71,6 +71,10 @@ If this error appears, remove the `LDFLAGS` line from `Makefile`.
 |---|---|---|
 | `VOICES[]` / `g_voice_idx` | ~243 | **Voice bank** + active index. Cycled live by the FSR-hold gesture; `g_voice_idx` initializer = boot voice. See [Voices](#voices) |
 | `VOICE_SWITCH_FIRST_MS` / `_REPEAT_MS` | ~263 | FSR-hold gesture timing (3 s to first switch, then every 2 s) |
+| `MAX_FINGERS` | ~36 | Fingers tracked (4) — polyphony count for the Drums MultiVoice |
+| `FIX_DRUM` | ~430 | `true` = every drum tap is full 100% pressure (consistent); `false` = `vel_sens` dynamics |
+| `MULTI_ZONES[]` / `MULTI_INTERVALS[]` | ~425 | Drums: zone→drum map and the per-zone pitch intervals |
+| `TAP_GAP_MS` / `RISE_THRESH` (in `main`) | — | Lift debounce, and held re-attack sensitivity (drum retrigger tuning) |
 | `TOUCH_THRESHOLD` | 39 | Min delta to register touch |
 | `PRESSURE_MAX_REF[12]` | 40 | Per-electrode 100% pressure delta |
 | `PRESSURE_MIN_REF[12]` | 40 | Per-electrode 0% pressure delta (was `PRESSURE_DEAD_ZONE`) |
@@ -106,16 +110,34 @@ resolution. Envelope/glide coefficients (`ms_to_coeff`) recompute only when the
 index changes. Because selection is runtime, the per-sample waveform dispatch /
 noise / keytrack / osc2 branches no longer fold away — negligible on the H750.
 
-### MultiVoice — "Drums" (`src/main.cpp` `VOICE_DRUMS`, `MULTI_*`)
+### MultiVoice — "Drums": 4-voice polyphonic kit (`VOICE_DRUMS`, `MULTI_*`)
 
 `VOICE_DRUMS` (kept **last** in the bank, `MULTI_IDX = NUM_VOICES-1`) is a meta-
 voice: when selected, the slider splits into 4 equal zones (`MULTI_ZONES[]` —
-Kick, Snare, Tom, Hat by bank index) and each fresh tap latches the zone's drum
-into `g_active_voice` plus a pitch — the fine position within the zone snaps to
-`MULTI_INTERVALS[]` (root / 4th / 5th / octave) above that drum's `freq_low`.
-Drum + pitch hold for the whole tap; pressure still drives per-drum brightness.
-The `VOICE_DRUMS` struct itself is just a Kick-like placeholder so it appears in
-the bank/gesture/header ("Drums"); its fields aren't used for audio.
+Kick, Snare, Tom, Hat by bank index). It is **polyphonic** — up to `MAX_FINGERS`
+(4) fingers each play their own drum at once.
+
+- **Detection**: `detect_raw` finds up to 4 separated fingers; `tracked[4]`. The
+  mono melodic path still only reads `tracked[0]`/`tracked[1]`.
+- **Engine**: a pool of `DrumHit g_hits[POLY]` — each a self-contained voice
+  (oscillators + noise + **its own** 1-pole lowpass `lp_*`, not the 4-pole Moog,
+  for CPU; + amp/pitch envelopes). `drum_render` sums them; the mono engine is
+  held silent (`g_amp_target = 0`) and the callback uses the sum when
+  `g_voice_idx == MULTI_IDX`. `drum_trigger` latches drum + pitch + velocity-
+  derived cutoff/drive per hit. Reuses `moog_st` is **not** used here (1-pole).
+- **Pitch**: zone → drum; fine position within the zone snaps to
+  `MULTI_INTERVALS[]` (root / 4th / 5th / octave) above the drum's `freq_low`.
+- **Velocity / `FIX_DRUM`**: with `FIX_DRUM = true` (default) every tap is full
+  100% pressure (consistent hits); set false for `vel_sens` dynamics.
+- **Retrigger** (per finger): a genuine tap (real lift + re-tap, off ≥
+  `TAP_GAP_MS`) retriggers with **no limit**; a sub-`TAP_GAP_MS` tracker dropout
+  is debounced as a flicker (no spurious hit); while held, a sharp pressure rise
+  (`RISE_THRESH`) re-attacks, rate-capped by the voice's `retrig_ms`.
+
+The `VOICE_DRUMS` struct itself is a Kick-like placeholder so it shows in the
+bank/gesture/header ("Drums"); its own audio fields aren't used (the zone drums
+are). Other voices stay monophonic; in mono a held re-attack re-articulates via
+`g_retrig` (only voices with `retrig_ms > 0`).
 
 ### Switching voices live — FSR-hold gesture
 
@@ -158,6 +180,7 @@ membership, reorder `VOICES[]` or flip `no_cycle`.
 | `noise_hp` | Noise tone: 0 = white ("shhh"), 1 = high-passed ("tsss", for hi-hats/cymbals). Uses the global `NOISE_HP_COEF` corner |
 | `no_cycle` | `true` = skip this voice in the FSR-gesture cycle (still reachable as boot voice or via the Drums MultiVoice). The 4 raw drums set this. Default `false` = in cycle |
 | `vel_sens` | 0..1 velocity sensitivity: onset hit strength (peak pressure, latched at the tap) scales loudness; loudness floor = `1 - vel_sens`. Drums = 0.85; default 0 = fixed loudness (the sustained instruments) |
+| `retrig_ms` | Held re-attack rate cap (ms): min interval between pressure-bounce repeats while a finger stays down. 0 = no held re-attack (melodic default). Genuine taps ignore this — only the held-bounce path is capped. Drums ~400 |
 
 Envelope/glide are in **milliseconds**, converted to per-sample slew
 coefficients (`ms_to_coeff`) in the audio callback, recomputed on voice change.

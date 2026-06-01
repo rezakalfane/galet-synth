@@ -4,6 +4,26 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: 4-voice polyphonic Drums MultiVoice + multitouch`
+- **Multitouch**: `detect_raw` now finds up to `MAX_FINGERS` (4) separated
+  fingers (`tracked[4]`); the mono melodic path is unchanged (uses [0]/[1])
+- **Polyphony in Drums mode**: a pool of independent drum voices (`DrumHit
+  g_hits[POLY]`) — each its own oscillators, noise, 1-pole lowpass and amp/pitch
+  envelopes — summed in the audio callback. Up to 4 drums sound at once (kick +
+  snare + hat…). Melodic voices stay monophonic
+- The per-voice Moog ladder is **bypassed in Drums mode** for a cheap per-drum
+  **1-pole lowpass** (`lp_*`) — keeps Kick/Tom dark, Snare/Hat bright, at a
+  fraction of the CPU for 4 simultaneous voices
+- **`FIX_DRUM`** (default true): every drum tap is treated as full 100% pressure
+  for consistent hits; set false for `vel_sens` velocity dynamics
+- **Retrigger model**: genuine taps (real lift + re-tap, off ≥ `TAP_GAP_MS`)
+  retrigger with **no limit**; sub-`TAP_GAP_MS` tracker dropouts are debounced as
+  flickers (no spurious hits while held); a held pressure bounce (`RISE_THRESH`)
+  re-attacks, rate-capped per voice by `retrig_ms`. Mono voices re-articulate via
+  `g_retrig` when `retrig_ms > 0`
+- New `Voice` fields `vel_sens` and `retrig_ms`; `moog_st` filter variant takes
+  caller-supplied state
+
 ### Changed — `feat: faster control loop + per-voice velocity sensitivity`
 - **Decoupled the control loop from the serial display.** The display now prints
   throttled (`PRINT_INTERVAL_MS`, ~8 Hz) instead of every frame with a 60 ms
