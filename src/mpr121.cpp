@@ -69,7 +69,10 @@ bool mpr_init()
     for(uint8_t ch=0;ch<12;ch++){mpr_write(0x41+ch*2,4);mpr_write(0x42+ch*2,2);}
     mpr_write(REG_DEBOUNCE,0x11);
     mpr_write(REG_CONFIG1,0xF0);  // FFI=34 | CDC=48uA
-    mpr_write(REG_CONFIG2,0x4C);  // CDT=4us | SFI=18 | ESI=1ms
+    // CONFIG2 bits: CDT[7:5] SFI[4:3] ESI[2:0]. Was 0x4C = CDT 1us | SFI 6 |
+    // ESI 16ms — the 16ms electrode sample interval throttled fast taps to ~62Hz
+    // updates. 0x48 keeps CDT/SFI, sets ESI=000=1ms (sensor refreshes ~16x faster).
+    mpr_write(REG_CONFIG2,0x48);  // CDT=1us | SFI=6 | ESI=1ms
     mpr_write(REG_ECR,0x8C);
     System::Delay(100);
     uint8_t ecr=0;mpr_read(REG_ECR,&ecr,1);

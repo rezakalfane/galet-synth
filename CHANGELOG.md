@@ -4,6 +4,13 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Fixed — `fix: MPR121 ESI 16ms → 1ms for fast-tap response`
+- `REG_CONFIG2` was `0x4C`, whose ESI (electrode sample interval) bits decode to
+  16 ms — the sensor only refreshed electrode values ~62×/sec, blurring/dropping
+  quick taps (and its comment wrongly claimed "ESI=1ms"). Set to `0x48` (ESI =
+  1 ms, CDT/SFI unchanged) so the sensor refreshes ~16× faster; fast tapping and
+  rolls now register reliably. Verified stable on the glass (no added jitter)
+
 ### Added — `feat: startup voice-blink + FSR volume deadzone`
 - On boot (after the grace period + audio start) the LEDs flash N times = the
   boot/restored voice's cycle position — same gesture as a live voice switch, so
