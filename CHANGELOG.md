@@ -4,6 +4,14 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: startup voice-blink + FSR volume deadzone`
+- On boot (after the grace period + audio start) the LEDs flash N times = the
+  boot/restored voice's cycle position — same gesture as a live voice switch, so
+  you can see which voice you're on (handy with the persisted voice)
+- FSR master volume gains a 10% deadzone (`FSR_DEADZONE`): light pressure holds
+  full volume; only past 10% of travel does it ramp down to 0 at the min. The
+  deadzone tracks `fsr_max`, so it recalibrates with the idle re-cal
+
 ### Added — `test: host unit-test harness for the pure modules (phase 4)`
 - New `test/` harness (`test/test_main.cpp` + `test/Makefile`, run with
   `make -C test`) — compiles `dsp.h`, `voice.h`, and `touch` on the host (no

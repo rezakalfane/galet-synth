@@ -159,8 +159,12 @@ int main()
     hw.adc.Start();
 
     constexpr uint16_t FSR_MIN       = 8000;
+    constexpr float    FSR_DEADZONE  = 0.10f;  // top 10% of travel = full volume (no change)
     uint16_t           fsr_max       = 55000;
-    float              fsr_range_inv = 1.0f / (float)(fsr_max - FSR_MIN);
+    // Volume stays 100% until pressure passes the deadzone (raw drops below
+    // fsr_dead), then ramps linearly to 0% at FSR_MIN.
+    uint16_t           fsr_dead       = (uint16_t)(fsr_max - FSR_DEADZONE * (fsr_max - FSR_MIN));
+    float              fsr_active_inv = 1.0f / (float)(fsr_dead - FSR_MIN);
 
     auto commit_fsr_avg = [&](uint32_t acc, int n) {
         if(n == 0) return;
@@ -168,8 +172,9 @@ int main()
         // Sanity floor — without enough headroom over FSR_MIN the volume curve
         // becomes hyper-sensitive to noise.
         if(avg < FSR_MIN + 500) avg = FSR_MIN + 500;
-        fsr_max       = avg;
-        fsr_range_inv = 1.0f / (float)(fsr_max - FSR_MIN);
+        fsr_max        = avg;
+        fsr_dead       = (uint16_t)(fsr_max - FSR_DEADZONE * (fsr_max - FSR_MIN));
+        fsr_active_inv = 1.0f / (float)(fsr_dead - FSR_MIN);
     };
 
     // Startup calibration: 2 s silent FSR average → fsr_max.
@@ -330,6 +335,10 @@ int main()
         }
     };
 
+    // Startup: flash the LEDs to announce the boot/restored voice (its cycle
+    // position) — same gesture as a live voice switch.
+    flash_voice_leds(cycle_pos(g_voice_idx));
+
     // ── Polyphonic Drums state ────────────────────────────────────────────────
     bool     hit_was_alive[MAX_FINGERS] = {};   // debounced-alive, previous frame
     uint32_t hit_last_alive[MAX_FINGERS]= {};   // last RAW-alive time (for lift debounce)
@@ -370,12 +379,14 @@ int main()
 
     while(true)
     {
-        // ── FSR → master volume (no pressure = 100%, press attenuates) ───────
+        // ── FSR → master volume ──────────────────────────────────────────────
+        // Full volume through the deadzone (light pressure), then ramps to 0 as
+        // pressure increases down to FSR_MIN.
         uint16_t fsr_raw = hw.adc.Get(0);
         float    vol;
-        if(fsr_raw <= FSR_MIN)      vol = 0.0f;
-        else if(fsr_raw >= fsr_max) vol = 1.0f;
-        else                        vol = (float)(fsr_raw - FSR_MIN) * fsr_range_inv;
+        if(fsr_raw >= fsr_dead)     vol = 1.0f;
+        else if(fsr_raw <= FSR_MIN) vol = 0.0f;
+        else                        vol = (float)(fsr_raw - FSR_MIN) * fsr_active_inv;
         g_master_vol = vol;
 
         // ── FSR-hold voice-switch gesture ───────────────────────────────────
