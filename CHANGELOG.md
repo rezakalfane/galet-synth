@@ -4,6 +4,16 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `test: host unit-test harness for the pure modules (phase 4)`
+- New `test/` harness (`test/test_main.cpp` + `test/Makefile`, run with
+  `make -C test`) — compiles `dsp.h`, `voice.h`, and `touch` on the host (no
+  Daisy, no gtest; plain assertion macros) and runs ~200 checks: oscillator/
+  filter/`ms_to_coeff` behaviour, `detect_raw`/`update_tracked`/`centroid`/
+  `pressure_pct`, and the voice `cycle_*` / MultiVoice logic
+- Surfaced a known quirk: `pressure_pct`'s integer Newton-sqrt converges poorly
+  and saturates to 100 before the electrode max; left as-is (mappings were tuned
+  around it), the test asserts the envelope (bounds + monotonic), not a curve
+
 ### Changed — `refactor: split main.cpp into modules (phase 3 — audio engine unit)`
 - Extracted the **audio engine** into `engine.{h,cpp}`: the `g_*` control params,
   the per-sample DSP state, `moog()`, the polyphonic drum voices (`DrumHit`,

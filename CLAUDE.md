@@ -42,6 +42,18 @@ After `make clean`, always recreate build directories before building:
 mkdir -p build/src build/tools
 ```
 
+## Tests (host, no hardware)
+
+The pure modules (`dsp.h`, `voice.h`, `touch`) compile and run on the host —
+no Daisy, no gtest, plain assertions in `test/test_main.cpp`:
+```bash
+make -C test        # builds with the host c++ and runs the checks
+```
+Add cases there when changing detection, oscillators/filters, or the voice bank.
+Note: `pressure_pct`'s integer Newton-sqrt saturates to 100 well before the
+electrode max (poor convergence) — a known quirk the mappings were tuned around;
+the test asserts the envelope, not an idealized curve.
+
 ## Flash
 
 Put Daisy in DFU mode (hold BOOT, tap RESET), then:
