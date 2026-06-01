@@ -34,9 +34,12 @@ static constexpr float    LED3_INTENSITY     = 0.1f * LED3_LEVEL;
 static constexpr float    LED3_RELEASE_SMOOTH = 0.10f;
 
 // ── Musical mapping ───────────────────────────────────────────────────────────
-// Set to false to disable all quantization (fully continuous pitch)
-static constexpr bool QUANTIZE_ENABLED = false;
+// Master quantize switch. Per-voice quantize is set by Voice::quantize (only the
+// Organ enables it); this gate must ALSO be true for any snapping to happen.
+// Set to false to force fully continuous pitch on every voice.
+static constexpr bool QUANTIZE_ENABLED = true;
 // Quantize to chromatic scale (all 12 semitones)
 // Change to {0,2,4,5,7,9,11} for major scale, {0,2,3,5,7,8,10} for minor, etc.
-static const int SCALE[] = {0,1,2,3,4,5,6,7,8,9,10,11}; // chromatic
+// static const int SCALE[] = {0,1,2,3,4,5,6,7,8,9,10,11}; // chromatic
+static const int SCALE[] = {0,2,3,5,7,8,10}; // for minor scale
 static constexpr int SCALE_LEN = 12;

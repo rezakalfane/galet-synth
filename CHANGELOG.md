@@ -4,6 +4,15 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Changed — `feat: per-voice pitch quantize (Organ only)`
+- Pitch quantization is now a per-voice property: added a `quantize` field to the
+  `Voice` struct (default `false`). Only `VOICE_ORGAN` enables it, so the Organ
+  snaps finger-1 to the nearest chromatic note on touch-down (then bends freely on
+  slide) while every other voice plays fully continuous pitch.
+- `QUANTIZE_ENABLED` in `config.h` is now a master switch — the touch-down snap
+  gates on `QUANTIZE_ENABLED && VOICE.quantize`, so it must also be true for any
+  snapping to happen.
+
 ### Added — `feat: per-LED brightness levels (reduce LED→audio noise)`
 - Per-LED brightness knobs in `config.h` (`LED1_LEVEL`/`LED2_LEVEL`/`LED3_LEVEL`)
   applied to every LED write (position, idle sweep, voice flash). Lowering an

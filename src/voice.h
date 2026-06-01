@@ -66,6 +66,11 @@ struct Voice {
     // retriggers). A full lift always retriggers regardless. Default 0 keeps the
     // melodic voices free of accidental re-articulation; drums set a value.
     float retrig_ms;
+
+    // Pitch quantize: true = snap finger-1 to the nearest chromatic note on
+    // touch-down, then bend freely while sliding (see QUANTIZE in main.cpp).
+    // false = fully continuous pitch. Default false; only the Organ sets it.
+    bool quantize;
 };
 
 // Perfect-fifth frequency ratio = 2^(7/12).
@@ -159,7 +164,10 @@ static constexpr Voice VOICE_ORGAN = {
     2.0f, 5.0f, 0.20f,          // mostly-open clean filter, gentle pressure lift, low res
     0.8f,                       // light drive — pressure adds subtle warmth, stays pure
     // noise, keytrack, rm_ratio, rm_max, fold_max, attack, release, glide (ms)
-    0.03f, 1.0f, 1.0f, 0.05f, 0.0f, 8.0f, 120.0f, 8.0f   // breath chiff, fast on/off, no glide
+    0.03f, 1.0f, 1.0f, 0.05f, 0.0f, 8.0f, 120.0f, 8.0f,  // breath chiff, fast on/off, no glide
+    // pitch_env_oct, pitch_env_ms, noise_hp, no_cycle, vel_sens, retrig_ms (defaults)
+    0.0f, 0.0f, 0.0f, false, 0.0f, 0.0f,
+    true         // quantize — snap to chromatic notes on touch-down (organ/keyboard feel)
 };
 
 // ── Voice 5: screaming aggressive lead ────────────────────────────────────────

@@ -545,7 +545,7 @@ int main()
 
             float freq; // final frequency to use
 
-            if(QUANTIZE_ENABLED && f1_fresh)
+            if(QUANTIZE_ENABLED && VOICE.quantize && f1_fresh)
             {
                 // Touch-down: snap to nearest chromatic note
                 f1_midi_base = quantize_midi(midi_raw);
