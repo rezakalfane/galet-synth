@@ -152,6 +152,16 @@ gesture freezes the idle-chase / rebaseline timers while held. To change the
 **boot** voice, edit the `g_voice_idx` initializer; to change cycle order or
 membership, reorder `VOICES[]` or flip `no_cycle`.
 
+### Persistence (QSPI flash)
+
+The selected voice survives power-off. A `PersistentStorage<PersistSettings>`
+(libDaisy, `util/PersistentStorage.h`) stores `g_voice_idx` in QSPI flash at
+offset 0 — fine because this app runs from **internal** flash, so QSPI is free.
+At boot `storage.Init(...)` restores it (first boot writes the `g_voice_idx`
+initializer as the factory default); each FSR-gesture switch calls
+`storage.Save()` (only erases/writes if the value changed → minimal wear).
+Out-of-range stored values are ignored, falling back to the default.
+
 ### Voice struct fields
 
 | Field | Meaning |

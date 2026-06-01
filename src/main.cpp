@@ -22,11 +22,18 @@
  */
 
 #include "daisy_seed.h"
+#include "util/PersistentStorage.h"
 #include <math.h>
 #include <string.h>
 
 using namespace daisy;
 using namespace daisy::seed;
+
+// Persisted settings (saved to QSPI flash, survives power-off).
+struct PersistSettings {
+    int32_t voice_idx;
+    bool operator!=(const PersistSettings& o) const { return o.voice_idx != voice_idx; }
+};
 
 // ── Pin / I2C config ──────────────────────────────────────────────────────────
 static constexpr Pin      SDA_PIN  = D12;
@@ -1189,6 +1196,17 @@ int main()
     hw.Init();
     hw.SetAudioBlockSize(4);
 
+    // ── Persisted voice (QSPI flash) ──────────────────────────────────────────
+    // Restore the last selected voice across power cycles. First boot writes the
+    // current g_voice_idx as the factory default.
+    PersistentStorage<PersistSettings> storage(hw.qspi);
+    storage.Init(PersistSettings{ g_voice_idx });
+    {
+        int32_t v = storage.GetSettings().voice_idx;
+        if(v >= 0 && v < NUM_VOICES) g_voice_idx = v;
+    }
+    g_active_voice = (g_voice_idx == MULTI_IDX) ? MULTI_ZONES[0] : g_voice_idx;
+
     // Power-on grace period so the lid can be closed before baseline capture.
     System::Delay(5000);
 
@@ -1468,6 +1486,9 @@ int main()
                 int pos = cycle_pos(g_voice_idx);
                 hw.PrintLine("[voice %d/%d] %s",
                              pos, cycle_total(), VOICES[g_voice_idx].name);
+                // Persist the new selection (only erases/writes QSPI if changed).
+                storage.GetSettings().voice_idx = g_voice_idx;
+                storage.Save();
                 flash_voice_leds(pos);                         // count = position in the cycle
                 fsr_next_switch = System::GetNow() + VOICE_SWITCH_REPEAT_MS; // re-time after flash
             }

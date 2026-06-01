@@ -128,7 +128,8 @@ raw drums are excluded (you play them via the Drums MultiVoice), so the gesture
 steps through the 8 instruments + Drums. Each switch **flashes the LEDs N times**
 where N is the new voice's position in the cycle, and prints `[voice n/total]`
 to serial. (You're at zero volume while holding, so you hear the new voice on
-release.)
+release.) The selected voice is **saved to flash**, so it's restored after a
+power-cycle.
 
 Each voice controls, per oscillator: pitch ratio, mix level and **waveform**
 (`WAVE_TRI` / `WAVE_SINE` / `WAVE_SQUARE` / `WAVE_SAW`); plus filter base cutoff,

@@ -4,6 +4,13 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: persist the selected voice across power cycles`
+- The FSR-selected voice is saved to QSPI flash (`PersistentStorage<PersistSettings>`)
+  and restored on boot — turn the synth off and on and it comes back on the last
+  voice you chose. Saved on each gesture switch (only writes if changed);
+  out-of-range stored values fall back to the default. Works because the app runs
+  from internal flash, leaving QSPI free for data
+
 ### Added — `feat: 4-voice polyphonic Drums MultiVoice + multitouch`
 - **Multitouch**: `detect_raw` now finds up to `MAX_FINGERS` (4) separated
   fingers (`tracked[4]`); the mono melodic path is unchanged (uses [0]/[1])
