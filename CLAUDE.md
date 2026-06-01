@@ -3,13 +3,16 @@
 ## Project
 
 Glass touch bass synth for Daisy Seed + MPR121 capacitive sensor.
-- Firmware (`src/`), being split into modules (header-only so far; one translation unit):
-  - `main.cpp` — app: init, persistence, MPR121 bit-bang I2C, the control loop, audio callback
+- Firmware (`src/`), split into modules:
+  - `main.cpp` — app: init, persistence, the control loop, the audio callback
   - `config.h` — tuning constants (touch, LEDs, musical mapping)
   - `dsp.h` — pure DSP/math: oscillators, filters (`moog_st`), `fast_tanh`, `ms_to_coeff`, `Waveform`
   - `voice.h` — `Voice` struct, all presets, `VOICES[]` bank, `MULTI_*`, cycle helpers
-  - (planned: `touch.{h,cpp}`, `mpr121.{h,cpp}`, `engine.{h,cpp}` — see CHANGELOG)
-- Diagnostic / calibration tools: `tools/*.cpp`
+  - `mpr121.{h,cpp}` — bit-bang I2C + MPR121 driver (`mpr_init`, `read_electrodes`, `capture_baseline`)
+  - `touch.{h,cpp}` — finger detection/tracking (`detect_raw`, `update_tracked`, `tracked[]`)
+  - (planned: `engine.{h,cpp}` — audio callback + drum engine + `g_*` state)
+- `.cpp` modules are added to the build by the Makefile (only for `TARGET=src/main`);
+  tools stay standalone. Diagnostic / calibration tools: `tools/*.cpp`
 
 ## Build
 

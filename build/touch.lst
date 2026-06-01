@@ -1,0 +1,1384 @@
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"touch.cpp"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text._Z15centroid_windowPliiS_Pi,"ax",%progbits
+  19              		.align	1
+  20              		.p2align 2,,3
+  21              		.global	_Z15centroid_windowPliiS_Pi
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	_Z15centroid_windowPliiS_Pi:
+  27              	.LVL0:
+  28              	.LFB544:
+  29              		.file 1 "src/touch.cpp"
+   1:src/touch.cpp **** #include "touch.h"
+   2:src/touch.cpp **** #include "config.h"     // TOUCH_THRESHOLD, MIN_FINGER_SEP, N_CH, PRESSURE_MAX_REF, MAX_POS_JUMP
+   3:src/touch.cpp **** 
+   4:src/touch.cpp **** TrackedFinger tracked[MAX_FINGERS] = {};
+   5:src/touch.cpp **** 
+   6:src/touch.cpp **** int32_t centroid_window(int32_t* d,int s,int e,int32_t* pk_out,int* pkch_out)
+   7:src/touch.cpp **** {
+  30              		.loc 1 7 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 4, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+   8:src/touch.cpp ****     int32_t sw=0,swx=0,pk=0;int pkc=s;
+  34              		.loc 1 8 5 view .LVU1
+  35              		.loc 1 8 29 view .LVU2
+   9:src/touch.cpp ****     for(int i=s;i<=e;i++){
+  36              		.loc 1 9 5 view .LVU3
+  37              	.LBB4:
+  38              		.loc 1 9 18 view .LVU4
+  39 0000 9142     		cmp	r1, r2
+  40              	.LBE4:
+   7:src/touch.cpp ****     int32_t sw=0,swx=0,pk=0;int pkc=s;
+  41              		.loc 1 7 1 is_stmt 0 view .LVU5
+  42 0002 F0B5     		push	{r4, r5, r6, r7, lr}
+  43              		.cfi_def_cfa_offset 20
+  44              		.cfi_offset 4, -20
+  45              		.cfi_offset 5, -16
+  46              		.cfi_offset 6, -12
+  47              		.cfi_offset 7, -8
+  48              		.cfi_offset 14, -4
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 2
+
+
+   7:src/touch.cpp ****     int32_t sw=0,swx=0,pk=0;int pkc=s;
+  49              		.loc 1 7 1 view .LVU6
+  50 0004 059F     		ldr	r7, [sp, #20]
+  51              	.LBB6:
+  52              		.loc 1 9 18 view .LVU7
+  53 0006 2CDC     		bgt	.L8
+  54 0008 6FF0404E 		mvn	lr, #-1073741824
+  55              	.LBE6:
+   8:src/touch.cpp ****     int32_t sw=0,swx=0,pk=0;int pkc=s;
+  56              		.loc 1 8 24 view .LVU8
+  57 000c 0025     		movs	r5, #0
+  58 000e 561C     		adds	r6, r2, #1
+  59 0010 8E44     		add	lr, lr, r1
+   8:src/touch.cpp ****     int32_t sw=0,swx=0,pk=0;int pkc=s;
+  60              		.loc 1 8 18 view .LVU9
+  61 0012 AC46     		mov	ip, r5
+   8:src/touch.cpp ****     int32_t sw=0,swx=0,pk=0;int pkc=s;
+  62              		.loc 1 8 13 view .LVU10
+  63 0014 2C46     		mov	r4, r5
+  64 0016 00EB8E0E 		add	lr, r0, lr, lsl #2
+  65              	.LBB7:
+  66              		.loc 1 9 18 view .LVU11
+  67 001a 0846     		mov	r0, r1
+  68              	.LVL1:
+  69              	.L4:
+  70              	.LBB5:
+  10:src/touch.cpp ****         int32_t w=d[i]>0?d[i]:0;
+  71              		.loc 1 10 9 is_stmt 1 view .LVU12
+  72              		.loc 1 10 17 is_stmt 0 view .LVU13
+  73 001c 5EF8042F 		ldr	r2, [lr, #4]!
+  74 0020 22EAE272 		bic	r2, r2, r2, asr #31
+  75              	.LVL2:
+  11:src/touch.cpp ****         sw+=w;swx+=w*i;
+  76              		.loc 1 11 9 is_stmt 1 view .LVU14
+  12:src/touch.cpp ****         if(w>pk){pk=w;pkc=i;}
+  77              		.loc 1 12 9 is_stmt 0 view .LVU15
+  78 0024 AA42     		cmp	r2, r5
+  11:src/touch.cpp ****         sw+=w;swx+=w*i;
+  79              		.loc 1 11 18 view .LVU16
+  80 0026 00FB02CC 		mla	ip, r0, r2, ip
+  81              	.LVL3:
+  11:src/touch.cpp ****         sw+=w;swx+=w*i;
+  82              		.loc 1 11 11 view .LVU17
+  83 002a 1444     		add	r4, r4, r2
+  84              	.LVL4:
+  11:src/touch.cpp ****         sw+=w;swx+=w*i;
+  85              		.loc 1 11 15 is_stmt 1 view .LVU18
+  86              		.loc 1 12 9 view .LVU19
+  87 002c 01DD     		ble	.L3
+  88              		.loc 1 12 9 is_stmt 0 view .LVU20
+  89 002e 0146     		mov	r1, r0
+  90 0030 1546     		mov	r5, r2
+  91              	.LVL5:
+  92              	.L3:
+  93              		.loc 1 12 9 view .LVU21
+  94              	.LBE5:
+   9:src/touch.cpp ****         int32_t w=d[i]>0?d[i]:0;
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 3
+
+
+  95              		.loc 1 9 5 is_stmt 1 discriminator 2 view .LVU22
+  96 0032 0130     		adds	r0, r0, #1
+  97              	.LVL6:
+   9:src/touch.cpp ****         int32_t w=d[i]>0?d[i]:0;
+  98              		.loc 1 9 18 discriminator 2 view .LVU23
+  99 0034 B042     		cmp	r0, r6
+ 100 0036 F1D1     		bne	.L4
+ 101              	.LVL7:
+ 102              	.L2:
+   9:src/touch.cpp ****         int32_t w=d[i]>0?d[i]:0;
+ 103              		.loc 1 9 18 is_stmt 0 discriminator 2 view .LVU24
+ 104              	.LBE7:
+  13:src/touch.cpp ****     }
+  14:src/touch.cpp ****     if(pk_out)*pk_out=pk;if(pkch_out)*pkch_out=pkc;
+ 105              		.loc 1 14 5 is_stmt 1 view .LVU25
+ 106 0038 03B1     		cbz	r3, .L5
+ 107              		.loc 1 14 15 discriminator 1 view .LVU26
+ 108              		.loc 1 14 22 is_stmt 0 discriminator 1 view .LVU27
+ 109 003a 1D60     		str	r5, [r3]
+ 110              	.L5:
+ 111              		.loc 1 14 26 is_stmt 1 discriminator 3 view .LVU28
+ 112 003c 07B1     		cbz	r7, .L6
+ 113              		.loc 1 14 38 discriminator 4 view .LVU29
+ 114              		.loc 1 14 47 is_stmt 0 discriminator 4 view .LVU30
+ 115 003e 3960     		str	r1, [r7]
+ 116              	.L6:
+  15:src/touch.cpp ****     if(sw==0)return -1;
+ 117              		.loc 1 15 5 is_stmt 1 view .LVU31
+ 118 0040 9CB1     		cbz	r4, .L9
+  16:src/touch.cpp ****     int32_t p=(swx*1000)/(sw*(N_CH-1));
+ 119              		.loc 1 16 5 view .LVU32
+ 120              	.LVL8:
+  17:src/touch.cpp ****     if(p<0)p=0;if(p>1000)p=1000;
+ 121              		.loc 1 17 5 view .LVU33
+  16:src/touch.cpp ****     int32_t p=(swx*1000)/(sw*(N_CH-1));
+ 122              		.loc 1 16 19 is_stmt 0 view .LVU34
+ 123 0042 4FF47A73 		mov	r3, #1000
+ 124              	.LVL9:
+  16:src/touch.cpp ****     int32_t p=(swx*1000)/(sw*(N_CH-1));
+ 125              		.loc 1 16 29 view .LVU35
+ 126 0046 04EB8400 		add	r0, r4, r4, lsl #2
+  16:src/touch.cpp ****     int32_t p=(swx*1000)/(sw*(N_CH-1));
+ 127              		.loc 1 16 19 view .LVU36
+ 128 004a 03FB0CFC 		mul	ip, r3, ip
+ 129              	.LVL10:
+  16:src/touch.cpp ****     int32_t p=(swx*1000)/(sw*(N_CH-1));
+ 130              		.loc 1 16 29 view .LVU37
+ 131 004e 04EB4000 		add	r0, r4, r0, lsl #1
+  16:src/touch.cpp ****     int32_t p=(swx*1000)/(sw*(N_CH-1));
+ 132              		.loc 1 16 13 view .LVU38
+ 133 0052 9CFBF0F0 		sdiv	r0, ip, r0
+ 134 0056 9842     		cmp	r0, r3
+ 135 0058 A8BF     		it	ge
+ 136 005a 1846     		movge	r0, r3
+ 137 005c 20EAE070 		bic	r0, r0, r0, asr #31
+  18:src/touch.cpp ****     return p;
+  19:src/touch.cpp **** }
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 4
+
+
+ 138              		.loc 1 19 1 view .LVU39
+ 139 0060 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 140              	.LVL11:
+ 141              	.L8:
+   8:src/touch.cpp ****     for(int i=s;i<=e;i++){
+ 142              		.loc 1 8 24 view .LVU40
+ 143 0062 0025     		movs	r5, #0
+   8:src/touch.cpp ****     for(int i=s;i<=e;i++){
+ 144              		.loc 1 8 18 view .LVU41
+ 145 0064 AC46     		mov	ip, r5
+   8:src/touch.cpp ****     for(int i=s;i<=e;i++){
+ 146              		.loc 1 8 13 view .LVU42
+ 147 0066 2C46     		mov	r4, r5
+ 148 0068 E6E7     		b	.L2
+ 149              	.LVL12:
+ 150              	.L9:
+  15:src/touch.cpp ****     int32_t p=(swx*1000)/(sw*(N_CH-1));
+ 151              		.loc 1 15 22 view .LVU43
+ 152 006a 4FF0FF30 		mov	r0, #-1
+ 153              		.loc 1 19 1 view .LVU44
+ 154 006e F0BD     		pop	{r4, r5, r6, r7, pc}
+ 155              		.loc 1 19 1 view .LVU45
+ 156              		.cfi_endproc
+ 157              	.LFE544:
+ 159              		.section	.text._Z12pressure_pctli,"ax",%progbits
+ 160              		.align	1
+ 161              		.p2align 2,,3
+ 162              		.global	_Z12pressure_pctli
+ 163              		.syntax unified
+ 164              		.thumb
+ 165              		.thumb_func
+ 167              	_Z12pressure_pctli:
+ 168              	.LVL13:
+ 169              	.LFB545:
+  20:src/touch.cpp **** 
+  21:src/touch.cpp **** int32_t pressure_pct(int32_t pk, int ch){
+ 170              		.loc 1 21 41 is_stmt 1 view -0
+ 171              		.cfi_startproc
+ 172              		@ args = 0, pretend = 0, frame = 0
+ 173              		@ frame_needed = 0, uses_anonymous_args = 0
+ 174              		@ link register save eliminated.
+  22:src/touch.cpp ****     int32_t range = PRESSURE_MAX_REF[ch] - TOUCH_THRESHOLD;
+ 175              		.loc 1 22 5 view .LVU47
+  23:src/touch.cpp ****     int32_t raw   = pk - TOUCH_THRESHOLD;
+ 176              		.loc 1 23 13 is_stmt 0 view .LVU48
+ 177 0000 A0F10A02 		sub	r2, r0, #10
+  22:src/touch.cpp ****     int32_t range = PRESSURE_MAX_REF[ch] - TOUCH_THRESHOLD;
+ 178              		.loc 1 22 40 view .LVU49
+ 179 0004 1C4B     		ldr	r3, .L29
+  24:src/touch.cpp ****     if(raw <= 0)     return 0;
+ 180              		.loc 1 24 5 view .LVU50
+ 181 0006 002A     		cmp	r2, #0
+  22:src/touch.cpp ****     int32_t range = PRESSURE_MAX_REF[ch] - TOUCH_THRESHOLD;
+ 182              		.loc 1 22 40 view .LVU51
+ 183 0008 53F82110 		ldr	r1, [r3, r1, lsl #2]
+ 184              	.LVL14:
+  23:src/touch.cpp ****     int32_t raw   = pk - TOUCH_THRESHOLD;
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 5
+
+
+ 185              		.loc 1 23 5 is_stmt 1 view .LVU52
+ 186              		.loc 1 24 5 view .LVU53
+ 187 000c 30DD     		ble	.L28
+  25:src/touch.cpp ****     if(raw >= range) return 100;
+ 188              		.loc 1 25 5 view .LVU54
+ 189 000e 8142     		cmp	r1, r0
+ 190 0010 30DD     		ble	.L27
+  26:src/touch.cpp ****     // Clamp raw strictly before sqrt to prevent Newton overshoot
+  27:src/touch.cpp ****     if(raw > range) raw = range;
+ 191              		.loc 1 27 5 view .LVU55
+  28:src/touch.cpp ****     int32_t scaled = raw * 10000 / range; // 0..10000
+ 192              		.loc 1 28 5 view .LVU56
+ 193              		.loc 1 28 26 is_stmt 0 view .LVU57
+ 194 0012 42F21070 		movw	r0, #10000
+ 195              	.LVL15:
+  22:src/touch.cpp ****     int32_t raw   = pk - TOUCH_THRESHOLD;
+ 196              		.loc 1 22 13 view .LVU58
+ 197 0016 0A39     		subs	r1, r1, #10
+ 198              	.LVL16:
+ 199              		.loc 1 28 26 view .LVU59
+ 200 0018 00FB02F2 		mul	r2, r0, r2
+ 201              	.LVL17:
+ 202              		.loc 1 28 13 view .LVU60
+ 203 001c 92FBF1F3 		sdiv	r3, r2, r1
+ 204              	.LVL18:
+  29:src/touch.cpp ****     if(scaled > 10000) scaled = 10000;
+ 205              		.loc 1 29 5 is_stmt 1 view .LVU61
+ 206 0020 8342     		cmp	r3, r0
+ 207 0022 A8BF     		it	ge
+ 208 0024 0346     		movge	r3, r0
+ 209              	.LVL19:
+  30:src/touch.cpp ****     // Integer sqrt via Newton
+  31:src/touch.cpp ****     int32_t s = scaled / 2 + 1;
+ 210              		.loc 1 31 5 view .LVU62
+ 211              		.loc 1 31 24 is_stmt 0 view .LVU63
+ 212 0026 002B     		cmp	r3, #0
+ 213 0028 1A46     		mov	r2, r3
+ 214 002a B8BF     		it	lt
+ 215 002c 5A1C     		addlt	r2, r3, #1
+ 216 002e 5210     		asrs	r2, r2, #1
+ 217              		.loc 1 31 13 view .LVU64
+ 218 0030 511C     		adds	r1, r2, #1
+ 219              	.LVL20:
+  32:src/touch.cpp ****     s = (s + scaled/s) / 2;
+ 220              		.loc 1 32 5 is_stmt 1 view .LVU65
+ 221              		.loc 1 32 20 is_stmt 0 view .LVU66
+ 222 0032 93FBF1F2 		sdiv	r2, r3, r1
+ 223              		.loc 1 32 7 view .LVU67
+ 224 0036 5218     		adds	r2, r2, r1
+ 225 0038 48BF     		it	mi
+ 226 003a 0132     		addmi	r2, r2, #1
+ 227 003c 5110     		asrs	r1, r2, #1
+ 228              	.LVL21:
+  33:src/touch.cpp ****     s = (s + scaled/s) / 2;
+ 229              		.loc 1 33 5 is_stmt 1 view .LVU68
+ 230              		.loc 1 33 20 is_stmt 0 view .LVU69
+ 231 003e 93FBF1F2 		sdiv	r2, r3, r1
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 6
+
+
+ 232              		.loc 1 33 7 view .LVU70
+ 233 0042 5218     		adds	r2, r2, r1
+ 234 0044 48BF     		it	mi
+ 235 0046 0132     		addmi	r2, r2, #1
+ 236 0048 5210     		asrs	r2, r2, #1
+ 237              	.LVL22:
+  34:src/touch.cpp ****     s = (s + scaled/s) / 2;
+ 238              		.loc 1 34 5 is_stmt 1 view .LVU71
+ 239              		.loc 1 34 20 is_stmt 0 view .LVU72
+ 240 004a 93FBF2F1 		sdiv	r1, r3, r2
+ 241              		.loc 1 34 7 view .LVU73
+ 242 004e 8A18     		adds	r2, r1, r2
+ 243              	.LVL23:
+ 244              		.loc 1 34 7 view .LVU74
+ 245 0050 48BF     		it	mi
+ 246 0052 0132     		addmi	r2, r2, #1
+ 247 0054 5210     		asrs	r2, r2, #1
+ 248              	.LVL24:
+  35:src/touch.cpp ****     s = (s + scaled/s) / 2;
+ 249              		.loc 1 35 5 is_stmt 1 view .LVU75
+ 250              		.loc 1 35 20 is_stmt 0 view .LVU76
+ 251 0056 93FBF2F3 		sdiv	r3, r3, r2
+ 252              	.LVL25:
+ 253              		.loc 1 35 12 view .LVU77
+ 254 005a 1344     		add	r3, r3, r2
+ 255              	.LVL26:
+  36:src/touch.cpp ****     // Hard clamp output — Newton can land at 101 due to rounding
+  37:src/touch.cpp ****     if(s < 0)   s = 0;
+ 256              		.loc 1 37 5 is_stmt 1 view .LVU78
+ 257 005c 5A1C     		adds	r2, r3, #1
+ 258 005e 07DB     		blt	.L28
+  38:src/touch.cpp ****     if(s > 100) s = 100;
+ 259              		.loc 1 38 5 view .LVU79
+  35:src/touch.cpp ****     s = (s + scaled/s) / 2;
+ 260              		.loc 1 35 7 is_stmt 0 view .LVU80
+ 261 0060 002B     		cmp	r3, #0
+  35:src/touch.cpp ****     s = (s + scaled/s) / 2;
+ 262              		.loc 1 35 7 view .LVU81
+ 263 0062 B8BF     		it	lt
+ 264 0064 0133     		addlt	r3, r3, #1
+ 265              	.LVL27:
+  35:src/touch.cpp ****     s = (s + scaled/s) / 2;
+ 266              		.loc 1 35 7 view .LVU82
+ 267 0066 5810     		asrs	r0, r3, #1
+ 268              	.LVL28:
+  35:src/touch.cpp ****     s = (s + scaled/s) / 2;
+ 269              		.loc 1 35 7 view .LVU83
+ 270 0068 6428     		cmp	r0, #100
+ 271 006a A8BF     		it	ge
+ 272 006c 6420     		movge	r0, #100
+ 273 006e 7047     		bx	lr
+ 274              	.LVL29:
+ 275              	.L28:
+  24:src/touch.cpp ****     if(raw >= range) return 100;
+ 276              		.loc 1 24 29 view .LVU84
+ 277 0070 0020     		movs	r0, #0
+  39:src/touch.cpp ****     return s;
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 7
+
+
+  40:src/touch.cpp **** }
+ 278              		.loc 1 40 1 view .LVU85
+ 279 0072 7047     		bx	lr
+ 280              	.LVL30:
+ 281              	.L27:
+  25:src/touch.cpp ****     // Clamp raw strictly before sqrt to prevent Newton overshoot
+ 282              		.loc 1 25 29 view .LVU86
+ 283 0074 6420     		movs	r0, #100
+ 284              	.LVL31:
+  25:src/touch.cpp ****     // Clamp raw strictly before sqrt to prevent Newton overshoot
+ 285              		.loc 1 25 29 view .LVU87
+ 286 0076 7047     		bx	lr
+ 287              	.L30:
+ 288              		.align	2
+ 289              	.L29:
+ 290 0078 00000000 		.word	.LANCHOR0
+ 291              		.cfi_endproc
+ 292              	.LFE545:
+ 294              		.section	.text._Z10detect_rawPlP6Fingeri,"ax",%progbits
+ 295              		.align	1
+ 296              		.p2align 2,,3
+ 297              		.global	_Z10detect_rawPlP6Fingeri
+ 298              		.syntax unified
+ 299              		.thumb
+ 300              		.thumb_func
+ 302              	_Z10detect_rawPlP6Fingeri:
+ 303              	.LVL32:
+ 304              	.LFB546:
+  41:src/touch.cpp **** 
+  42:src/touch.cpp **** // Find up to `maxf` fingers: repeatedly take the strongest remaining peak, and
+  43:src/touch.cpp **** // if it's far enough from the peaks already found, record its centroid; then
+  44:src/touch.cpp **** // zero a ±2 window around it and look again. The first two peaks come out
+  45:src/touch.cpp **** // identical to the old 2-finger detector, so the mono path is unchanged.
+  46:src/touch.cpp **** int detect_raw(int32_t* delta, Finger* out, int maxf)
+  47:src/touch.cpp **** {
+ 305              		.loc 1 47 1 is_stmt 1 view -0
+ 306              		.cfi_startproc
+ 307              		@ args = 0, pretend = 0, frame = 80
+ 308              		@ frame_needed = 0, uses_anonymous_args = 0
+  48:src/touch.cpp ****     for(int i=0;i<maxf;i++) out[i].active=false;
+ 309              		.loc 1 48 5 view .LVU89
+ 310              	.LBB22:
+ 311              		.loc 1 48 18 view .LVU90
+ 312              	.LBE22:
+  47:src/touch.cpp ****     for(int i=0;i<maxf;i++) out[i].active=false;
+ 313              		.loc 1 47 1 is_stmt 0 view .LVU91
+ 314 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 315              		.cfi_def_cfa_offset 36
+ 316              		.cfi_offset 4, -36
+ 317              		.cfi_offset 5, -32
+ 318              		.cfi_offset 6, -28
+ 319              		.cfi_offset 7, -24
+ 320              		.cfi_offset 8, -20
+ 321              		.cfi_offset 9, -16
+ 322              		.cfi_offset 10, -12
+ 323              		.cfi_offset 11, -8
+ 324              		.cfi_offset 14, -4
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 8
+
+
+ 325              	.LBB23:
+ 326              		.loc 1 48 18 view .LVU92
+ 327 0004 B2F1000B 		subs	fp, r2, #0
+ 328              	.LBE23:
+  47:src/touch.cpp ****     for(int i=0;i<maxf;i++) out[i].active=false;
+ 329              		.loc 1 47 1 view .LVU93
+ 330 0008 95B0     		sub	sp, sp, #84
+ 331              		.cfi_def_cfa_offset 120
+  47:src/touch.cpp ****     for(int i=0;i<maxf;i++) out[i].active=false;
+ 332              		.loc 1 47 1 view .LVU94
+ 333 000a 0391     		str	r1, [sp, #12]
+ 334              	.LBB24:
+ 335              		.loc 1 48 18 view .LVU95
+ 336 000c 40F3B780 		ble	.L50
+ 337 0010 0B46     		mov	r3, r1
+ 338 0012 0BEB8B01 		add	r1, fp, fp, lsl #2
+ 339              	.LVL33:
+ 340              		.loc 1 48 18 view .LVU96
+ 341 0016 03EB8101 		add	r1, r3, r1, lsl #2
+ 342              	.LVL34:
+ 343              	.L34:
+ 344              		.loc 1 48 29 is_stmt 1 discriminator 2 view .LVU97
+ 345              		.loc 1 48 42 is_stmt 0 discriminator 2 view .LVU98
+ 346 001a 0022     		movs	r2, #0
+ 347 001c 03F8142B 		strb	r2, [r3], #20
+ 348              		.loc 1 48 5 is_stmt 1 discriminator 2 view .LVU99
+ 349              		.loc 1 48 18 discriminator 2 view .LVU100
+ 350 0020 9942     		cmp	r1, r3
+ 351 0022 FAD1     		bne	.L34
+ 352              	.LBE24:
+ 353              	.LBB25:
+  49:src/touch.cpp ****     int32_t work[N_CH];
+  50:src/touch.cpp ****     for(int i=0;i<N_CH;i++) work[i]=delta[i];
+ 354              		.loc 1 50 36 is_stmt 0 view .LVU101
+ 355 0024 0446     		mov	r4, r0
+ 356 0026 08AE     		add	r6, sp, #32
+ 357 0028 00F13007 		add	r7, r0, #48
+ 358              	.LVL35:
+ 359              	.L49:
+ 360              		.loc 1 50 36 view .LVU102
+ 361 002c 2068     		ldr	r0, [r4]	@ unaligned
+ 362 002e 1034     		adds	r4, r4, #16
+ 363 0030 54F80C1C 		ldr	r1, [r4, #-12]	@ unaligned
+ 364 0034 3546     		mov	r5, r6
+ 365 0036 54F8082C 		ldr	r2, [r4, #-8]	@ unaligned
+ 366 003a 1036     		adds	r6, r6, #16
+ 367 003c 54F8043C 		ldr	r3, [r4, #-4]	@ unaligned
+ 368 0040 BC42     		cmp	r4, r7
+ 369 0042 0FC5     		stmia	r5!, {r0, r1, r2, r3}
+ 370 0044 F2D1     		bne	.L49
+ 371              	.LVL36:
+ 372              		.loc 1 50 36 view .LVU103
+ 373              	.LBE25:
+ 374              	.LBB26:
+  51:src/touch.cpp **** 
+  52:src/touch.cpp ****     int peaks[MAX_FINGERS];
+  53:src/touch.cpp ****     int found=0;
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 9
+
+
+  54:src/touch.cpp ****     for(int attempt=0; attempt<maxf && found<maxf; attempt++){
+ 375              		.loc 1 54 37 is_stmt 1 view .LVU104
+ 376              	.LBE26:
+ 377              	.LBB48:
+  50:src/touch.cpp **** 
+ 378              		.loc 1 50 36 is_stmt 0 view .LVU105
+ 379 0046 4FF0000A 		mov	r10, #0
+ 380 004a 5B46     		mov	r3, fp
+ 381 004c 5646     		mov	r6, r10
+ 382              	.LVL37:
+ 383              	.L47:
+  50:src/touch.cpp **** 
+ 384              		.loc 1 50 36 view .LVU106
+ 385              	.LBE48:
+ 386              	.LBB49:
+ 387              	.LBB27:
+ 388              	.LBB28:
+  55:src/touch.cpp ****         int pk=0; int32_t mx=0;
+  56:src/touch.cpp ****         for(int i=0;i<N_CH;i++) if(work[i]>mx){ mx=work[i]; pk=i; }
+ 389              		.loc 1 56 17 view .LVU107
+ 390 004e 0022     		movs	r2, #0
+ 391 0050 08A8     		add	r0, sp, #32
+ 392              	.LBE28:
+  55:src/touch.cpp ****         int pk=0; int32_t mx=0;
+ 393              		.loc 1 55 27 view .LVU108
+ 394 0052 1546     		mov	r5, r2
+  55:src/touch.cpp ****         int pk=0; int32_t mx=0;
+ 395              		.loc 1 55 13 view .LVU109
+ 396 0054 1446     		mov	r4, r2
+ 397              	.L36:
+ 398              	.LVL38:
+ 399              	.LBB29:
+ 400              		.loc 1 56 33 is_stmt 1 discriminator 2 view .LVU110
+ 401              		.loc 1 56 42 is_stmt 0 discriminator 2 view .LVU111
+ 402 0056 50F8041B 		ldr	r1, [r0], #4
+ 403              		.loc 1 56 33 discriminator 2 view .LVU112
+ 404 005a A942     		cmp	r1, r5
+ 405 005c 01DD     		ble	.L35
+ 406              		.loc 1 56 33 view .LVU113
+ 407 005e 1446     		mov	r4, r2
+ 408 0060 0D46     		mov	r5, r1
+ 409              	.LVL39:
+ 410              	.L35:
+ 411              		.loc 1 56 9 is_stmt 1 discriminator 5 view .LVU114
+ 412 0062 0132     		adds	r2, r2, #1
+ 413              	.LVL40:
+ 414              		.loc 1 56 22 discriminator 5 view .LVU115
+ 415 0064 0C2A     		cmp	r2, #12
+ 416 0066 F6D1     		bne	.L36
+ 417              	.LBE29:
+  57:src/touch.cpp ****         if(mx<TOUCH_THRESHOLD) break;                 // nothing left above threshold
+ 418              		.loc 1 57 9 view .LVU116
+ 419 0068 092D     		cmp	r5, #9
+ 420 006a 27DD     		ble	.L31
+ 421              	.LVL41:
+ 422              	.LBB30:
+  58:src/touch.cpp **** 
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 10
+
+
+  59:src/touch.cpp ****         bool sep_ok=true;
+  60:src/touch.cpp ****         for(int j=0;j<found;j++){ int s=pk-peaks[j]; if(s<0)s=-s; if(s<MIN_FINGER_SEP){ sep_ok=fals
+ 423              		.loc 1 60 22 view .LVU117
+ 424 006c 56B3     		cbz	r6, .L37
+ 425 006e 04AD     		add	r5, sp, #16
+ 426              	.LVL42:
+ 427              		.loc 1 60 17 is_stmt 0 view .LVU118
+ 428 0070 0021     		movs	r1, #0
+ 429 0072 01E0     		b	.L41
+ 430              	.LVL43:
+ 431              	.L39:
+ 432              		.loc 1 60 22 discriminator 7 view .LVU119
+ 433 0074 8E42     		cmp	r6, r1
+ 434 0076 25D0     		beq	.L37
+ 435              	.LVL44:
+ 436              	.L41:
+ 437              	.LBB31:
+ 438              		.loc 1 60 35 is_stmt 1 discriminator 2 view .LVU120
+ 439              		.loc 1 60 61 discriminator 2 view .LVU121
+ 440              	.LBE31:
+ 441              		.loc 1 60 9 discriminator 2 view .LVU122
+ 442              	.LBB32:
+ 443              		.loc 1 60 51 is_stmt 0 discriminator 2 view .LVU123
+ 444 0078 55F8042B 		ldr	r2, [r5], #4
+ 445              	.LVL45:
+ 446              		.loc 1 60 54 is_stmt 1 discriminator 2 view .LVU124
+ 447              	.LBE32:
+ 448              		.loc 1 60 9 is_stmt 0 discriminator 2 view .LVU125
+ 449 007c 0131     		adds	r1, r1, #1
+ 450              	.LVL46:
+ 451              		.loc 1 60 22 is_stmt 1 discriminator 2 view .LVU126
+ 452              	.LBB33:
+ 453              		.loc 1 60 54 is_stmt 0 discriminator 2 view .LVU127
+ 454 007e A01A     		subs	r0, r4, r2
+ 455              	.LVL47:
+ 456              		.loc 1 60 62 discriminator 2 view .LVU128
+ 457 0080 48BF     		it	mi
+ 458 0082 101B     		submi	r0, r2, r4
+ 459              	.LVL48:
+ 460              		.loc 1 60 67 is_stmt 1 discriminator 2 view .LVU129
+ 461 0084 0328     		cmp	r0, #3
+ 462 0086 F5DC     		bgt	.L39
+ 463              	.LBE33:
+ 464              	.LBE30:
+ 465              	.LBB34:
+  61:src/touch.cpp ****         if(sep_ok){
+  62:src/touch.cpp ****             int ws=pk-2; if(ws<0)ws=0; int we=pk+2; if(we>=N_CH)we=N_CH-1;
+  63:src/touch.cpp ****             int32_t pkv; int pkc;
+  64:src/touch.cpp ****             int32_t pos=centroid_window(work,ws,we,&pkv,&pkc);
+  65:src/touch.cpp ****             out[found]={true,pos,pressure_pct(pkv,pkc),pkc,pkv};
+  66:src/touch.cpp ****             peaks[found]=pk;
+  67:src/touch.cpp ****             found++;
+  68:src/touch.cpp ****         }
+  69:src/touch.cpp ****         // Zero this peak's window so the next pass finds a different finger.
+  70:src/touch.cpp ****         for(int i=pk-2;i<=pk+2;i++) if(i>=0 && i<N_CH) work[i]=0;
+ 466              		.loc 1 70 17 is_stmt 0 view .LVU130
+ 467 0088 A51E     		subs	r5, r4, #2
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 11
+
+
+ 468              		.loc 1 70 29 view .LVU131
+ 469 008a 04F10208 		add	r8, r4, #2
+ 470              	.LVL49:
+ 471              	.L40:
+ 472              		.loc 1 70 29 view .LVU132
+ 473              	.LBE34:
+ 474              		.loc 1 70 9 is_stmt 1 view .LVU133
+ 475              	.LBB35:
+ 476              		.loc 1 70 25 view .LVU134
+ 477 008e 08AA     		add	r2, sp, #32
+ 478 0090 02EB8502 		add	r2, r2, r5, lsl #2
+ 479              	.L46:
+ 480              	.LVL50:
+ 481              		.loc 1 70 37 discriminator 2 view .LVU135
+ 482              		.loc 1 70 56 discriminator 2 view .LVU136
+ 483              		.loc 1 70 9 discriminator 2 view .LVU137
+ 484              		.loc 1 70 37 is_stmt 0 discriminator 2 view .LVU138
+ 485 0094 0B2D     		cmp	r5, #11
+ 486              		.loc 1 70 63 discriminator 2 view .LVU139
+ 487 0096 4FF00001 		mov	r1, #0
+ 488              		.loc 1 70 9 discriminator 2 view .LVU140
+ 489 009a 05F10105 		add	r5, r5, #1
+ 490              	.LVL51:
+ 491              		.loc 1 70 25 is_stmt 1 discriminator 2 view .LVU141
+ 492 009e 02F10402 		add	r2, r2, #4
+ 493              		.loc 1 70 63 is_stmt 0 discriminator 2 view .LVU142
+ 494 00a2 98BF     		it	ls
+ 495 00a4 42F8041C 		strls	r1, [r2, #-4]
+ 496              		.loc 1 70 25 discriminator 2 view .LVU143
+ 497 00a8 4545     		cmp	r5, r8
+ 498 00aa F3DD     		ble	.L46
+ 499              	.LBE35:
+ 500              	.LBE27:
+  54:src/touch.cpp ****         int pk=0; int32_t mx=0;
+ 501              		.loc 1 54 5 is_stmt 1 discriminator 2 view .LVU144
+ 502 00ac 0AF1010A 		add	r10, r10, #1
+ 503              	.LVL52:
+  54:src/touch.cpp ****         int pk=0; int32_t mx=0;
+ 504              		.loc 1 54 37 discriminator 2 view .LVU145
+ 505 00b0 3246     		mov	r2, r6
+ 506 00b2 5645     		cmp	r6, r10
+ 507 00b4 B8BF     		it	lt
+ 508 00b6 5246     		movlt	r2, r10
+ 509 00b8 9A42     		cmp	r2, r3
+ 510 00ba C8DB     		blt	.L47
+ 511              	.LVL53:
+ 512              	.L31:
+  54:src/touch.cpp ****         int pk=0; int32_t mx=0;
+ 513              		.loc 1 54 37 is_stmt 0 discriminator 2 view .LVU146
+ 514              	.LBE49:
+  71:src/touch.cpp ****     }
+  72:src/touch.cpp ****     return found;
+  73:src/touch.cpp **** }
+ 515              		.loc 1 73 1 view .LVU147
+ 516 00bc 3046     		mov	r0, r6
+ 517 00be 15B0     		add	sp, sp, #84
+ 518              		.cfi_remember_state
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 12
+
+
+ 519              		.cfi_def_cfa_offset 36
+ 520              		@ sp needed
+ 521 00c0 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 522              	.LVL54:
+ 523              	.L37:
+ 524              		.cfi_restore_state
+ 525              	.LBB50:
+ 526              	.LBB47:
+  61:src/touch.cpp ****             int ws=pk-2; if(ws<0)ws=0; int we=pk+2; if(we>=N_CH)we=N_CH-1;
+ 527              		.loc 1 61 9 is_stmt 1 view .LVU148
+ 528              	.LBB36:
+ 529              	.LBB37:
+  62:src/touch.cpp ****             int32_t pkv; int pkc;
+ 530              		.loc 1 62 13 view .LVU149
+  62:src/touch.cpp ****             int32_t pkv; int pkc;
+ 531              		.loc 1 62 44 is_stmt 0 view .LVU150
+ 532 00c4 04F10208 		add	r8, r4, #2
+  62:src/touch.cpp ****             int32_t pkv; int pkc;
+ 533              		.loc 1 62 17 view .LVU151
+ 534 00c8 A51E     		subs	r5, r4, #2
+ 535              	.LVL55:
+  62:src/touch.cpp ****             int32_t pkv; int pkc;
+ 536              		.loc 1 62 26 is_stmt 1 view .LVU152
+ 537 00ca B8F10B0F 		cmp	r8, #11
+ 538 00ce C346     		mov	fp, r8
+ 539 00d0 25EAE571 		bic	r1, r5, r5, asr #31
+ 540              	.LVL56:
+  62:src/touch.cpp ****             int32_t pkv; int pkc;
+ 541              		.loc 1 62 40 view .LVU153
+  62:src/touch.cpp ****             int32_t pkv; int pkc;
+ 542              		.loc 1 62 53 view .LVU154
+ 543 00d4 A8BF     		it	ge
+ 544 00d6 4FF00B0B 		movge	fp, #11
+ 545              	.LVL57:
+  63:src/touch.cpp ****             int32_t pos=centroid_window(work,ws,we,&pkv,&pkc);
+ 546              		.loc 1 63 13 view .LVU155
+  63:src/touch.cpp ****             int32_t pos=centroid_window(work,ws,we,&pkv,&pkc);
+ 547              		.loc 1 63 26 view .LVU156
+  64:src/touch.cpp ****             out[found]={true,pos,pressure_pct(pkv,pkc),pkc,pkv};
+ 548              		.loc 1 64 13 view .LVU157
+ 549              	.LBB38:
+ 550              	.LBI38:
+   6:src/touch.cpp **** {
+ 551              		.loc 1 6 9 view .LVU158
+ 552              	.LBB39:
+ 553              	.LBB40:
+   9:src/touch.cpp ****         int32_t w=d[i]>0?d[i]:0;
+ 554              		.loc 1 9 18 view .LVU159
+ 555 00da 8B45     		cmp	fp, r1
+ 556 00dc 4ADB     		blt	.L67
+ 557 00de 6FF0404C 		mvn	ip, #-1073741824
+ 558              	.LBE40:
+   8:src/touch.cpp ****     for(int i=s;i<=e;i++){
+ 559              		.loc 1 8 24 is_stmt 0 view .LVU160
+ 560 00e2 4FF00009 		mov	r9, #0
+ 561 00e6 08AA     		add	r2, sp, #32
+ 562              	.LVL58:
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 13
+
+
+   8:src/touch.cpp ****     for(int i=s;i<=e;i++){
+ 563              		.loc 1 8 24 view .LVU161
+ 564 00e8 0BF1010B 		add	fp, fp, #1
+ 565              	.LVL59:
+   8:src/touch.cpp ****     for(int i=s;i<=e;i++){
+ 566              		.loc 1 8 24 view .LVU162
+ 567 00ec 8C44     		add	ip, ip, r1
+ 568              	.LBB42:
+   9:src/touch.cpp ****         int32_t w=d[i]>0?d[i]:0;
+ 569              		.loc 1 9 18 view .LVU163
+ 570 00ee 0846     		mov	r0, r1
+ 571              	.LBE42:
+   8:src/touch.cpp ****     for(int i=s;i<=e;i++){
+ 572              		.loc 1 8 18 view .LVU164
+ 573 00f0 CE46     		mov	lr, r9
+   8:src/touch.cpp ****     for(int i=s;i<=e;i++){
+ 574              		.loc 1 8 13 view .LVU165
+ 575 00f2 4F46     		mov	r7, r9
+ 576 00f4 02EB8C0C 		add	ip, r2, ip, lsl #2
+ 577              	.LVL60:
+ 578              	.L43:
+ 579              	.LBB43:
+ 580              	.LBB41:
+  10:src/touch.cpp ****         sw+=w;swx+=w*i;
+ 581              		.loc 1 10 9 is_stmt 1 view .LVU166
+  10:src/touch.cpp ****         sw+=w;swx+=w*i;
+ 582              		.loc 1 10 17 is_stmt 0 view .LVU167
+ 583 00f8 5CF8042F 		ldr	r2, [ip, #4]!
+ 584 00fc 22EAE272 		bic	r2, r2, r2, asr #31
+ 585              	.LVL61:
+  11:src/touch.cpp ****         if(w>pk){pk=w;pkc=i;}
+ 586              		.loc 1 11 9 is_stmt 1 view .LVU168
+  12:src/touch.cpp ****     }
+ 587              		.loc 1 12 9 is_stmt 0 view .LVU169
+ 588 0100 4A45     		cmp	r2, r9
+  11:src/touch.cpp ****         if(w>pk){pk=w;pkc=i;}
+ 589              		.loc 1 11 18 view .LVU170
+ 590 0102 00FB02EE 		mla	lr, r0, r2, lr
+ 591              	.LVL62:
+  11:src/touch.cpp ****         if(w>pk){pk=w;pkc=i;}
+ 592              		.loc 1 11 11 view .LVU171
+ 593 0106 1744     		add	r7, r7, r2
+ 594              	.LVL63:
+  11:src/touch.cpp ****         if(w>pk){pk=w;pkc=i;}
+ 595              		.loc 1 11 15 is_stmt 1 view .LVU172
+  12:src/touch.cpp ****     }
+ 596              		.loc 1 12 9 view .LVU173
+ 597 0108 01DD     		ble	.L42
+  12:src/touch.cpp ****     }
+ 598              		.loc 1 12 9 is_stmt 0 view .LVU174
+ 599 010a 0146     		mov	r1, r0
+ 600 010c 9146     		mov	r9, r2
+ 601              	.LVL64:
+ 602              	.L42:
+  12:src/touch.cpp ****     }
+ 603              		.loc 1 12 9 view .LVU175
+ 604              	.LBE41:
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 14
+
+
+   9:src/touch.cpp ****         int32_t w=d[i]>0?d[i]:0;
+ 605              		.loc 1 9 5 is_stmt 1 view .LVU176
+ 606 010e 0130     		adds	r0, r0, #1
+ 607              	.LVL65:
+   9:src/touch.cpp ****         int32_t w=d[i]>0?d[i]:0;
+ 608              		.loc 1 9 18 view .LVU177
+ 609 0110 8345     		cmp	fp, r0
+ 610 0112 F1D1     		bne	.L43
+ 611              	.LBE43:
+  14:src/touch.cpp ****     if(sw==0)return -1;
+ 612              		.loc 1 14 5 view .LVU178
+  14:src/touch.cpp ****     if(sw==0)return -1;
+ 613              		.loc 1 14 15 view .LVU179
+ 614              	.LVL66:
+  14:src/touch.cpp ****     if(sw==0)return -1;
+ 615              		.loc 1 14 26 view .LVU180
+  14:src/touch.cpp ****     if(sw==0)return -1;
+ 616              		.loc 1 14 38 view .LVU181
+  15:src/touch.cpp ****     int32_t p=(swx*1000)/(sw*(N_CH-1));
+ 617              		.loc 1 15 5 view .LVU182
+ 618 0114 87B3     		cbz	r7, .L66
+  16:src/touch.cpp ****     if(p<0)p=0;if(p>1000)p=1000;
+ 619              		.loc 1 16 5 view .LVU183
+ 620              	.LVL67:
+  17:src/touch.cpp ****     return p;
+ 621              		.loc 1 17 5 view .LVU184
+  16:src/touch.cpp ****     if(p<0)p=0;if(p>1000)p=1000;
+ 622              		.loc 1 16 19 is_stmt 0 view .LVU185
+ 623 0116 4FF47A72 		mov	r2, #1000
+ 624              	.LVL68:
+  16:src/touch.cpp ****     if(p<0)p=0;if(p>1000)p=1000;
+ 625              		.loc 1 16 19 view .LVU186
+ 626 011a 02FB0EFE 		mul	lr, r2, lr
+ 627              	.LVL69:
+  16:src/touch.cpp ****     if(p<0)p=0;if(p>1000)p=1000;
+ 628              		.loc 1 16 29 view .LVU187
+ 629 011e 07EB8702 		add	r2, r7, r7, lsl #2
+ 630 0122 07EB4207 		add	r7, r7, r2, lsl #1
+ 631              	.LVL70:
+  16:src/touch.cpp ****     if(p<0)p=0;if(p>1000)p=1000;
+ 632              		.loc 1 16 13 view .LVU188
+ 633 0126 BEFBF7F7 		udiv	r7, lr, r7
+ 634 012a B7F57A7F 		cmp	r7, #1000
+ 635 012e A8BF     		it	ge
+ 636 0130 4FF47A77 		movge	r7, #1000
+ 637              	.LVL71:
+ 638              	.L44:
+  16:src/touch.cpp ****     if(p<0)p=0;if(p>1000)p=1000;
+ 639              		.loc 1 16 13 view .LVU189
+ 640              	.LBE39:
+ 641              	.LBE38:
+  65:src/touch.cpp ****             peaks[found]=pk;
+ 642              		.loc 1 65 13 is_stmt 1 view .LVU190
+  65:src/touch.cpp ****             peaks[found]=pk;
+ 643              		.loc 1 65 23 is_stmt 0 view .LVU191
+ 644 0134 06EB8602 		add	r2, r6, r6, lsl #2
+  65:src/touch.cpp ****             peaks[found]=pk;
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 15
+
+
+ 645              		.loc 1 65 46 view .LVU192
+ 646 0138 4846     		mov	r0, r9
+  65:src/touch.cpp ****             peaks[found]=pk;
+ 647              		.loc 1 65 23 view .LVU193
+ 648 013a 4FEA860B 		lsl	fp, r6, #2
+ 649 013e 0293     		str	r3, [sp, #8]
+ 650 0140 0192     		str	r2, [sp, #4]
+ 651 0142 0136     		adds	r6, r6, #1
+ 652              	.LVL72:
+  65:src/touch.cpp ****             peaks[found]=pk;
+ 653              		.loc 1 65 46 view .LVU194
+ 654 0144 0091     		str	r1, [sp]
+ 655 0146 FFF7FEFF 		bl	_Z12pressure_pctli
+ 656              	.LVL73:
+  66:src/touch.cpp ****             found++;
+ 657              		.loc 1 66 25 view .LVU195
+ 658 014a 0BF15003 		add	r3, fp, #80
+  65:src/touch.cpp ****             peaks[found]=pk;
+ 659              		.loc 1 65 23 view .LVU196
+ 660 014e 019A     		ldr	r2, [sp, #4]
+ 661 0150 4FF0010C 		mov	ip, #1
+ 662 0154 0099     		ldr	r1, [sp]
+  66:src/touch.cpp ****             found++;
+ 663              		.loc 1 66 25 view .LVU197
+ 664 0156 0DEB030B 		add	fp, sp, r3
+  65:src/touch.cpp ****             peaks[found]=pk;
+ 665              		.loc 1 65 23 view .LVU198
+ 666 015a 039B     		ldr	r3, [sp, #12]
+  66:src/touch.cpp ****             found++;
+ 667              		.loc 1 66 25 view .LVU199
+ 668 015c 4BF8404C 		str	r4, [fp, #-64]
+  65:src/touch.cpp ****             peaks[found]=pk;
+ 669              		.loc 1 65 23 view .LVU200
+ 670 0160 03EB8204 		add	r4, r3, r2, lsl #2
+ 671 0164 03F822C0 		strb	ip, [r3, r2, lsl #2]
+ 672 0168 029B     		ldr	r3, [sp, #8]
+  66:src/touch.cpp ****             found++;
+ 673              		.loc 1 66 13 is_stmt 1 view .LVU201
+  67:src/touch.cpp ****         }
+ 674              		.loc 1 67 13 view .LVU202
+ 675              	.LVL74:
+  65:src/touch.cpp ****             peaks[found]=pk;
+ 676              		.loc 1 65 23 is_stmt 0 view .LVU203
+ 677 016a C4E90170 		strd	r7, r0, [r4, #4]
+ 678 016e C4E90319 		strd	r1, r9, [r4, #12]
+ 679              	.LBE37:
+ 680 0172 8CE7     		b	.L40
+ 681              	.LVL75:
+ 682              	.L67:
+ 683              	.LBB46:
+ 684              	.LBB45:
+ 685              	.LBB44:
+   8:src/touch.cpp ****     for(int i=s;i<=e;i++){
+ 686              		.loc 1 8 24 view .LVU204
+ 687 0174 4FF00009 		mov	r9, #0
+ 688              	.LVL76:
+ 689              	.L66:
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 16
+
+
+  15:src/touch.cpp ****     int32_t p=(swx*1000)/(sw*(N_CH-1));
+ 690              		.loc 1 15 22 view .LVU205
+ 691 0178 4FF0FF37 		mov	r7, #-1
+ 692 017c DAE7     		b	.L44
+ 693              	.LVL77:
+ 694              	.L50:
+  15:src/touch.cpp ****     int32_t p=(swx*1000)/(sw*(N_CH-1));
+ 695              		.loc 1 15 22 view .LVU206
+ 696              	.LBE44:
+ 697              	.LBE45:
+ 698              	.LBE46:
+ 699              	.LBE36:
+ 700              	.LBE47:
+ 701              	.LBE50:
+  53:src/touch.cpp ****     for(int attempt=0; attempt<maxf && found<maxf; attempt++){
+ 702              		.loc 1 53 9 view .LVU207
+ 703 017e 0026     		movs	r6, #0
+  72:src/touch.cpp **** }
+ 704              		.loc 1 72 5 is_stmt 1 view .LVU208
+ 705              		.loc 1 73 1 is_stmt 0 view .LVU209
+ 706 0180 3046     		mov	r0, r6
+ 707              	.LVL78:
+ 708              		.loc 1 73 1 view .LVU210
+ 709 0182 15B0     		add	sp, sp, #84
+ 710              		.cfi_def_cfa_offset 36
+ 711              		@ sp needed
+ 712 0184 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 713              		.cfi_endproc
+ 714              	.LFE546:
+ 716              		.section	.text._Z14update_trackedP6Fingeri,"ax",%progbits
+ 717              		.align	1
+ 718              		.p2align 2,,3
+ 719              		.global	_Z14update_trackedP6Fingeri
+ 720              		.syntax unified
+ 721              		.thumb
+ 722              		.thumb_func
+ 724              	_Z14update_trackedP6Fingeri:
+ 725              	.LVL79:
+ 726              	.LFB547:
+  74:src/touch.cpp **** 
+  75:src/touch.cpp **** void update_tracked(Finger* raw,int n)
+  76:src/touch.cpp **** {
+ 727              		.loc 1 76 1 is_stmt 1 view -0
+ 728              		.cfi_startproc
+ 729              		@ args = 0, pretend = 0, frame = 8
+ 730              		@ frame_needed = 0, uses_anonymous_args = 0
+  77:src/touch.cpp ****     bool ra[MAX_FINGERS]={};
+ 731              		.loc 1 77 5 view .LVU212
+  76:src/touch.cpp ****     bool ra[MAX_FINGERS]={};
+ 732              		.loc 1 76 1 is_stmt 0 view .LVU213
+ 733 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 734              		.cfi_def_cfa_offset 32
+ 735              		.cfi_offset 4, -32
+ 736              		.cfi_offset 5, -28
+ 737              		.cfi_offset 6, -24
+ 738              		.cfi_offset 7, -20
+ 739              		.cfi_offset 8, -16
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 17
+
+
+ 740              		.cfi_offset 9, -12
+ 741              		.cfi_offset 10, -8
+ 742              		.cfi_offset 14, -4
+ 743              		.loc 1 77 10 view .LVU214
+ 744 0004 0023     		movs	r3, #0
+ 745 0006 384E     		ldr	r6, .L95
+  76:src/touch.cpp ****     bool ra[MAX_FINGERS]={};
+ 746              		.loc 1 76 1 view .LVU215
+ 747 0008 82B0     		sub	sp, sp, #8
+ 748              		.cfi_def_cfa_offset 40
+ 749 000a 06F15009 		add	r9, r6, #80
+ 750              		.loc 1 77 10 view .LVU216
+ 751 000e 0193     		str	r3, [sp, #4]
+  78:src/touch.cpp ****     for(int slot=0;slot<MAX_FINGERS;slot++){
+ 752              		.loc 1 78 5 is_stmt 1 view .LVU217
+ 753              	.LVL80:
+ 754              	.LBB51:
+ 755              		.loc 1 78 24 view .LVU218
+ 756              	.LBE51:
+  77:src/touch.cpp ****     bool ra[MAX_FINGERS]={};
+ 757              		.loc 1 77 10 is_stmt 0 view .LVU219
+ 758 0010 3346     		mov	r3, r6
+ 759              	.LVL81:
+ 760              	.L74:
+ 761              	.LBB58:
+ 762              	.LBB52:
+  79:src/touch.cpp ****         if(!tracked[slot].alive)continue;
+ 763              		.loc 1 79 9 is_stmt 1 view .LVU220
+ 764 0012 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 765 0014 9AB9     		cbnz	r2, .L92
+ 766              	.L69:
+ 767              	.LBE52:
+  78:src/touch.cpp ****     for(int slot=0;slot<MAX_FINGERS;slot++){
+ 768              		.loc 1 78 5 discriminator 2 view .LVU221
+  78:src/touch.cpp ****     for(int slot=0;slot<MAX_FINGERS;slot++){
+ 769              		.loc 1 78 24 discriminator 2 view .LVU222
+ 770 0016 1433     		adds	r3, r3, #20
+ 771 0018 4B45     		cmp	r3, r9
+ 772 001a FAD1     		bne	.L74
+ 773              	.LVL82:
+  78:src/touch.cpp ****     for(int slot=0;slot<MAX_FINGERS;slot++){
+ 774              		.loc 1 78 24 is_stmt 0 discriminator 2 view .LVU223
+ 775              	.LBE58:
+ 776              	.LBB59:
+  80:src/touch.cpp ****         int32_t best=MAX_POS_JUMP+1;int br=-1;
+  81:src/touch.cpp ****         for(int r=0;r<n;r++){
+  82:src/touch.cpp ****             if(ra[r])continue;
+  83:src/touch.cpp ****             int32_t c=raw[r].pos-tracked[slot].pos;if(c<0)c=-c;
+  84:src/touch.cpp ****             if(c<best){best=c;br=r;}
+  85:src/touch.cpp ****         }
+  86:src/touch.cpp ****         if(br>=0){
+  87:src/touch.cpp ****             tracked[slot].pos=raw[br].pos;tracked[slot].pressure=raw[br].pressure;
+  88:src/touch.cpp ****             tracked[slot].peak_ch=raw[br].peak_ch;tracked[slot].peak_delta=raw[br].peak_delta;
+  89:src/touch.cpp ****             ra[br]=true;
+  90:src/touch.cpp ****         } else tracked[slot].alive=false;
+  91:src/touch.cpp ****     }
+  92:src/touch.cpp ****     for(int r=0;r<n;r++){
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 18
+
+
+ 777              		.loc 1 92 18 is_stmt 1 view .LVU224
+ 778 001c 0029     		cmp	r1, #0
+ 779 001e 0BDD     		ble	.L68
+ 780              		.loc 1 92 18 is_stmt 0 view .LVU225
+ 781 0020 01EB8101 		add	r1, r1, r1, lsl #2
+ 782              	.LVL83:
+ 783              		.loc 1 92 18 view .LVU226
+ 784 0024 01AD     		add	r5, sp, #4
+ 785 0026 00EB8101 		add	r1, r0, r1, lsl #2
+ 786              	.LVL84:
+ 787              	.L79:
+ 788              	.LBB60:
+  93:src/touch.cpp ****         if(ra[r])continue;
+ 789              		.loc 1 93 9 is_stmt 1 view .LVU227
+ 790              		.loc 1 93 16 is_stmt 0 view .LVU228
+ 791 002a 15F8013B 		ldrb	r3, [r5], #1	@ zero_extendqisi2
+ 792              	.LVL85:
+ 793              		.loc 1 93 9 view .LVU229
+ 794 002e 002B     		cmp	r3, #0
+ 795 0030 38D0     		beq	.L93
+ 796              	.L76:
+ 797              	.LBE60:
+  92:src/touch.cpp ****         if(ra[r])continue;
+ 798              		.loc 1 92 5 is_stmt 1 discriminator 2 view .LVU230
+ 799              	.LVL86:
+  92:src/touch.cpp ****         if(ra[r])continue;
+ 800              		.loc 1 92 18 discriminator 2 view .LVU231
+ 801 0032 1430     		adds	r0, r0, #20
+ 802 0034 8842     		cmp	r0, r1
+ 803 0036 F8D1     		bne	.L79
+ 804              	.LVL87:
+ 805              	.L68:
+  92:src/touch.cpp ****         if(ra[r])continue;
+ 806              		.loc 1 92 18 is_stmt 0 discriminator 2 view .LVU232
+ 807              	.LBE59:
+  94:src/touch.cpp ****         for(int slot=0;slot<MAX_FINGERS;slot++){
+  95:src/touch.cpp ****             if(!tracked[slot].alive){
+  96:src/touch.cpp ****                 tracked[slot]={true,raw[r].pos,raw[r].pressure,raw[r].peak_ch,raw[r].peak_delta};
+  97:src/touch.cpp ****                 ra[r]=true;break;
+  98:src/touch.cpp ****             }
+  99:src/touch.cpp ****         }
+ 100:src/touch.cpp ****     }
+ 101:src/touch.cpp **** }
+ 808              		.loc 1 101 1 view .LVU233
+ 809 0038 02B0     		add	sp, sp, #8
+ 810              		.cfi_remember_state
+ 811              		.cfi_def_cfa_offset 32
+ 812              		@ sp needed
+ 813 003a BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 814              	.LVL88:
+ 815              	.L92:
+ 816              		.cfi_restore_state
+ 817              	.LBB64:
+ 818              	.LBB56:
+ 819              	.LBB53:
+  81:src/touch.cpp ****             if(ra[r])continue;
+ 820              		.loc 1 81 22 is_stmt 1 view .LVU234
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 19
+
+
+ 821 003e 0029     		cmp	r1, #0
+ 822 0040 4EDD     		ble	.L70
+ 823 0042 0DF1040E 		add	lr, sp, #4
+ 824 0046 8446     		mov	ip, r0
+  81:src/touch.cpp ****             if(ra[r])continue;
+ 825              		.loc 1 81 17 is_stmt 0 view .LVU235
+ 826 0048 0022     		movs	r2, #0
+ 827              	.LBE53:
+  80:src/touch.cpp ****         for(int r=0;r<n;r++){
+ 828              		.loc 1 80 41 view .LVU236
+ 829 004a 4FF0FF38 		mov	r8, #-1
+  80:src/touch.cpp ****         for(int r=0;r<n;r++){
+ 830              		.loc 1 80 17 view .LVU237
+ 831 004e 4FF0C90A 		mov	r10, #201
+ 832              	.LVL89:
+ 833              	.L73:
+ 834              	.LBB55:
+ 835              	.LBB54:
+  82:src/touch.cpp ****             int32_t c=raw[r].pos-tracked[slot].pos;if(c<0)c=-c;
+ 836              		.loc 1 82 13 is_stmt 1 view .LVU238
+  83:src/touch.cpp ****             if(c<best){best=c;br=r;}
+ 837              		.loc 1 83 13 view .LVU239
+  82:src/touch.cpp ****             int32_t c=raw[r].pos-tracked[slot].pos;if(c<0)c=-c;
+ 838              		.loc 1 82 20 is_stmt 0 view .LVU240
+ 839 0052 1EF8014B 		ldrb	r4, [lr], #1	@ zero_extendqisi2
+  82:src/touch.cpp ****             int32_t c=raw[r].pos-tracked[slot].pos;if(c<0)c=-c;
+ 840              		.loc 1 82 13 view .LVU241
+ 841 0056 4CB9     		cbnz	r4, .L71
+  83:src/touch.cpp ****             if(c<best){best=c;br=r;}
+ 842              		.loc 1 83 59 is_stmt 1 view .LVU242
+  83:src/touch.cpp ****             if(c<best){best=c;br=r;}
+ 843              		.loc 1 83 30 is_stmt 0 view .LVU243
+ 844 0058 DCF80440 		ldr	r4, [ip, #4]
+  83:src/touch.cpp ****             if(c<best){best=c;br=r;}
+ 845              		.loc 1 83 48 view .LVU244
+ 846 005c 5D68     		ldr	r5, [r3, #4]
+ 847              	.LVL90:
+  83:src/touch.cpp ****             if(c<best){best=c;br=r;}
+ 848              		.loc 1 83 52 is_stmt 1 view .LVU245
+ 849 005e 671B     		subs	r7, r4, r5
+ 850              	.LVL91:
+  83:src/touch.cpp ****             if(c<best){best=c;br=r;}
+ 851              		.loc 1 83 60 is_stmt 0 view .LVU246
+ 852 0060 48BF     		it	mi
+ 853 0062 2F1B     		submi	r7, r5, r4
+ 854              	.LVL92:
+  84:src/touch.cpp ****         }
+ 855              		.loc 1 84 13 is_stmt 1 view .LVU247
+ 856 0064 BA45     		cmp	r10, r7
+ 857 0066 01DD     		ble	.L71
+ 858 0068 9046     		mov	r8, r2
+ 859 006a BA46     		mov	r10, r7
+ 860              	.LVL93:
+ 861              	.L71:
+  84:src/touch.cpp ****         }
+ 862              		.loc 1 84 13 is_stmt 0 view .LVU248
+ 863              	.LBE54:
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 20
+
+
+  81:src/touch.cpp ****             if(ra[r])continue;
+ 864              		.loc 1 81 9 is_stmt 1 discriminator 2 view .LVU249
+ 865 006c 0132     		adds	r2, r2, #1
+ 866              	.LVL94:
+  81:src/touch.cpp ****             if(ra[r])continue;
+ 867              		.loc 1 81 22 discriminator 2 view .LVU250
+ 868 006e 0CF1140C 		add	ip, ip, #20
+ 869 0072 9142     		cmp	r1, r2
+ 870 0074 EDD1     		bne	.L73
+ 871              	.LBE55:
+  86:src/touch.cpp ****             tracked[slot].pos=raw[br].pos;tracked[slot].pressure=raw[br].pressure;
+ 872              		.loc 1 86 9 view .LVU251
+ 873 0076 B8F1FF3F 		cmp	r8, #-1
+ 874 007a 31D0     		beq	.L70
+  87:src/touch.cpp ****             tracked[slot].peak_ch=raw[br].peak_ch;tracked[slot].peak_delta=raw[br].peak_delta;
+ 875              		.loc 1 87 13 view .LVU252
+  87:src/touch.cpp ****             tracked[slot].peak_ch=raw[br].peak_ch;tracked[slot].peak_delta=raw[br].peak_delta;
+ 876              		.loc 1 87 37 is_stmt 0 view .LVU253
+ 877 007c 08EB8802 		add	r2, r8, r8, lsl #2
+ 878              	.LVL95:
+  89:src/touch.cpp ****         } else tracked[slot].alive=false;
+ 879              		.loc 1 89 19 view .LVU254
+ 880 0080 08F10804 		add	r4, r8, #8
+  87:src/touch.cpp ****             tracked[slot].peak_ch=raw[br].peak_ch;tracked[slot].peak_delta=raw[br].peak_delta;
+ 881              		.loc 1 87 37 view .LVU255
+ 882 0084 00EB8202 		add	r2, r0, r2, lsl #2
+  89:src/touch.cpp ****         } else tracked[slot].alive=false;
+ 883              		.loc 1 89 19 view .LVU256
+ 884 0088 0DEB0408 		add	r8, sp, r4
+ 885 008c 0124     		movs	r4, #1
+ 886 008e 08F8044C 		strb	r4, [r8, #-4]
+  87:src/touch.cpp ****             tracked[slot].peak_ch=raw[br].peak_ch;tracked[slot].peak_delta=raw[br].peak_delta;
+ 887              		.loc 1 87 39 view .LVU257
+ 888 0092 5468     		ldr	r4, [r2, #4]
+  87:src/touch.cpp ****             tracked[slot].peak_ch=raw[br].peak_ch;tracked[slot].peak_delta=raw[br].peak_delta;
+ 889              		.loc 1 87 30 view .LVU258
+ 890 0094 5C60     		str	r4, [r3, #4]
+  87:src/touch.cpp ****             tracked[slot].peak_ch=raw[br].peak_ch;tracked[slot].peak_delta=raw[br].peak_delta;
+ 891              		.loc 1 87 43 is_stmt 1 view .LVU259
+  87:src/touch.cpp ****             tracked[slot].peak_ch=raw[br].peak_ch;tracked[slot].peak_delta=raw[br].peak_delta;
+ 892              		.loc 1 87 74 is_stmt 0 view .LVU260
+ 893 0096 9468     		ldr	r4, [r2, #8]
+  87:src/touch.cpp ****             tracked[slot].peak_ch=raw[br].peak_ch;tracked[slot].peak_delta=raw[br].peak_delta;
+ 894              		.loc 1 87 65 view .LVU261
+ 895 0098 9C60     		str	r4, [r3, #8]
+  88:src/touch.cpp ****             ra[br]=true;
+ 896              		.loc 1 88 13 is_stmt 1 view .LVU262
+  88:src/touch.cpp ****             ra[br]=true;
+ 897              		.loc 1 88 34 is_stmt 0 view .LVU263
+ 898 009a D468     		ldr	r4, [r2, #12]
+  88:src/touch.cpp ****             ra[br]=true;
+ 899              		.loc 1 88 84 view .LVU264
+ 900 009c 1269     		ldr	r2, [r2, #16]
+  88:src/touch.cpp ****             ra[br]=true;
+ 901              		.loc 1 88 34 view .LVU265
+ 902 009e DC60     		str	r4, [r3, #12]
+  88:src/touch.cpp ****             ra[br]=true;
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 21
+
+
+ 903              		.loc 1 88 51 is_stmt 1 view .LVU266
+  88:src/touch.cpp ****             ra[br]=true;
+ 904              		.loc 1 88 75 is_stmt 0 view .LVU267
+ 905 00a0 1A61     		str	r2, [r3, #16]
+  89:src/touch.cpp ****         } else tracked[slot].alive=false;
+ 906              		.loc 1 89 13 is_stmt 1 view .LVU268
+ 907 00a2 B8E7     		b	.L69
+ 908              	.LVL96:
+ 909              	.L93:
+  89:src/touch.cpp ****         } else tracked[slot].alive=false;
+ 910              		.loc 1 89 13 is_stmt 0 view .LVU269
+ 911              	.LBE56:
+ 912              	.LBE64:
+ 913              	.LBB65:
+ 914              	.LBB63:
+ 915              	.LBB61:
+  95:src/touch.cpp ****                 tracked[slot]={true,raw[r].pos,raw[r].pressure,raw[r].peak_ch,raw[r].peak_delta};
+ 916              		.loc 1 95 13 is_stmt 1 view .LVU270
+  94:src/touch.cpp ****             if(!tracked[slot].alive){
+ 917              		.loc 1 94 9 view .LVU271
+ 918              	.LBE61:
+ 919 00a4 3246     		mov	r2, r6
+ 920              	.LBB62:
+  95:src/touch.cpp ****                 tracked[slot]={true,raw[r].pos,raw[r].pressure,raw[r].peak_ch,raw[r].peak_delta};
+ 921              		.loc 1 95 13 is_stmt 0 view .LVU272
+ 922 00a6 1478     		ldrb	r4, [r2]	@ zero_extendqisi2
+  94:src/touch.cpp ****             if(!tracked[slot].alive){
+ 923              		.loc 1 94 28 view .LVU273
+ 924 00a8 1432     		adds	r2, r2, #20
+  95:src/touch.cpp ****                 tracked[slot]={true,raw[r].pos,raw[r].pressure,raw[r].peak_ch,raw[r].peak_delta};
+ 925              		.loc 1 95 13 view .LVU274
+ 926 00aa 34B1     		cbz	r4, .L94
+ 927              	.L77:
+  94:src/touch.cpp ****             if(!tracked[slot].alive){
+ 928              		.loc 1 94 9 discriminator 2 view .LVU275
+ 929 00ac 0133     		adds	r3, r3, #1
+ 930              	.LVL97:
+  94:src/touch.cpp ****             if(!tracked[slot].alive){
+ 931              		.loc 1 94 28 is_stmt 1 discriminator 2 view .LVU276
+ 932 00ae 042B     		cmp	r3, #4
+ 933 00b0 BFD0     		beq	.L76
+  95:src/touch.cpp ****                 tracked[slot]={true,raw[r].pos,raw[r].pressure,raw[r].peak_ch,raw[r].peak_delta};
+ 934              		.loc 1 95 13 view .LVU277
+  94:src/touch.cpp ****             if(!tracked[slot].alive){
+ 935              		.loc 1 94 9 view .LVU278
+  95:src/touch.cpp ****                 tracked[slot]={true,raw[r].pos,raw[r].pressure,raw[r].peak_ch,raw[r].peak_delta};
+ 936              		.loc 1 95 13 is_stmt 0 view .LVU279
+ 937 00b2 1478     		ldrb	r4, [r2]	@ zero_extendqisi2
+  94:src/touch.cpp ****             if(!tracked[slot].alive){
+ 938              		.loc 1 94 28 view .LVU280
+ 939 00b4 1432     		adds	r2, r2, #20
+  95:src/touch.cpp ****                 tracked[slot]={true,raw[r].pos,raw[r].pressure,raw[r].peak_ch,raw[r].peak_delta};
+ 940              		.loc 1 95 13 view .LVU281
+ 941 00b6 002C     		cmp	r4, #0
+ 942 00b8 F8D1     		bne	.L77
+ 943              	.L94:
+  96:src/touch.cpp ****                 ra[r]=true;break;
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 22
+
+
+ 944              		.loc 1 96 17 is_stmt 1 view .LVU282
+  96:src/touch.cpp ****                 ra[r]=true;break;
+ 945              		.loc 1 96 30 is_stmt 0 view .LVU283
+ 946 00ba 03EB8303 		add	r3, r3, r3, lsl #2
+ 947              	.LVL98:
+  96:src/touch.cpp ****                 ra[r]=true;break;
+ 948              		.loc 1 96 86 view .LVU284
+ 949 00be D0F810C0 		ldr	ip, [r0, #16]
+  96:src/touch.cpp ****                 ra[r]=true;break;
+ 950              		.loc 1 96 30 view .LVU285
+ 951 00c2 4468     		ldr	r4, [r0, #4]
+ 952 00c4 06EB8302 		add	r2, r6, r3, lsl #2
+  96:src/touch.cpp ****                 ra[r]=true;break;
+ 953              		.loc 1 96 71 view .LVU286
+ 954 00c8 D0E902E7 		ldrd	lr, r7, [r0, #8]
+  96:src/touch.cpp ****                 ra[r]=true;break;
+ 955              		.loc 1 96 30 view .LVU287
+ 956 00cc C2E9014E 		strd	r4, lr, [r2, #4]
+ 957 00d0 C2E9037C 		strd	r7, ip, [r2, #12]
+  97:src/touch.cpp ****             }
+ 958              		.loc 1 97 17 is_stmt 1 view .LVU288
+  96:src/touch.cpp ****                 ra[r]=true;break;
+ 959              		.loc 1 96 30 is_stmt 0 view .LVU289
+ 960 00d4 0122     		movs	r2, #1
+ 961 00d6 06F82320 		strb	r2, [r6, r3, lsl #2]
+  97:src/touch.cpp ****             }
+ 962              		.loc 1 97 22 view .LVU290
+ 963 00da 05F8012C 		strb	r2, [r5, #-1]
+  97:src/touch.cpp ****             }
+ 964              		.loc 1 97 28 is_stmt 1 view .LVU291
+ 965 00de A8E7     		b	.L76
+ 966              	.LVL99:
+ 967              	.L70:
+  97:src/touch.cpp ****             }
+ 968              		.loc 1 97 28 is_stmt 0 view .LVU292
+ 969              	.LBE62:
+ 970              	.LBE63:
+ 971              	.LBE65:
+ 972              	.LBB66:
+ 973              	.LBB57:
+  86:src/touch.cpp ****             tracked[slot].pos=raw[br].pos;tracked[slot].pressure=raw[br].pressure;
+ 974              		.loc 1 86 9 is_stmt 1 view .LVU293
+  90:src/touch.cpp ****     }
+ 975              		.loc 1 90 16 view .LVU294
+  90:src/touch.cpp ****     }
+ 976              		.loc 1 90 35 is_stmt 0 view .LVU295
+ 977 00e0 0022     		movs	r2, #0
+ 978 00e2 1A70     		strb	r2, [r3]
+ 979 00e4 97E7     		b	.L69
+ 980              	.L96:
+ 981 00e6 00BF     		.align	2
+ 982              	.L95:
+ 983 00e8 00000000 		.word	.LANCHOR1
+ 984              	.LBE57:
+ 985              	.LBE66:
+ 986              		.cfi_endproc
+ 987              	.LFE547:
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 23
+
+
+ 989              		.global	tracked
+ 990              		.section	.bss.tracked,"aw",%nobits
+ 991              		.align	2
+ 992              		.set	.LANCHOR1,. + 0
+ 995              	tracked:
+ 996 0000 00000000 		.space	80
+ 996      00000000 
+ 996      00000000 
+ 996      00000000 
+ 996      00000000 
+ 997              		.section	.rodata._ZL16PRESSURE_MAX_REF,"a"
+ 998              		.align	2
+ 999              		.set	.LANCHOR0,. + 0
+ 1002              	_ZL16PRESSURE_MAX_REF:
+ 1003 0000 2A000000 		.word	42
+ 1004 0004 23000000 		.word	35
+ 1005 0008 22000000 		.word	34
+ 1006 000c 22000000 		.word	34
+ 1007 0010 22000000 		.word	34
+ 1008 0014 22000000 		.word	34
+ 1009 0018 22000000 		.word	34
+ 1010 001c 22000000 		.word	34
+ 1011 0020 21000000 		.word	33
+ 1012 0024 20000000 		.word	32
+ 1013 0028 1D000000 		.word	29
+ 1014 002c 1E000000 		.word	30
+ 1015              		.text
+ 1016              	.Letext0:
+ 1017              		.file 2 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/machine/_default_types.h"
+ 1018              		.file 3 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/_stdint.h"
+ 1019              		.file 4 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/stdint.h"
+ 1020              		.file 5 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cmath"
+ 1021              		.file 6 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/std_abs.h"
+ 1022              		.file 7 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdint"
+ 1023              		.file 8 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v7
+ 1024              		.file 9 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/math.h"
+ 1025              		.file 10 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/math.h"
+ 1026              		.file 11 "src/touch.h"
+ 1027              		.file 12 "src/config.h"
+ 1028              		.file 13 "<built-in>"
+ARM GAS  /tmp/claude-502/ccc2bmib.s 			page 24
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 touch.cpp
+/tmp/claude-502/ccc2bmib.s:19     .text._Z15centroid_windowPliiS_Pi:0000000000000000 $t
+/tmp/claude-502/ccc2bmib.s:26     .text._Z15centroid_windowPliiS_Pi:0000000000000000 _Z15centroid_windowPliiS_Pi
+/tmp/claude-502/ccc2bmib.s:160    .text._Z12pressure_pctli:0000000000000000 $t
+/tmp/claude-502/ccc2bmib.s:167    .text._Z12pressure_pctli:0000000000000000 _Z12pressure_pctli
+/tmp/claude-502/ccc2bmib.s:290    .text._Z12pressure_pctli:0000000000000078 $d
+/tmp/claude-502/ccc2bmib.s:295    .text._Z10detect_rawPlP6Fingeri:0000000000000000 $t
+/tmp/claude-502/ccc2bmib.s:302    .text._Z10detect_rawPlP6Fingeri:0000000000000000 _Z10detect_rawPlP6Fingeri
+/tmp/claude-502/ccc2bmib.s:717    .text._Z14update_trackedP6Fingeri:0000000000000000 $t
+/tmp/claude-502/ccc2bmib.s:724    .text._Z14update_trackedP6Fingeri:0000000000000000 _Z14update_trackedP6Fingeri
+/tmp/claude-502/ccc2bmib.s:983    .text._Z14update_trackedP6Fingeri:00000000000000e8 $d
+/tmp/claude-502/ccc2bmib.s:995    .bss.tracked:0000000000000000 tracked
+/tmp/claude-502/ccc2bmib.s:991    .bss.tracked:0000000000000000 $d
+/tmp/claude-502/ccc2bmib.s:998    .rodata._ZL16PRESSURE_MAX_REF:0000000000000000 $d
+/tmp/claude-502/ccc2bmib.s:1002   .rodata._ZL16PRESSURE_MAX_REF:0000000000000000 _ZL16PRESSURE_MAX_REF
+
+NO UNDEFINED SYMBOLS

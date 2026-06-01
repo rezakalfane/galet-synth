@@ -4,6 +4,16 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Changed — `refactor: split main.cpp into modules (phase 2 — mpr121 + touch units)`
+- Extracted the **MPR121 bit-bang driver** (`mpr121.{h,cpp}` — I2C, `mpr_init`,
+  `read_electrodes`, `capture_baseline`, owns the SDA/SCL `GPIO`) and the **touch
+  detection/tracking** (`touch.{h,cpp}` — `detect_raw`, `update_tracked`,
+  `pressure_pct`, `centroid_window`, `tracked[]`) into real compiled translation
+  units. `touch` is pure logic over electrode deltas → unit-testable off-target
+- Makefile compiles the extra units only for `TARGET=src/main` (tools unaffected)
+- `main.cpp`: 1327 → ~1120 lines. Behavior unchanged (flash 106720 → 106756 B,
+  a few bytes from the multi-unit layout)
+
 ### Changed — `refactor: split main.cpp into modules (phase 1 — config/dsp/voice headers)`
 - Extracted three header-only modules from `main.cpp`: `config.h` (tuning
   constants), `dsp.h` (oscillators, filters, math, `Waveform`), `voice.h`

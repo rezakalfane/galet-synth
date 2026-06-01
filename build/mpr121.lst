@@ -1,0 +1,2825 @@
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"mpr121.cpp"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text._Z9i2c_startv,"ax",%progbits
+  19              		.align	1
+  20              		.p2align 2,,3
+  21              		.global	_Z9i2c_startv
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	_Z9i2c_startv:
+  27              	.LFB2566:
+  28              		.file 1 "src/mpr121.cpp"
+   1:src/mpr121.cpp **** #include "mpr121.h"
+   2:src/mpr121.cpp **** #include "config.h"     // N_CH, REBASELINE_SAMPLES
+   3:src/mpr121.cpp **** 
+   4:src/mpr121.cpp **** using namespace daisy;
+   5:src/mpr121.cpp **** using namespace daisy::seed;
+   6:src/mpr121.cpp **** 
+   7:src/mpr121.cpp **** // GPIO lines owned by the driver.
+   8:src/mpr121.cpp **** static GPIO sda, scl;
+   9:src/mpr121.cpp **** 
+  10:src/mpr121.cpp **** inline void sda_high(){sda.Init(SDA_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+  11:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+  12:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+  13:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+  14:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+  15:src/mpr121.cpp **** 
+  16:src/mpr121.cpp **** void i2c_start(){sda_high();d();scl_high();d();sda_low();d();scl_low();d();}
+  29              		.loc 1 16 17 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 16 18 view .LVU1
+  34              	.LBB100:
+  35              	.LBI100:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+  36              		.loc 1 10 13 view .LVU2
+  37              	.LBB101:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+  38              		.loc 1 10 24 view .LVU3
+  39              	.LBE101:
+  40              	.LBE100:
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 2
+
+
+  41              		.loc 1 16 17 is_stmt 0 view .LVU4
+  42 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  43              		.cfi_def_cfa_offset 24
+  44              		.cfi_offset 4, -24
+  45              		.cfi_offset 5, -20
+  46              		.cfi_offset 6, -16
+  47              		.cfi_offset 7, -12
+  48              		.cfi_offset 8, -8
+  49              		.cfi_offset 14, -4
+  50              	.LBB106:
+  51              	.LBB102:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+  52              		.loc 1 10 32 view .LVU5
+  53 0004 0024     		movs	r4, #0
+  54              	.LBE102:
+  55              	.LBE106:
+  56              		.loc 1 16 17 view .LVU6
+  57 0006 82B0     		sub	sp, sp, #8
+  58              		.cfi_def_cfa_offset 32
+  59              	.LBB107:
+  60              	.LBB103:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+  61              		.loc 1 10 32 view .LVU7
+  62 0008 1C4E     		ldr	r6, .L4
+  63 000a 0123     		movs	r3, #1
+  64 000c DFF87880 		ldr	r8, .L4+12
+  65 0010 2246     		mov	r2, r4
+  66              	.LBE103:
+  67              	.LBE107:
+  68              	.LBB108:
+  69              	.LBB109:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+  70              		.loc 1 12 32 view .LVU8
+  71 0012 1B4D     		ldr	r5, .L4+4
+  72              	.LBE109:
+  73              	.LBE108:
+  74              	.LBB112:
+  75              	.LBB104:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+  76              		.loc 1 10 32 view .LVU9
+  77 0014 3046     		mov	r0, r6
+  78 0016 D8F80010 		ldr	r1, [r8]
+  79              	.LBE104:
+  80              	.LBE112:
+  81              	.LBB113:
+  82              	.LBB110:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+  83              		.loc 1 12 32 view .LVU10
+  84 001a 1A4F     		ldr	r7, .L4+8
+  85              	.LBE110:
+  86              	.LBE113:
+  87              	.LBB114:
+  88              	.LBB105:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+  89              		.loc 1 10 32 view .LVU11
+  90 001c 0094     		str	r4, [sp]
+  91 001e FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 3
+
+
+  92              	.LVL0:
+  93              	.LBE105:
+  94              	.LBE114:
+  95              		.loc 1 16 29 is_stmt 1 view .LVU12
+  96              	.LBB115:
+  97              	.LBI115:
+  14:src/mpr121.cpp **** 
+  98              		.loc 1 14 13 view .LVU13
+  99              	.LBB116:
+  14:src/mpr121.cpp **** 
+ 100              		.loc 1 14 17 view .LVU14
+  14:src/mpr121.cpp **** 
+ 101              		.loc 1 14 32 is_stmt 0 view .LVU15
+ 102 0022 0520     		movs	r0, #5
+ 103 0024 FFF7FEFF 		bl	_ZN5daisy6System7DelayUsEm
+ 104              	.LVL1:
+ 105              	.LBE116:
+ 106              	.LBE115:
+ 107              		.loc 1 16 33 is_stmt 1 view .LVU16
+ 108              	.LBB117:
+ 109              	.LBI108:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 110              		.loc 1 12 13 view .LVU17
+ 111              	.LBB111:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 112              		.loc 1 12 24 view .LVU18
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 113              		.loc 1 12 32 is_stmt 0 view .LVU19
+ 114 0028 2246     		mov	r2, r4
+ 115 002a 3968     		ldr	r1, [r7]
+ 116 002c 0123     		movs	r3, #1
+ 117 002e 2846     		mov	r0, r5
+ 118 0030 0094     		str	r4, [sp]
+ 119 0032 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 120              	.LVL2:
+ 121              	.LBE111:
+ 122              	.LBE117:
+ 123              		.loc 1 16 44 is_stmt 1 view .LVU20
+ 124              	.LBB118:
+ 125              	.LBI118:
+  14:src/mpr121.cpp **** 
+ 126              		.loc 1 14 13 view .LVU21
+ 127              	.LBB119:
+  14:src/mpr121.cpp **** 
+ 128              		.loc 1 14 17 view .LVU22
+  14:src/mpr121.cpp **** 
+ 129              		.loc 1 14 32 is_stmt 0 view .LVU23
+ 130 0036 0520     		movs	r0, #5
+ 131 0038 FFF7FEFF 		bl	_ZN5daisy6System7DelayUsEm
+ 132              	.LVL3:
+ 133              	.LBE119:
+ 134              	.LBE118:
+ 135              		.loc 1 16 48 is_stmt 1 view .LVU24
+ 136              	.LBB120:
+ 137              	.LBI120:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 138              		.loc 1 11 13 view .LVU25
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 4
+
+
+ 139              	.LBB121:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 140              		.loc 1 11 24 view .LVU26
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 141              		.loc 1 11 32 is_stmt 0 view .LVU27
+ 142 003c 2346     		mov	r3, r4
+ 143 003e 0122     		movs	r2, #1
+ 144 0040 D8F80010 		ldr	r1, [r8]
+ 145 0044 3046     		mov	r0, r6
+ 146 0046 0094     		str	r4, [sp]
+ 147 0048 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 148              	.LVL4:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 149              		.loc 1 11 80 is_stmt 1 view .LVU28
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 150              		.loc 1 11 89 is_stmt 0 view .LVU29
+ 151 004c 2146     		mov	r1, r4
+ 152 004e 3046     		mov	r0, r6
+ 153 0050 FFF7FEFF 		bl	_ZN5daisy4GPIO5WriteEb
+ 154              	.LVL5:
+ 155              	.LBE121:
+ 156              	.LBE120:
+ 157              		.loc 1 16 58 is_stmt 1 view .LVU30
+ 158              	.LBB122:
+ 159              	.LBI122:
+  14:src/mpr121.cpp **** 
+ 160              		.loc 1 14 13 view .LVU31
+ 161              	.LBB123:
+  14:src/mpr121.cpp **** 
+ 162              		.loc 1 14 17 view .LVU32
+  14:src/mpr121.cpp **** 
+ 163              		.loc 1 14 32 is_stmt 0 view .LVU33
+ 164 0054 0520     		movs	r0, #5
+ 165 0056 FFF7FEFF 		bl	_ZN5daisy6System7DelayUsEm
+ 166              	.LVL6:
+ 167              	.LBE123:
+ 168              	.LBE122:
+ 169              		.loc 1 16 62 is_stmt 1 view .LVU34
+ 170              	.LBB124:
+ 171              	.LBI124:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 172              		.loc 1 13 13 view .LVU35
+ 173              	.LBB125:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 174              		.loc 1 13 24 view .LVU36
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 175              		.loc 1 13 32 is_stmt 0 view .LVU37
+ 176 005a 2346     		mov	r3, r4
+ 177 005c 0122     		movs	r2, #1
+ 178 005e 3968     		ldr	r1, [r7]
+ 179 0060 2846     		mov	r0, r5
+ 180 0062 0094     		str	r4, [sp]
+ 181 0064 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 182              	.LVL7:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 183              		.loc 1 13 80 is_stmt 1 view .LVU38
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 5
+
+
+ 184              		.loc 1 13 89 is_stmt 0 view .LVU39
+ 185 0068 2846     		mov	r0, r5
+ 186 006a 2146     		mov	r1, r4
+ 187 006c FFF7FEFF 		bl	_ZN5daisy4GPIO5WriteEb
+ 188              	.LVL8:
+ 189              	.LBE125:
+ 190              	.LBE124:
+ 191              		.loc 1 16 72 is_stmt 1 view .LVU40
+ 192              	.LBB126:
+ 193              	.LBI126:
+  14:src/mpr121.cpp **** 
+ 194              		.loc 1 14 13 view .LVU41
+ 195              	.LBB127:
+  14:src/mpr121.cpp **** 
+ 196              		.loc 1 14 17 view .LVU42
+  14:src/mpr121.cpp **** 
+ 197              		.loc 1 14 32 is_stmt 0 view .LVU43
+ 198 0070 0520     		movs	r0, #5
+ 199              	.LBE127:
+ 200              	.LBE126:
+ 201              		.loc 1 16 76 view .LVU44
+ 202 0072 02B0     		add	sp, sp, #8
+ 203              		.cfi_def_cfa_offset 24
+ 204              		@ sp needed
+ 205 0074 BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+ 206              		.cfi_restore 14
+ 207              		.cfi_restore 8
+ 208              		.cfi_restore 7
+ 209              		.cfi_restore 6
+ 210              		.cfi_restore 5
+ 211              		.cfi_restore 4
+ 212              		.cfi_def_cfa_offset 0
+ 213              	.LBB129:
+ 214              	.LBB128:
+  14:src/mpr121.cpp **** 
+ 215              		.loc 1 14 32 view .LVU45
+ 216 0078 FFF7FEBF 		b	_ZN5daisy6System7DelayUsEm
+ 217              	.LVL9:
+ 218              	.L5:
+ 219              		.align	2
+ 220              	.L4:
+ 221 007c 00000000 		.word	.LANCHOR1
+ 222 0080 00000000 		.word	.LANCHOR3
+ 223 0084 00000000 		.word	.LANCHOR2
+ 224 0088 00000000 		.word	.LANCHOR0
+ 225              	.LBE128:
+ 226              	.LBE129:
+ 227              		.cfi_endproc
+ 228              	.LFE2566:
+ 230              		.section	.text._Z8i2c_stopv,"ax",%progbits
+ 231              		.align	1
+ 232              		.p2align 2,,3
+ 233              		.global	_Z8i2c_stopv
+ 234              		.syntax unified
+ 235              		.thumb
+ 236              		.thumb_func
+ 238              	_Z8i2c_stopv:
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 6
+
+
+ 239              	.LFB2567:
+  17:src/mpr121.cpp **** void i2c_stop() {sda_low();d();scl_high();d();sda_high();d();}
+ 240              		.loc 1 17 17 is_stmt 1 view -0
+ 241              		.cfi_startproc
+ 242              		@ args = 0, pretend = 0, frame = 0
+ 243              		@ frame_needed = 0, uses_anonymous_args = 0
+ 244              		.loc 1 17 18 view .LVU47
+ 245              	.LBB142:
+ 246              	.LBI142:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 247              		.loc 1 11 13 view .LVU48
+ 248              	.LBB143:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 249              		.loc 1 11 24 view .LVU49
+ 250              	.LBE143:
+ 251              	.LBE142:
+ 252              		.loc 1 17 17 is_stmt 0 view .LVU50
+ 253 0000 70B5     		push	{r4, r5, r6, lr}
+ 254              		.cfi_def_cfa_offset 16
+ 255              		.cfi_offset 4, -16
+ 256              		.cfi_offset 5, -12
+ 257              		.cfi_offset 6, -8
+ 258              		.cfi_offset 14, -4
+ 259              	.LBB146:
+ 260              	.LBB144:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 261              		.loc 1 11 32 view .LVU51
+ 262 0002 0024     		movs	r4, #0
+ 263              	.LBE144:
+ 264              	.LBE146:
+ 265              		.loc 1 17 17 view .LVU52
+ 266 0004 82B0     		sub	sp, sp, #8
+ 267              		.cfi_def_cfa_offset 24
+ 268              	.LBB147:
+ 269              	.LBB145:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 270              		.loc 1 11 32 view .LVU53
+ 271 0006 144D     		ldr	r5, .L8
+ 272 0008 0122     		movs	r2, #1
+ 273 000a 144E     		ldr	r6, .L8+4
+ 274 000c 2346     		mov	r3, r4
+ 275 000e 2846     		mov	r0, r5
+ 276 0010 0094     		str	r4, [sp]
+ 277 0012 3168     		ldr	r1, [r6]
+ 278 0014 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 279              	.LVL10:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 280              		.loc 1 11 80 is_stmt 1 view .LVU54
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 281              		.loc 1 11 89 is_stmt 0 view .LVU55
+ 282 0018 2146     		mov	r1, r4
+ 283 001a 2846     		mov	r0, r5
+ 284 001c FFF7FEFF 		bl	_ZN5daisy4GPIO5WriteEb
+ 285              	.LVL11:
+ 286              	.LBE145:
+ 287              	.LBE147:
+ 288              		.loc 1 17 28 is_stmt 1 view .LVU56
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 7
+
+
+ 289              	.LBB148:
+ 290              	.LBI148:
+  14:src/mpr121.cpp **** 
+ 291              		.loc 1 14 13 view .LVU57
+ 292              	.LBB149:
+  14:src/mpr121.cpp **** 
+ 293              		.loc 1 14 17 view .LVU58
+  14:src/mpr121.cpp **** 
+ 294              		.loc 1 14 32 is_stmt 0 view .LVU59
+ 295 0020 0520     		movs	r0, #5
+ 296 0022 FFF7FEFF 		bl	_ZN5daisy6System7DelayUsEm
+ 297              	.LVL12:
+ 298              	.LBE149:
+ 299              	.LBE148:
+ 300              		.loc 1 17 32 is_stmt 1 view .LVU60
+ 301              	.LBB150:
+ 302              	.LBI150:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 303              		.loc 1 12 13 view .LVU61
+ 304              	.LBB151:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 305              		.loc 1 12 24 view .LVU62
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 306              		.loc 1 12 32 is_stmt 0 view .LVU63
+ 307 0026 0E4A     		ldr	r2, .L8+8
+ 308 0028 0123     		movs	r3, #1
+ 309 002a 0E48     		ldr	r0, .L8+12
+ 310 002c 1168     		ldr	r1, [r2]
+ 311 002e 2246     		mov	r2, r4
+ 312 0030 0094     		str	r4, [sp]
+ 313 0032 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 314              	.LVL13:
+ 315              	.LBE151:
+ 316              	.LBE150:
+ 317              		.loc 1 17 43 is_stmt 1 view .LVU64
+ 318              	.LBB152:
+ 319              	.LBI152:
+  14:src/mpr121.cpp **** 
+ 320              		.loc 1 14 13 view .LVU65
+ 321              	.LBB153:
+  14:src/mpr121.cpp **** 
+ 322              		.loc 1 14 17 view .LVU66
+  14:src/mpr121.cpp **** 
+ 323              		.loc 1 14 32 is_stmt 0 view .LVU67
+ 324 0036 0520     		movs	r0, #5
+ 325 0038 FFF7FEFF 		bl	_ZN5daisy6System7DelayUsEm
+ 326              	.LVL14:
+ 327              	.LBE153:
+ 328              	.LBE152:
+ 329              		.loc 1 17 47 is_stmt 1 view .LVU68
+ 330              	.LBB154:
+ 331              	.LBI154:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 332              		.loc 1 10 13 view .LVU69
+ 333              	.LBB155:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 334              		.loc 1 10 24 view .LVU70
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 8
+
+
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 335              		.loc 1 10 32 is_stmt 0 view .LVU71
+ 336 003c 2846     		mov	r0, r5
+ 337 003e 0123     		movs	r3, #1
+ 338 0040 2246     		mov	r2, r4
+ 339 0042 3168     		ldr	r1, [r6]
+ 340 0044 0094     		str	r4, [sp]
+ 341 0046 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 342              	.LVL15:
+ 343              	.LBE155:
+ 344              	.LBE154:
+ 345              		.loc 1 17 58 is_stmt 1 view .LVU72
+ 346              	.LBB156:
+ 347              	.LBI156:
+  14:src/mpr121.cpp **** 
+ 348              		.loc 1 14 13 view .LVU73
+ 349              	.LBB157:
+  14:src/mpr121.cpp **** 
+ 350              		.loc 1 14 17 view .LVU74
+  14:src/mpr121.cpp **** 
+ 351              		.loc 1 14 32 is_stmt 0 view .LVU75
+ 352 004a 0520     		movs	r0, #5
+ 353              	.LBE157:
+ 354              	.LBE156:
+ 355              		.loc 1 17 62 view .LVU76
+ 356 004c 02B0     		add	sp, sp, #8
+ 357              		.cfi_def_cfa_offset 16
+ 358              		@ sp needed
+ 359 004e BDE87040 		pop	{r4, r5, r6, lr}
+ 360              		.cfi_restore 14
+ 361              		.cfi_restore 6
+ 362              		.cfi_restore 5
+ 363              		.cfi_restore 4
+ 364              		.cfi_def_cfa_offset 0
+ 365              	.LBB159:
+ 366              	.LBB158:
+  14:src/mpr121.cpp **** 
+ 367              		.loc 1 14 32 view .LVU77
+ 368 0052 FFF7FEBF 		b	_ZN5daisy6System7DelayUsEm
+ 369              	.LVL16:
+ 370              	.L9:
+ 371 0056 00BF     		.align	2
+ 372              	.L8:
+ 373 0058 00000000 		.word	.LANCHOR1
+ 374 005c 00000000 		.word	.LANCHOR0
+ 375 0060 00000000 		.word	.LANCHOR2
+ 376 0064 00000000 		.word	.LANCHOR3
+ 377              	.LBE158:
+ 378              	.LBE159:
+ 379              		.cfi_endproc
+ 380              	.LFE2567:
+ 382              		.section	.text._Z14i2c_write_byteh,"ax",%progbits
+ 383              		.align	1
+ 384              		.p2align 2,,3
+ 385              		.global	_Z14i2c_write_byteh
+ 386              		.syntax unified
+ 387              		.thumb
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 9
+
+
+ 388              		.thumb_func
+ 390              	_Z14i2c_write_byteh:
+ 391              	.LVL17:
+ 392              	.LFB2568:
+  18:src/mpr121.cpp **** 
+  19:src/mpr121.cpp **** bool i2c_write_byte(uint8_t byte)
+  20:src/mpr121.cpp **** {
+ 393              		.loc 1 20 1 is_stmt 1 view -0
+ 394              		.cfi_startproc
+ 395              		@ args = 0, pretend = 0, frame = 0
+ 396              		@ frame_needed = 0, uses_anonymous_args = 0
+  21:src/mpr121.cpp ****     for(int i=7;i>=0;i--){
+ 397              		.loc 1 21 5 view .LVU79
+ 398              	.LBB187:
+ 399              		.loc 1 21 18 view .LVU80
+ 400              	.LBE187:
+  20:src/mpr121.cpp ****     for(int i=7;i>=0;i--){
+ 401              		.loc 1 20 1 is_stmt 0 view .LVU81
+ 402 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 403              		.cfi_def_cfa_offset 24
+ 404              		.cfi_offset 4, -24
+ 405              		.cfi_offset 5, -20
+ 406              		.cfi_offset 6, -16
+ 407              		.cfi_offset 7, -12
+ 408              		.cfi_offset 8, -8
+ 409              		.cfi_offset 14, -4
+ 410              	.LBB218:
+ 411              		.loc 1 21 13 view .LVU82
+ 412 0004 0725     		movs	r5, #7
+ 413              	.LBE218:
+  20:src/mpr121.cpp ****     for(int i=7;i>=0;i--){
+ 414              		.loc 1 20 1 view .LVU83
+ 415 0006 82B0     		sub	sp, sp, #8
+ 416              		.cfi_def_cfa_offset 32
+ 417 0008 DFF8E480 		ldr	r8, .L18+12
+  20:src/mpr121.cpp ****     for(int i=7;i>=0;i--){
+ 418              		.loc 1 20 1 view .LVU84
+ 419 000c 0746     		mov	r7, r0
+ 420 000e 354E     		ldr	r6, .L18
+ 421 0010 25E0     		b	.L13
+ 422              	.LVL18:
+ 423              	.L17:
+ 424              	.LBB219:
+ 425              	.LBB188:
+ 426              	.LBB189:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 427              		.loc 1 10 32 view .LVU85
+ 428 0012 6246     		mov	r2, ip
+ 429 0014 D8F80010 		ldr	r1, [r8]
+ 430 0018 CDF800C0 		str	ip, [sp]
+ 431 001c FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 432              	.LVL19:
+ 433              	.L12:
+ 434              	.LBE189:
+ 435              	.LBE188:
+  22:src/mpr121.cpp ****         if(byte&(1<<i))sda_high();else sda_low();
+  23:src/mpr121.cpp ****         d();scl_high();d();scl_low();d();
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 10
+
+
+ 436              		.loc 1 23 9 is_stmt 1 discriminator 2 view .LVU86
+ 437              	.LBB193:
+ 438              	.LBI193:
+  14:src/mpr121.cpp **** 
+ 439              		.loc 1 14 13 discriminator 2 view .LVU87
+ 440              	.LBB194:
+  14:src/mpr121.cpp **** 
+ 441              		.loc 1 14 17 discriminator 2 view .LVU88
+ 442              	.LBE194:
+ 443              	.LBE193:
+ 444              	.LBB196:
+ 445              	.LBB197:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 446              		.loc 1 12 32 is_stmt 0 discriminator 2 view .LVU89
+ 447 0020 0024     		movs	r4, #0
+ 448              	.LBE197:
+ 449              	.LBE196:
+ 450              	.LBB200:
+ 451              	.LBB195:
+  14:src/mpr121.cpp **** 
+ 452              		.loc 1 14 32 discriminator 2 view .LVU90
+ 453 0022 0520     		movs	r0, #5
+ 454 0024 FFF7FEFF 		bl	_ZN5daisy6System7DelayUsEm
+ 455              	.LVL20:
+ 456              	.LBE195:
+ 457              	.LBE200:
+ 458              		.loc 1 23 13 is_stmt 1 discriminator 2 view .LVU91
+ 459              	.LBB201:
+ 460              	.LBI196:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 461              		.loc 1 12 13 discriminator 2 view .LVU92
+ 462              	.LBB198:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 463              		.loc 1 12 24 discriminator 2 view .LVU93
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 464              		.loc 1 12 32 is_stmt 0 discriminator 2 view .LVU94
+ 465 0028 0123     		movs	r3, #1
+ 466 002a 2246     		mov	r2, r4
+ 467 002c 3168     		ldr	r1, [r6]
+ 468 002e 2E48     		ldr	r0, .L18+4
+ 469              	.LBE198:
+ 470              	.LBE201:
+  21:src/mpr121.cpp ****         if(byte&(1<<i))sda_high();else sda_low();
+ 471              		.loc 1 21 5 discriminator 2 view .LVU95
+ 472 0030 013D     		subs	r5, r5, #1
+ 473              	.LVL21:
+ 474              	.LBB202:
+ 475              	.LBB199:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 476              		.loc 1 12 32 discriminator 2 view .LVU96
+ 477 0032 0094     		str	r4, [sp]
+ 478 0034 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 479              	.LVL22:
+ 480              	.LBE199:
+ 481              	.LBE202:
+ 482              		.loc 1 23 24 is_stmt 1 discriminator 2 view .LVU97
+ 483              	.LBB203:
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 11
+
+
+ 484              	.LBI203:
+  14:src/mpr121.cpp **** 
+ 485              		.loc 1 14 13 discriminator 2 view .LVU98
+ 486              	.LBB204:
+  14:src/mpr121.cpp **** 
+ 487              		.loc 1 14 17 discriminator 2 view .LVU99
+  14:src/mpr121.cpp **** 
+ 488              		.loc 1 14 32 is_stmt 0 discriminator 2 view .LVU100
+ 489 0038 0520     		movs	r0, #5
+ 490 003a FFF7FEFF 		bl	_ZN5daisy6System7DelayUsEm
+ 491              	.LVL23:
+ 492              	.LBE204:
+ 493              	.LBE203:
+ 494              		.loc 1 23 28 is_stmt 1 discriminator 2 view .LVU101
+ 495              	.LBB205:
+ 496              	.LBI205:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 497              		.loc 1 13 13 discriminator 2 view .LVU102
+ 498              	.LBB206:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 499              		.loc 1 13 24 discriminator 2 view .LVU103
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 500              		.loc 1 13 32 is_stmt 0 discriminator 2 view .LVU104
+ 501 003e 2346     		mov	r3, r4
+ 502 0040 0122     		movs	r2, #1
+ 503 0042 2948     		ldr	r0, .L18+4
+ 504 0044 3168     		ldr	r1, [r6]
+ 505 0046 0094     		str	r4, [sp]
+ 506 0048 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 507              	.LVL24:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 508              		.loc 1 13 80 is_stmt 1 discriminator 2 view .LVU105
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 509              		.loc 1 13 89 is_stmt 0 discriminator 2 view .LVU106
+ 510 004c 2146     		mov	r1, r4
+ 511 004e 2648     		ldr	r0, .L18+4
+ 512 0050 FFF7FEFF 		bl	_ZN5daisy4GPIO5WriteEb
+ 513              	.LVL25:
+ 514              	.LBE206:
+ 515              	.LBE205:
+ 516              		.loc 1 23 38 is_stmt 1 discriminator 2 view .LVU107
+ 517              	.LBB207:
+ 518              	.LBI207:
+  14:src/mpr121.cpp **** 
+ 519              		.loc 1 14 13 discriminator 2 view .LVU108
+ 520              	.LBB208:
+  14:src/mpr121.cpp **** 
+ 521              		.loc 1 14 17 discriminator 2 view .LVU109
+  14:src/mpr121.cpp **** 
+ 522              		.loc 1 14 32 is_stmt 0 discriminator 2 view .LVU110
+ 523 0054 0520     		movs	r0, #5
+ 524 0056 FFF7FEFF 		bl	_ZN5daisy6System7DelayUsEm
+ 525              	.LVL26:
+ 526              	.LBE208:
+ 527              	.LBE207:
+  21:src/mpr121.cpp ****         if(byte&(1<<i))sda_high();else sda_low();
+ 528              		.loc 1 21 5 is_stmt 1 discriminator 2 view .LVU111
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 12
+
+
+  21:src/mpr121.cpp ****         if(byte&(1<<i))sda_high();else sda_low();
+ 529              		.loc 1 21 18 discriminator 2 view .LVU112
+ 530 005a 6B1C     		adds	r3, r5, #1
+ 531 005c 14D0     		beq	.L16
+ 532              	.LVL27:
+ 533              	.L13:
+  22:src/mpr121.cpp ****         d();scl_high();d();scl_low();d();
+ 534              		.loc 1 22 9 view .LVU113
+  22:src/mpr121.cpp ****         d();scl_high();d();scl_low();d();
+ 535              		.loc 1 22 24 view .LVU114
+ 536              	.LBB209:
+ 537              	.LBI188:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 538              		.loc 1 10 13 view .LVU115
+ 539              	.LBB190:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 540              		.loc 1 10 24 view .LVU116
+ 541              	.LBE190:
+ 542              	.LBE209:
+  22:src/mpr121.cpp ****         d();scl_high();d();scl_low();d();
+ 543              		.loc 1 22 40 view .LVU117
+ 544              	.LBB210:
+ 545              	.LBI210:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 546              		.loc 1 11 13 view .LVU118
+ 547              	.LBB211:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 548              		.loc 1 11 24 view .LVU119
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 549              		.loc 1 11 32 is_stmt 0 view .LVU120
+ 550 005e 0122     		movs	r2, #1
+ 551              	.LBE211:
+ 552              	.LBE210:
+  22:src/mpr121.cpp ****         d();scl_high();d();scl_low();d();
+ 553              		.loc 1 22 16 view .LVU121
+ 554 0060 47FA05F1 		asr	r1, r7, r5
+ 555              	.LBB214:
+ 556              	.LBB191:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 557              		.loc 1 10 32 view .LVU122
+ 558 0064 4FF0000C 		mov	ip, #0
+ 559              	.LBE191:
+ 560              	.LBE214:
+ 561              	.LBB215:
+ 562              	.LBB212:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 563              		.loc 1 11 32 view .LVU123
+ 564 0068 2048     		ldr	r0, .L18+8
+ 565              	.LBE212:
+ 566              	.LBE215:
+  22:src/mpr121.cpp ****         d();scl_high();d();scl_low();d();
+ 567              		.loc 1 22 9 view .LVU124
+ 568 006a 11EA0204 		ands	r4, r1, r2
+ 569              	.LBB216:
+ 570              	.LBB192:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 571              		.loc 1 10 32 view .LVU125
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 13
+
+
+ 572 006e 1346     		mov	r3, r2
+ 573              	.LBE192:
+ 574              	.LBE216:
+  22:src/mpr121.cpp ****         d();scl_high();d();scl_low();d();
+ 575              		.loc 1 22 9 view .LVU126
+ 576 0070 CFD1     		bne	.L17
+ 577              	.LBB217:
+ 578              	.LBB213:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 579              		.loc 1 11 32 view .LVU127
+ 580 0072 D8F80010 		ldr	r1, [r8]
+ 581 0076 2346     		mov	r3, r4
+ 582 0078 0094     		str	r4, [sp]
+ 583 007a FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 584              	.LVL28:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 585              		.loc 1 11 80 is_stmt 1 view .LVU128
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 586              		.loc 1 11 89 is_stmt 0 view .LVU129
+ 587 007e 2146     		mov	r1, r4
+ 588 0080 1A48     		ldr	r0, .L18+8
+ 589 0082 FFF7FEFF 		bl	_ZN5daisy4GPIO5WriteEb
+ 590              	.LVL29:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 591              		.loc 1 11 97 view .LVU130
+ 592 0086 CBE7     		b	.L12
+ 593              	.L16:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 594              		.loc 1 11 97 view .LVU131
+ 595              	.LBE213:
+ 596              	.LBE217:
+ 597              	.LBE219:
+  24:src/mpr121.cpp ****     }
+  25:src/mpr121.cpp ****     sda_high();d();scl_high();d();
+ 598              		.loc 1 25 5 is_stmt 1 view .LVU132
+ 599              	.LBB220:
+ 600              	.LBI220:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 601              		.loc 1 10 13 view .LVU133
+ 602              	.LBB221:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 603              		.loc 1 10 24 view .LVU134
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 604              		.loc 1 10 32 is_stmt 0 view .LVU135
+ 605 0088 2246     		mov	r2, r4
+ 606 008a D8F80010 		ldr	r1, [r8]
+ 607 008e 0123     		movs	r3, #1
+ 608 0090 1648     		ldr	r0, .L18+8
+ 609 0092 0094     		str	r4, [sp]
+ 610 0094 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 611              	.LVL30:
+ 612              	.LBE221:
+ 613              	.LBE220:
+ 614              		.loc 1 25 16 is_stmt 1 view .LVU136
+ 615              	.LBB222:
+ 616              	.LBI222:
+  14:src/mpr121.cpp **** 
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 14
+
+
+ 617              		.loc 1 14 13 view .LVU137
+ 618              	.LBB223:
+  14:src/mpr121.cpp **** 
+ 619              		.loc 1 14 17 view .LVU138
+  14:src/mpr121.cpp **** 
+ 620              		.loc 1 14 32 is_stmt 0 view .LVU139
+ 621 0098 0520     		movs	r0, #5
+ 622 009a FFF7FEFF 		bl	_ZN5daisy6System7DelayUsEm
+ 623              	.LVL31:
+ 624              	.LBE223:
+ 625              	.LBE222:
+ 626              		.loc 1 25 20 is_stmt 1 view .LVU140
+ 627              	.LBB224:
+ 628              	.LBI224:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 629              		.loc 1 12 13 view .LVU141
+ 630              	.LBB225:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 631              		.loc 1 12 24 view .LVU142
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 632              		.loc 1 12 32 is_stmt 0 view .LVU143
+ 633 009e 2246     		mov	r2, r4
+ 634 00a0 3168     		ldr	r1, [r6]
+ 635 00a2 0123     		movs	r3, #1
+ 636 00a4 1048     		ldr	r0, .L18+4
+ 637 00a6 0094     		str	r4, [sp]
+ 638 00a8 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 639              	.LVL32:
+ 640              	.LBE225:
+ 641              	.LBE224:
+ 642              		.loc 1 25 31 is_stmt 1 view .LVU144
+ 643              	.LBB226:
+ 644              	.LBI226:
+  14:src/mpr121.cpp **** 
+ 645              		.loc 1 14 13 view .LVU145
+ 646              	.LBB227:
+  14:src/mpr121.cpp **** 
+ 647              		.loc 1 14 17 view .LVU146
+  14:src/mpr121.cpp **** 
+ 648              		.loc 1 14 32 is_stmt 0 view .LVU147
+ 649 00ac 0520     		movs	r0, #5
+ 650 00ae FFF7FEFF 		bl	_ZN5daisy6System7DelayUsEm
+ 651              	.LVL33:
+ 652              	.LBE227:
+ 653              	.LBE226:
+  26:src/mpr121.cpp ****     bool ack=!sda.Read();
+ 654              		.loc 1 26 5 is_stmt 1 view .LVU148
+ 655              		.loc 1 26 23 is_stmt 0 view .LVU149
+ 656 00b2 0E48     		ldr	r0, .L18+8
+ 657 00b4 FFF7FEFF 		bl	_ZN5daisy4GPIO4ReadEv
+ 658              	.LVL34:
+ 659              	.LBB228:
+ 660              	.LBB229:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 661              		.loc 1 13 32 view .LVU150
+ 662 00b8 2346     		mov	r3, r4
+ 663 00ba 0122     		movs	r2, #1
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 15
+
+
+ 664 00bc 3168     		ldr	r1, [r6]
+ 665              	.LBE229:
+ 666              	.LBE228:
+ 667              		.loc 1 26 23 view .LVU151
+ 668 00be 0546     		mov	r5, r0
+ 669              	.LVL35:
+  27:src/mpr121.cpp ****     scl_low();d();
+ 670              		.loc 1 27 5 is_stmt 1 view .LVU152
+ 671              	.LBB231:
+ 672              	.LBI228:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 673              		.loc 1 13 13 view .LVU153
+ 674              	.LBB230:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 675              		.loc 1 13 24 view .LVU154
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 676              		.loc 1 13 32 is_stmt 0 view .LVU155
+ 677 00c0 0094     		str	r4, [sp]
+ 678 00c2 0948     		ldr	r0, .L18+4
+ 679 00c4 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 680              	.LVL36:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 681              		.loc 1 13 80 is_stmt 1 view .LVU156
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 682              		.loc 1 13 89 is_stmt 0 view .LVU157
+ 683 00c8 2146     		mov	r1, r4
+ 684 00ca 0748     		ldr	r0, .L18+4
+ 685 00cc FFF7FEFF 		bl	_ZN5daisy4GPIO5WriteEb
+ 686              	.LVL37:
+ 687              	.LBE230:
+ 688              	.LBE231:
+ 689              		.loc 1 27 15 is_stmt 1 view .LVU158
+ 690              	.LBB232:
+ 691              	.LBI232:
+  14:src/mpr121.cpp **** 
+ 692              		.loc 1 14 13 view .LVU159
+ 693              	.LBB233:
+  14:src/mpr121.cpp **** 
+ 694              		.loc 1 14 17 view .LVU160
+  14:src/mpr121.cpp **** 
+ 695              		.loc 1 14 32 is_stmt 0 view .LVU161
+ 696 00d0 0520     		movs	r0, #5
+ 697 00d2 FFF7FEFF 		bl	_ZN5daisy6System7DelayUsEm
+ 698              	.LVL38:
+ 699              	.LBE233:
+ 700              	.LBE232:
+  28:src/mpr121.cpp ****     return ack;
+ 701              		.loc 1 28 5 is_stmt 1 view .LVU162
+  26:src/mpr121.cpp ****     scl_low();d();
+ 702              		.loc 1 26 24 is_stmt 0 view .LVU163
+ 703 00d6 85F00100 		eor	r0, r5, #1
+  29:src/mpr121.cpp **** }
+ 704              		.loc 1 29 1 view .LVU164
+ 705 00da C0B2     		uxtb	r0, r0
+ 706 00dc 02B0     		add	sp, sp, #8
+ 707              		.cfi_def_cfa_offset 24
+ 708              		@ sp needed
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 16
+
+
+ 709 00de BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 710              	.LVL39:
+ 711              	.L19:
+ 712              		.loc 1 29 1 view .LVU165
+ 713 00e2 00BF     		.align	2
+ 714              	.L18:
+ 715 00e4 00000000 		.word	.LANCHOR2
+ 716 00e8 00000000 		.word	.LANCHOR3
+ 717 00ec 00000000 		.word	.LANCHOR1
+ 718 00f0 00000000 		.word	.LANCHOR0
+ 719              		.cfi_endproc
+ 720              	.LFE2568:
+ 722              		.section	.text._Z13i2c_read_byteb,"ax",%progbits
+ 723              		.align	1
+ 724              		.p2align 2,,3
+ 725              		.global	_Z13i2c_read_byteb
+ 726              		.syntax unified
+ 727              		.thumb
+ 728              		.thumb_func
+ 730              	_Z13i2c_read_byteb:
+ 731              	.LVL40:
+ 732              	.LFB2569:
+  30:src/mpr121.cpp **** 
+  31:src/mpr121.cpp **** uint8_t i2c_read_byte(bool ack)
+  32:src/mpr121.cpp **** {
+ 733              		.loc 1 32 1 is_stmt 1 view -0
+ 734              		.cfi_startproc
+ 735              		@ args = 0, pretend = 0, frame = 0
+ 736              		@ frame_needed = 0, uses_anonymous_args = 0
+  33:src/mpr121.cpp ****     uint8_t b=0;sda_high();
+ 737              		.loc 1 33 5 view .LVU167
+ 738              		.loc 1 33 17 view .LVU168
+ 739              	.LBB261:
+ 740              	.LBI261:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 741              		.loc 1 10 13 view .LVU169
+ 742              	.LBB262:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 743              		.loc 1 10 24 view .LVU170
+ 744              	.LBE262:
+ 745              	.LBE261:
+  32:src/mpr121.cpp ****     uint8_t b=0;sda_high();
+ 746              		.loc 1 32 1 is_stmt 0 view .LVU171
+ 747 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 748              		.cfi_def_cfa_offset 28
+ 749              		.cfi_offset 4, -28
+ 750              		.cfi_offset 5, -24
+ 751              		.cfi_offset 6, -20
+ 752              		.cfi_offset 7, -16
+ 753              		.cfi_offset 8, -12
+ 754              		.cfi_offset 9, -8
+ 755              		.cfi_offset 14, -4
+ 756              	.LBB268:
+ 757              	.LBB263:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 758              		.loc 1 10 32 view .LVU172
+ 759 0004 0022     		movs	r2, #0
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 17
+
+
+ 760              	.LBE263:
+ 761              	.LBE268:
+  32:src/mpr121.cpp ****     uint8_t b=0;sda_high();
+ 762              		.loc 1 32 1 view .LVU173
+ 763 0006 83B0     		sub	sp, sp, #12
+ 764              		.cfi_def_cfa_offset 40
+ 765              	.LBB269:
+ 766              	.LBB264:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 767              		.loc 1 10 32 view .LVU174
+ 768 0008 DFF8F480 		ldr	r8, .L30+12
+ 769              	.LBE264:
+ 770              	.LBE269:
+  32:src/mpr121.cpp ****     uint8_t b=0;sda_high();
+ 771              		.loc 1 32 1 view .LVU175
+ 772 000c 0746     		mov	r7, r0
+ 773              	.LBB270:
+ 774              	.LBB265:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 775              		.loc 1 10 32 view .LVU176
+ 776 000e 0123     		movs	r3, #1
+ 777 0010 3848     		ldr	r0, .L30
+ 778              	.LVL41:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 779              		.loc 1 10 32 view .LVU177
+ 780 0012 D8F80010 		ldr	r1, [r8]
+ 781              	.LBE265:
+ 782              	.LBE270:
+ 783              		.loc 1 33 13 view .LVU178
+ 784 0016 9146     		mov	r9, r2
+ 785              	.LBB271:
+ 786              	.LBB266:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 787              		.loc 1 10 32 view .LVU179
+ 788 0018 0092     		str	r2, [sp]
+ 789              	.LBE266:
+ 790              	.LBE271:
+ 791              	.LBB272:
+  34:src/mpr121.cpp ****     for(int i=7;i>=0;i--){d();scl_high();d();if(sda.Read())b|=(1<<i);scl_low();}
+ 792              		.loc 1 34 13 view .LVU180
+ 793 001a 0725     		movs	r5, #7
+ 794 001c 364E     		ldr	r6, .L30+4
+ 795              	.LBE272:
+ 796              	.LBB291:
+ 797              	.LBB267:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 798              		.loc 1 10 32 view .LVU181
+ 799 001e FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 800              	.LVL42:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 801              		.loc 1 10 32 view .LVU182
+ 802              	.LBE267:
+ 803              	.LBE291:
+ 804              	.LBB292:
+ 805              		.loc 1 34 18 is_stmt 1 view .LVU183
+ 806              	.L22:
+ 807              		.loc 1 34 27 view .LVU184
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 18
+
+
+ 808              	.LBB273:
+ 809              	.LBI273:
+  14:src/mpr121.cpp **** 
+ 810              		.loc 1 14 13 view .LVU185
+ 811              	.LBB274:
+  14:src/mpr121.cpp **** 
+ 812              		.loc 1 14 17 view .LVU186
+ 813              	.LBE274:
+ 814              	.LBE273:
+ 815              	.LBB276:
+ 816              	.LBB277:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 817              		.loc 1 13 32 is_stmt 0 view .LVU187
+ 818 0022 0024     		movs	r4, #0
+ 819              	.LBE277:
+ 820              	.LBE276:
+ 821              	.LBB282:
+ 822              	.LBB275:
+  14:src/mpr121.cpp **** 
+ 823              		.loc 1 14 32 view .LVU188
+ 824 0024 0520     		movs	r0, #5
+ 825 0026 FFF7FEFF 		bl	_ZN5daisy6System7DelayUsEm
+ 826              	.LVL43:
+ 827              	.LBE275:
+ 828              	.LBE282:
+ 829              		.loc 1 34 31 is_stmt 1 view .LVU189
+ 830              	.LBB283:
+ 831              	.LBI283:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 832              		.loc 1 12 13 view .LVU190
+ 833              	.LBB284:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 834              		.loc 1 12 24 view .LVU191
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 835              		.loc 1 12 32 is_stmt 0 view .LVU192
+ 836 002a 0123     		movs	r3, #1
+ 837 002c 2246     		mov	r2, r4
+ 838 002e 3168     		ldr	r1, [r6]
+ 839 0030 3248     		ldr	r0, .L30+8
+ 840 0032 0094     		str	r4, [sp]
+ 841 0034 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 842              	.LVL44:
+ 843              	.LBE284:
+ 844              	.LBE283:
+ 845              		.loc 1 34 42 is_stmt 1 view .LVU193
+ 846              	.LBB285:
+ 847              	.LBI285:
+  14:src/mpr121.cpp **** 
+ 848              		.loc 1 14 13 view .LVU194
+ 849              	.LBB286:
+  14:src/mpr121.cpp **** 
+ 850              		.loc 1 14 17 view .LVU195
+  14:src/mpr121.cpp **** 
+ 851              		.loc 1 14 32 is_stmt 0 view .LVU196
+ 852 0038 0520     		movs	r0, #5
+ 853 003a FFF7FEFF 		bl	_ZN5daisy6System7DelayUsEm
+ 854              	.LVL45:
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 19
+
+
+ 855              	.LBE286:
+ 856              	.LBE285:
+ 857              		.loc 1 34 46 is_stmt 1 view .LVU197
+ 858              		.loc 1 34 57 is_stmt 0 view .LVU198
+ 859 003e 2D48     		ldr	r0, .L30
+ 860 0040 FFF7FEFF 		bl	_ZN5daisy4GPIO4ReadEv
+ 861              	.LVL46:
+ 862              		.loc 1 34 60 is_stmt 1 view .LVU199
+ 863              		.loc 1 34 65 is_stmt 0 view .LVU200
+ 864 0044 0121     		movs	r1, #1
+ 865              		.loc 1 34 57 view .LVU201
+ 866 0046 8646     		mov	lr, r0
+ 867              	.LBB287:
+ 868              	.LBB278:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 869              		.loc 1 13 32 view .LVU202
+ 870 0048 2346     		mov	r3, r4
+ 871              	.LBE278:
+ 872              	.LBE287:
+ 873              		.loc 1 34 65 view .LVU203
+ 874 004a 01FA05FC 		lsl	ip, r1, r5
+ 875              	.LBB288:
+ 876              	.LBB279:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 877              		.loc 1 13 32 view .LVU204
+ 878 004e 0A46     		mov	r2, r1
+ 879 0050 2A48     		ldr	r0, .L30+8
+ 880              	.LBE279:
+ 881              	.LBE288:
+ 882              		.loc 1 34 5 view .LVU205
+ 883 0052 013D     		subs	r5, r5, #1
+ 884              	.LVL47:
+ 885              	.LBB289:
+ 886              	.LBB280:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 887              		.loc 1 13 32 view .LVU206
+ 888 0054 3168     		ldr	r1, [r6]
+ 889              	.LBE280:
+ 890              	.LBE289:
+ 891              		.loc 1 34 46 view .LVU207
+ 892 0056 BEF1000F 		cmp	lr, #0
+ 893 005a 03D0     		beq	.L21
+ 894              		.loc 1 34 61 discriminator 3 view .LVU208
+ 895 005c 4CEA090C 		orr	ip, ip, r9
+ 896 0060 5FFA8CF9 		uxtb	r9, ip
+ 897              	.LVL48:
+ 898              	.L21:
+ 899              		.loc 1 34 70 is_stmt 1 discriminator 5 view .LVU209
+ 900              	.LBB290:
+ 901              	.LBI276:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 902              		.loc 1 13 13 discriminator 5 view .LVU210
+ 903              	.LBB281:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 904              		.loc 1 13 24 discriminator 5 view .LVU211
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 905              		.loc 1 13 32 is_stmt 0 discriminator 5 view .LVU212
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 20
+
+
+ 906 0064 0094     		str	r4, [sp]
+ 907 0066 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 908              	.LVL49:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 909              		.loc 1 13 80 is_stmt 1 discriminator 5 view .LVU213
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 910              		.loc 1 13 89 is_stmt 0 discriminator 5 view .LVU214
+ 911 006a 2146     		mov	r1, r4
+ 912 006c 2348     		ldr	r0, .L30+8
+ 913 006e FFF7FEFF 		bl	_ZN5daisy4GPIO5WriteEb
+ 914              	.LVL50:
+ 915              	.LBE281:
+ 916              	.LBE290:
+ 917              		.loc 1 34 5 is_stmt 1 discriminator 5 view .LVU215
+ 918              		.loc 1 34 18 discriminator 5 view .LVU216
+ 919 0072 6B1C     		adds	r3, r5, #1
+ 920 0074 D5D1     		bne	.L22
+ 921              		.loc 1 34 18 is_stmt 0 discriminator 5 view .LVU217
+ 922              	.LBE292:
+  35:src/mpr121.cpp ****     if(ack)sda_low();else sda_high();
+ 923              		.loc 1 35 5 is_stmt 1 view .LVU218
+ 924 0076 002F     		cmp	r7, #0
+ 925 0078 33D0     		beq	.L23
+ 926              		.loc 1 35 12 view .LVU219
+ 927              	.LBB293:
+ 928              	.LBI293:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 929              		.loc 1 11 13 view .LVU220
+ 930              	.LBB294:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 931              		.loc 1 11 24 view .LVU221
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 932              		.loc 1 11 32 is_stmt 0 view .LVU222
+ 933 007a D8F80010 		ldr	r1, [r8]
+ 934 007e 2346     		mov	r3, r4
+ 935 0080 1C48     		ldr	r0, .L30
+ 936 0082 0122     		movs	r2, #1
+ 937 0084 0094     		str	r4, [sp]
+ 938 0086 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 939              	.LVL51:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 940              		.loc 1 11 80 is_stmt 1 view .LVU223
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 941              		.loc 1 11 89 is_stmt 0 view .LVU224
+ 942 008a 2146     		mov	r1, r4
+ 943 008c 1948     		ldr	r0, .L30
+ 944 008e FFF7FEFF 		bl	_ZN5daisy4GPIO5WriteEb
+ 945              	.LVL52:
+ 946              	.L24:
+  11:src/mpr121.cpp **** inline void scl_high(){scl.Init(SCL_PIN,GPIO::Mode::INPUT, GPIO::Pull::PULLUP);}
+ 947              		.loc 1 11 89 view .LVU225
+ 948              	.LBE294:
+ 949              	.LBE293:
+  36:src/mpr121.cpp ****     d();scl_high();d();scl_low();d();sda_high();
+ 950              		.loc 1 36 5 is_stmt 1 view .LVU226
+ 951              	.LBB295:
+ 952              	.LBI295:
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 21
+
+
+  14:src/mpr121.cpp **** 
+ 953              		.loc 1 14 13 view .LVU227
+ 954              	.LBB296:
+  14:src/mpr121.cpp **** 
+ 955              		.loc 1 14 17 view .LVU228
+ 956              	.LBE296:
+ 957              	.LBE295:
+ 958              	.LBB298:
+ 959              	.LBB299:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 960              		.loc 1 12 32 is_stmt 0 view .LVU229
+ 961 0092 0024     		movs	r4, #0
+ 962              	.LBE299:
+ 963              	.LBE298:
+ 964              	.LBB301:
+ 965              	.LBB297:
+  14:src/mpr121.cpp **** 
+ 966              		.loc 1 14 32 view .LVU230
+ 967 0094 0520     		movs	r0, #5
+ 968 0096 FFF7FEFF 		bl	_ZN5daisy6System7DelayUsEm
+ 969              	.LVL53:
+ 970              	.LBE297:
+ 971              	.LBE301:
+ 972              		.loc 1 36 9 is_stmt 1 view .LVU231
+ 973              	.LBB302:
+ 974              	.LBI298:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 975              		.loc 1 12 13 view .LVU232
+ 976              	.LBB300:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 977              		.loc 1 12 24 view .LVU233
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 978              		.loc 1 12 32 is_stmt 0 view .LVU234
+ 979 009a 3168     		ldr	r1, [r6]
+ 980 009c 2246     		mov	r2, r4
+ 981 009e 0123     		movs	r3, #1
+ 982 00a0 1648     		ldr	r0, .L30+8
+ 983 00a2 0094     		str	r4, [sp]
+ 984 00a4 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 985              	.LVL54:
+ 986              	.LBE300:
+ 987              	.LBE302:
+ 988              		.loc 1 36 20 is_stmt 1 view .LVU235
+ 989              	.LBB303:
+ 990              	.LBI303:
+  14:src/mpr121.cpp **** 
+ 991              		.loc 1 14 13 view .LVU236
+ 992              	.LBB304:
+  14:src/mpr121.cpp **** 
+ 993              		.loc 1 14 17 view .LVU237
+  14:src/mpr121.cpp **** 
+ 994              		.loc 1 14 32 is_stmt 0 view .LVU238
+ 995 00a8 0520     		movs	r0, #5
+ 996 00aa FFF7FEFF 		bl	_ZN5daisy6System7DelayUsEm
+ 997              	.LVL55:
+ 998              	.LBE304:
+ 999              	.LBE303:
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 22
+
+
+ 1000              		.loc 1 36 24 is_stmt 1 view .LVU239
+ 1001              	.LBB305:
+ 1002              	.LBI305:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 1003              		.loc 1 13 13 view .LVU240
+ 1004              	.LBB306:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 1005              		.loc 1 13 24 view .LVU241
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 1006              		.loc 1 13 32 is_stmt 0 view .LVU242
+ 1007 00ae 2346     		mov	r3, r4
+ 1008 00b0 0122     		movs	r2, #1
+ 1009 00b2 3168     		ldr	r1, [r6]
+ 1010 00b4 1148     		ldr	r0, .L30+8
+ 1011 00b6 0094     		str	r4, [sp]
+ 1012 00b8 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 1013              	.LVL56:
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 1014              		.loc 1 13 80 is_stmt 1 view .LVU243
+  13:src/mpr121.cpp **** inline void d(){System::DelayUs(HP);}
+ 1015              		.loc 1 13 89 is_stmt 0 view .LVU244
+ 1016 00bc 2146     		mov	r1, r4
+ 1017 00be 0F48     		ldr	r0, .L30+8
+ 1018 00c0 FFF7FEFF 		bl	_ZN5daisy4GPIO5WriteEb
+ 1019              	.LVL57:
+ 1020              	.LBE306:
+ 1021              	.LBE305:
+ 1022              		.loc 1 36 34 is_stmt 1 view .LVU245
+ 1023              	.LBB307:
+ 1024              	.LBI307:
+  14:src/mpr121.cpp **** 
+ 1025              		.loc 1 14 13 view .LVU246
+ 1026              	.LBB308:
+  14:src/mpr121.cpp **** 
+ 1027              		.loc 1 14 17 view .LVU247
+  14:src/mpr121.cpp **** 
+ 1028              		.loc 1 14 32 is_stmt 0 view .LVU248
+ 1029 00c4 0520     		movs	r0, #5
+ 1030 00c6 FFF7FEFF 		bl	_ZN5daisy6System7DelayUsEm
+ 1031              	.LVL58:
+ 1032              	.LBE308:
+ 1033              	.LBE307:
+ 1034              		.loc 1 36 38 is_stmt 1 view .LVU249
+ 1035              	.LBB309:
+ 1036              	.LBI309:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 1037              		.loc 1 10 13 view .LVU250
+ 1038              	.LBB310:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 1039              		.loc 1 10 24 view .LVU251
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 1040              		.loc 1 10 32 is_stmt 0 view .LVU252
+ 1041 00ca 0123     		movs	r3, #1
+ 1042 00cc 2246     		mov	r2, r4
+ 1043 00ce D8F80010 		ldr	r1, [r8]
+ 1044 00d2 0848     		ldr	r0, .L30
+ 1045 00d4 0094     		str	r4, [sp]
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 23
+
+
+ 1046 00d6 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 1047              	.LVL59:
+ 1048              	.LBE310:
+ 1049              	.LBE309:
+  37:src/mpr121.cpp ****     return b;
+ 1050              		.loc 1 37 5 is_stmt 1 view .LVU253
+  38:src/mpr121.cpp **** }
+ 1051              		.loc 1 38 1 is_stmt 0 view .LVU254
+ 1052 00da 4846     		mov	r0, r9
+ 1053 00dc 03B0     		add	sp, sp, #12
+ 1054              		.cfi_remember_state
+ 1055              		.cfi_def_cfa_offset 28
+ 1056              		@ sp needed
+ 1057 00de BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 1058              	.LVL60:
+ 1059              	.L23:
+ 1060              		.cfi_restore_state
+  35:src/mpr121.cpp ****     d();scl_high();d();scl_low();d();sda_high();
+ 1061              		.loc 1 35 27 is_stmt 1 view .LVU255
+ 1062              	.LBB311:
+ 1063              	.LBI311:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 1064              		.loc 1 10 13 view .LVU256
+ 1065              	.LBB312:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 1066              		.loc 1 10 24 view .LVU257
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 1067              		.loc 1 10 32 is_stmt 0 view .LVU258
+ 1068 00e2 0123     		movs	r3, #1
+ 1069 00e4 3A46     		mov	r2, r7
+ 1070 00e6 D8F80010 		ldr	r1, [r8]
+ 1071 00ea 0248     		ldr	r0, .L30
+ 1072 00ec 0097     		str	r7, [sp]
+ 1073 00ee FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 1074              	.LVL61:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 1075              		.loc 1 10 80 view .LVU259
+ 1076 00f2 CEE7     		b	.L24
+ 1077              	.L31:
+ 1078              		.align	2
+ 1079              	.L30:
+ 1080 00f4 00000000 		.word	.LANCHOR1
+ 1081 00f8 00000000 		.word	.LANCHOR2
+ 1082 00fc 00000000 		.word	.LANCHOR3
+ 1083 0100 00000000 		.word	.LANCHOR0
+ 1084              	.LBE312:
+ 1085              	.LBE311:
+ 1086              		.cfi_endproc
+ 1087              	.LFE2569:
+ 1089              		.section	.text._Z9mpr_writehh,"ax",%progbits
+ 1090              		.align	1
+ 1091              		.p2align 2,,3
+ 1092              		.global	_Z9mpr_writehh
+ 1093              		.syntax unified
+ 1094              		.thumb
+ 1095              		.thumb_func
+ 1097              	_Z9mpr_writehh:
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 24
+
+
+ 1098              	.LVL62:
+ 1099              	.LFB2570:
+  39:src/mpr121.cpp **** 
+  40:src/mpr121.cpp **** bool mpr_write(uint8_t reg,uint8_t val)
+  41:src/mpr121.cpp **** {
+ 1100              		.loc 1 41 1 is_stmt 1 view -0
+ 1101              		.cfi_startproc
+ 1102              		@ args = 0, pretend = 0, frame = 0
+ 1103              		@ frame_needed = 0, uses_anonymous_args = 0
+  42:src/mpr121.cpp ****     i2c_start();
+ 1104              		.loc 1 42 5 view .LVU261
+  41:src/mpr121.cpp ****     i2c_start();
+ 1105              		.loc 1 41 1 is_stmt 0 view .LVU262
+ 1106 0000 38B5     		push	{r3, r4, r5, lr}
+ 1107              		.cfi_def_cfa_offset 16
+ 1108              		.cfi_offset 3, -16
+ 1109              		.cfi_offset 4, -12
+ 1110              		.cfi_offset 5, -8
+ 1111              		.cfi_offset 14, -4
+  41:src/mpr121.cpp ****     i2c_start();
+ 1112              		.loc 1 41 1 view .LVU263
+ 1113 0002 0446     		mov	r4, r0
+ 1114 0004 0D46     		mov	r5, r1
+ 1115              		.loc 1 42 14 view .LVU264
+ 1116 0006 FFF7FEFF 		bl	_Z9i2c_startv
+ 1117              	.LVL63:
+  43:src/mpr121.cpp ****     if(!i2c_write_byte((MPR_ADDR<<1)|0)){i2c_stop();return false;}
+ 1118              		.loc 1 43 5 is_stmt 1 view .LVU265
+ 1119              		.loc 1 43 23 is_stmt 0 view .LVU266
+ 1120 000a B420     		movs	r0, #180
+ 1121 000c FFF7FEFF 		bl	_Z14i2c_write_byteh
+ 1122              	.LVL64:
+ 1123              		.loc 1 43 5 view .LVU267
+ 1124 0010 60B1     		cbz	r0, .L35
+  44:src/mpr121.cpp ****     if(!i2c_write_byte(reg))            {i2c_stop();return false;}
+ 1125              		.loc 1 44 5 is_stmt 1 view .LVU268
+ 1126              		.loc 1 44 23 is_stmt 0 view .LVU269
+ 1127 0012 2046     		mov	r0, r4
+ 1128 0014 FFF7FEFF 		bl	_Z14i2c_write_byteh
+ 1129              	.LVL65:
+ 1130              		.loc 1 44 5 view .LVU270
+ 1131 0018 40B1     		cbz	r0, .L35
+ 1132              	.LVL66:
+ 1133              	.LBB315:
+ 1134              	.LBI315:
+  40:src/mpr121.cpp **** {
+ 1135              		.loc 1 40 6 is_stmt 1 view .LVU271
+ 1136              	.LBB316:
+  45:src/mpr121.cpp ****     if(!i2c_write_byte(val))            {i2c_stop();return false;}
+ 1137              		.loc 1 45 5 view .LVU272
+ 1138              		.loc 1 45 23 is_stmt 0 view .LVU273
+ 1139 001a 2846     		mov	r0, r5
+ 1140 001c FFF7FEFF 		bl	_Z14i2c_write_byteh
+ 1141              	.LVL67:
+ 1142              		.loc 1 45 5 view .LVU274
+ 1143 0020 0446     		mov	r4, r0
+ 1144              	.LVL68:
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 25
+
+
+ 1145              		.loc 1 45 5 view .LVU275
+ 1146 0022 18B1     		cbz	r0, .L35
+  46:src/mpr121.cpp ****     i2c_stop();return true;
+ 1147              		.loc 1 46 5 is_stmt 1 view .LVU276
+ 1148              		.loc 1 46 13 is_stmt 0 view .LVU277
+ 1149 0024 FFF7FEFF 		bl	_Z8i2c_stopv
+ 1150              	.LVL69:
+ 1151              		.loc 1 46 16 is_stmt 1 view .LVU278
+ 1152              		.loc 1 46 16 is_stmt 0 view .LVU279
+ 1153              	.LBE316:
+ 1154              	.LBE315:
+  47:src/mpr121.cpp **** }
+ 1155              		.loc 1 47 1 view .LVU280
+ 1156 0028 2046     		mov	r0, r4
+ 1157 002a 38BD     		pop	{r3, r4, r5, pc}
+ 1158              	.L35:
+  43:src/mpr121.cpp ****     if(!i2c_write_byte(reg))            {i2c_stop();return false;}
+ 1159              		.loc 1 43 42 is_stmt 1 discriminator 1 view .LVU281
+  43:src/mpr121.cpp ****     if(!i2c_write_byte(reg))            {i2c_stop();return false;}
+ 1160              		.loc 1 43 60 is_stmt 0 discriminator 1 view .LVU282
+ 1161 002c 0024     		movs	r4, #0
+  43:src/mpr121.cpp ****     if(!i2c_write_byte(reg))            {i2c_stop();return false;}
+ 1162              		.loc 1 43 50 discriminator 1 view .LVU283
+ 1163 002e FFF7FEFF 		bl	_Z8i2c_stopv
+ 1164              	.LVL70:
+  43:src/mpr121.cpp ****     if(!i2c_write_byte(reg))            {i2c_stop();return false;}
+ 1165              		.loc 1 43 53 is_stmt 1 discriminator 1 view .LVU284
+ 1166              		.loc 1 47 1 is_stmt 0 discriminator 1 view .LVU285
+ 1167 0032 2046     		mov	r0, r4
+ 1168 0034 38BD     		pop	{r3, r4, r5, pc}
+ 1169              		.cfi_endproc
+ 1170              	.LFE2570:
+ 1172 0036 00BF     		.section	.text._Z8mpr_readhPhh,"ax",%progbits
+ 1173              		.align	1
+ 1174              		.p2align 2,,3
+ 1175              		.global	_Z8mpr_readhPhh
+ 1176              		.syntax unified
+ 1177              		.thumb
+ 1178              		.thumb_func
+ 1180              	_Z8mpr_readhPhh:
+ 1181              	.LVL71:
+ 1182              	.LFB2571:
+  48:src/mpr121.cpp **** 
+  49:src/mpr121.cpp **** bool mpr_read(uint8_t reg,uint8_t* buf,uint8_t len)
+  50:src/mpr121.cpp **** {
+ 1183              		.loc 1 50 1 is_stmt 1 view -0
+ 1184              		.cfi_startproc
+ 1185              		@ args = 0, pretend = 0, frame = 0
+ 1186              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1187              		.loc 1 50 1 is_stmt 0 view .LVU287
+ 1188 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 1189              		.cfi_def_cfa_offset 24
+ 1190              		.cfi_offset 4, -24
+ 1191              		.cfi_offset 5, -20
+ 1192              		.cfi_offset 6, -16
+ 1193              		.cfi_offset 7, -12
+ 1194              		.cfi_offset 8, -8
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 26
+
+
+ 1195              		.cfi_offset 14, -4
+ 1196              		.loc 1 50 1 view .LVU288
+ 1197 0004 0446     		mov	r4, r0
+  51:src/mpr121.cpp ****     i2c_start();
+ 1198              		.loc 1 51 5 is_stmt 1 view .LVU289
+  50:src/mpr121.cpp ****     i2c_start();
+ 1199              		.loc 1 50 1 is_stmt 0 view .LVU290
+ 1200 0006 0E46     		mov	r6, r1
+ 1201 0008 1546     		mov	r5, r2
+ 1202              		.loc 1 51 14 view .LVU291
+ 1203 000a FFF7FEFF 		bl	_Z9i2c_startv
+ 1204              	.LVL72:
+  52:src/mpr121.cpp ****     if(!i2c_write_byte((MPR_ADDR<<1)|0)){i2c_stop();return false;}
+ 1205              		.loc 1 52 5 is_stmt 1 view .LVU292
+ 1206              		.loc 1 52 23 is_stmt 0 view .LVU293
+ 1207 000e B420     		movs	r0, #180
+ 1208 0010 FFF7FEFF 		bl	_Z14i2c_write_byteh
+ 1209              	.LVL73:
+ 1210              		.loc 1 52 5 view .LVU294
+ 1211 0014 08B3     		cbz	r0, .L46
+  53:src/mpr121.cpp ****     if(!i2c_write_byte(reg))            {i2c_stop();return false;}
+ 1212              		.loc 1 53 5 is_stmt 1 view .LVU295
+ 1213              		.loc 1 53 23 is_stmt 0 view .LVU296
+ 1214 0016 2046     		mov	r0, r4
+ 1215 0018 FFF7FEFF 		bl	_Z14i2c_write_byteh
+ 1216              	.LVL74:
+ 1217              		.loc 1 53 5 view .LVU297
+ 1218 001c E8B1     		cbz	r0, .L46
+ 1219              	.LVL75:
+ 1220              	.LBB320:
+ 1221              	.LBI320:
+  49:src/mpr121.cpp **** {
+ 1222              		.loc 1 49 6 is_stmt 1 view .LVU298
+ 1223              	.LBB321:
+  54:src/mpr121.cpp ****     i2c_start();
+ 1224              		.loc 1 54 5 view .LVU299
+ 1225              		.loc 1 54 14 is_stmt 0 view .LVU300
+ 1226 001e FFF7FEFF 		bl	_Z9i2c_startv
+ 1227              	.LVL76:
+  55:src/mpr121.cpp ****     if(!i2c_write_byte((MPR_ADDR<<1)|1)){i2c_stop();return false;}
+ 1228              		.loc 1 55 5 is_stmt 1 view .LVU301
+ 1229              		.loc 1 55 23 is_stmt 0 view .LVU302
+ 1230 0022 B520     		movs	r0, #181
+ 1231 0024 FFF7FEFF 		bl	_Z14i2c_write_byteh
+ 1232              	.LVL77:
+ 1233              		.loc 1 55 5 view .LVU303
+ 1234 0028 0746     		mov	r7, r0
+ 1235 002a B0B1     		cbz	r0, .L46
+ 1236              	.LVL78:
+ 1237              	.LBB322:
+  56:src/mpr121.cpp ****     for(uint8_t i=0;i<len;i++) buf[i]=i2c_read_byte(i<len-1);
+ 1238              		.loc 1 56 22 is_stmt 1 view .LVU304
+ 1239 002c 85B1     		cbz	r5, .L48
+ 1240              		.loc 1 56 58 is_stmt 0 view .LVU305
+ 1241 002e 013D     		subs	r5, r5, #1
+ 1242              	.LVL79:
+ 1243              		.loc 1 56 58 view .LVU306
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 27
+
+
+ 1244 0030 741E     		subs	r4, r6, #1
+ 1245              	.LVL80:
+ 1246              		.loc 1 56 58 view .LVU307
+ 1247 0032 56FA85F8 		uxtab	r8, r6, r5
+ 1248 0036 C6F10106 		rsb	r6, r6, #1
+ 1249              	.LVL81:
+ 1250              	.L49:
+ 1251              		.loc 1 56 32 is_stmt 1 view .LVU308
+ 1252              		.loc 1 56 52 is_stmt 0 view .LVU309
+ 1253 003a 3019     		adds	r0, r6, r4
+ 1254 003c 8542     		cmp	r5, r0
+ 1255 003e D4BF     		ite	le
+ 1256 0040 0020     		movle	r0, #0
+ 1257 0042 0120     		movgt	r0, #1
+ 1258 0044 FFF7FEFF 		bl	_Z13i2c_read_byteb
+ 1259              	.LVL82:
+ 1260              		.loc 1 56 38 view .LVU310
+ 1261 0048 04F8010F 		strb	r0, [r4, #1]!
+ 1262              	.LVL83:
+ 1263              		.loc 1 56 5 is_stmt 1 view .LVU311
+ 1264              		.loc 1 56 22 view .LVU312
+ 1265 004c 4445     		cmp	r4, r8
+ 1266 004e F4D1     		bne	.L49
+ 1267              	.LVL84:
+ 1268              	.L48:
+ 1269              		.loc 1 56 22 is_stmt 0 view .LVU313
+ 1270              	.LBE322:
+  57:src/mpr121.cpp ****     i2c_stop();return true;
+ 1271              		.loc 1 57 5 is_stmt 1 view .LVU314
+ 1272              		.loc 1 57 13 is_stmt 0 view .LVU315
+ 1273 0050 FFF7FEFF 		bl	_Z8i2c_stopv
+ 1274              	.LVL85:
+ 1275              		.loc 1 57 16 is_stmt 1 view .LVU316
+ 1276              		.loc 1 57 16 is_stmt 0 view .LVU317
+ 1277              	.LBE321:
+ 1278              	.LBE320:
+  58:src/mpr121.cpp **** }
+ 1279              		.loc 1 58 1 view .LVU318
+ 1280 0054 3846     		mov	r0, r7
+ 1281 0056 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 1282              	.LVL86:
+ 1283              	.L46:
+  52:src/mpr121.cpp ****     if(!i2c_write_byte(reg))            {i2c_stop();return false;}
+ 1284              		.loc 1 52 42 is_stmt 1 discriminator 1 view .LVU319
+  52:src/mpr121.cpp ****     if(!i2c_write_byte(reg))            {i2c_stop();return false;}
+ 1285              		.loc 1 52 60 is_stmt 0 discriminator 1 view .LVU320
+ 1286 005a 0027     		movs	r7, #0
+  52:src/mpr121.cpp ****     if(!i2c_write_byte(reg))            {i2c_stop();return false;}
+ 1287              		.loc 1 52 50 discriminator 1 view .LVU321
+ 1288 005c FFF7FEFF 		bl	_Z8i2c_stopv
+ 1289              	.LVL87:
+  52:src/mpr121.cpp ****     if(!i2c_write_byte(reg))            {i2c_stop();return false;}
+ 1290              		.loc 1 52 53 is_stmt 1 discriminator 1 view .LVU322
+ 1291              		.loc 1 58 1 is_stmt 0 discriminator 1 view .LVU323
+ 1292 0060 3846     		mov	r0, r7
+ 1293 0062 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 1294              		.loc 1 58 1 discriminator 1 view .LVU324
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 28
+
+
+ 1295              		.cfi_endproc
+ 1296              	.LFE2571:
+ 1298 0066 00BF     		.section	.text._Z8mpr_initv,"ax",%progbits
+ 1299              		.align	1
+ 1300              		.p2align 2,,3
+ 1301              		.global	_Z8mpr_initv
+ 1302              		.syntax unified
+ 1303              		.thumb
+ 1304              		.thumb_func
+ 1306              	_Z8mpr_initv:
+ 1307              	.LFB2572:
+  59:src/mpr121.cpp **** 
+  60:src/mpr121.cpp **** bool mpr_init()
+  61:src/mpr121.cpp **** {
+ 1308              		.loc 1 61 1 is_stmt 1 view -0
+ 1309              		.cfi_startproc
+ 1310              		@ args = 0, pretend = 0, frame = 8
+ 1311              		@ frame_needed = 0, uses_anonymous_args = 0
+  62:src/mpr121.cpp ****     mpr_write(REG_SOFTRESET,0x63);System::Delay(10);
+ 1312              		.loc 1 62 5 view .LVU326
+  61:src/mpr121.cpp ****     mpr_write(REG_SOFTRESET,0x63);System::Delay(10);
+ 1313              		.loc 1 61 1 is_stmt 0 view .LVU327
+ 1314 0000 10B5     		push	{r4, lr}
+ 1315              		.cfi_def_cfa_offset 8
+ 1316              		.cfi_offset 4, -8
+ 1317              		.cfi_offset 14, -4
+ 1318              		.loc 1 62 14 view .LVU328
+ 1319 0002 6321     		movs	r1, #99
+  61:src/mpr121.cpp ****     mpr_write(REG_SOFTRESET,0x63);System::Delay(10);
+ 1320              		.loc 1 61 1 view .LVU329
+ 1321 0004 82B0     		sub	sp, sp, #8
+ 1322              		.cfi_def_cfa_offset 16
+ 1323              		.loc 1 62 14 view .LVU330
+ 1324 0006 8020     		movs	r0, #128
+  63:src/mpr121.cpp ****     mpr_write(REG_ECR,0x00);
+  64:src/mpr121.cpp ****     mpr_write(REG_MHDR,0x01);mpr_write(REG_NHDR,0x01);
+  65:src/mpr121.cpp ****     mpr_write(REG_NCLR,0x10);mpr_write(REG_FDLR,0x20);
+  66:src/mpr121.cpp ****     mpr_write(REG_MHDF,0x01);mpr_write(REG_NHDF,0x01);
+  67:src/mpr121.cpp ****     mpr_write(REG_NCLF,0x10);mpr_write(REG_FDLF,0x20);
+  68:src/mpr121.cpp ****     mpr_write(REG_NHDT,0x00);mpr_write(REG_NCLT,0x00);mpr_write(REG_FDLT,0x00);
+ 1325              		.loc 1 68 64 view .LVU331
+ 1326 0008 4124     		movs	r4, #65
+  62:src/mpr121.cpp ****     mpr_write(REG_ECR,0x00);
+ 1327              		.loc 1 62 14 view .LVU332
+ 1328 000a FFF7FEFF 		bl	_Z9mpr_writehh
+ 1329              	.LVL88:
+  62:src/mpr121.cpp ****     mpr_write(REG_ECR,0x00);
+ 1330              		.loc 1 62 35 is_stmt 1 view .LVU333
+  62:src/mpr121.cpp ****     mpr_write(REG_ECR,0x00);
+ 1331              		.loc 1 62 48 is_stmt 0 view .LVU334
+ 1332 000e 0A20     		movs	r0, #10
+ 1333 0010 FFF7FEFF 		bl	_ZN5daisy6System5DelayEm
+ 1334              	.LVL89:
+  63:src/mpr121.cpp ****     mpr_write(REG_ECR,0x00);
+ 1335              		.loc 1 63 5 is_stmt 1 view .LVU335
+  63:src/mpr121.cpp ****     mpr_write(REG_ECR,0x00);
+ 1336              		.loc 1 63 14 is_stmt 0 view .LVU336
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 29
+
+
+ 1337 0014 0021     		movs	r1, #0
+ 1338 0016 5E20     		movs	r0, #94
+ 1339 0018 FFF7FEFF 		bl	_Z9mpr_writehh
+ 1340              	.LVL90:
+  64:src/mpr121.cpp ****     mpr_write(REG_NCLR,0x10);mpr_write(REG_FDLR,0x20);
+ 1341              		.loc 1 64 5 is_stmt 1 view .LVU337
+  64:src/mpr121.cpp ****     mpr_write(REG_NCLR,0x10);mpr_write(REG_FDLR,0x20);
+ 1342              		.loc 1 64 14 is_stmt 0 view .LVU338
+ 1343 001c 0121     		movs	r1, #1
+ 1344 001e 2B20     		movs	r0, #43
+ 1345 0020 FFF7FEFF 		bl	_Z9mpr_writehh
+ 1346              	.LVL91:
+  64:src/mpr121.cpp ****     mpr_write(REG_NCLR,0x10);mpr_write(REG_FDLR,0x20);
+ 1347              		.loc 1 64 30 is_stmt 1 view .LVU339
+  64:src/mpr121.cpp ****     mpr_write(REG_NCLR,0x10);mpr_write(REG_FDLR,0x20);
+ 1348              		.loc 1 64 39 is_stmt 0 view .LVU340
+ 1349 0024 0121     		movs	r1, #1
+ 1350 0026 2C20     		movs	r0, #44
+ 1351 0028 FFF7FEFF 		bl	_Z9mpr_writehh
+ 1352              	.LVL92:
+  65:src/mpr121.cpp ****     mpr_write(REG_MHDF,0x01);mpr_write(REG_NHDF,0x01);
+ 1353              		.loc 1 65 5 is_stmt 1 view .LVU341
+  65:src/mpr121.cpp ****     mpr_write(REG_MHDF,0x01);mpr_write(REG_NHDF,0x01);
+ 1354              		.loc 1 65 14 is_stmt 0 view .LVU342
+ 1355 002c 1021     		movs	r1, #16
+ 1356 002e 2D20     		movs	r0, #45
+ 1357 0030 FFF7FEFF 		bl	_Z9mpr_writehh
+ 1358              	.LVL93:
+  65:src/mpr121.cpp ****     mpr_write(REG_MHDF,0x01);mpr_write(REG_NHDF,0x01);
+ 1359              		.loc 1 65 30 is_stmt 1 view .LVU343
+  65:src/mpr121.cpp ****     mpr_write(REG_MHDF,0x01);mpr_write(REG_NHDF,0x01);
+ 1360              		.loc 1 65 39 is_stmt 0 view .LVU344
+ 1361 0034 2021     		movs	r1, #32
+ 1362 0036 2E20     		movs	r0, #46
+ 1363 0038 FFF7FEFF 		bl	_Z9mpr_writehh
+ 1364              	.LVL94:
+  66:src/mpr121.cpp ****     mpr_write(REG_NCLF,0x10);mpr_write(REG_FDLF,0x20);
+ 1365              		.loc 1 66 5 is_stmt 1 view .LVU345
+  66:src/mpr121.cpp ****     mpr_write(REG_NCLF,0x10);mpr_write(REG_FDLF,0x20);
+ 1366              		.loc 1 66 14 is_stmt 0 view .LVU346
+ 1367 003c 0121     		movs	r1, #1
+ 1368 003e 2F20     		movs	r0, #47
+ 1369 0040 FFF7FEFF 		bl	_Z9mpr_writehh
+ 1370              	.LVL95:
+  66:src/mpr121.cpp ****     mpr_write(REG_NCLF,0x10);mpr_write(REG_FDLF,0x20);
+ 1371              		.loc 1 66 30 is_stmt 1 view .LVU347
+  66:src/mpr121.cpp ****     mpr_write(REG_NCLF,0x10);mpr_write(REG_FDLF,0x20);
+ 1372              		.loc 1 66 39 is_stmt 0 view .LVU348
+ 1373 0044 0121     		movs	r1, #1
+ 1374 0046 3020     		movs	r0, #48
+ 1375 0048 FFF7FEFF 		bl	_Z9mpr_writehh
+ 1376              	.LVL96:
+  67:src/mpr121.cpp ****     mpr_write(REG_NHDT,0x00);mpr_write(REG_NCLT,0x00);mpr_write(REG_FDLT,0x00);
+ 1377              		.loc 1 67 5 is_stmt 1 view .LVU349
+  67:src/mpr121.cpp ****     mpr_write(REG_NHDT,0x00);mpr_write(REG_NCLT,0x00);mpr_write(REG_FDLT,0x00);
+ 1378              		.loc 1 67 14 is_stmt 0 view .LVU350
+ 1379 004c 1021     		movs	r1, #16
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 30
+
+
+ 1380 004e 3120     		movs	r0, #49
+ 1381 0050 FFF7FEFF 		bl	_Z9mpr_writehh
+ 1382              	.LVL97:
+  67:src/mpr121.cpp ****     mpr_write(REG_NHDT,0x00);mpr_write(REG_NCLT,0x00);mpr_write(REG_FDLT,0x00);
+ 1383              		.loc 1 67 30 is_stmt 1 view .LVU351
+  67:src/mpr121.cpp ****     mpr_write(REG_NHDT,0x00);mpr_write(REG_NCLT,0x00);mpr_write(REG_FDLT,0x00);
+ 1384              		.loc 1 67 39 is_stmt 0 view .LVU352
+ 1385 0054 2021     		movs	r1, #32
+ 1386 0056 3220     		movs	r0, #50
+ 1387 0058 FFF7FEFF 		bl	_Z9mpr_writehh
+ 1388              	.LVL98:
+ 1389              		.loc 1 68 5 is_stmt 1 view .LVU353
+ 1390              		.loc 1 68 14 is_stmt 0 view .LVU354
+ 1391 005c 0021     		movs	r1, #0
+ 1392 005e 3320     		movs	r0, #51
+ 1393 0060 FFF7FEFF 		bl	_Z9mpr_writehh
+ 1394              	.LVL99:
+ 1395              		.loc 1 68 30 is_stmt 1 view .LVU355
+ 1396              		.loc 1 68 39 is_stmt 0 view .LVU356
+ 1397 0064 0021     		movs	r1, #0
+ 1398 0066 3420     		movs	r0, #52
+ 1399 0068 FFF7FEFF 		bl	_Z9mpr_writehh
+ 1400              	.LVL100:
+ 1401              		.loc 1 68 55 is_stmt 1 view .LVU357
+ 1402              		.loc 1 68 64 is_stmt 0 view .LVU358
+ 1403 006c 0021     		movs	r1, #0
+ 1404 006e 3520     		movs	r0, #53
+ 1405 0070 FFF7FEFF 		bl	_Z9mpr_writehh
+ 1406              	.LVL101:
+  69:src/mpr121.cpp ****     for(uint8_t ch=0;ch<12;ch++){mpr_write(0x41+ch*2,4);mpr_write(0x42+ch*2,2);}
+ 1407              		.loc 1 69 5 is_stmt 1 view .LVU359
+ 1408              	.LBB323:
+ 1409              		.loc 1 69 24 view .LVU360
+ 1410              	.L58:
+ 1411              		.loc 1 69 34 discriminator 2 view .LVU361
+ 1412              		.loc 1 69 43 is_stmt 0 discriminator 2 view .LVU362
+ 1413 0074 0421     		movs	r1, #4
+ 1414 0076 2046     		mov	r0, r4
+ 1415 0078 FFF7FEFF 		bl	_Z9mpr_writehh
+ 1416              	.LVL102:
+ 1417              		.loc 1 69 57 is_stmt 1 discriminator 2 view .LVU363
+ 1418              		.loc 1 69 66 is_stmt 0 discriminator 2 view .LVU364
+ 1419 007c 601C     		adds	r0, r4, #1
+ 1420              		.loc 1 69 24 discriminator 2 view .LVU365
+ 1421 007e 0234     		adds	r4, r4, #2
+ 1422              		.loc 1 69 66 discriminator 2 view .LVU366
+ 1423 0080 0221     		movs	r1, #2
+ 1424 0082 C0B2     		uxtb	r0, r0
+ 1425              		.loc 1 69 24 discriminator 2 view .LVU367
+ 1426 0084 E4B2     		uxtb	r4, r4
+ 1427              		.loc 1 69 66 discriminator 2 view .LVU368
+ 1428 0086 FFF7FEFF 		bl	_Z9mpr_writehh
+ 1429              	.LVL103:
+ 1430              		.loc 1 69 5 is_stmt 1 discriminator 2 view .LVU369
+ 1431              		.loc 1 69 24 discriminator 2 view .LVU370
+ 1432 008a 592C     		cmp	r4, #89
+ 1433 008c F2D1     		bne	.L58
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 31
+
+
+ 1434              	.LBE323:
+  70:src/mpr121.cpp ****     mpr_write(REG_DEBOUNCE,0x11);
+ 1435              		.loc 1 70 5 view .LVU371
+ 1436              		.loc 1 70 14 is_stmt 0 view .LVU372
+ 1437 008e 1121     		movs	r1, #17
+ 1438 0090 5B20     		movs	r0, #91
+ 1439 0092 FFF7FEFF 		bl	_Z9mpr_writehh
+ 1440              	.LVL104:
+  71:src/mpr121.cpp ****     mpr_write(REG_CONFIG1,0xF0);  // FFI=34 | CDC=48uA
+ 1441              		.loc 1 71 5 is_stmt 1 view .LVU373
+ 1442              		.loc 1 71 14 is_stmt 0 view .LVU374
+ 1443 0096 F021     		movs	r1, #240
+ 1444 0098 5C20     		movs	r0, #92
+ 1445 009a FFF7FEFF 		bl	_Z9mpr_writehh
+ 1446              	.LVL105:
+  72:src/mpr121.cpp ****     mpr_write(REG_CONFIG2,0x4C);  // CDT=4us | SFI=18 | ESI=1ms
+ 1447              		.loc 1 72 5 is_stmt 1 view .LVU375
+ 1448              		.loc 1 72 14 is_stmt 0 view .LVU376
+ 1449 009e 4C21     		movs	r1, #76
+ 1450 00a0 5D20     		movs	r0, #93
+ 1451 00a2 FFF7FEFF 		bl	_Z9mpr_writehh
+ 1452              	.LVL106:
+  73:src/mpr121.cpp ****     mpr_write(REG_ECR,0x8C);
+ 1453              		.loc 1 73 5 is_stmt 1 view .LVU377
+ 1454              		.loc 1 73 14 is_stmt 0 view .LVU378
+ 1455 00a6 8C21     		movs	r1, #140
+ 1456 00a8 5E20     		movs	r0, #94
+ 1457 00aa FFF7FEFF 		bl	_Z9mpr_writehh
+ 1458              	.LVL107:
+  74:src/mpr121.cpp ****     System::Delay(100);
+ 1459              		.loc 1 74 5 is_stmt 1 view .LVU379
+ 1460              		.loc 1 74 18 is_stmt 0 view .LVU380
+ 1461 00ae 6420     		movs	r0, #100
+ 1462 00b0 FFF7FEFF 		bl	_ZN5daisy6System5DelayEm
+ 1463              	.LVL108:
+  75:src/mpr121.cpp ****     uint8_t ecr=0;mpr_read(REG_ECR,&ecr,1);
+ 1464              		.loc 1 75 5 is_stmt 1 view .LVU381
+ 1465              		.loc 1 75 13 is_stmt 0 view .LVU382
+ 1466 00b4 0023     		movs	r3, #0
+ 1467              		.loc 1 75 27 view .LVU383
+ 1468 00b6 0122     		movs	r2, #1
+ 1469 00b8 0DF10701 		add	r1, sp, #7
+ 1470 00bc 5E20     		movs	r0, #94
+ 1471              		.loc 1 75 13 view .LVU384
+ 1472 00be 8DF80730 		strb	r3, [sp, #7]
+ 1473              		.loc 1 75 19 is_stmt 1 view .LVU385
+ 1474              		.loc 1 75 27 is_stmt 0 view .LVU386
+ 1475 00c2 FFF7FEFF 		bl	_Z8mpr_readhPhh
+ 1476              	.LVL109:
+  76:src/mpr121.cpp ****     return(ecr==0x8C);
+ 1477              		.loc 1 76 5 is_stmt 1 view .LVU387
+ 1478              		.loc 1 76 21 is_stmt 0 view .LVU388
+ 1479 00c6 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+  77:src/mpr121.cpp **** }
+ 1480              		.loc 1 77 1 view .LVU389
+ 1481 00ca A0F18C00 		sub	r0, #140
+ 1482 00ce B0FA80F0 		clz	r0, r0
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 32
+
+
+ 1483 00d2 4009     		lsrs	r0, r0, #5
+ 1484 00d4 02B0     		add	sp, sp, #8
+ 1485              		.cfi_def_cfa_offset 8
+ 1486              		@ sp needed
+ 1487 00d6 10BD     		pop	{r4, pc}
+ 1488              		.cfi_endproc
+ 1489              	.LFE2572:
+ 1491              		.section	.text._Z15read_electrodesPt,"ax",%progbits
+ 1492              		.align	1
+ 1493              		.p2align 2,,3
+ 1494              		.global	_Z15read_electrodesPt
+ 1495              		.syntax unified
+ 1496              		.thumb
+ 1497              		.thumb_func
+ 1499              	_Z15read_electrodesPt:
+ 1500              	.LVL110:
+ 1501              	.LFB2573:
+  78:src/mpr121.cpp **** 
+  79:src/mpr121.cpp **** void read_electrodes(uint16_t* out)
+  80:src/mpr121.cpp **** {
+ 1502              		.loc 1 80 1 is_stmt 1 view -0
+ 1503              		.cfi_startproc
+ 1504              		@ args = 0, pretend = 0, frame = 24
+ 1505              		@ frame_needed = 0, uses_anonymous_args = 0
+  81:src/mpr121.cpp ****     uint8_t buf[24];
+ 1506              		.loc 1 81 5 view .LVU391
+  82:src/mpr121.cpp ****     mpr_read(REG_ELE0_LSB,buf,24);
+ 1507              		.loc 1 82 5 view .LVU392
+  80:src/mpr121.cpp ****     uint8_t buf[24];
+ 1508              		.loc 1 80 1 is_stmt 0 view .LVU393
+ 1509 0000 10B5     		push	{r4, lr}
+ 1510              		.cfi_def_cfa_offset 8
+ 1511              		.cfi_offset 4, -8
+ 1512              		.cfi_offset 14, -4
+ 1513 0002 86B0     		sub	sp, sp, #24
+ 1514              		.cfi_def_cfa_offset 32
+  80:src/mpr121.cpp ****     uint8_t buf[24];
+ 1515              		.loc 1 80 1 view .LVU394
+ 1516 0004 0446     		mov	r4, r0
+ 1517              		.loc 1 82 13 view .LVU395
+ 1518 0006 1822     		movs	r2, #24
+ 1519 0008 0420     		movs	r0, #4
+ 1520              	.LVL111:
+ 1521              		.loc 1 82 13 view .LVU396
+ 1522 000a 6946     		mov	r1, sp
+ 1523 000c FFF7FEFF 		bl	_Z8mpr_readhPhh
+ 1524              	.LVL112:
+  83:src/mpr121.cpp ****     for(int i=0;i<N_CH;i++)
+ 1525              		.loc 1 83 5 is_stmt 1 view .LVU397
+ 1526              	.LBB324:
+ 1527              		.loc 1 83 18 view .LVU398
+ 1528 0010 A01E     		subs	r0, r4, #2
+ 1529 0012 6A46     		mov	r2, sp
+ 1530 0014 06AC     		add	r4, sp, #24
+ 1531              	.LVL113:
+ 1532              	.L62:
+  84:src/mpr121.cpp ****         out[i]=(uint16_t)(buf[i*2]|((buf[i*2+1]&0x03)<<8));
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 33
+
+
+ 1533              		.loc 1 84 9 discriminator 2 view .LVU399
+ 1534              		.loc 1 84 48 is_stmt 0 discriminator 2 view .LVU400
+ 1535 0016 5378     		ldrb	r3, [r2, #1]	@ zero_extendqisi2
+ 1536              		.loc 1 84 34 discriminator 2 view .LVU401
+ 1537 0018 12F8021B 		ldrb	r1, [r2], #2	@ zero_extendqisi2
+ 1538              		.loc 1 84 54 discriminator 2 view .LVU402
+ 1539 001c 1B02     		lsls	r3, r3, #8
+  83:src/mpr121.cpp ****     for(int i=0;i<N_CH;i++)
+ 1540              		.loc 1 83 18 discriminator 2 view .LVU403
+ 1541 001e 9442     		cmp	r4, r2
+ 1542              		.loc 1 84 54 discriminator 2 view .LVU404
+ 1543 0020 03F44073 		and	r3, r3, #768
+ 1544              		.loc 1 84 35 discriminator 2 view .LVU405
+ 1545 0024 43EA0103 		orr	r3, r3, r1
+ 1546              		.loc 1 84 15 discriminator 2 view .LVU406
+ 1547 0028 20F8023F 		strh	r3, [r0, #2]!	@ movhi
+  83:src/mpr121.cpp ****     for(int i=0;i<N_CH;i++)
+ 1548              		.loc 1 83 5 is_stmt 1 discriminator 2 view .LVU407
+  83:src/mpr121.cpp ****     for(int i=0;i<N_CH;i++)
+ 1549              		.loc 1 83 18 discriminator 2 view .LVU408
+ 1550 002c F3D1     		bne	.L62
+ 1551              	.LBE324:
+  85:src/mpr121.cpp **** }
+ 1552              		.loc 1 85 1 is_stmt 0 view .LVU409
+ 1553 002e 06B0     		add	sp, sp, #24
+ 1554              		.cfi_def_cfa_offset 8
+ 1555              		@ sp needed
+ 1556 0030 10BD     		pop	{r4, pc}
+ 1557              		.cfi_endproc
+ 1558              	.LFE2573:
+ 1560 0032 00BF     		.section	.text._Z16capture_baselinePt,"ax",%progbits
+ 1561              		.align	1
+ 1562              		.p2align 2,,3
+ 1563              		.global	_Z16capture_baselinePt
+ 1564              		.syntax unified
+ 1565              		.thumb
+ 1566              		.thumb_func
+ 1568              	_Z16capture_baselinePt:
+ 1569              	.LVL114:
+ 1570              	.LFB2574:
+  86:src/mpr121.cpp **** 
+  87:src/mpr121.cpp **** void capture_baseline(uint16_t* bl)
+  88:src/mpr121.cpp **** {
+ 1571              		.loc 1 88 1 is_stmt 1 view -0
+ 1572              		.cfi_startproc
+ 1573              		@ args = 0, pretend = 0, frame = 72
+ 1574              		@ frame_needed = 0, uses_anonymous_args = 0
+  89:src/mpr121.cpp ****     uint32_t acc[N_CH]={0};uint16_t tmp[N_CH];
+ 1575              		.loc 1 89 5 view .LVU411
+  88:src/mpr121.cpp ****     uint32_t acc[N_CH]={0};uint16_t tmp[N_CH];
+ 1576              		.loc 1 88 1 is_stmt 0 view .LVU412
+ 1577 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 1578              		.cfi_def_cfa_offset 24
+ 1579              		.cfi_offset 4, -24
+ 1580              		.cfi_offset 5, -20
+ 1581              		.cfi_offset 6, -16
+ 1582              		.cfi_offset 7, -12
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 34
+
+
+ 1583              		.cfi_offset 8, -8
+ 1584              		.cfi_offset 14, -4
+ 1585 0004 92B0     		sub	sp, sp, #72
+ 1586              		.cfi_def_cfa_offset 96
+ 1587              		.loc 1 89 14 view .LVU413
+ 1588 0006 2025     		movs	r5, #32
+ 1589 0008 0024     		movs	r4, #0
+  88:src/mpr121.cpp ****     uint32_t acc[N_CH]={0};uint16_t tmp[N_CH];
+ 1590              		.loc 1 88 1 view .LVU414
+ 1591 000a 0746     		mov	r7, r0
+ 1592              		.loc 1 89 14 view .LVU415
+ 1593 000c 0DF11808 		add	r8, sp, #24
+ 1594 0010 3022     		movs	r2, #48
+ 1595 0012 0021     		movs	r1, #0
+ 1596 0014 4046     		mov	r0, r8
+ 1597              	.LVL115:
+ 1598              		.loc 1 89 14 view .LVU416
+ 1599 0016 FFF7FEFF 		bl	memset
+ 1600              	.LVL116:
+ 1601              		.loc 1 89 28 is_stmt 1 view .LVU417
+  90:src/mpr121.cpp ****     for(int s=0;s<REBASELINE_SAMPLES;s++){
+ 1602              		.loc 1 90 5 view .LVU418
+ 1603              	.LBB325:
+ 1604              		.loc 1 90 18 view .LVU419
+ 1605              	.L69:
+ 1606              	.LBB326:
+  91:src/mpr121.cpp ****         read_electrodes(tmp);
+ 1607              		.loc 1 91 9 view .LVU420
+ 1608              		.loc 1 91 24 is_stmt 0 view .LVU421
+ 1609 001a 6846     		mov	r0, sp
+ 1610 001c 4646     		mov	r6, r8
+ 1611 001e FFF7FEFF 		bl	_Z15read_electrodesPt
+ 1612              	.LVL117:
+  92:src/mpr121.cpp ****         for(int i=0;i<N_CH;i++)acc[i]+=tmp[i];
+ 1613              		.loc 1 92 9 is_stmt 1 view .LVU422
+ 1614              	.LBB327:
+ 1615              		.loc 1 92 22 view .LVU423
+ 1616 0022 6A46     		mov	r2, sp
+ 1617              	.LBE327:
+  91:src/mpr121.cpp ****         read_electrodes(tmp);
+ 1618              		.loc 1 91 24 is_stmt 0 view .LVU424
+ 1619 0024 4146     		mov	r1, r8
+ 1620 0026 00E0     		b	.L67
+ 1621              	.LVL118:
+ 1622              	.L74:
+ 1623              	.LBB328:
+ 1624              		.loc 1 92 38 view .LVU425
+ 1625 0028 0C68     		ldr	r4, [r1]
+ 1626              	.L67:
+ 1627              		.loc 1 92 32 is_stmt 1 discriminator 2 view .LVU426
+ 1628              		.loc 1 92 45 is_stmt 0 discriminator 2 view .LVU427
+ 1629 002a 32F8023B 		ldrh	r3, [r2], #2
+ 1630              		.loc 1 92 38 discriminator 2 view .LVU428
+ 1631 002e 2344     		add	r3, r3, r4
+ 1632              		.loc 1 92 22 discriminator 2 view .LVU429
+ 1633 0030 4245     		cmp	r2, r8
+ 1634              		.loc 1 92 38 discriminator 2 view .LVU430
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 35
+
+
+ 1635 0032 41F8043B 		str	r3, [r1], #4
+ 1636              		.loc 1 92 9 is_stmt 1 discriminator 2 view .LVU431
+ 1637              		.loc 1 92 22 discriminator 2 view .LVU432
+ 1638 0036 F7D1     		bne	.L74
+ 1639              	.LBE328:
+  93:src/mpr121.cpp ****         System::Delay(5);
+ 1640              		.loc 1 93 9 discriminator 2 view .LVU433
+ 1641              		.loc 1 93 22 is_stmt 0 discriminator 2 view .LVU434
+ 1642 0038 0520     		movs	r0, #5
+ 1643 003a FFF7FEFF 		bl	_ZN5daisy6System5DelayEm
+ 1644              	.LVL119:
+ 1645              	.LBE326:
+  90:src/mpr121.cpp ****         read_electrodes(tmp);
+ 1646              		.loc 1 90 5 is_stmt 1 discriminator 2 view .LVU435
+  90:src/mpr121.cpp ****         read_electrodes(tmp);
+ 1647              		.loc 1 90 18 discriminator 2 view .LVU436
+ 1648 003e 013D     		subs	r5, r5, #1
+ 1649              	.LVL120:
+  90:src/mpr121.cpp ****         read_electrodes(tmp);
+ 1650              		.loc 1 90 18 is_stmt 0 discriminator 2 view .LVU437
+ 1651 0040 01D0     		beq	.L68
+ 1652              	.LBB330:
+ 1653              	.LBB329:
+  92:src/mpr121.cpp ****         for(int i=0;i<N_CH;i++)acc[i]+=tmp[i];
+ 1654              		.loc 1 92 38 view .LVU438
+ 1655 0042 069C     		ldr	r4, [sp, #24]
+ 1656 0044 E9E7     		b	.L69
+ 1657              	.L68:
+ 1658 0046 BA1E     		subs	r2, r7, #2
+ 1659 0048 1637     		adds	r7, r7, #22
+ 1660              	.LVL121:
+ 1661              	.L70:
+  92:src/mpr121.cpp ****         for(int i=0;i<N_CH;i++)acc[i]+=tmp[i];
+ 1662              		.loc 1 92 38 view .LVU439
+ 1663              	.LBE329:
+ 1664              	.LBE330:
+ 1665              	.LBE325:
+ 1666              	.LBB331:
+  94:src/mpr121.cpp ****     }
+  95:src/mpr121.cpp ****     for(int i=0;i<N_CH;i++)bl[i]=(uint16_t)(acc[i]/REBASELINE_SAMPLES);
+ 1667              		.loc 1 95 28 is_stmt 1 discriminator 2 view .LVU440
+ 1668              		.loc 1 95 50 is_stmt 0 discriminator 2 view .LVU441
+ 1669 004a 56F8043B 		ldr	r3, [r6], #4
+ 1670              		.loc 1 95 51 discriminator 2 view .LVU442
+ 1671 004e 5B09     		lsrs	r3, r3, #5
+ 1672              		.loc 1 95 33 discriminator 2 view .LVU443
+ 1673 0050 22F8023F 		strh	r3, [r2, #2]!	@ movhi
+ 1674              		.loc 1 95 5 is_stmt 1 discriminator 2 view .LVU444
+ 1675              		.loc 1 95 18 discriminator 2 view .LVU445
+ 1676 0054 BA42     		cmp	r2, r7
+ 1677 0056 F8D1     		bne	.L70
+ 1678              	.LBE331:
+  96:src/mpr121.cpp **** }
+ 1679              		.loc 1 96 1 is_stmt 0 view .LVU446
+ 1680 0058 12B0     		add	sp, sp, #72
+ 1681              		.cfi_def_cfa_offset 24
+ 1682              		@ sp needed
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 36
+
+
+ 1683 005a BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 1684              		.loc 1 96 1 view .LVU447
+ 1685              		.cfi_endproc
+ 1686              	.LFE2574:
+ 1688 005e 00BF     		.section	.text._Z13mpr_idle_pinsv,"ax",%progbits
+ 1689              		.align	1
+ 1690              		.p2align 2,,3
+ 1691              		.global	_Z13mpr_idle_pinsv
+ 1692              		.syntax unified
+ 1693              		.thumb
+ 1694              		.thumb_func
+ 1696              	_Z13mpr_idle_pinsv:
+ 1697              	.LFB2575:
+  97:src/mpr121.cpp **** 
+  98:src/mpr121.cpp **** // Set both lines to idle (high) — call once before mpr_init().
+  99:src/mpr121.cpp **** void mpr_idle_pins(){ sda_high(); scl_high(); }
+ 1698              		.loc 1 99 21 is_stmt 1 view -0
+ 1699              		.cfi_startproc
+ 1700              		@ args = 0, pretend = 0, frame = 0
+ 1701              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1702              		.loc 1 99 23 view .LVU449
+ 1703              	.LBB336:
+ 1704              	.LBI336:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 1705              		.loc 1 10 13 view .LVU450
+ 1706              	.LBB337:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 1707              		.loc 1 10 24 view .LVU451
+ 1708              	.LBE337:
+ 1709              	.LBE336:
+ 1710              		.loc 1 99 21 is_stmt 0 view .LVU452
+ 1711 0000 10B5     		push	{r4, lr}
+ 1712              		.cfi_def_cfa_offset 8
+ 1713              		.cfi_offset 4, -8
+ 1714              		.cfi_offset 14, -4
+ 1715              	.LBB340:
+ 1716              	.LBB338:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 1717              		.loc 1 10 32 view .LVU453
+ 1718 0002 0A49     		ldr	r1, .L77
+ 1719              	.LBE338:
+ 1720              	.LBE340:
+ 1721              		.loc 1 99 21 view .LVU454
+ 1722 0004 82B0     		sub	sp, sp, #8
+ 1723              		.cfi_def_cfa_offset 16
+ 1724              	.LBB341:
+ 1725              	.LBB339:
+  10:src/mpr121.cpp **** inline void sda_low() {sda.Init(SDA_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);sda.Write(false);}
+ 1726              		.loc 1 10 32 view .LVU455
+ 1727 0006 0024     		movs	r4, #0
+ 1728 0008 0123     		movs	r3, #1
+ 1729 000a 0948     		ldr	r0, .L77+4
+ 1730 000c 2246     		mov	r2, r4
+ 1731 000e 0968     		ldr	r1, [r1]
+ 1732 0010 0094     		str	r4, [sp]
+ 1733 0012 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 1734              	.LVL122:
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 37
+
+
+ 1735              	.LBE339:
+ 1736              	.LBE341:
+ 1737              		.loc 1 99 35 is_stmt 1 view .LVU456
+ 1738              	.LBB342:
+ 1739              	.LBI342:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 1740              		.loc 1 12 13 view .LVU457
+ 1741              	.LBB343:
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 1742              		.loc 1 12 24 view .LVU458
+  12:src/mpr121.cpp **** inline void scl_low() {scl.Init(SCL_PIN,GPIO::Mode::OUTPUT,GPIO::Pull::NOPULL);scl.Write(false);}
+ 1743              		.loc 1 12 32 is_stmt 0 view .LVU459
+ 1744 0016 0749     		ldr	r1, .L77+8
+ 1745 0018 0123     		movs	r3, #1
+ 1746 001a 2246     		mov	r2, r4
+ 1747 001c 0968     		ldr	r1, [r1]
+ 1748 001e 0648     		ldr	r0, .L77+12
+ 1749 0020 0094     		str	r4, [sp]
+ 1750 0022 FFF7FEFF 		bl	_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+ 1751              	.LVL123:
+ 1752              	.LBE343:
+ 1753              	.LBE342:
+ 1754              		.loc 1 99 47 view .LVU460
+ 1755 0026 02B0     		add	sp, sp, #8
+ 1756              		.cfi_def_cfa_offset 8
+ 1757              		@ sp needed
+ 1758 0028 10BD     		pop	{r4, pc}
+ 1759              	.L78:
+ 1760 002a 00BF     		.align	2
+ 1761              	.L77:
+ 1762 002c 00000000 		.word	.LANCHOR0
+ 1763 0030 00000000 		.word	.LANCHOR1
+ 1764 0034 00000000 		.word	.LANCHOR2
+ 1765 0038 00000000 		.word	.LANCHOR3
+ 1766              		.cfi_endproc
+ 1767              	.LFE2575:
+ 1769              		.section	.text.startup._GLOBAL__sub_I__Z9i2c_startv,"ax",%progbits
+ 1770              		.align	1
+ 1771              		.p2align 2,,3
+ 1772              		.syntax unified
+ 1773              		.thumb
+ 1774              		.thumb_func
+ 1776              	_GLOBAL__sub_I__Z9i2c_startv:
+ 1777              	.LFB2594:
+ 1778              		.loc 1 99 47 is_stmt 1 view -0
+ 1779              		.cfi_startproc
+ 1780              		@ args = 0, pretend = 0, frame = 0
+ 1781              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1782              		@ link register save eliminated.
+ 1783              	.LBB362:
+ 1784              	.LBI362:
+ 1785              		.loc 1 99 47 view .LVU462
+ 1786              	.LVL124:
+ 1787              	.LBB363:
+ 1788              	.LBB364:
+ 1789              	.LBI364:
+ 1790              		.file 2 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h"
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 38
+
+
+   1:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** #pragma once
+   2:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** #ifndef DSY_GPIO_H
+   3:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** #define DSY_GPIO_H
+   4:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** #include "daisy_core.h"
+   5:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** 
+   6:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** #ifdef __cplusplus
+   7:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** 
+   8:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** namespace daisy
+   9:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** {
+  10:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** /** @brief General Purpose I/O control 
+  11:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****  *  @details peripheral control over a single GPIO
+  12:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****  *  @ingroup peripheral
+  13:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****  *   
+  14:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****  *  Button Input (with internal Pullup resistor)
+  15:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****  *  @include GPIO_Input.cpp 
+  16:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****  * 
+  17:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****  *  Output Example (perfect for blinking an LED)
+  18:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****  *  @include GPIO_Output.cpp
+  19:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****  * 
+  20:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** */
+  21:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** class GPIO
+  22:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** {
+  23:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****   public:
+  24:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     /** @brief Mode of operation for the specified GPIO */
+  25:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     enum class Mode
+  26:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     {
+  27:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         INPUT,     /**< Input for reading state of pin */
+  28:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         OUTPUT,    /**< Output w/ push-pull configuration */
+  29:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         OUTPUT_OD, /**< Output w/ open-drain configuration */
+  30:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         ANALOG,    /**< Analog for connection to ADC or DAC peripheral */
+  31:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     };
+  32:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** 
+  33:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     /** @brief Configures whether an internal Pull up or Pull down resistor is used. 
+  34:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****      *  
+  35:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****      * Internal Pull up/down resistors are typically 40k ohms, and will be between
+  36:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****      * 30k and 50k
+  37:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****      * 
+  38:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****      * When the Pin is configured in Analog mode, the pull up/down resistors are
+  39:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****      * disabled by hardware. 
+  40:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****      */
+  41:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     enum class Pull
+  42:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     {
+  43:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         NOPULL,   /**< No pull up resistor */
+  44:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         PULLUP,   /**< Internal pull up enabled */
+  45:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         PULLDOWN, /**< Internal pull down enabled*/
+  46:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     };
+  47:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** 
+  48:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     /** @brief Output speed controls the drive strength, and slew rate of the pin */
+  49:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     enum class Speed
+  50:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     {
+  51:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         LOW,
+  52:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         MEDIUM,
+  53:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         HIGH,
+  54:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         VERY_HIGH,
+  55:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     };
+  56:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** 
+  57:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     /** @brief Configuration for a given GPIO */
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 39
+
+
+  58:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     struct Config
+  59:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     {
+  60:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         Pin   pin;
+  61:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         Mode  mode;
+  62:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         Pull  pull;
+  63:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         Speed speed;
+  64:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** 
+  65:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         /** Constructor with no arguments will prepare an invalid GPIO set as
+  66:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****          *  an input, with no pullup. 
+  67:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****          */
+  68:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         Config()
+  69:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         : pin(), mode(Mode::INPUT), pull(Pull::NOPULL), speed(Speed::LOW)
+  70:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         {
+  71:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         }
+  72:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     };
+  73:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** 
+  74:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     GPIO() {}
+ 1791              		.loc 2 74 5 view .LVU463
+ 1792              	.LBB365:
+ 1793              	.LBB366:
+ 1794              	.LBI366:
+  68:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         : pin(), mode(Mode::INPUT), pull(Pull::NOPULL), speed(Speed::LOW)
+ 1795              		.loc 2 68 9 view .LVU464
+ 1796              	.LBB367:
+ 1797              	.LBB368:
+ 1798              	.LBB369:
+ 1799              	.LBI369:
+ 1800              		.file 3 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h"
+   1:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #pragma once
+   2:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #ifndef DSY_CORE_HW_H
+   3:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define DSY_CORE_HW_H /**< & */
+   4:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #include <stdint.h>
+   5:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #include <stdlib.h>
+   6:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+   7:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #if defined(_MSC_VER)
+   8:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define FORCE_INLINE __forceinline /**< & */
+   9:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #elif defined(__clang__)
+  10:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define FORCE_INLINE inline __attribute__((always_inline)) /**< & */
+  11:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #pragma clang diagnostic ignored "-Wduplicate-decl-specifier"
+  12:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #elif defined(__GNUC__)
+  13:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define FORCE_INLINE inline __attribute__((always_inline)) /**< & */
+  14:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #else
+  15:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #error unknown compiler
+  16:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #endif
+  17:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+  18:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** @addtogroup utility
+  19:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     @{
+  20:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** */
+  21:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+  22:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** Macro for area of memory that is configured as cacheless
+  23:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** This should be used primarily for DMA buffers, and the like.
+  24:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** */
+  25:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define DMA_BUFFER_MEM_SECTION __attribute__((section(".sram1_bss")))
+  26:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** 
+  27:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** THE DTCM RAM section is also non-cached. However, is not suitable 
+  28:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** for DMA transfers. Performance is on par with internal SRAM w/ 
+  29:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** cache enabled.
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 40
+
+
+  30:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** */
+  31:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define DTCM_MEM_SECTION __attribute__((section(".dtcmram_bss")))
+  32:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+  33:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define FBIPMAX 0.999985f             /**< close to 1.0f-LSB at 16 bit */
+  34:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define FBIPMIN (-FBIPMAX)            /**< - (1 - LSB) */
+  35:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define U82F_SCALE 0.0078740f         /**< 1 / 127 */
+  36:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define F2U8_SCALE 127.0f             /**< 128 - 1 */
+  37:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define S82F_SCALE 0.0078125f         /**< 1 / (2**7) */
+  38:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define F2S8_SCALE 127.0f             /**< (2 ** 7) - 1 */
+  39:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define S162F_SCALE 3.0517578125e-05f /**< 1 / (2** 15) */
+  40:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define F2S16_SCALE 32767.0f          /**< (2 ** 15) - 1 */
+  41:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define F2S24_SCALE 8388608.0f        /**< 2 ** 23 */
+  42:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define S242F_SCALE 1.192092896e-07f  /**< 1 / (2 ** 23) */
+  43:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define S24SIGN 0x800000              /**< 2 ** 23 */
+  44:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define S322F_SCALE 4.6566129e-10f    /**< 1 / (2** 31) */
+  45:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define F2S32_SCALE 2147483647.f      /**< (2 ** 31) - 1 */
+  46:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+  47:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+  48:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** shorthand macro for simplifying the reading of the left 
+  49:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  channel of a non-interleaved output buffer named out */
+  50:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define OUT_L out[0]
+  51:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+  52:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** shorthand macro for simplifying the reading of the right 
+  53:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  channel of a non-interleaved output buffer named out */
+  54:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define OUT_R out[1]
+  55:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+  56:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** shorthand macro for simplifying the reading of the left 
+  57:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  channel of a non-interleaved input buffer named in */
+  58:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define IN_L in[0]
+  59:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+  60:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** shorthand macro for simplifying the reading of the right 
+  61:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  channel of a non-interleaved input buffer named in */
+  62:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define IN_R in[1]
+  63:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+  64:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** 
+  65:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     Computes cube.
+  66:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     \param x Number to be cubed
+  67:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     \return x ^ 3
+  68:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** */
+  69:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** FORCE_INLINE float cube(float x)
+  70:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+  71:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     return (x * x) * x;
+  72:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** }
+  73:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+  74:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** 
+  75:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     Converts unsigned 8-bit to float
+  76:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     \param x Number to be scaled.
+  77:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     \return Scaled number.
+  78:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** */
+  79:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** FORCE_INLINE float u82f(uint8_t x)
+  80:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+  81:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     return ((float)x - 127.f) * U82F_SCALE;
+  82:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** }
+  83:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+  84:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /**
+  85:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     Converts float to unsigned 8-bit
+  86:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** */
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 41
+
+
+  87:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** FORCE_INLINE uint8_t f2u8(float x)
+  88:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+  89:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     x = x <= FBIPMIN ? FBIPMIN : x;
+  90:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     x = x >= FBIPMAX ? FBIPMAX : x;
+  91:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     return (uint8_t)((x * F2U8_SCALE) + F2U8_SCALE);
+  92:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** }
+  93:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+  94:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+  95:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** 
+  96:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     Converts Signed 8-bit to float
+  97:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     \param x Number to be scaled.
+  98:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     \return Scaled number.
+  99:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** */
+ 100:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** FORCE_INLINE float s82f(int8_t x)
+ 101:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+ 102:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     return (float)x * S82F_SCALE;
+ 103:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** }
+ 104:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+ 105:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /**
+ 106:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     Converts float to Signed 8-bit
+ 107:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** */
+ 108:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** FORCE_INLINE int8_t f2s8(float x)
+ 109:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+ 110:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     x = x <= FBIPMIN ? FBIPMIN : x;
+ 111:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     x = x >= FBIPMAX ? FBIPMAX : x;
+ 112:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     return (int32_t)(x * F2S8_SCALE);
+ 113:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** }
+ 114:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+ 115:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** 
+ 116:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     Converts Signed 16-bit to float
+ 117:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     \param x Number to be scaled.
+ 118:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     \return Scaled number.
+ 119:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** */
+ 120:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** FORCE_INLINE float s162f(int16_t x)
+ 121:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+ 122:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     return (float)x * S162F_SCALE;
+ 123:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** }
+ 124:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+ 125:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /**
+ 126:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     Converts float to Signed 16-bit
+ 127:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** */
+ 128:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** FORCE_INLINE int16_t f2s16(float x)
+ 129:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+ 130:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     x = x <= FBIPMIN ? FBIPMIN : x;
+ 131:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     x = x >= FBIPMAX ? FBIPMAX : x;
+ 132:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     return (int32_t)(x * F2S16_SCALE);
+ 133:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** }
+ 134:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+ 135:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /**
+ 136:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     Converts Signed 24-bit to float
+ 137:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  */
+ 138:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** FORCE_INLINE float s242f(int32_t x)
+ 139:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+ 140:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     x = (x ^ S24SIGN) - S24SIGN; //sign extend aka ((x<<8)>>8)
+ 141:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     return (float)x * S242F_SCALE;
+ 142:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** }
+ 143:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /**
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 42
+
+
+ 144:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     Converts float to Signed 24-bit
+ 145:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  */
+ 146:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** FORCE_INLINE int32_t f2s24(float x)
+ 147:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+ 148:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     x = x <= FBIPMIN ? FBIPMIN : x;
+ 149:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     x = x >= FBIPMAX ? FBIPMAX : x;
+ 150:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     return (int32_t)(x * F2S24_SCALE);
+ 151:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** }
+ 152:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+ 153:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /**
+ 154:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     Converts Signed 32-bit to float
+ 155:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  */
+ 156:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** FORCE_INLINE float s322f(int32_t x)
+ 157:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+ 158:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     return (float)x * S322F_SCALE;
+ 159:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** }
+ 160:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /**
+ 161:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     Converts float to Signed 24-bit
+ 162:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  */
+ 163:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** FORCE_INLINE int32_t f2s32(float x)
+ 164:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+ 165:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     x = x <= FBIPMIN ? FBIPMIN : x;
+ 166:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     x = x >= FBIPMAX ? FBIPMAX : x;
+ 167:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     return (int32_t)(x * F2S32_SCALE);
+ 168:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** }
+ 169:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+ 170:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+ 171:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** Enums and a simple struct for defining a hardware pin on the MCU
+ 172:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  These correlate with the stm32 datasheet, and are used to configure
+ 173:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  the hardware.
+ 174:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  * 
+ 175:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  This along with the dsy_gpio_pin class should no longer be used.
+ 176:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  They are available for backwards compatability. 
+ 177:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  * 
+ 178:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  Please use GPIOPort enum and the Pin struct instead.
+ 179:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  */
+ 180:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** typedef enum
+ 181:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+ 182:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     DSY_GPIOA, /**< & */
+ 183:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     DSY_GPIOB, /**< & */
+ 184:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     DSY_GPIOC, /**< & */
+ 185:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     DSY_GPIOD, /**< & */
+ 186:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     DSY_GPIOE, /**< & */
+ 187:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     DSY_GPIOF, /**< & */
+ 188:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     DSY_GPIOG, /**< & */
+ 189:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     DSY_GPIOH, /**< & */
+ 190:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     DSY_GPIOI, /**< & */
+ 191:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     DSY_GPIOJ, /**< & */
+ 192:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     DSY_GPIOK, /**< & */
+ 193:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     DSY_GPIOX, /** This is a non-existant port for unsupported bits of hardware. */
+ 194:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     DSY_GPIO_LAST, /** Final enum member */
+ 195:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** } dsy_gpio_port;
+ 196:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+ 197:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** Hardware define pins 
+ 198:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  
+ 199:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  The dsy_gpio_pin struct should no longer be used, and is only available for
+ 200:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  backwards compatability.
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 43
+
+
+ 201:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  * 
+ 202:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  Please use Pin struct instead.
+ 203:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  */
+ 204:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** typedef struct
+ 205:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+ 206:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     dsy_gpio_port port; /**< & */
+ 207:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     uint8_t       pin;  /**< number 0-15 */
+ 208:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** } dsy_gpio_pin;
+ 209:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+ 210:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** Helper for creating pins from port/pin combos easily
+ 211:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  * 
+ 212:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  The dsy_gpio_pin struct should no longer be used, and is only available for
+ 213:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  backwards compatability.
+ 214:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  * 
+ 215:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  Please use Pin struct instead.
+ 216:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** */
+ 217:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** FORCE_INLINE dsy_gpio_pin dsy_pin(dsy_gpio_port port, uint8_t pin)
+ 218:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+ 219:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     dsy_gpio_pin p;
+ 220:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     p.port = port;
+ 221:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     p.pin  = pin;
+ 222:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     return p;
+ 223:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** }
+ 224:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+ 225:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** Helper for testing sameness of two dsy_gpio_pins
+ 226:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  \return    1 if same, 0 if different
+ 227:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  * 
+ 228:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  The dsy_gpio_pin struct should no longer be used, and is only available for
+ 229:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  backwards compatability.
+ 230:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  * 
+ 231:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  Please use Pin struct instead.
+ 232:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  */
+ 233:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** FORCE_INLINE uint8_t dsy_pin_cmp(dsy_gpio_pin *a, dsy_gpio_pin *b)
+ 234:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+ 235:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     return ((a->port == b->port) && (a->pin == b->pin));
+ 236:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** }
+ 237:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+ 238:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #ifdef __cplusplus
+ 239:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+ 240:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** namespace daisy
+ 241:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+ 242:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** @brief GPIO Port names */
+ 243:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** enum GPIOPort
+ 244:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+ 245:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     PORTA, /**< Port A */
+ 246:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     PORTB, /**< Port B */
+ 247:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     PORTC, /**< Port C */
+ 248:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     PORTD, /**< Port D */
+ 249:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     PORTE, /**< Port E */
+ 250:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     PORTF, /**< Port F */
+ 251:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     PORTG, /**< Port G */
+ 252:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     PORTH, /**< Port H */
+ 253:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     PORTI, /**< Port I */
+ 254:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     PORTJ, /**< Port J */
+ 255:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     PORTK, /**< Port K */
+ 256:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     PORTX, /**< Used as a dummy port to signal an invalid pin. */
+ 257:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** };
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 44
+
+
+ 258:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+ 259:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** @brief representation of hardware port/pin combination */
+ 260:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** struct Pin
+ 261:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** {
+ 262:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     GPIOPort port;
+ 263:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     uint8_t  pin;
+ 264:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+ 265:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     /** @brief Constructor creates a valid pin. 
+ 266:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****      *  @param pt GPIOPort between PA, and PK corresponding to STM32 Port.
+ 267:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****      *  @param pn pin number in range of 0-15
+ 268:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     */
+ 269:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     constexpr Pin(const GPIOPort pt, const uint8_t pn) : port(pt), pin(pn) {}
+ 270:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
+ 271:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     /** @brief Basic Constructor creates an invalid Pin object */
+ 272:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     constexpr Pin() : port(PORTX), pin(255) {}
+ 1801              		.loc 3 272 15 view .LVU465
+ 1802              		.loc 3 272 15 is_stmt 0 view .LVU466
+ 1803              	.LBE369:
+  69:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         {
+ 1804              		.loc 2 69 73 view .LVU467
+ 1805 0000 0023     		movs	r3, #0
+ 1806              	.LBE368:
+ 1807              	.LBE367:
+ 1808              	.LBE366:
+ 1809              		.loc 2 74 12 view .LVU468
+ 1810 0002 0649     		ldr	r1, .L80
+ 1811              	.LBE365:
+ 1812              	.LBE364:
+ 1813              	.LBB378:
+ 1814              	.LBB379:
+ 1815 0004 064A     		ldr	r2, .L80+4
+ 1816              	.LBE379:
+ 1817              	.LBE378:
+ 1818              	.LBB389:
+ 1819              	.LBB376:
+ 1820 0006 4FF60B70 		movw	r0, #65291
+ 1821              	.LBB374:
+ 1822              	.LBB372:
+ 1823              	.LBB370:
+  69:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         {
+ 1824              		.loc 2 69 73 view .LVU469
+ 1825 000a CB60     		str	r3, [r1, #12]
+ 1826              	.LVL125:
+  69:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         {
+ 1827              		.loc 2 69 73 view .LVU470
+ 1828              	.LBE370:
+ 1829              	.LBE372:
+ 1830              	.LBE374:
+ 1831              	.LBE376:
+ 1832              	.LBE389:
+ 1833              	.LBB390:
+ 1834              	.LBI378:
+ 1835              		.loc 2 74 5 is_stmt 1 view .LVU471
+ 1836              	.LBB387:
+ 1837              	.LBB380:
+ 1838              	.LBI380:
+  68:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         : pin(), mode(Mode::INPUT), pull(Pull::NOPULL), speed(Speed::LOW)
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 45
+
+
+ 1839              		.loc 2 68 9 view .LVU472
+ 1840              	.LBB381:
+ 1841              	.LBB382:
+ 1842              	.LBB383:
+ 1843              	.LBI383:
+ 1844              		.loc 3 272 15 view .LVU473
+ 1845              		.loc 3 272 15 is_stmt 0 view .LVU474
+ 1846              	.LBE383:
+ 1847              	.LBE382:
+ 1848              	.LBE381:
+ 1849              	.LBE380:
+ 1850              	.LBE387:
+ 1851              	.LBE390:
+ 1852              	.LBB391:
+ 1853              	.LBB377:
+ 1854              		.loc 2 74 12 view .LVU475
+ 1855 000c 0860     		str	r0, [r1]
+ 1856              	.LBB375:
+ 1857              	.LBB373:
+ 1858              	.LBB371:
+  69:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         {
+ 1859              		.loc 2 69 73 view .LVU476
+ 1860 000e C1E90133 		strd	r3, r3, [r1, #4]
+ 1861              	.LBE371:
+ 1862              	.LBE373:
+ 1863              	.LBE375:
+ 1864              	.LBE377:
+ 1865              	.LBE391:
+ 1866              	.LBB392:
+ 1867              	.LBB388:
+ 1868              	.LBB386:
+ 1869              	.LBB385:
+ 1870              	.LBB384:
+ 1871 0012 C2E90003 		strd	r0, r3, [r2]
+ 1872 0016 C2E90233 		strd	r3, r3, [r2, #8]
+ 1873              	.LVL126:
+  69:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         {
+ 1874              		.loc 2 69 73 view .LVU477
+ 1875              	.LBE384:
+ 1876              	.LBE385:
+ 1877              	.LBE386:
+ 1878              	.LBE388:
+ 1879              	.LBE392:
+ 1880              	.LBE363:
+ 1881              	.LBE362:
+ 1882              		.loc 1 99 47 view .LVU478
+ 1883 001a 7047     		bx	lr
+ 1884              	.L81:
+ 1885              		.align	2
+ 1886              	.L80:
+ 1887 001c 00000000 		.word	.LANCHOR1
+ 1888 0020 00000000 		.word	.LANCHOR3
+ 1889              		.cfi_endproc
+ 1890              	.LFE2594:
+ 1892              		.section	.init_array,"aw",%init_array
+ 1893              		.align	2
+ 1894 0000 00000000 		.word	_GLOBAL__sub_I__Z9i2c_startv(target1)
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 46
+
+
+ 1895              		.section	.bss._ZL3scl,"aw",%nobits
+ 1896              		.align	2
+ 1897              		.set	.LANCHOR3,. + 0
+ 1900              	_ZL3scl:
+ 1901 0000 00000000 		.space	20
+ 1901      00000000 
+ 1901      00000000 
+ 1901      00000000 
+ 1901      00000000 
+ 1902              		.section	.bss._ZL3sda,"aw",%nobits
+ 1903              		.align	2
+ 1904              		.set	.LANCHOR1,. + 0
+ 1907              	_ZL3sda:
+ 1908 0000 00000000 		.space	20
+ 1908      00000000 
+ 1908      00000000 
+ 1908      00000000 
+ 1908      00000000 
+ 1909              		.section	.rodata._ZL7SCL_PIN,"a"
+ 1910              		.align	2
+ 1911              		.set	.LANCHOR2,. + 0
+ 1914              	_ZL7SCL_PIN:
+ 1915 0000 01       		.byte	1
+ 1916 0001 08       		.byte	8
+ 1917              		.section	.rodata._ZL7SDA_PIN,"a"
+ 1918              		.align	2
+ 1919              		.set	.LANCHOR0,. + 0
+ 1922              	_ZL7SDA_PIN:
+ 1923 0000 01       		.byte	1
+ 1924 0001 09       		.byte	9
+ 1925              		.text
+ 1926              	.Letext0:
+ 1927              		.file 4 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/machine/_default_types.h"
+ 1928              		.file 5 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/_stdint.h"
+ 1929              		.file 6 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/stdint.h"
+ 1930              		.file 7 "/Library/DaisyToolchain/0.2.0/arm/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
+ 1931              		.file 8 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cmath"
+ 1932              		.file 9 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/std_abs.h"
+ 1933              		.file 10 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdlib"
+ 1934              		.file 11 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdint"
+ 1935              		.file 12 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/type_traits"
+ 1936              		.file 13 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/debug/debug.h"
+ 1937              		.file 14 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v
+ 1938              		.file 15 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/algorithmfwd.h"
+ 1939              		.file 16 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/stl_pair.h"
+ 1940              		.file 17 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/exception_ptr.h"
+ 1941              		.file 18 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdarg"
+ 1942              		.file 19 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdio"
+ 1943              		.file 20 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstring"
+ 1944              		.file 21 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/predefined_ops.h
+ 1945              		.file 22 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/_types.h"
+ 1946              		.file 23 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/reent.h"
+ 1947              		.file 24 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/lock.h"
+ 1948              		.file 25 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/math.h"
+ 1949              		.file 26 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/stdlib.h"
+ 1950              		.file 27 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/math.h"
+ 1951              		.file 28 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/stdlib.h"
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 47
+
+
+ 1952              		.file 29 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/tim.h"
+ 1953              		.file 30 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/system.h"
+ 1954              		.file 31 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/wav_format.h"
+ 1955              		.file 32 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/dev/max11300.h"
+ 1956              		.file 33 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h"
+ 1957              		.file 34 "/Library/DaisyToolchain/0.2.0/arm/lib/gcc/arm-none-eabi/10.3.1/include/stdarg.h"
+ 1958              		.file 35 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/stdio.h"
+ 1959              		.file 36 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/string.h"
+ 1960              		.file 37 "src/mpr121.h"
+ 1961              		.file 38 "src/config.h"
+ 1962              		.file 39 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/dev/sr_595.h"
+ 1963              		.file 40 "<built-in>"
+ARM GAS  /tmp/claude-502/ccoTHMbR.s 			page 48
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 mpr121.cpp
+/tmp/claude-502/ccoTHMbR.s:19     .text._Z9i2c_startv:0000000000000000 $t
+/tmp/claude-502/ccoTHMbR.s:26     .text._Z9i2c_startv:0000000000000000 _Z9i2c_startv
+/tmp/claude-502/ccoTHMbR.s:221    .text._Z9i2c_startv:000000000000007c $d
+/tmp/claude-502/ccoTHMbR.s:231    .text._Z8i2c_stopv:0000000000000000 $t
+/tmp/claude-502/ccoTHMbR.s:238    .text._Z8i2c_stopv:0000000000000000 _Z8i2c_stopv
+/tmp/claude-502/ccoTHMbR.s:373    .text._Z8i2c_stopv:0000000000000058 $d
+/tmp/claude-502/ccoTHMbR.s:383    .text._Z14i2c_write_byteh:0000000000000000 $t
+/tmp/claude-502/ccoTHMbR.s:390    .text._Z14i2c_write_byteh:0000000000000000 _Z14i2c_write_byteh
+/tmp/claude-502/ccoTHMbR.s:715    .text._Z14i2c_write_byteh:00000000000000e4 $d
+/tmp/claude-502/ccoTHMbR.s:723    .text._Z13i2c_read_byteb:0000000000000000 $t
+/tmp/claude-502/ccoTHMbR.s:730    .text._Z13i2c_read_byteb:0000000000000000 _Z13i2c_read_byteb
+/tmp/claude-502/ccoTHMbR.s:1080   .text._Z13i2c_read_byteb:00000000000000f4 $d
+/tmp/claude-502/ccoTHMbR.s:1090   .text._Z9mpr_writehh:0000000000000000 $t
+/tmp/claude-502/ccoTHMbR.s:1097   .text._Z9mpr_writehh:0000000000000000 _Z9mpr_writehh
+/tmp/claude-502/ccoTHMbR.s:1173   .text._Z8mpr_readhPhh:0000000000000000 $t
+/tmp/claude-502/ccoTHMbR.s:1180   .text._Z8mpr_readhPhh:0000000000000000 _Z8mpr_readhPhh
+/tmp/claude-502/ccoTHMbR.s:1299   .text._Z8mpr_initv:0000000000000000 $t
+/tmp/claude-502/ccoTHMbR.s:1306   .text._Z8mpr_initv:0000000000000000 _Z8mpr_initv
+/tmp/claude-502/ccoTHMbR.s:1492   .text._Z15read_electrodesPt:0000000000000000 $t
+/tmp/claude-502/ccoTHMbR.s:1499   .text._Z15read_electrodesPt:0000000000000000 _Z15read_electrodesPt
+/tmp/claude-502/ccoTHMbR.s:1561   .text._Z16capture_baselinePt:0000000000000000 $t
+/tmp/claude-502/ccoTHMbR.s:1568   .text._Z16capture_baselinePt:0000000000000000 _Z16capture_baselinePt
+/tmp/claude-502/ccoTHMbR.s:1689   .text._Z13mpr_idle_pinsv:0000000000000000 $t
+/tmp/claude-502/ccoTHMbR.s:1696   .text._Z13mpr_idle_pinsv:0000000000000000 _Z13mpr_idle_pinsv
+/tmp/claude-502/ccoTHMbR.s:1762   .text._Z13mpr_idle_pinsv:000000000000002c $d
+/tmp/claude-502/ccoTHMbR.s:1770   .text.startup._GLOBAL__sub_I__Z9i2c_startv:0000000000000000 $t
+/tmp/claude-502/ccoTHMbR.s:1776   .text.startup._GLOBAL__sub_I__Z9i2c_startv:0000000000000000 _GLOBAL__sub_I__Z9i2c_startv
+/tmp/claude-502/ccoTHMbR.s:1887   .text.startup._GLOBAL__sub_I__Z9i2c_startv:000000000000001c $d
+/tmp/claude-502/ccoTHMbR.s:1893   .init_array:0000000000000000 $d
+/tmp/claude-502/ccoTHMbR.s:1896   .bss._ZL3scl:0000000000000000 $d
+/tmp/claude-502/ccoTHMbR.s:1900   .bss._ZL3scl:0000000000000000 _ZL3scl
+/tmp/claude-502/ccoTHMbR.s:1903   .bss._ZL3sda:0000000000000000 $d
+/tmp/claude-502/ccoTHMbR.s:1907   .bss._ZL3sda:0000000000000000 _ZL3sda
+/tmp/claude-502/ccoTHMbR.s:1910   .rodata._ZL7SCL_PIN:0000000000000000 $d
+/tmp/claude-502/ccoTHMbR.s:1914   .rodata._ZL7SCL_PIN:0000000000000000 _ZL7SCL_PIN
+/tmp/claude-502/ccoTHMbR.s:1918   .rodata._ZL7SDA_PIN:0000000000000000 $d
+/tmp/claude-502/ccoTHMbR.s:1922   .rodata._ZL7SDA_PIN:0000000000000000 _ZL7SDA_PIN
+
+UNDEFINED SYMBOLS
+_ZN5daisy4GPIO4InitENS_3PinENS0_4ModeENS0_4PullENS0_5SpeedE
+_ZN5daisy6System7DelayUsEm
+_ZN5daisy4GPIO5WriteEb
+_ZN5daisy4GPIO4ReadEv
+_ZN5daisy6System5DelayEm
+memset

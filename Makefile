@@ -19,6 +19,11 @@ TARGET ?= src/main
 C_SOURCES   =
 CPP_SOURCES = $(TARGET).cpp
 
+# The synth (src/main) is split across modules; the tools stay standalone.
+ifeq ($(TARGET),src/main)
+CPP_SOURCES += src/mpr121.cpp src/touch.cpp
+endif
+
 libdaisy_dir = ../libDaisy
 
 include $(libdaisy_dir)/core/Makefile
