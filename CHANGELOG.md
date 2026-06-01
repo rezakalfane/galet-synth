@@ -4,6 +4,13 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: per-LED brightness levels (reduce LED→audio noise)`
+- Per-LED brightness knobs in `config.h` (`LED1_LEVEL`/`LED2_LEVEL`/`LED3_LEVEL`)
+  applied to every LED write (position, idle sweep, voice flash). Lowering an
+  LED's level cuts its current, which reduces the LED switching noise that
+  couples into the audio (worst on battery). LED3 (the 200 Hz software-PWM LED)
+  is the main culprit, so it's set to 50%; the analog DAC LEDs stay at 100%
+
 ### Fixed — `fix: MPR121 ESI 16ms → 1ms for fast-tap response`
 - `REG_CONFIG2` was `0x4C`, whose ESI (electrode sample interval) bits decode to
   16 ms — the sensor only refreshed electrode values ~62×/sec, blurring/dropping

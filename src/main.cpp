@@ -216,8 +216,8 @@ int main()
             float led1   = sqrtf(sqrtf(l2_raw));              // middle (DAC1)
             float led2   = sqrtf(sqrtf(l1_raw));              // pos 0  (DAC2)
             float led3   = sqrtf(sqrtf(l3_raw)) * LED3_INTENSITY; // pos 1 (PWM A0)
-            hw.dac.WriteValue(DacHandle::Channel::ONE, (uint16_t)(led1 * 4095.0f));
-            hw.dac.WriteValue(DacHandle::Channel::TWO, (uint16_t)(led2 * 4095.0f));
+            hw.dac.WriteValue(DacHandle::Channel::ONE, (uint16_t)(led1 * LED1_MAX));
+            hw.dac.WriteValue(DacHandle::Channel::TWO, (uint16_t)(led2 * LED2_MAX));
             g_led3_duty = led3;
 
             // FSR calibration window: first 2 s only.
@@ -324,8 +324,8 @@ int main()
     // number). Blocks the touch loop briefly — fine, we're mid-gesture and silent.
     auto flash_voice_leds = [&](int count){
         for(int f = 0; f < count; f++){
-            hw.dac.WriteValue(DacHandle::Channel::ONE, 4095);
-            hw.dac.WriteValue(DacHandle::Channel::TWO, 4095);
+            hw.dac.WriteValue(DacHandle::Channel::ONE, (uint16_t)LED1_MAX);
+            hw.dac.WriteValue(DacHandle::Channel::TWO, (uint16_t)LED2_MAX);
             g_led3_duty = LED3_INTENSITY;
             System::Delay(110);
             hw.dac.WriteValue(DacHandle::Channel::ONE, 0);
@@ -666,8 +666,8 @@ int main()
             s_led2 = s_led2 * LED_SMOOTH + led2_target * (1.0f - LED_SMOOTH);
             s_led3 = s_led3 * smooth3   + led3_target * (1.0f - smooth3);
         }
-        hw.dac.WriteValue(DacHandle::Channel::ONE, (uint16_t)(s_led1 * 4095.0f));
-        hw.dac.WriteValue(DacHandle::Channel::TWO, (uint16_t)(s_led2 * 4095.0f));
+        hw.dac.WriteValue(DacHandle::Channel::ONE, (uint16_t)(s_led1 * LED1_MAX));
+        hw.dac.WriteValue(DacHandle::Channel::TWO, (uint16_t)(s_led2 * LED2_MAX));
         g_led3_duty = s_led3;  // audio callback sigma-delta's this onto A0
 
         f1_was_on = f1_on;

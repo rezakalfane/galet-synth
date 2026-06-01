@@ -18,8 +18,17 @@ static constexpr int32_t  MAX_POS_JUMP       = 200;
 // LED slew at ~60Hz touch loop. Closer to 1.0 = smoother/slower fade.
 // 0.0 = no smoothing (snap), 0.7 = ~80ms fade, 0.9 = ~250ms fade.
 static constexpr float    LED_SMOOTH         = 0.45f;
-// LED3 (software sigma-delta PWM on A0 / ADC0 / pin 22) max-brightness scale.
-static constexpr float    LED3_INTENSITY     = 0.1f;
+// Per-LED brightness levels (0..1). Lowering an LED's level cuts its current,
+// which reduces the LED noise coupled into the audio (esp. on battery).
+//   LED1 = DAC1 (middle), LED2 = DAC2 (pos-0 end), LED3 = PWM on A0 (pos-1 end).
+static constexpr float    LED1_LEVEL         = 1.00f;
+static constexpr float    LED2_LEVEL         = 1.00f;
+static constexpr float    LED3_LEVEL         = 0.50f;
+// Derived DAC ceilings (full-scale = 4095) for the two analog LEDs.
+static constexpr float    LED1_MAX           = 4095.0f * LED1_LEVEL;
+static constexpr float    LED2_MAX           = 4095.0f * LED2_LEVEL;
+// LED3 PWM is much brighter per unit duty, so 100% is pre-scaled to 0.1 duty.
+static constexpr float    LED3_INTENSITY     = 0.1f * LED3_LEVEL;
 // Smoothing coefficient used for LED3 only when no finger is touching. Smaller
 // than LED_SMOOTH = faster fade-out on lift. 0.0 = instant snap to 0.
 static constexpr float    LED3_RELEASE_SMOOTH = 0.10f;
