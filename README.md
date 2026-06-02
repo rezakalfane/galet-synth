@@ -519,6 +519,8 @@ python3 -m venv .venv && .venv/bin/pip install pyserial PySide6
 .venv/bin/python tools/voicelab.py          # or the terminal REPL
 ```
 
+![GaletSynth Voice Tuner GUI](docs/voicelab_gui.png)
+
 The firmware speaks a small line protocol over USB (`tune`/`set`/`select`/`dump`/
 `mon`); while tuning it plays a mutable copy of the active voice so edits take
 effect live. The GUI shows a slider/dropdown per field grouped into sections,
@@ -526,6 +528,27 @@ a voice picker, a live status dashboard (`mon`), and **Export** → a paste-read
 `static constexpr Voice VOICE_…{ }` block for `src/voice.h`. CLI and GUI share one
 core (`tools/galetsynth/`), so the protocol, field model and exporter live in one
 place. (Close any open `screen` first — the serial port is single-user.)
+
+### Keep your edits — the persistent voice bank
+
+Tuning is no longer throwaway. At boot the firmware copies the factory `VOICES[]`
+into a mutable RAM bank (`g_bank[]`, in `src/persist.{h,cpp}`) — what the engine,
+control loop and tuner all play — then overlays whatever was last saved to QSPI
+flash. So a reshaped voice can be **kept across power cycles**, not just heard
+while the laptop is attached.
+
+- **Name** — rename a voice in the GUI's *Name* field (spaces allowed, e.g.
+  "SH-101 min"); the picker labels follow the device's saved names.
+- **Save to flash** — commits the live voice (parameters **and** name) into its
+  bank slot and writes the bank to QSPI (only when something changed, to spare
+  flash wear). It survives power-off.
+- **Revert** / **Revert all** — restore one slot, or the whole bank, to the
+  source defaults baked into `VOICES[]`.
+
+The serial protocol gains matching verbs — `save`, `factory [all]`, `names`, and
+`set name <text>` — and `dump` now reports the bank slot (`idx=`) so the host
+stays in sync even after a rename. The GUI also reconnects automatically if the
+synth is power-cycled mid-session, re-syncing to whatever voice it boots into.
 
 ---
 
