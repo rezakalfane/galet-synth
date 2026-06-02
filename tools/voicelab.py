@@ -15,6 +15,8 @@ client-side commands (handled here):
     export [NAME] [file.h]   dump the live voice → C++ Voice{...} block
     save <file.txt>          save as replayable set-commands
     load <file.txt>          replay a saved file
+    backup <file.json>       read the whole bank off the device → JSON file
+    restore <file.json>      write a JSON bank back to the device (+ flash)
     quit / exit
 Field names tab-complete; you see what you type.
 """
@@ -24,7 +26,7 @@ import time
 
 sys.path.insert(0, __file__.rsplit("/", 1)[0])  # find the galetsynth package
 from galetsynth import Link, find_port, gen_cpp           # noqa: E402
-from galetsynth import schema                             # noqa: E402
+from galetsynth import schema, bank                       # noqa: E402
 
 try:
     import readline
@@ -37,11 +39,22 @@ except ImportError:
     sys.exit("pyserial not installed — run:  pip install pyserial")
 
 
+def progress_bar(done, total, name):
+    """One-line textual progress bar for backup/restore (overwrites in place)."""
+    width = 24
+    fill = int(width * done / total) if total else width
+    sys.stdout.write(f"\r  [{'#' * fill}{'.' * (width - fill)}] "
+                     f"{done}/{total}  {name[:18]:18}")
+    sys.stdout.flush()
+    if done >= total:
+        sys.stdout.write("\n")
+
+
 def setup_readline():
     if not readline:
         return
     words = (["tune", "set", "select", "dump", "mon", "help", "export", "save",
-              "load", "factory", "name", "quit", "exit"]
+              "load", "backup", "restore", "factory", "name", "quit", "exit"]
              + schema.SETTABLE + list(schema.WAVES) + list(schema.SCALES))
 
     def completer(text, state):
@@ -130,9 +143,32 @@ def main():
                 print(f"loaded {rest[0]}")
                 continue
 
+            if cmd == "backup":
+                # No arg → autogenerate YYYYMMDDhhmmss-Galet-Backup.json in cwd.
+                fname = rest[0] if rest else time.strftime("%Y%m%d%H%M%S-Galet-Backup.json")
+                data = bank.backup_bank(link, log=print, progress=progress_bar)
+                bank.write_bank(fname, data)
+                print(f"backed up {len(data['voices'])} voices → {fname}")
+                continue
+
+            if cmd == "restore":
+                if not rest:
+                    print("! restore <file.json>")
+                    continue
+                try:
+                    data = bank.read_bank(rest[0])
+                except (OSError, ValueError) as e:
+                    print(f"! {e}")
+                    continue
+                n = bank.restore_bank(link, data, log=print, progress=progress_bar)
+                print(f"restored {n} voices from {rest[0]}")
+                continue
+
             link.send(line)  # pass through to firmware
             time.sleep(0.05)
     finally:
+        link.send("tune 0")   # resume normal idle behavior (LED chase / FSR recal)
+        time.sleep(0.05)
         link.close()
         print("\nbye")
 

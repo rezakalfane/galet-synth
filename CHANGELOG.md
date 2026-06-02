@@ -4,6 +4,43 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: whole-bank backup / restore to a local JSON file`
+- New shared **`tools/galetsynth/bank.py`**: `backup_bank()` reads every editable
+  slot off the device (`select` + `dump`) into a portable JSON document;
+  `restore_bank()` replays one back (`select` + `set` + `save` per slot, so each
+  lands in flash). It drives the existing tuning protocol — no new protocol. The
+  **Drums** meta-voice (`schema.MULTI_IDX`, last slot) is skipped: `select`ing it
+  remaps the engine to the Kick slot and its fields are an unused placeholder — the
+  four raw drums it plays *are* backed up. Global effect params (`reverb_*`/
+  `delay_*`) are stored once and re-applied on restore.
+- **GUI**: **Backup…** / **Restore…** buttons. Both run on a worker thread (a few
+  seconds of serial traffic) so the window stays responsive, with a modal
+  `QProgressDialog` that advances per voice. Backup confirms the filename + location
+  at the end, defaulting to a timestamped `YYYYMMDDhhmmss-Galet-Backup.json`.
+  Restore opens a **modal pick list** — a checkbox per voice (Select all / none) +
+  an optional "import global effects" toggle — so you choose exactly which voices
+  to import; only the checked ones are written, then the picker/controls re-sync.
+- **CLI**: `backup [file.json]` (auto-names if omitted) / `restore <file.json>`,
+  with a one-line textual progress bar; tab-completions added.
+- `restore_bank()` takes `only=<indices>` + `do_globals` to back the selective
+  restore (full restore is still the default; the CLI is unchanged).
+
+### Added — `feat: voice-tuner GUI tooltips (rich-text info boxes)`
+- Per-parameter, per-group and per-button tooltips on the PySide6 tuner, rendered
+  as small rich-text boxes (bold header + word-wrapped body, 4px padding). Each of
+  the 14 group titles gets an `ⓘ` marker. Help text lives in `schema.py`
+  (`HELP` / `GROUP_HELP`) so it stays next to the field model and is HTML-escaped
+  (several descriptions contain `<`/`>`).
+
+### Fixed — `fix: serial stays responsive while the synth is idle`
+- The idle LED-chase loop (`idle_chase_and_calibrate`) spun until a glass touch /
+  FSR press without servicing USB serial, so a connected tuner's commands sat
+  unparsed — the GUI wouldn't sync at boot and **Backup** stalled until you touched
+  the glass. The chase now polls `serial_tune_poll()` and bails the instant tune
+  mode is entered, and the synth no longer enters the chase at all while a host
+  tuner is connected (`g_live_tune`). The CLI/GUI send `tune 0` on a clean exit so
+  normal idle behavior resumes.
+
 ### Added — `feat: editable + persistent voice bank (rename/save/revert)`
 - **Firmware** (`src/persist.{h,cpp}`): the read-only `constexpr VOICES[]` is now
   copied at boot into a mutable RAM bank **`g_bank[]`** — what the engine, control

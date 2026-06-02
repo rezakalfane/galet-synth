@@ -193,6 +193,13 @@ int main()
         uint16_t scan[N_CH];
 
         while(true) {
+            // Stay responsive to a host tuner while idling: this loop would
+            // otherwise spin until a glass touch / FSR press, leaving serial
+            // commands (dump/select/save) unparsed in the RX ring. Poll them
+            // here, and leave the chase the instant tune mode is entered.
+            serial_tune_poll();
+            if(g_live_tune) break;
+
             uint32_t elapsed = System::GetNow() - start;
 
             // Sinusoidal position 0→1→0 over SWEEP_PERIOD_MS — eases at the
@@ -546,9 +553,11 @@ int main()
         }
 
         // ── 5 s idle → chase + FSR recalibration, loops until touch ──────────
+        // Suppressed while a host tuner is connected (g_live_tune): the chase is
+        // a blocking idle animation, and we must keep servicing serial instead.
         if(touching){
             last_touch_ms = System::GetNow();
-        } else if(System::GetNow() - last_touch_ms >= 5000){
+        } else if(!g_live_tune && System::GetNow() - last_touch_ms >= 5000){
             idle_chase_and_calibrate();
             last_touch_ms = System::GetNow();
             idle_since    = System::GetNow();

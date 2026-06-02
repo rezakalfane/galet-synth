@@ -9,12 +9,14 @@ glass to hear them. Export writes a paste-ready C++ Voice{...} block.
     pip install pyserial PySide6
     python3 tools/voicelab_gui.py            # auto-detect /dev/tty.usbmodem*
 """
+import html
 import sys
+import threading
 import time
 
 sys.path.insert(0, __file__.rsplit("/", 1)[0])  # find the galetsynth package
 from galetsynth import Link, find_port, gen_cpp          # noqa: E402
-from galetsynth import schema                            # noqa: E402
+from galetsynth import schema, bank                      # noqa: E402
 
 try:
     import serial
@@ -23,9 +25,24 @@ except ImportError as e:
     sys.exit(f"Missing dependency ({e}). Run:  pip install pyserial PySide6")
 
 
+def info_tip(title, body):
+    """Format a tooltip as a small rich-text info box: a bold header rule above a
+    word-wrapped body. Making the tooltip rich text is what gets Qt to wrap it into
+    a tidy rectangle instead of one long line; everything is HTML-escaped because
+    several descriptions contain '<' / '>' (e.g. '<1', '>0')."""
+    return (f"<div style='max-width:300px'>"
+            f"<b>{html.escape(title)}</b>"
+            f"<hr style='margin:3px 0'>"
+            f"{html.escape(body)}</div>")
+
+
 class Bridge(QtCore.QObject):
     """Marshals reader-thread lines onto the GUI thread."""
     line = QtCore.Signal(str)
+    # Backup/restore run in a worker thread; these marshal its progress + result
+    # back to the GUI thread. progress(done, total, name); finished(op, payload).
+    progress = QtCore.Signal(int, int, str)
+    finished = QtCore.Signal(str, object)
 
 
 class FieldRow:
@@ -119,6 +136,75 @@ class FieldRow:
             self._loading = False
 
 
+class RestorePicker(QtWidgets.QDialog):
+    """Modal: choose which voices (and whether the global FX) to import from a
+    backup file. The selected voices overwrite the synth's flash."""
+    def __init__(self, data, filename, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Restore — choose voices")
+        self.setModal(True)
+        lay = QtWidgets.QVBoxLayout(self)
+        head = QtWidgets.QLabel(
+            f"Import from <b>{html.escape(filename)}</b>.<br>"
+            f"<span style='color:#c33'>Checked voices overwrite the synth's "
+            f"flash — their saved edits are lost.</span>")
+        head.setWordWrap(True)
+        lay.addWidget(head)
+
+        # One checkbox per voice (skip the Drums meta-voice — not restorable).
+        self._boxes = {}
+        listw = QtWidgets.QWidget()
+        vb = QtWidgets.QVBoxLayout(listw)
+        vb.setContentsMargins(4, 4, 4, 4)
+        vb.setSpacing(2)
+        for v in data.get("voices", []):
+            idx = v.get("idx")
+            if not isinstance(idx, int) or idx == schema.MULTI_IDX:
+                continue
+            cb = QtWidgets.QCheckBox(f"{idx}: {v.get('name', '')}")
+            cb.setChecked(True)
+            self._boxes[idx] = cb
+            vb.addWidget(cb)
+        vb.addStretch(1)
+        scroll = QtWidgets.QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setWidget(listw)
+        scroll.setMinimumHeight(280)
+        lay.addWidget(scroll)
+
+        sel = QtWidgets.QHBoxLayout()
+        for label, on in (("Select all", True), ("Select none", False)):
+            b = QtWidgets.QPushButton(label)
+            b.clicked.connect(lambda _=False, x=on: self._set_all(x))
+            sel.addWidget(b)
+        sel.addStretch(1)
+        lay.addLayout(sel)
+
+        has_globals = bool(data.get("globals"))
+        self.globals_cb = QtWidgets.QCheckBox("Also import global effects (reverb / delay)")
+        self.globals_cb.setChecked(has_globals)
+        self.globals_cb.setEnabled(has_globals)
+        lay.addWidget(self.globals_cb)
+
+        bb = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+        bb.button(QtWidgets.QDialogButtonBox.Ok).setText("Import")
+        bb.accepted.connect(self.accept)
+        bb.rejected.connect(self.reject)
+        lay.addWidget(bb)
+        self.resize(380, 480)
+
+    def _set_all(self, on):
+        for cb in self._boxes.values():
+            cb.setChecked(on)
+
+    def selected(self):
+        return {idx for idx, cb in self._boxes.items() if cb.isChecked()}
+
+    def do_globals(self):
+        return self.globals_cb.isChecked()
+
+
 class Tuner(QtWidgets.QMainWindow):
     def __init__(self, port_pref=None):
         super().__init__()
@@ -126,9 +212,13 @@ class Tuner(QtWidgets.QMainWindow):
         self.link = None
         self.bridge = Bridge()
         self.bridge.line.connect(self.append_log)
+        self.bridge.progress.connect(self._on_progress)
+        self.bridge.finished.connect(self._on_finished)
         self.setWindowTitle("GaletSynth Voice Tuner — connecting…")
         self.rows = {}
         self._block = None   # accumulates the current mon status frame (or None)
+        self._busy = False   # a backup/restore is in flight (blocks re-entry)
+        self._progress = None
 
         central = QtWidgets.QWidget()
         self.setCentralWidget(central)
@@ -140,21 +230,51 @@ class Tuner(QtWidgets.QMainWindow):
         self.voice = QtWidgets.QComboBox()
         self.voice.addItems([f"{i}: {n}" for i, n in enumerate(schema.VOICE_NAMES)])
         self.voice.activated.connect(self._select_voice)
+        self.voice.setToolTip(info_tip(
+            "Voice", "Pick which voice to edit — also switches the active voice on "
+            "the synth so you hear it on the glass."))
         top.addWidget(self.voice)
         top.addWidget(QtWidgets.QLabel("Name:"))
         self.name = QtWidgets.QLineEdit()
         self.name.setMaxLength(23)
         self.name.setFixedWidth(140)
         self.name.editingFinished.connect(self._rename)
+        self.name.setToolTip(info_tip(
+            "Name", "Rename the current voice (spaces allowed). "
+            "Click “Save to flash” to persist it."))
         top.addWidget(self.name)
-        for label, slot in (("Refresh", self.refresh), ("Save to flash", self._save),
-                            ("Revert", self._revert), ("Revert all", self._revert_all),
-                            ("Export…", self.export)):
+        buttons = (
+            ("Refresh",       self.refresh,
+             "Reload this voice's parameters from the synth — re-snapshots the saved "
+             "preset, discarding unsaved live edits."),
+            ("Save to flash", self._save,
+             "Commit this voice (parameters + name) to its bank slot in QSPI flash. "
+             "Survives power-off."),
+            ("Revert",        self._revert,
+             "Reset this voice to its factory default and overwrite the saved version "
+             "in flash."),
+            ("Revert all",    self._revert_all,
+             "Reset every voice in the bank to factory defaults and wipe all saved "
+             "edits in flash."),
+            ("Backup…",       self._backup,
+             "Read the whole bank off the synth and save it to a JSON file "
+             "(you confirm the filename at the end)."),
+            ("Restore…",      self._restore,
+             "Load a JSON bank backup and write it back to the synth, persisting each "
+             "voice to flash."),
+            ("Export…",       self.export,
+             "Export this voice as a paste-ready C++ Voice{…} block for src/voice.h."),
+        )
+        for label, slot, tip in buttons:
             b = QtWidgets.QPushButton(label)
             b.clicked.connect(slot)
+            b.setToolTip(info_tip(label.rstrip("…"), tip))
             top.addWidget(b)
         self.mon = QtWidgets.QCheckBox("mon")
         self.mon.toggled.connect(self._toggle_mon)
+        self.mon.setToolTip(info_tip(
+            "mon", "Stream the synth's live status dashboard (touch position, "
+            "pressure, audio params) into the log below."))
         top.addWidget(self.mon)
         top.addStretch(1)
         root.addLayout(top)
@@ -172,7 +292,10 @@ class Tuner(QtWidgets.QMainWindow):
         cols = [QtWidgets.QVBoxLayout() for _ in range(NCOL)]
         load = [0] * NCOL   # rough row count per column, for balancing
         for title, fields in schema.GROUPS:
-            box = QtWidgets.QGroupBox(title)
+            # "ⓘ" in the title marks the section as documented; hovering it (or the
+            # box title) shows what the group is for.
+            box = QtWidgets.QGroupBox(f"{title}  ⓘ")
+            box.setToolTip(info_tip(title, schema.GROUP_HELP.get(title, "")))
             gform = QtWidgets.QFormLayout(box)
             gform.setLabelAlignment(QtCore.Qt.AlignRight)
             gform.setContentsMargins(8, 6, 8, 6)
@@ -181,7 +304,11 @@ class Tuner(QtWidgets.QMainWindow):
                 typ, lo, hi = meta[field]
                 row = FieldRow(field, typ, lo, hi, self._send)
                 self.rows[field] = row
-                gform.addRow(field, row.widget)
+                tip = info_tip(field, schema.HELP.get(field, ""))
+                lbl = QtWidgets.QLabel(field)        # explicit label so it can carry a tooltip
+                lbl.setToolTip(tip)
+                row.widget.setToolTip(tip)
+                gform.addRow(lbl, row.widget)
             c = load.index(min(load))           # drop into the shortest column
             cols[c].addWidget(box)
             load[c] += len(fields) + 1
@@ -421,6 +548,110 @@ class Tuner(QtWidgets.QMainWindow):
             f.write(gen_cpp(kv, name) + "\n")
         self.append_log(f"exported → {fn}")
 
+    # ── Whole-bank backup / restore (JSON) ──
+    # Both run on a worker thread (a few seconds of serial traffic) so the window
+    # stays live and the progress bar animates; results marshal back via the
+    # bridge. A modal QProgressDialog blocks the controls meanwhile.
+    def _backup(self):
+        if not self._require_link() or self._busy:
+            return
+        self._busy = True
+        self.mon.setChecked(False)            # quiet the channel so dumps are clean
+        total = len(bank.backup_slots())
+        self._progress = QtWidgets.QProgressDialog(
+            "Reading voices from the synth…", None, 0, total, self)
+        self._progress.setWindowTitle("Backup")
+        self._progress.setWindowModality(QtCore.Qt.WindowModal)
+        self._progress.setMinimumDuration(0)
+        self._progress.setValue(0)
+        threading.Thread(target=self._backup_worker, daemon=True).start()
+
+    def _backup_worker(self):
+        try:
+            data = bank.backup_bank(
+                self.link, log=self.bridge.line.emit,
+                progress=lambda d, t, n: self.bridge.progress.emit(d, t, n))
+            self.bridge.finished.emit("backup", data)
+        except Exception as e:                # noqa: BLE001 — report any failure
+            self.bridge.finished.emit("backup", e)
+
+    def _save_backup(self, data):
+        # Confirm filename + location at the end, defaulting to a timestamped name.
+        default = time.strftime("%Y%m%d%H%M%S-Galet-Backup.json")
+        fn, _ = QtWidgets.QFileDialog.getSaveFileName(
+            self, "Save bank backup", default, "JSON backup (*.json)")
+        if not fn:
+            self.append_log("backup read OK — not saved (cancelled)")
+            return
+        bank.write_bank(fn, data)
+        self.append_log(f"backed up {len(data['voices'])} voices → {fn}")
+
+    def _restore(self):
+        if not self._require_link() or self._busy:
+            return
+        fn, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, "Restore bank backup", "", "JSON backup (*.json)")
+        if not fn:
+            return
+        try:
+            data = bank.read_bank(fn)
+        except (OSError, ValueError) as e:
+            self.append_log(f"! {e}")
+            return
+        if data.get("format") != bank.BANK_FORMAT:
+            self.append_log(f"! not a {bank.BANK_FORMAT} file")
+            return
+        # Modal pick list: choose which voices (+ globals) to import.
+        dlg = RestorePicker(data, fn.rsplit("/", 1)[-1], self)
+        if dlg.exec() != QtWidgets.QDialog.Accepted:
+            return
+        only = dlg.selected()
+        if not only:
+            self.append_log("restore cancelled (no voices selected)")
+            return
+        do_globals = dlg.do_globals()
+        self._busy = True
+        self.mon.setChecked(False)
+        self._progress = QtWidgets.QProgressDialog(
+            "Writing voices to the synth…", None, 0, len(only), self)
+        self._progress.setWindowTitle("Restore")
+        self._progress.setWindowModality(QtCore.Qt.WindowModal)
+        self._progress.setMinimumDuration(0)
+        self._progress.setValue(0)
+        threading.Thread(target=self._restore_worker,
+                         args=(data, only, do_globals), daemon=True).start()
+
+    def _restore_worker(self, data, only, do_globals):
+        try:
+            n = bank.restore_bank(
+                self.link, data, log=self.bridge.line.emit,
+                only=only, do_globals=do_globals,
+                progress=lambda d, t, nm: self.bridge.progress.emit(d, t, nm))
+            self.bridge.finished.emit("restore", n)
+        except Exception as e:                # noqa: BLE001 — report any failure
+            self.bridge.finished.emit("restore", e)
+
+    def _on_progress(self, done, total, name):
+        if self._progress:
+            self._progress.setMaximum(total)
+            self._progress.setValue(done)
+            self._progress.setLabelText(f"{done}/{total}  {name}")
+
+    def _on_finished(self, op, payload):
+        if self._progress:
+            self._progress.reset()
+            self._progress = None
+        self._busy = False
+        if isinstance(payload, Exception):
+            self.append_log(f"! {op} failed: {payload}")
+            return
+        if op == "backup":
+            self._save_backup(payload)
+        elif op == "restore":
+            self.append_log(f"restored {payload} voices from flash")
+            self._load_names()                # picker labels follow restored names
+            self.refresh()                    # reload the current voice's controls
+
     def append_log(self, s):
         # Hardware voice-change event ("voice <n>") from the FSR gesture on the
         # Galet — follow it: switch the picker and reload that voice's params.
@@ -446,10 +677,15 @@ def main():
     port = (sys.argv[sys.argv.index("--port") + 1]
             if "--port" in sys.argv else None)   # None → auto-detect + reconnect
     app = QtWidgets.QApplication(sys.argv)
+    # 4px breathing room inside every tooltip's frame (inline CSS padding isn't
+    # honored by Qt's rich-text engine; a QToolTip stylesheet is).
+    app.setStyleSheet("QToolTip { padding: 4px; }")
     win = Tuner(port)        # owns the link; connects + reconnects via watchdog
     win.show()
     code = app.exec()
     if win.link:
+        win.link.send("tune 0")   # leave tune mode so the synth resumes normal
+        time.sleep(0.05)          # idle behavior (LED chase / FSR recal)
         win.link.close()
     sys.exit(code)
 

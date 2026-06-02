@@ -550,6 +550,24 @@ The serial protocol gains matching verbs — `save`, `factory [all]`, `names`, a
 stays in sync even after a rename. The GUI also reconnects automatically if the
 synth is power-cycled mid-session, re-syncing to whatever voice it boots into.
 
+### Back up & restore the whole bank (JSON)
+
+- **Backup…** reads every editable slot off the synth (with a progress bar) and
+  writes a portable JSON file. At the end it asks where to save, defaulting to a
+  timestamped `YYYYMMDDhhmmss-Galet-Backup.json`.
+- **Restore…** opens a checkbox pick list (per voice, plus an optional "global
+  effects" toggle) so you choose exactly which voices to import, then writes the
+  selected ones back to the synth and persists each to flash.
+
+Both are host-side only (no extra firmware) — they drive the existing
+`select`/`dump`/`set`/`save` protocol, so they live in the shared
+`galetsynth.bank` module and work from the GUI buttons or the CLI (`backup
+[file]` / `restore <file>`). The **Drums** meta-voice (last slot) is skipped —
+`select`ing it remaps the engine to the Kick slot, and its fields are an unused
+placeholder; the four raw drums it plays (Kick/Snare/Tom/HiHat) are ordinary
+slots and *are* included. The global effect params (`reverb_*`/`delay_*`) are
+stored once in the file and re-applied on restore.
+
 ---
 
 ## Possible Extensions
