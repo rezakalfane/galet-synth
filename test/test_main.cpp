@@ -125,13 +125,13 @@ static void test_touch()
 // ── voice ─────────────────────────────────────────────────────────────────────
 static void test_voice()
 {
-    CHECK(NUM_VOICES == 14);
+    CHECK(NUM_VOICES == 15);
     CHECK(MULTI_IDX == NUM_VOICES - 1);
 
-    // 4 raw drums are no_cycle → 10 cyclable (9 instruments + Drums).
+    // 4 raw drums are no_cycle → 11 cyclable (10 instruments + Drums).
     int cyclable = 0;
     for(int i = 0; i < NUM_VOICES; i++) if(!VOICES[i].no_cycle) cyclable++;
-    CHECK(cyclable == 10);
+    CHECK(cyclable == 11);
     CHECK(cycle_total() == cyclable);
 
     // cycle_next always lands on a cyclable voice, and wrapping visits exactly
@@ -155,6 +155,42 @@ static void test_voice()
     }
     CHECK(MULTI_INTERVALS[0] == 1.0f);
     CHECK(MULTI_NINTERVALS == 4);
+
+    // Chords: the two SH-101 twins build diatonic triads, and a chord voice must
+    // quantize to a musical (non-chromatic) scale or the triad degenerates to a
+    // cluster.
+    int chord_voices = 0;
+    for(int i = 0; i < NUM_VOICES; i++) if(VOICES[i].chords){
+        chord_voices++;
+        CHECK(VOICES[i].quantize);
+        CHECK(VOICES[i].scale != nullptr && VOICES[i].scale_len > 0);
+        CHECK(VOICES[i].scale != SCALE_CHROMATIC);
+    }
+    CHECK(chord_voices == 2);
+}
+
+// ── diatonic_triad ──────────────────────────────────────────────────────────
+static void test_chords()
+{
+    const int n_min = (int)(sizeof(SCALE_MINOR) / sizeof(SCALE_MINOR[0]));
+    const int n_maj = (int)(sizeof(SCALE_MAJOR) / sizeof(SCALE_MAJOR[0]));
+    int t, f;
+
+    // Minor scale {0,2,3,5,7,8,10}: i = minor triad, ii = diminished, VII = major.
+    diatonic_triad(0,  SCALE_MINOR, n_min, t, f); CHECK(t == 3 && f == 7); // i
+    diatonic_triad(2,  SCALE_MINOR, n_min, t, f); CHECK(t == 3 && f == 6); // ii°
+    diatonic_triad(10, SCALE_MINOR, n_min, t, f); CHECK(t == 4 && f == 7); // VII (wraps)
+
+    // Major scale {0,2,4,5,7,9,11}: I = major, ii = minor.
+    diatonic_triad(0,  SCALE_MAJOR, n_maj, t, f); CHECK(t == 4 && f == 7); // I
+    diatonic_triad(2,  SCALE_MAJOR, n_maj, t, f); CHECK(t == 3 && f == 7); // ii
+
+    // A pitch class not in the scale snaps to the nearest degree first.
+    diatonic_triad(1,  SCALE_MINOR, n_min, t, f); CHECK(t == 3 && f == 7); // → i
+
+    // No scale → fixed major triad fallback; octave wrap handled for any input.
+    diatonic_triad(5,  nullptr, 0, t, f);         CHECK(t == 4 && f == 7);
+    diatonic_triad(25, SCALE_MINOR, n_min, t, f); CHECK(t == 3 && f == 7); // pc 1 → i
 }
 
 int main()
@@ -163,6 +199,7 @@ int main()
     test_dsp();   printf("  dsp    done\n");
     test_touch(); printf("  touch  done\n");
     test_voice(); printf("  voice  done\n");
+    test_chords();printf("  chords done\n");
     printf("%s — %d checks, %d failures\n", g_fail ? "FAILED" : "PASSED", g_total, g_fail);
     return g_fail ? 1 : 0;
 }

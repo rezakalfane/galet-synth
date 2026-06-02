@@ -118,15 +118,16 @@ static volatile int    g_voice_idx = 2;  // ← boot voice (index into VOICES[];
 | 10 | `VOICE_KICK` | **Tap** — deep punchy kick, low sine + a 2-octave pitch "boom", very closed; tunes 30–80 Hz |
 | 11 | `VOICE_SNARE` | **Tap** — bright noisy rattle + tonal body, quick pitch snap, open filter; tunes 150–500 Hz |
 | 12 | `VOICE_HIHAT` | **Tap** — crisp high "tsss" from high-passed noise + a metallic edge, short sizzle tail |
-| 13 | `VOICE_SH101` | SH-101-style mono synth — saw + unison square over a square sub one octave down, resonant ladder swept by pressure for the squelchy acid "wow", portamento glide, chromatic quantize |
-| 14 | `VOICE_DRUMS` | **MultiVoice** — the glass becomes a 4-zone drum kit (see below) |
+| 13 | `VOICE_SH101` | SH-101-style synth ("SH-101 min") — saw + unison square over a square sub one octave down, resonant ladder swept by pressure for the squelchy acid "wow", portamento glide. **Plays 3-note diatonic triads** (`chords`) quantized to a minor scale — each tap is a root + 3rd + 5th in key; slides bend the whole chord |
+| 14 | `VOICE_SH101_MAJ` | "SH-101 maj" — same synth, but its triads quantize to a **major** scale (bright I/ii/iii… chords). Cycle here to switch the chord flavor live |
+| 15 | `VOICE_DRUMS` | **MultiVoice** — the glass becomes a 4-zone drum kit (see below) |
 
 > The four raw drums (Tom/Kick/Snare/Hi-Hat) and the others are all in the bank,
 > but the live-switch **cycle** skips the raw drums (`no_cycle`) — you reach them
 > only as the boot voice or through the Drums MultiVoice. So the gesture steps
-> through the **9 melodic instruments + Drums**. `VOICE_SH101` sits after the raw
-> drums in the bank (keeping their indices, and `MULTI_ZONES`, stable) but is
-> cyclable — it appears right after Pad in the cycle.
+> through the **10 melodic instruments + Drums**. The two `VOICE_SH101` twins sit
+> after the raw drums in the bank (keeping their indices, and `MULTI_ZONES`,
+> stable) but are cyclable — they appear right after Pad in the cycle.
 
 **Switching voices live — FSR-hold + tap-the-glass gesture:** a three-phase move:
 

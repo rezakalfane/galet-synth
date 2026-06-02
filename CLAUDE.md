@@ -250,6 +250,7 @@ Out-of-range stored values are ignored, falling back to the default.
 | `retrig_ms` | Held re-attack rate cap (ms): min interval between pressure-bounce repeats while a finger stays down. 0 = no held re-attack (melodic default). Genuine taps ignore this — only the held-bounce path is capped. Drums ~400 |
 | `decay_ms` | Amp decay-to-sustain time. **0 = off** (note holds at full while gated — the default for every voice). >0 = after the attack the level falls to `sustain` over this time (plucked feel; Guitar ~1200) |
 | `sustain` | Level the amp decays to when `decay_ms > 0` (0..1 fraction of full). 0 = decays to silence (a clean pluck); ignored when `decay_ms == 0` |
+| `chords` | `true` = play a **3-note diatonic triad** instead of a single note: the engine adds the `scale`'s 3rd and 5th above the quantized root (stacking scale-thirds via `diatonic_triad`), so chords stay in key and change quality with position. Needs a musical `scale` (major/minor) — over a chromatic scale stacking thirds is a whole-tone cluster, not a triad. The upper two notes are osc1+osc2 only (sub + noise stay on the root) at `CHORD_UPPER_LEVEL` (0.9×) for a little headroom; they ride the root's glide/vibrato via per-note ratios (`g_chord_ratio2/3`, set in the control loop, snapshotted by the callback). Default `false` = single note. The two SH-101 twins set it |
 
 Envelope/glide are in **milliseconds**, converted to per-sample slew
 coefficients (`ms_to_coeff`) in the audio callback, recomputed on voice change.
@@ -283,7 +284,8 @@ silence). All three fields default to 0 (off) for voices that omit them.
 | `KICK` | **Tap** — deep punchy thud, low sine + sub, 2-oct/45 ms pitch "boom", very closed filter; tunes 30–80 Hz |
 | `SNARE` | **Tap** — bright noisy rattle over two tonal modes, open filter, quick 0.7-oct/30 ms snap; tunes 150–500 Hz |
 | `HIHAT` | **Tap** — crisp high "tsss": high-passed noise (`noise_hp=1`) + faint metallic squares, short sizzle tail; tunes 4–11 kHz |
-| `SH101` | SH-101-style mono synth — saw + unison square (pulse) over a square sub-osc one octave down, resonant ladder swept by pressure for the squelchy acid "wow", portamento glide, chromatic quantize. Kept after the raw drums in the bank (so `MULTI_ZONES` indices are stable) but cyclable — appears after Pad in the cycle |
+| `SH101` | SH-101-style synth ("SH-101 min") — saw + unison square (pulse) over a square sub-osc one octave down, resonant ladder swept by pressure for the squelchy acid "wow", portamento glide. **Plays diatonic triads** (`chords = true`) quantized to a **minor** scale: each tap is a root + 3rd + 5th that stays in key; slides bend the whole chord. Kept after the raw drums in the bank (so `MULTI_ZONES` indices are stable) but cyclable — appears after Pad in the cycle |
+| `SH101_MAJ` | "SH-101 maj" — identical to `SH101` but quantizes to **major**, so the triads come out bright (I, ii, iii…). Cycle to it to flip the chord flavor live (this is how major/minor is "switchable" — two bank voices, no special control). Sits right after `SH101` in the bank/cycle |
 | `DRUMS` | **MultiVoice** — slider splits into 4 zones (Kick/Snare/Tom/Hat); each tap triggers the zone's drum, fine position snaps pitch to root/4th/5th/octave (see the MultiVoice subsection above) |
 
 ## Hardware

@@ -4,6 +4,33 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: diatonic chord voices + SH-101 plays triads`
+- New per-voice **`Voice::chords`** boolean: when true the voice plays a **3-note
+  diatonic triad** instead of a single note. The control loop snaps the root to
+  the voice's scale as before, then `diatonic_triad` (new, in `voice.h`) stacks
+  scale-thirds (degrees i, i+2, i+4) to get the 3rd and 5th; the offsets become
+  frequency ratios (`g_chord_ratio2/3`) the audio engine multiplies the root by.
+  Chords therefore stay in key and change quality with position (i, ii°, III…).
+- **Engine**: the chord's upper two notes are rendered as extra osc1+osc2 voices
+  above the root (sub-osc and noise stay on the root for a tight low end), at
+  `CHORD_UPPER_LEVEL` (~0.6×) for drive/filter headroom. They ride the root's
+  glide + vibrato via the ratios, and the whole chord passes through one ladder
+  filter. The `if(VOICE.chords)` branch folds away for every single-note voice.
+- **`VOICE_SH101`** ("SH-101 min") now sets `chords = true` and quantizes to
+  **`SCALE_MINOR`** (was chromatic) — a chromatic scale would make stacked thirds
+  a whole-tone cluster, so a musical scale is required.
+- **`VOICE_SH101_MAJ`** ("SH-101 maj") added — the same synth quantizing to
+  **`SCALE_MAJOR`** for bright triads. Major/minor is switchable live by cycling
+  between the two twins (no special control). It slots in right after `VOICE_SH101`
+  and before `VOICE_DRUMS`; `NUM_VOICES` 14→15, cyclable 10→11, `MULTI_ZONES`
+  (drum indices 8–11) unaffected.
+- `CHORD_UPPER_LEVEL` tuned 0.6→0.9 (the upper two notes were too quiet relative
+  to the root).
+- Appended `chords` last in the `Voice` struct so every other preset zero-inits
+  to `false` (unchanged). Host test added for `diatonic_triad` (minor/major
+  triad shapes, octave wrap, off-scale snap, no-scale fallback) plus a bank
+  invariant: every chord voice must quantize to a non-chromatic scale.
+
 ### Docs — `docs: sync README + CLAUDE.md with current voices/gesture/constants`
 - **README voice table**: added `VOICE_GUITAR` (it had replaced `VOICE_BASS_CLOSED`,
   which was still listed) and `VOICE_SH101`; renumbered Drums to 14 and noted the

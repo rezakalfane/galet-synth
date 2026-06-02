@@ -21,6 +21,10 @@ extern volatile float g_amp_target;
 extern volatile bool  g_retrig;       // mono: re-articulate the note (re-attack)
 extern volatile float g_led3_duty;    // 0-1, sigma-delta'd to LED3 in the audio cb
 extern volatile float g_master_vol;   // 0-1, master volume from the FSR
+// Chord voices (Voice::chords): frequency ratios of the upper two triad notes
+// vs the root, set by the control loop at each quantized note. 1.0 = unison (no
+// extra note). Ignored by single-note voices.
+extern volatile float g_chord_ratio2, g_chord_ratio3;
 
 // ── Polyphonic drum engine (Drums MultiVoice only) ────────────────────────────
 // A pool of independent drum voices, one per finger. Each is a self-contained

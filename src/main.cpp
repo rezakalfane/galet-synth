@@ -656,12 +656,22 @@ int main()
 
             if(QUANTIZE_ENABLED && VOICE.quantize && f1_fresh)
             {
-                // Touch-down: snap to nearest chromatic note
+                // Touch-down: snap to nearest scale note
                 f1_midi_base = quantize_midi(midi_raw, VOICE.scale, VOICE.scale_len);
-                // Convert quantized MIDI back to Hz
+                // Convert quantized note number back to Hz
                 float qe = (f1_midi_base - 69.0f) * 0.05776f;
                 freq = clampf(440.0f*(1.0f+qe*(1.0f+qe*(0.5f+qe*0.1667f))), VOICE.freq_low, VOICE.freq_high);
                 f1_sliding = false;
+                // Chord voices: build the diatonic triad from the snapped root and
+                // hand the engine the 3rd/5th frequency ratios (it adds those notes
+                // above the root). Recomputed only on a fresh note; while sliding the
+                // ratios hold so the whole chord bends together.
+                if(VOICE.chords){
+                    int third, fifth;
+                    diatonic_triad((int)f1_midi_base, VOICE.scale, VOICE.scale_len, third, fifth);
+                    g_chord_ratio2 = exp2f((float)third / 12.0f);
+                    g_chord_ratio3 = exp2f((float)fifth / 12.0f);
+                }
             }
             else
             {

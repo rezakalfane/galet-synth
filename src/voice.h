@@ -95,7 +95,49 @@ struct Voice {
   // positional initializers of the existing presets are unchanged.
   float decay_ms;
   float sustain;
+
+  // Chords: true → play a 3-note diatonic triad instead of a single note. The
+  // root is the quantized finger-1 note; the engine adds the scale's 3rd and 5th
+  // above it (stacking scale-thirds — see diatonic_triad below), so the chord
+  // stays in key. Requires a musical `scale` (major/minor) — over a chromatic
+  // scale stacking thirds degenerates to a whole-tone cluster, not a triad. Only
+  // the SH-101 sets this; appended last so every other preset zero-inits to
+  // false (single-note, unchanged). The upper two notes use osc1+osc2 only (sub
+  // and noise stay on the root) at a reduced level — see engine.cpp.
+  bool chords;
 };
+
+// ── Diatonic triad ──────────────────────────────────────────────────────────
+// For a root pitch class (0–11 semitones within an octave) that belongs to
+// `scale`, return the semitone offsets of the 3rd and 5th scale-degrees above it
+// (stacking thirds: degrees i, i+2, i+4). Wrapping past the top of the scale
+// adds an octave. Used by chord voices (Voice::chords). With no scale it falls
+// back to a fixed major triad (4, 7). Pure (no Hz, no note-number line) so it
+// runs in the host tests.
+static inline void diatonic_triad(int root_pc, const int8_t *scale, int n,
+                                  int &semis_third, int &semis_fifth) {
+  if (!scale || n <= 0) {
+    semis_third = 4;
+    semis_fifth = 7;
+    return;
+  }
+  int pc = ((root_pc % 12) + 12) % 12;
+  // Nearest scale degree to the root pitch class.
+  int idx = 0, best = 127;
+  for (int i = 0; i < n; i++) {
+    int d = scale[i] - pc;
+    if (d < 0)
+      d = -d;
+    if (d < best) {
+      best = d;
+      idx = i;
+    }
+  }
+  auto deg = [&](int k) { return scale[k % n] + 12 * (k / n); };
+  int base = deg(idx);
+  semis_third = deg(idx + 2) - base;
+  semis_fifth = deg(idx + 4) - base;
+}
 
 // ── Quantize scales ───────────────────────────────────────────────────────────
 // Semitone offsets within an octave. A voice with quantize = true snaps finger-1
@@ -751,10 +793,11 @@ static constexpr Voice VOICE_HIHAT = {
 //   SH-101 is loved for — through the resonant 4-pole ladder. The cutoff sits
 //   fairly closed and pressure sweeps it wide open with high resonance for the
 //   squelchy acid "wow" (the SH-101's filter-env squelch, here played by finger
-//   pressure). A whisper of noise, portamento glide between notes, and chromatic
-//   quantize so acid lines stay in tune while slides bend freely. Bass + leads.
+//   pressure). A whisper of noise, portamento glide between notes. Plays diatonic
+//   triads (chords = true) quantized to a MINOR scale so acid chords stay in key
+//   while slides bend the whole chord. Bass + leads. (Major twin: VOICE_SH101_MAJ.)
 static constexpr Voice VOICE_SH101 = {
-    "SH-101",
+    "SH-101 min",
     // FREQUENCY RANGE
     40.0f,
     400.0f,
@@ -795,15 +838,74 @@ static constexpr Voice VOICE_SH101 = {
     0.0f, 0.0f,          // pitch_env_oct, pitch_env_ms (none)
     // noise_hp, no_cycle, vel_sens, retrig_ms (defaults)
     0.0f, false, 0.0f, 0.0f,
-    // PITCH QUANTIZE — chromatic: acid lines stay in tune, slides still bend
+    // PITCH QUANTIZE — minor scale: chords land as diatonic triads (i, ii°, III…)
+    // and stay in key; slides still bend between notes
     true,
-    SCALE_CHROMATIC, (int)(sizeof(SCALE_CHROMATIC) / sizeof(SCALE_CHROMATIC[0])),
+    SCALE_MINOR, (int)(sizeof(SCALE_MINOR) / sizeof(SCALE_MINOR[0])),
     // AMP DECAY — none: sustained mono synth (hold the note; pressure does the wow)
     0.0f,                // decay_ms
-    0.0f                 // sustain (ignored when decay_ms == 0)
+    0.0f,                // sustain (ignored when decay_ms == 0)
+    // CHORDS — play the snapped note as a 3-note diatonic triad (root + 3rd + 5th)
+    true
 };
 
-// ── Voice 13: MultiVoice "Drums" ──────────────────────────────────────────────
+// ── Voice 13: SH-101, major twin ──────────────────────────────────────────────
+//   Identical to VOICE_SH101 in every way except the quantize scale: MAJOR, so
+//   the diatonic triads come out bright (I, ii, iii, IV…) instead of the minor
+//   set. Cycle to it to switch the chord flavor live — no other change.
+static constexpr Voice VOICE_SH101_MAJ = {
+    "SH-101 maj",
+    // FREQUENCY RANGE
+    40.0f,
+    400.0f,
+    2.30259f,            // 40–400 Hz, ln(10) — bass up to lead
+    // OSCILLATOR STACK
+    1.0f,
+    0.42f,
+    WAVE_SAW,            // osc1  — the saw VCO
+    // SECONDARY OSCILLATOR
+    1.0f,
+    0.28f,
+    WAVE_SQUARE,         // osc2  — pulse, in unison (saw + pulse = the SH-101 blend)
+    // SUB OSCILLATOR
+    0.5f,
+    0.40f,
+    WAVE_SQUARE,         // sub   — the iconic square sub-osc, one octave down
+    // OCTAVE OSCILLATOR
+    2.0f,
+    0.0f,
+    WAVE_SQUARE,         // oct   — off (the SH-101 has no up-octave)
+    // FILTER
+    false,               // osc2 is a fixed unison, not finger-2 detune
+    0.8f,
+    9.0f,
+    0.80f,               // closed-ish base, huge pressure sweep, squelchy acid res
+    // DRIVE
+    1.8f,                // a little drive for warmth/grit
+    // NOISE
+    0.02f,               // noise level — a whisper (the SH-101 noise source)
+    1.0f,                // keytrack
+    1.0f,                // ringmod ratio
+    0.10f,               // ringmod max
+    0.12f,               // fold max
+    2.0f,                // attack — snappy
+    220.0f,              // release
+    30.0f,               // glide — portamento slide between notes
+    // PITCH ENVELOPE
+    0.0f, 0.0f,          // pitch_env_oct, pitch_env_ms (none)
+    // noise_hp, no_cycle, vel_sens, retrig_ms (defaults)
+    0.0f, false, 0.0f, 0.0f,
+    // PITCH QUANTIZE — MAJOR scale: the only difference from VOICE_SH101
+    true,
+    SCALE_MAJOR, (int)(sizeof(SCALE_MAJOR) / sizeof(SCALE_MAJOR[0])),
+    // AMP DECAY — none
+    0.0f,                // decay_ms
+    0.0f,                // sustain (ignored when decay_ms == 0)
+    // CHORDS — diatonic triads, same as the minor twin
+    true
+};
+
+// ── Voice 14: MultiVoice "Drums" ──────────────────────────────────────────────
 //   A meta-voice: when selected, the slider splits into 4 equal zones, each
 //   triggering one drum on tap, with the fine position snapping the pitch to an
 //   interval (see MULTI_* below). This struct is just a placeholder so it lives
@@ -868,9 +970,10 @@ static constexpr Voice VOICES[] = {
     VOICE_LEAD,  VOICE_BASS,   VOICE_BASS_OPEN,   VOICE_BASS_RICH,
     VOICE_ORGAN, VOICE_SCREAM, VOICE_GUITAR,      VOICE_PAD,
     VOICE_TOM,   VOICE_KICK,   VOICE_SNARE,       VOICE_HIHAT,
-    VOICE_SH101, // SH-101 mono synth (cyclable; kept after the raw drums so their
-                 // bank indices — and MULTI_ZONES — stay put)
-    VOICE_DRUMS, // MultiVoice — must stay last (MULTI_IDX = NUM_VOICES-1)
+    VOICE_SH101,     // SH-101 mono synth, minor-scale chords (cyclable; kept after
+                     // the raw drums so their bank indices — and MULTI_ZONES — stay put)
+    VOICE_SH101_MAJ, // same synth, major-scale chords — cycle here to flip the flavor
+    VOICE_DRUMS,     // MultiVoice — must stay last (MULTI_IDX = NUM_VOICES-1)
 };
 static constexpr int NUM_VOICES = (int)(sizeof(VOICES) / sizeof(VOICES[0]));
 
