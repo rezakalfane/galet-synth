@@ -84,3 +84,23 @@ GLOBAL_SPEC = [
 GLOBALS = [g[0] for g in GLOBAL_SPEC]
 # Field names the firmware `set` accepts (voice fields + scale + globals).
 SETTABLE = [n for n, t, *_ in SPEC if t in ("f", "i", "b", "w")] + ["scale"] + GLOBALS
+
+# Logical grouping for the GUI (mirrors the Voice struct sections / docs).
+# (title, [field names]). Covers every gui-editable field + the globals once.
+GROUPS = [
+    ("Range",            ["freq_low", "freq_high"]),
+    ("Osc 1",            ["osc1_ratio", "osc1_level", "osc1_wave"]),
+    ("Osc 2",            ["osc2_ratio", "osc2_level", "osc2_wave", "osc2_detune"]),
+    ("Sub",              ["sub_ratio", "sub_level", "sub_wave"]),
+    ("Octave",           ["oct_ratio", "oct_level", "oct_wave"]),
+    ("Filter",           ["cutoff_mult", "cutoff_oct_max", "resonance", "keytrack"]),
+    ("Drive / Noise",    ["drive_max", "noise_level", "noise_hp"]),
+    ("Ring / Fold",      ["ringmod_ratio", "ringmod_max", "fold_max"]),
+    ("Envelope",         ["attack_ms", "release_ms", "glide_ms", "decay_ms", "sustain"]),
+    ("Pitch Env",        ["pitch_env_oct", "pitch_env_ms"]),
+    ("Dynamics",         ["vel_sens", "retrig_ms", "no_cycle"]),
+    ("Quantize / Chords", ["quantize", "scale", "chords", "chord_level", "chord_spread"]),
+    ("Sends",            ["reverb_send", "delay_send"]),
+    ("Global FX",        ["reverb_decay", "reverb_level", "delay_time_ms",
+                          "delay_feedback", "delay_level"]),
+]

@@ -147,22 +147,38 @@ class Tuner(QtWidgets.QMainWindow):
         top.addStretch(1)
         root.addLayout(top)
 
-        # ── Scrollable field grid (voice fields + globals) ──
+        # ── Grouped field columns (see everything at once) ──
+        # Per-field metadata lookup: voice fields (from SPEC) + globals.
+        meta = {n: (t, lo, hi) for n, t, lo, hi, gui in schema.SPEC if gui}
+        for n, lo, hi in schema.GLOBAL_SPEC:
+            meta[n] = ("f", lo, hi)
+
         scroll = QtWidgets.QScrollArea()
         scroll.setWidgetResizable(True)
         inner = QtWidgets.QWidget()
-        form = QtWidgets.QFormLayout(inner)
-        for field, typ, lo, hi, gui in schema.SPEC:
-            if not gui:
-                continue
-            row = FieldRow(field, typ, lo, hi, self.link.send)
-            self.rows[field] = row
-            form.addRow(field, row.widget)
-        form.addRow(QtWidgets.QLabel("— global effects —"))
-        for field, lo, hi in schema.GLOBAL_SPEC:
-            row = FieldRow(field, "f", lo, hi, self.link.send)
-            self.rows[field] = row
-            form.addRow(field, row.widget)
+        NCOL = 3
+        cols = [QtWidgets.QVBoxLayout() for _ in range(NCOL)]
+        load = [0] * NCOL   # rough row count per column, for balancing
+        for title, fields in schema.GROUPS:
+            box = QtWidgets.QGroupBox(title)
+            gform = QtWidgets.QFormLayout(box)
+            gform.setLabelAlignment(QtCore.Qt.AlignRight)
+            gform.setContentsMargins(8, 6, 8, 6)
+            gform.setVerticalSpacing(4)
+            for field in fields:
+                typ, lo, hi = meta[field]
+                row = FieldRow(field, typ, lo, hi, self.link.send)
+                self.rows[field] = row
+                gform.addRow(field, row.widget)
+            c = load.index(min(load))           # drop into the shortest column
+            cols[c].addWidget(box)
+            load[c] += len(fields) + 1
+        colrow = QtWidgets.QHBoxLayout(inner)
+        for col in cols:
+            col.addStretch(1)
+            holder = QtWidgets.QWidget()
+            holder.setLayout(col)
+            colrow.addWidget(holder)
         scroll.setWidget(inner)
 
         # ── Log pane — in a draggable splitter so it's freely resizable ──
@@ -184,8 +200,8 @@ class Tuner(QtWidgets.QMainWindow):
         self.splitter.setChildrenCollapsible(False)
         root.addWidget(self.splitter, 1)
 
-        self.resize(560, 780)
-        self.splitter.setSizes([660, 120])
+        self.resize(1080, 760)
+        self.splitter.setSizes([640, 120])
         QtCore.QTimer.singleShot(300, self.refresh)  # populate once connected
 
     def _log_lines_height(self, lines):
