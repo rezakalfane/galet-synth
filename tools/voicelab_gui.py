@@ -124,6 +124,7 @@ class Tuner(QtWidgets.QMainWindow):
         self.link = link
         self.setWindowTitle(f"GaletSynth Voice Tuner — {link.port}")
         self.rows = {}
+        self._block = None   # accumulates the current mon status frame (or None)
 
         central = QtWidgets.QWidget()
         self.setCentralWidget(central)
@@ -141,7 +142,7 @@ class Tuner(QtWidgets.QMainWindow):
             b.clicked.connect(slot)
             top.addWidget(b)
         self.mon = QtWidgets.QCheckBox("mon")
-        self.mon.toggled.connect(lambda on: self.link.send(f"mon {1 if on else 0}"))
+        self.mon.toggled.connect(self._toggle_mon)
         top.addWidget(self.mon)
         top.addStretch(1)
         root.addLayout(top)
@@ -163,17 +164,52 @@ class Tuner(QtWidgets.QMainWindow):
             self.rows[field] = row
             form.addRow(field, row.widget)
         scroll.setWidget(inner)
-        root.addWidget(scroll, 1)
 
-        # ── Log pane ──
+        # ── Log pane — in a draggable splitter so it's freely resizable ──
         self.log = QtWidgets.QPlainTextEdit()
         self.log.setReadOnly(True)
-        self.log.setMaximumBlockCount(200)
-        self.log.setFixedHeight(110)
-        root.addWidget(self.log)
+        self.log.setMaximumBlockCount(2000)
+        self.log.setLineWrapMode(QtWidgets.QPlainTextEdit.NoWrap)
+        self.log.setMinimumHeight(36)
+        # Monospace so the mon status bars/columns line up.
+        self.log.setFont(QtWidgets.QApplication.font())
+        f = self.log.font(); f.setFamily("Menlo"); f.setStyleHint(f.StyleHint.Monospace)
+        self.log.setFont(f)
 
-        self.resize(560, 760)
+        self.splitter = QtWidgets.QSplitter(QtCore.Qt.Vertical)
+        self.splitter.addWidget(scroll)
+        self.splitter.addWidget(self.log)
+        self.splitter.setStretchFactor(0, 1)   # fields take the extra space
+        self.splitter.setStretchFactor(1, 0)
+        self.splitter.setChildrenCollapsible(False)
+        root.addWidget(self.splitter, 1)
+
+        self.resize(560, 780)
+        self.splitter.setSizes([660, 120])
         QtCore.QTimer.singleShot(300, self.refresh)  # populate once connected
+
+    def _log_lines_height(self, lines):
+        """Pixel height that shows exactly `lines` rows of the log font."""
+        fm = self.log.fontMetrics()
+        return int(fm.lineSpacing() * lines) + 14
+
+    def _fit_log(self, lines):
+        """Resize the splitter so the log shows ~`lines` rows (smoothly, leaving
+        the field area the rest). The handle stays draggable afterward."""
+        total = self.splitter.size().height()
+        if total <= 0:
+            total = self.height()
+        h = min(self._log_lines_height(lines), max(total - 160, 80))
+        self.splitter.setSizes([max(total - h, 120), h])
+
+    def _toggle_mon(self, on):
+        self.link.send(f"mon {1 if on else 0}")
+        self._block = None
+        if on:
+            self.log.clear()
+        # The firmware status frame is ~22 lines; size the pane to fit it when mon
+        # is on, shrink back to a few log lines when off.
+        self._fit_log(24 if on else 6)
 
     def _select_voice(self, idx):
         self.link.send(f"select {idx}")
@@ -204,7 +240,19 @@ class Tuner(QtWidgets.QMainWindow):
         self.append_log(f"exported → {fn}")
 
     def append_log(self, s):
-        self.log.appendPlainText(s)
+        # mon status frames start with a "VOICE " header and repeat ~8 Hz. Render
+        # each completed frame in place (replace) so it reads as a smooth, stable
+        # dashboard instead of an endless scroll; other lines (ok/err, app
+        # messages) append normally when no frame is in progress.
+        if s.startswith("VOICE "):
+            if self._block:
+                self.log.setPlainText("\n".join(self._block))
+                self.log.verticalScrollBar().setValue(0)
+            self._block = [s]
+        elif self._block is not None:
+            self._block.append(s)
+        else:
+            self.log.appendPlainText(s)
 
 
 def main():
