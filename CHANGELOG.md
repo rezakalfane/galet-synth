@@ -4,6 +4,22 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Docs — `docs: sync README + CLAUDE.md with current voices/gesture/constants`
+- **README voice table**: added `VOICE_GUITAR` (it had replaced `VOICE_BASS_CLOSED`,
+  which was still listed) and `VOICE_SH101`; renumbered Drums to 14 and noted the
+  `no_cycle` raw-drums exclusion and where SH101 sits in the bank vs. the cycle.
+- **README live-switch gesture**: replaced the old "hold FSR, auto-advances every
+  2 s" text with the current three-phase **FSR-hold + tap-the-glass** gesture
+  (2 s no-touch enter → tap to advance with live preview → release to save).
+- **README Possible Extensions**: dropped "Save the selected voice" and "Pitch
+  envelope" (both shipped).
+- **README touch params**: updated stale `PRESSURE_MAX_REF` values and removed the
+  `PRESSURE_DEAD_ZONE[12]` block (that constant no longer exists — the pressure
+  floor is now the scalar `TOUCH_THRESHOLD`); fixed the matching troubleshooting row.
+- **CLAUDE.md key-constants table**: corrected `TOUCH_THRESHOLD` (was "39"; it's 10
+  and lives in `config.h`), removed the nonexistent `PRESSURE_MIN_REF[12]` row, and
+  pointed the touch constants at `config.h` instead of stale `main.cpp` line numbers.
+
 ### Added — `feat: SH-101-style mono synth voice`
 - New **`VOICE_SH101`** ("SH-101"): a Roland SH-101 homage — saw + unison square
   (pulse) over a square sub-oscillator an octave down (the fat single-VCO stack),

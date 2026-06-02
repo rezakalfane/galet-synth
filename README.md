@@ -112,24 +112,43 @@ static volatile int    g_voice_idx = 2;  // ← boot voice (index into VOICES[];
 | 4 | `VOICE_BASS_RICH` | Mixed saw/square/sine waveforms, dark base, huge acid-style filter sweep |
 | 5 | `VOICE_ORGAN` | Clean all-sine organ/flute, higher register, slow chorus shimmer, breath noise |
 | 6 | `VOICE_SCREAM` | Aggressive detuned saws, heavy drive, near-self-oscillating resonance, inharmonic metallic ring-mod |
-| 7 | `VOICE_BASS_CLOSED` | Deep, muffled sub — filter near the fundamental, soft attack, long tail |
+| 7 | `VOICE_GUITAR` | Electric guitar power chord — driven saw stack (root + fixed 5th + octave), **quantized to major**, fast pluck attack + amp **decay-to-silence** (~1.2 s) so it plucks and rings out |
 | 8 | `VOICE_PAD` | Warm ensemble pad — detuned saws + sine top, dark filter, very slow swell and long tail |
 | 9 | `VOICE_TOM` | Noise-driven percussion — **tap to play**; dark/round tom with a pitch-drop, tunes 40–400 Hz |
 | 10 | `VOICE_KICK` | **Tap** — deep punchy kick, low sine + a 2-octave pitch "boom", very closed; tunes 30–80 Hz |
 | 11 | `VOICE_SNARE` | **Tap** — bright noisy rattle + tonal body, quick pitch snap, open filter; tunes 150–500 Hz |
 | 12 | `VOICE_HIHAT` | **Tap** — crisp high "tsss" from high-passed noise + a metallic edge, short sizzle tail |
-| 13 | `VOICE_DRUMS` | **MultiVoice** — the glass becomes a 4-zone drum kit (see below) |
+| 13 | `VOICE_SH101` | SH-101-style mono synth — saw + unison square over a square sub one octave down, resonant ladder swept by pressure for the squelchy acid "wow", portamento glide, chromatic quantize |
+| 14 | `VOICE_DRUMS` | **MultiVoice** — the glass becomes a 4-zone drum kit (see below) |
 
-**Switching voices live — FSR-hold gesture:** press and hold the FSR (down to
-the mute floor). After **3 seconds** the voice advances to the next in the
-cycle, and while you keep holding it advances **every 2 seconds**; releasing
-re-arms the 3 s wait. The cycle **skips voices flagged `no_cycle`** — the four
-raw drums are excluded (you play them via the Drums MultiVoice), so the gesture
-steps through the 8 instruments + Drums. Each switch **flashes the LEDs N times**
-where N is the new voice's position in the cycle, and prints `[voice n/total]`
-to serial. (You're at zero volume while holding, so you hear the new voice on
-release.) The selected voice is **saved to flash**, so it's restored after a
-power-cycle.
+> The four raw drums (Tom/Kick/Snare/Hi-Hat) and the others are all in the bank,
+> but the live-switch **cycle** skips the raw drums (`no_cycle`) — you reach them
+> only as the boot voice or through the Drums MultiVoice. So the gesture steps
+> through the **9 melodic instruments + Drums**. `VOICE_SH101` sits after the raw
+> drums in the bank (keeping their indices, and `MULTI_ZONES`, stable) but is
+> cyclable — it appears right after Pad in the cycle.
+
+**Switching voices live — FSR-hold + tap-the-glass gesture:** a three-phase move:
+
+1. **Enter** — press the FSR **fully to the mute floor** while **not touching the
+   glass** for **2 seconds**. (Requiring no touch is deliberate: a hard press
+   alone is just "muted", so the no-touch condition keeps normal muting from
+   tripping select.) The LEDs blink the current voice's cycle position.
+2. **Advance / preview** — with the FSR **still held**, each **tap on the glass**
+   steps to the next cyclable voice, **wrapping** after the last; a single LED
+   blink marks each change. If voice-preview is enabled (`VOICE_PREVIEW_ENABLED`),
+   the selected mono voice then plays live through the real note path driven by
+   your actual pressure + position — slide for pitch, press for the filter sweep.
+   The **Drums** kit instead fires a canned kick + snare "one-two".
+3. **Keep** — **release the FSR** → the selected voice is **saved to QSPI flash**
+   (so it survives a power-cycle) and you exit immediately; the saved voice's
+   number then blinks non-blocking so you can start playing right away.
+
+The cycle **skips voices flagged `no_cycle`** — the four raw drums are excluded
+(you play them via the Drums MultiVoice), so the gesture steps through the
+melodic instruments + Drums. To change the **boot** voice edit the `g_voice_idx`
+initializer; to change cycle order or membership reorder `VOICES[]` or flip
+`no_cycle`.
 
 Each voice controls, per oscillator: pitch ratio, mix level and **waveform**
 (`WAVE_TRI` / `WAVE_SINE` / `WAVE_SQUARE` / `WAVE_SAW`); plus filter base cutoff,
@@ -212,19 +231,15 @@ Minimum capacitance delta (counts) to register a touch. **Raise** if you get fal
 
 ```cpp
 static constexpr int32_t  PRESSURE_MAX_REF[12] = {
-    100,60,60,60,60,60,
-    60,60,60,60,60,100
+    42,35,34,34,34,34,
+    34,34,33,32,29,30
 };
 ```
-Per-electrode delta count that maps to 100% pressure. Edge channels (0 and 11) are set higher because they naturally produce larger deltas even with moderate pressure. Tune each entry by pressing firmly on that electrode and noting the peak delta in `tools/test-slider`.
-
-```cpp
-static constexpr int32_t  PRESSURE_DEAD_ZONE[12] = {
-    30,23,13,13,13,13,
-    13,13,13,13,23,35
-};
-```
-Per-electrode delta below which pressure reads 0%. Edge channels have higher values to compensate for their greater sensitivity — without this, a light touch on channel 0 or 11 would immediately register as medium pressure. Should be set to roughly the delta produced by the lightest intentional touch on each electrode.
+Per-electrode delta count that maps to 100% pressure. Pressure is scaled over the
+range `[TOUCH_THRESHOLD .. PRESSURE_MAX_REF[ch]]`, so a touch reads 0% at the
+touch threshold and 100% at this peak. Edge channels are tuned slightly higher
+because they naturally produce larger deltas. Tune each entry by pressing firmly
+on that electrode and noting the peak delta in `tools/test-slider`.
 
 ```cpp
 static constexpr bool QUANTIZE_ENABLED = true;
@@ -473,7 +488,7 @@ POS  |----------1--------------------2----------|
 | All deltas stuck at 0 | Wrong register address | Electrode data starts at 0x04, not 0x1C |
 | Baseline much lower than raw | Baseline not settled | Increase post-init delay or use software baseline |
 | Clicks on note start | Attack too fast | Raise the active voice's `attack_ms` (e.g. to 3–5 ms) |
-| False touches at threshold 5 | Glass vibration noise | Raise `TOUCH_THRESHOLD` to 7–10 (update `PRESSURE_DEAD_ZONE` to match) |
+| False touches at threshold 5 | Glass vibration noise | Raise `TOUCH_THRESHOLD` to 7–10 |
 | Clicks on note end | Cutoff jumps on lift | Cutoff should track amplitude during release — check the release coupling code |
 | False touches | Threshold too low | Raise `TOUCH_THRESHOLD` |
 | Pressure always 0% | `PRESSURE_MAX_REF` too high | Lower to match real peak delta seen in monitor |
@@ -489,9 +504,7 @@ POS  |----------1--------------------2----------|
 
 - **MIDI output** — map finger 1 position to MIDI note + pitch bend, pressure to aftertouch
 - **Reverb** — a simple Schroeder reverb or plate reverb tail would suit the long release
-- **Save the selected voice** — persist `g_voice_idx` to QSPI/flash so the FSR-chosen voice survives a power cycle
 - **Per-voice vibrato / LFO routing** — LFO rate, depth and destination (filter/amp) are still global; moving them into the `Voice` would unlock auto-wah / tremolo
-- **Pitch envelope** — a fast pitch blip on attack for kick/zap/pluck transients
 - **More voices** — the `Voice` struct makes new presets cheap; bells, pads, leads all fit
 - **Second glass slider** — add a second MPR121 for a two-dimensional control surface
 - **Custom slumped glass** — kiln-formed glass (borosilicate, Bullseye 96) with controlled thickness gives stronger and more uniform signal than drinking glass walls

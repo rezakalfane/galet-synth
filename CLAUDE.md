@@ -99,11 +99,10 @@ If this error appears, remove the `LDFLAGS` line from `Makefile`.
 | `FIX_DRUM` | ~430 | `true` = every drum tap is full 100% pressure (consistent); `false` = `vel_sens` dynamics |
 | `MULTI_ZONES[]` / `MULTI_INTERVALS[]` | ~425 | Drums: zone→drum map and the per-zone pitch intervals |
 | `TAP_GAP_MS` / `RISE_THRESH` (in `main`) | — | Lift debounce, and held re-attack sensitivity (drum retrigger tuning) |
-| `TOUCH_THRESHOLD` | 39 | Min delta to register touch |
-| `PRESSURE_MAX_REF[12]` | 40 | Per-electrode 100% pressure delta |
-| `PRESSURE_MIN_REF[12]` | 40 | Per-electrode 0% pressure delta (was `PRESSURE_DEAD_ZONE`) |
-| `MIN_FINGER_SEP` | 44 | Min electrode gap for two-finger detection |
-| `QUANTIZE_ENABLED` | ~247 | `false` = fully continuous pitch, no snapping |
+| `TOUCH_THRESHOLD` | (config.h) | Min delta to register touch (=10). Also the pressure floor: `pressure_pct` scales `[TOUCH_THRESHOLD .. PRESSURE_MAX_REF[ch]]` (no separate dead-zone array) |
+| `PRESSURE_MAX_REF[12]` | (config.h) | Per-electrode 100% pressure delta |
+| `MIN_FINGER_SEP` | (config.h) | Min electrode gap for two-finger detection |
+| `QUANTIZE_ENABLED` | (config.h) | Master quantize switch; `false` = fully continuous pitch, no snapping. (Per-voice quantize + scale also live on the `Voice`) |
 | `VOICE_PREVIEW_ENABLED` | (config.h) | Voice-select plays the selected voice live on the glass (`false` = silent cycling) |
 | `SLEW_CUT` | ~525 | Cutoff opening slew (~35 ms — smooths stepped pressure targets) |
 | `NOISE_HP_COEF` | ~660 | High-pass corner for `noise_hp` voices (higher = brighter "tsss") |
