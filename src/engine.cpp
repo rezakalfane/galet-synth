@@ -1,4 +1,5 @@
 #include "engine.h"
+#include "persist.h"   // g_bank — the live, editable voice bank the engine plays
 
 using namespace daisy;
 using namespace daisy::seed;
@@ -95,7 +96,7 @@ DrumHit g_hits[POLY];
 void drum_trigger(DrumHit& h, int vidx, float freq, float amp_tgt,
                          float cutoff, float drive, float sr)
 {
-    const Voice& V = VOICES[vidx];
+    const Voice& V = g_bank[vidx];
     h.active=true; h.gate=true; h.vidx=vidx;
     h.freq=freq; h.amp_tgt=amp_tgt; h.cutoff=cutoff; h.drive=drive;
     h.ph1=h.ph2=h.phs=h.pho=0.0f;
@@ -113,7 +114,7 @@ void drum_trigger(DrumHit& h, int vidx, float freq, float amp_tgt,
 static float drum_render(DrumHit& h, float sr)
 {
     if(!h.active) return 0.0f;
-    const Voice& V = VOICES[h.vidx];
+    const Voice& V = g_bank[h.vidx];
     // Amp envelope: attack while gated, release on lift; free the slot when done.
     float tgt = h.gate ? h.amp_tgt : 0.0f;
     float c   = (tgt > h.amp) ? h.atk_c : h.rel_c;
@@ -190,7 +191,7 @@ void AudioCallback(AudioHandle::InputBuffer,
     static bool s_was_tuning = false;
     bool tune_changed = (s_was_tuning != g_live_tune);
     s_was_tuning = g_live_tune;
-    const Voice& VOICE = g_live_tune ? g_live_voice : VOICES[vi];
+    const Voice& VOICE = g_live_tune ? g_live_voice : g_bank[vi];
 
     // In the Drums MultiVoice the polyphonic drum engine plays instead of the
     // mono path (which the touch loop holds silent). Decided once per block.

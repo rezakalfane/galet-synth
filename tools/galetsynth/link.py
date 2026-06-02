@@ -53,24 +53,46 @@ class Link:
                     self.on_line(line)
 
     def send(self, s):
-        with self._wlock:
-            self.ser.write((s + "\n").encode())
+        # Survive a disconnect (e.g. the synth was power-cycled): mark the link
+        # dead instead of throwing, so the GUI/CLI can reconnect.
+        try:
+            with self._wlock:
+                self.ser.write((s + "\n").encode())
+            return True
+        except Exception:
+            self.alive = False
+            return False
+
+    def _capture(self, cmd, timeout=2.0):
+        """Send a command and collect its reply lines up to the `end` sentinel."""
+        self._cap = []
+        self._cap_done.clear()
+        self.send(cmd)
+        self._cap_done.wait(timeout)
+        lines, self._cap = self._cap, None
+        return lines
 
     def dump(self, timeout=2.0):
         """Send `dump` and parse the field=value reply into a dict."""
-        self._cap = []
-        self._cap_done.clear()
-        self.send("dump")
-        self._cap_done.wait(timeout)
-        lines, self._cap = self._cap, None
         kv = {}
-        for ln in lines:
+        for ln in self._capture("dump", timeout):
             if ln.startswith("dump name="):
                 kv["name"] = ln.split("=", 1)[1]
             elif "=" in ln and ln != "end":
                 k, v = ln.split("=", 1)
                 kv[k.strip()] = v.strip()
         return kv
+
+    def names(self, timeout=2.0):
+        """Send `names` → {index: name} for every bank slot (names may contain
+        spaces, e.g. 'SH-101 min')."""
+        out = {}
+        for ln in self._capture("names", timeout):
+            if ln.startswith("name "):
+                p = ln.split(" ", 2)
+                if len(p) >= 3 and p[1].isdigit():
+                    out[int(p[1])] = p[2]
+        return out
 
     def close(self):
         self.alive = False

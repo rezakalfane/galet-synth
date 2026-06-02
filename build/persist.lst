@@ -1,0 +1,2952 @@
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"persist.cpp"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text._ZL9serializeR10StoredBank,"ax",%progbits
+  19              		.align	1
+  20              		.p2align 2,,3
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	_ZL9serializeR10StoredBank:
+  26              	.LVL0:
+  27              	.LFB2586:
+  28              		.file 1 "src/persist.cpp"
+   1:src/persist.cpp **** #include "persist.h"
+   2:src/persist.cpp **** #include "engine.h"                  // hw, VOICES, NUM_VOICES, MULTI_*, g_voice_idx, g_active_voic
+   3:src/persist.cpp **** #include "util/PersistentStorage.h"
+   4:src/persist.cpp **** #include <string.h>                  // memcmp / strncpy
+   5:src/persist.cpp **** 
+   6:src/persist.cpp **** using namespace daisy;
+   7:src/persist.cpp **** 
+   8:src/persist.cpp **** // The live bank + RAM backing for the editable names.
+   9:src/persist.cpp **** Voice       g_bank[NUM_VOICES];
+  10:src/persist.cpp **** static char g_names[NUM_VOICES][VOICE_NAME_MAX];
+  11:src/persist.cpp **** 
+  12:src/persist.cpp **** // ── Flash format ─────────────────────────�
+  13:src/persist.cpp **** // Bump BANK_MAGIC whenever the Voice struct layout changes — a mismatch makes the
+  14:src/persist.cpp **** // stored blob be ignored (falls back to factory), so old data can't be misread.
+  15:src/persist.cpp **** static constexpr uint32_t BANK_MAGIC = 0x47564231;  // 'GVB1'
+  16:src/persist.cpp **** 
+  17:src/persist.cpp **** struct StoredVoice {
+  18:src/persist.cpp ****     Voice   v;                       // raw; v.name / v.scale are fixed up on load
+  19:src/persist.cpp ****     char    name[VOICE_NAME_MAX];    // the real (portable) name
+  20:src/persist.cpp ****     uint8_t scale_id;                // 0 none, 1 chromatic, 2 major, 3 minor
+  21:src/persist.cpp **** };
+  22:src/persist.cpp **** struct StoredBank {
+  23:src/persist.cpp ****     uint32_t    magic;
+  24:src/persist.cpp ****     int32_t     voice_idx;
+  25:src/persist.cpp ****     StoredVoice voices[NUM_VOICES];
+  26:src/persist.cpp ****     bool operator!=(const StoredBank &o) const { return memcmp(this, &o, sizeof(*this)) != 0; }
+  27:src/persist.cpp **** };
+  28:src/persist.cpp **** 
+  29:src/persist.cpp **** static PersistentStorage<StoredBank> *g_store = nullptr;
+  30:src/persist.cpp **** 
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 2
+
+
+  31:src/persist.cpp **** // ── scale <-> id ─────────────────────────�
+  32:src/persist.cpp **** static uint8_t scale_id(const int8_t *s) {
+  33:src/persist.cpp ****     if(s == SCALE_CHROMATIC) return 1;
+  34:src/persist.cpp ****     if(s == SCALE_MAJOR)     return 2;
+  35:src/persist.cpp ****     if(s == SCALE_MINOR)     return 3;
+  36:src/persist.cpp ****     return 0;
+  37:src/persist.cpp **** }
+  38:src/persist.cpp **** static const int8_t *id_scale(uint8_t id) {
+  39:src/persist.cpp ****     switch(id) {
+  40:src/persist.cpp ****         case 1: return SCALE_CHROMATIC;
+  41:src/persist.cpp ****         case 2: return SCALE_MAJOR;
+  42:src/persist.cpp ****         case 3: return SCALE_MINOR;
+  43:src/persist.cpp ****         default: return nullptr;
+  44:src/persist.cpp ****     }
+  45:src/persist.cpp **** }
+  46:src/persist.cpp **** static int id_scale_len(uint8_t id) {
+  47:src/persist.cpp ****     switch(id) {
+  48:src/persist.cpp ****         case 1: return (int)(sizeof(SCALE_CHROMATIC) / sizeof(SCALE_CHROMATIC[0]));
+  49:src/persist.cpp ****         case 2: return (int)(sizeof(SCALE_MAJOR) / sizeof(SCALE_MAJOR[0]));
+  50:src/persist.cpp ****         case 3: return (int)(sizeof(SCALE_MINOR) / sizeof(SCALE_MINOR[0]));
+  51:src/persist.cpp ****         default: return 0;
+  52:src/persist.cpp ****     }
+  53:src/persist.cpp **** }
+  54:src/persist.cpp **** 
+  55:src/persist.cpp **** static void set_name(int i, const char *src) {
+  56:src/persist.cpp ****     strncpy(g_names[i], src ? src : "", VOICE_NAME_MAX - 1);
+  57:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+  58:src/persist.cpp ****     g_bank[i].name = g_names[i];
+  59:src/persist.cpp **** }
+  60:src/persist.cpp **** 
+  61:src/persist.cpp **** // ── (de)serialization ───────────────────────�
+  62:src/persist.cpp **** static void fill_factory_bank() {
+  63:src/persist.cpp ****     for(int i = 0; i < NUM_VOICES; i++) {
+  64:src/persist.cpp ****         g_bank[i] = VOICES[i];
+  65:src/persist.cpp ****         set_name(i, VOICES[i].name);     // point at the RAM buffer (editable)
+  66:src/persist.cpp ****     }
+  67:src/persist.cpp **** }
+  68:src/persist.cpp **** static void serialize(StoredBank &b) {
+  29              		.loc 1 68 38 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  69:src/persist.cpp ****     b.magic = BANK_MAGIC;
+  33              		.loc 1 69 5 view .LVU1
+  68:src/persist.cpp ****     b.magic = BANK_MAGIC;
+  34              		.loc 1 68 38 is_stmt 0 view .LVU2
+  35 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  36              		.cfi_def_cfa_offset 24
+  37              		.cfi_offset 3, -24
+  38              		.cfi_offset 4, -20
+  39              		.cfi_offset 5, -16
+  40              		.cfi_offset 6, -12
+  41              		.cfi_offset 7, -8
+  42              		.cfi_offset 14, -4
+  70:src/persist.cpp ****     b.voice_idx = g_voice_idx;
+  43              		.loc 1 70 17 view .LVU3
+  44 0002 1A4B     		ldr	r3, .L12
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 3
+
+
+  45 0004 00F1B805 		add	r5, r0, #184
+  46 0008 194C     		ldr	r4, .L12+4
+  69:src/persist.cpp ****     b.magic = BANK_MAGIC;
+  47              		.loc 1 69 13 view .LVU4
+  48 000a 1A4A     		ldr	r2, .L12+8
+  49              		.loc 1 70 17 view .LVU5
+  50 000c 1B68     		ldr	r3, [r3]
+  51 000e 04F52567 		add	r7, r4, #2640
+  52 0012 194E     		ldr	r6, .L12+12
+  53 0014 C0E90023 		strd	r2, r3, [r0]
+  71:src/persist.cpp ****     for(int i = 0; i < NUM_VOICES; i++) {
+  54              		.loc 1 71 5 is_stmt 1 view .LVU6
+  55              	.LVL1:
+  56              	.LBB26:
+  57              		.loc 1 71 22 view .LVU7
+  58 0018 0BE0     		b	.L3
+  59              	.LVL2:
+  60              	.L11:
+  61              	.LBB27:
+  62              	.LBB28:
+  34:src/persist.cpp ****     if(s == SCALE_MINOR)     return 3;
+  63              		.loc 1 34 5 is_stmt 0 view .LVU8
+  64 001a 8B42     		cmp	r3, r1
+  65 001c 24D0     		beq	.L5
+  35:src/persist.cpp ****     return 0;
+  66              		.loc 1 35 37 view .LVU9
+  67 001e 8342     		cmp	r3, r0
+  68 0020 0CBF     		ite	eq
+  69 0022 0323     		moveq	r3, #3
+  70 0024 1346     		movne	r3, r2
+  71              	.LVL3:
+  72              	.L2:
+  35:src/persist.cpp ****     return 0;
+  73              		.loc 1 35 37 view .LVU10
+  74              	.LBE28:
+  75              	.LBE27:
+  76              		.loc 1 71 22 view .LVU11
+  77 0026 B034     		adds	r4, r4, #176
+  78 0028 CC35     		adds	r5, r5, #204
+  72:src/persist.cpp ****         b.voices[i].v = g_bank[i];
+  73:src/persist.cpp ****         strncpy(b.voices[i].name, g_bank[i].name, VOICE_NAME_MAX - 1);
+  74:src/persist.cpp ****         b.voices[i].name[VOICE_NAME_MAX - 1] = 0;
+  75:src/persist.cpp ****         b.voices[i].scale_id = scale_id(g_bank[i].scale);
+  79              		.loc 1 75 30 view .LVU12
+  80 002a 05F8B43C 		strb	r3, [r5, #-180]
+  71:src/persist.cpp ****         b.voices[i].v = g_bank[i];
+  81              		.loc 1 71 5 is_stmt 1 view .LVU13
+  71:src/persist.cpp ****         b.voices[i].v = g_bank[i];
+  82              		.loc 1 71 22 view .LVU14
+  83 002e BC42     		cmp	r4, r7
+  84 0030 19D0     		beq	.L10
+  85              	.L3:
+  72:src/persist.cpp ****         b.voices[i].v = g_bank[i];
+  86              		.loc 1 72 9 discriminator 2 view .LVU15
+  72:src/persist.cpp ****         b.voices[i].v = g_bank[i];
+  87              		.loc 1 72 23 is_stmt 0 discriminator 2 view .LVU16
+  88 0032 2146     		mov	r1, r4
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 4
+
+
+  89 0034 B022     		movs	r2, #176
+  90 0036 A5F1B000 		sub	r0, r5, #176
+  91 003a FFF7FEFF 		bl	memcpy
+  92              	.LVL4:
+  73:src/persist.cpp ****         b.voices[i].name[VOICE_NAME_MAX - 1] = 0;
+  93              		.loc 1 73 9 is_stmt 1 discriminator 2 view .LVU17
+  73:src/persist.cpp ****         b.voices[i].name[VOICE_NAME_MAX - 1] = 0;
+  94              		.loc 1 73 16 is_stmt 0 discriminator 2 view .LVU18
+  95 003e 2168     		ldr	r1, [r4]
+  96 0040 1722     		movs	r2, #23
+  97 0042 2846     		mov	r0, r5
+  98 0044 FFF7FEFF 		bl	strncpy
+  99              	.LVL5:
+  74:src/persist.cpp ****         b.voices[i].scale_id = scale_id(g_bank[i].scale);
+ 100              		.loc 1 74 9 is_stmt 1 discriminator 2 view .LVU19
+ 101              	.LBB34:
+ 102              	.LBB29:
+  34:src/persist.cpp ****     if(s == SCALE_MINOR)     return 3;
+ 103              		.loc 1 34 5 discriminator 2 view .LVU20
+  35:src/persist.cpp ****     return 0;
+ 104              		.loc 1 35 5 discriminator 2 view .LVU21
+ 105              	.LBE29:
+ 106              	.LBE34:
+  74:src/persist.cpp ****         b.voices[i].scale_id = scale_id(g_bank[i].scale);
+ 107              		.loc 1 74 46 is_stmt 0 discriminator 2 view .LVU22
+ 108 0048 0022     		movs	r2, #0
+ 109              	.LBB35:
+ 110              	.LBB30:
+  34:src/persist.cpp ****     if(s == SCALE_MINOR)     return 3;
+ 111              		.loc 1 34 5 discriminator 2 view .LVU23
+ 112 004a 0C49     		ldr	r1, .L12+16
+ 113              	.LBE30:
+ 114              	.LBE35:
+  74:src/persist.cpp ****         b.voices[i].scale_id = scale_id(g_bank[i].scale);
+ 115              		.loc 1 74 46 discriminator 2 view .LVU24
+ 116 004c EA75     		strb	r2, [r5, #23]
+ 117              		.loc 1 75 9 is_stmt 1 discriminator 2 view .LVU25
+ 118              		.loc 1 75 40 is_stmt 0 discriminator 2 view .LVU26
+ 119 004e D4F88C30 		ldr	r3, [r4, #140]
+ 120              	.LVL6:
+ 121              	.LBB36:
+ 122              	.LBI27:
+  32:src/persist.cpp ****     if(s == SCALE_CHROMATIC) return 1;
+ 123              		.loc 1 32 16 is_stmt 1 discriminator 2 view .LVU27
+ 124              	.LBB31:
+  33:src/persist.cpp ****     if(s == SCALE_MAJOR)     return 2;
+ 125              		.loc 1 33 5 discriminator 2 view .LVU28
+  35:src/persist.cpp ****     return 0;
+ 126              		.loc 1 35 5 is_stmt 0 discriminator 2 view .LVU29
+ 127 0052 0B48     		ldr	r0, .L12+20
+  33:src/persist.cpp ****     if(s == SCALE_MAJOR)     return 2;
+ 128              		.loc 1 33 5 discriminator 2 view .LVU30
+ 129 0054 B342     		cmp	r3, r6
+ 130 0056 E0D1     		bne	.L11
+ 131              	.LBE31:
+ 132              	.LBE36:
+  71:src/persist.cpp ****         b.voices[i].v = g_bank[i];
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 5
+
+
+ 133              		.loc 1 71 22 view .LVU31
+ 134 0058 B034     		adds	r4, r4, #176
+ 135              	.LBB37:
+ 136              	.LBB32:
+  33:src/persist.cpp ****     if(s == SCALE_MAJOR)     return 2;
+ 137              		.loc 1 33 37 view .LVU32
+ 138 005a 0123     		movs	r3, #1
+ 139              	.LVL7:
+  33:src/persist.cpp ****     if(s == SCALE_MAJOR)     return 2;
+ 140              		.loc 1 33 37 view .LVU33
+ 141              	.LBE32:
+ 142              	.LBE37:
+  71:src/persist.cpp ****         b.voices[i].v = g_bank[i];
+ 143              		.loc 1 71 22 view .LVU34
+ 144 005c CC35     		adds	r5, r5, #204
+ 145 005e BC42     		cmp	r4, r7
+ 146              		.loc 1 75 30 view .LVU35
+ 147 0060 05F8B43C 		strb	r3, [r5, #-180]
+  71:src/persist.cpp ****         b.voices[i].v = g_bank[i];
+ 148              		.loc 1 71 5 is_stmt 1 view .LVU36
+  71:src/persist.cpp ****         b.voices[i].v = g_bank[i];
+ 149              		.loc 1 71 22 view .LVU37
+ 150 0064 E5D1     		bne	.L3
+ 151              	.L10:
+ 152              	.LBE26:
+  76:src/persist.cpp ****     }
+  77:src/persist.cpp **** }
+ 153              		.loc 1 77 1 is_stmt 0 view .LVU38
+ 154 0066 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 155              	.LVL8:
+ 156              	.L5:
+ 157              	.LBB39:
+ 158              	.LBB38:
+ 159              	.LBB33:
+  34:src/persist.cpp ****     if(s == SCALE_MINOR)     return 3;
+ 160              		.loc 1 34 37 view .LVU39
+ 161 0068 0223     		movs	r3, #2
+ 162              	.LVL9:
+  34:src/persist.cpp ****     if(s == SCALE_MINOR)     return 3;
+ 163              		.loc 1 34 37 view .LVU40
+ 164 006a DCE7     		b	.L2
+ 165              	.L13:
+ 166              		.align	2
+ 167              	.L12:
+ 168 006c 00000000 		.word	g_voice_idx
+ 169 0070 00000000 		.word	.LANCHOR0
+ 170 0074 31425647 		.word	1196835377
+ 171 0078 00000000 		.word	.LANCHOR1
+ 172 007c 00000000 		.word	.LANCHOR2
+ 173 0080 00000000 		.word	.LANCHOR3
+ 174              	.LBE33:
+ 175              	.LBE38:
+ 176              	.LBE39:
+ 177              		.cfi_endproc
+ 178              	.LFE2586:
+ 180              		.section	.rodata._Z12persist_initv.str1.4,"aMS",%progbits,1
+ 181              		.align	2
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 6
+
+
+ 182              	.LC0:
+ 183 0000 4C656164 		.ascii	"Lead\000"
+ 183      00
+ 184 0005 000000   		.align	2
+ 185              	.LC1:
+ 186 0008 00       		.ascii	"\000"
+ 187              		.section	.text._Z12persist_initv,"ax",%progbits
+ 188              		.align	1
+ 189              		.p2align 2,,3
+ 190              		.global	_Z12persist_initv
+ 191              		.syntax unified
+ 192              		.thumb
+ 193              		.thumb_func
+ 195              	_Z12persist_initv:
+ 196              	.LFB2588:
+  78:src/persist.cpp **** static void deserialize(const StoredBank &b) {
+  79:src/persist.cpp ****     for(int i = 0; i < NUM_VOICES; i++) {
+  80:src/persist.cpp ****         g_bank[i] = b.voices[i].v;                 // raw (pointers fixed up next)
+  81:src/persist.cpp ****         set_name(i, b.voices[i].name);
+  82:src/persist.cpp ****         g_bank[i].scale = id_scale(b.voices[i].scale_id);
+  83:src/persist.cpp ****         g_bank[i].scale_len = id_scale_len(b.voices[i].scale_id);
+  84:src/persist.cpp ****     }
+  85:src/persist.cpp **** }
+  86:src/persist.cpp **** 
+  87:src/persist.cpp **** void persist_init() {
+ 197              		.loc 1 87 21 is_stmt 1 view -0
+ 198              		.cfi_startproc
+ 199              		@ args = 0, pretend = 0, frame = 6152
+ 200              		@ frame_needed = 0, uses_anonymous_args = 0
+  88:src/persist.cpp ****     fill_factory_bank();
+ 201              		.loc 1 88 5 view .LVU42
+ 202              	.LBB68:
+ 203              	.LBI68:
+  62:src/persist.cpp ****     for(int i = 0; i < NUM_VOICES; i++) {
+ 204              		.loc 1 62 13 view .LVU43
+ 205              	.LBE68:
+  63:src/persist.cpp ****         g_bank[i] = VOICES[i];
+ 206              		.loc 1 63 5 view .LVU44
+ 207              	.LVL10:
+ 208              	.LBB79:
+ 209              	.LBB69:
+  63:src/persist.cpp ****         g_bank[i] = VOICES[i];
+ 210              		.loc 1 63 22 view .LVU45
+ 211              	.LBE69:
+ 212              	.LBE79:
+  87:src/persist.cpp ****     fill_factory_bank();
+ 213              		.loc 1 87 21 is_stmt 0 view .LVU46
+ 214 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 215              		.cfi_def_cfa_offset 28
+ 216              		.cfi_offset 4, -28
+ 217              		.cfi_offset 5, -24
+ 218              		.cfi_offset 6, -20
+ 219              		.cfi_offset 7, -16
+ 220              		.cfi_offset 8, -12
+ 221              		.cfi_offset 9, -8
+ 222              		.cfi_offset 14, -4
+ 223 0004 944F     		ldr	r7, .L61
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 7
+
+
+ 224 0006 ADF5C05D 		sub	sp, sp, #6144
+ 225              		.cfi_def_cfa_offset 6172
+ 226 000a 0024     		movs	r4, #0
+ 227 000c 934E     		ldr	r6, .L61+4
+ 228 000e 83B0     		sub	sp, sp, #12
+ 229              		.cfi_def_cfa_offset 6184
+ 230 0010 DFF86C82 		ldr	r8, .L61+40
+  87:src/persist.cpp ****     fill_factory_bank();
+ 231              		.loc 1 87 21 view .LVU47
+ 232 0014 3D46     		mov	r5, r7
+ 233 0016 DFF87892 		ldr	r9, .L61+56
+ 234 001a 0EE0     		b	.L17
+ 235              	.LVL11:
+ 236              	.L15:
+ 237              	.LBB80:
+ 238              	.LBB78:
+ 239              	.LBB70:
+ 240              	.LBB71:
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 241              		.loc 1 56 12 view .LVU48
+ 242 001c 3146     		mov	r1, r6
+ 243 001e FFF7FEFF 		bl	strncpy
+ 244              	.LVL12:
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 245              		.loc 1 57 5 is_stmt 1 view .LVU49
+  58:src/persist.cpp **** }
+ 246              		.loc 1 58 20 is_stmt 0 view .LVU50
+ 247 0022 48F82450 		str	r5, [r8, r4, lsl #2]
+ 248              	.LBE71:
+ 249              	.LBE70:
+  63:src/persist.cpp ****         g_bank[i] = VOICES[i];
+ 250              		.loc 1 63 22 view .LVU51
+ 251 0026 2C34     		adds	r4, r4, #44
+ 252              	.LBB75:
+ 253              	.LBB72:
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 254              		.loc 1 57 36 view .LVU52
+ 255 0028 0023     		movs	r3, #0
+ 256              	.LBE72:
+ 257              	.LBE75:
+  63:src/persist.cpp ****         g_bank[i] = VOICES[i];
+ 258              		.loc 1 63 22 view .LVU53
+ 259 002a 1835     		adds	r5, r5, #24
+ 260 002c B4F5257F 		cmp	r4, #660
+ 261              	.LBB76:
+ 262              	.LBB73:
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 263              		.loc 1 57 36 view .LVU54
+ 264 0030 05F8013C 		strb	r3, [r5, #-1]
+  58:src/persist.cpp **** }
+ 265              		.loc 1 58 5 is_stmt 1 view .LVU55
+ 266              	.LBE73:
+ 267              	.LBE76:
+  63:src/persist.cpp ****         g_bank[i] = VOICES[i];
+ 268              		.loc 1 63 5 view .LVU56
+  63:src/persist.cpp ****         g_bank[i] = VOICES[i];
+ 269              		.loc 1 63 22 view .LVU57
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 8
+
+
+ 270 0034 0ED0     		beq	.L16
+  65:src/persist.cpp ****     }
+ 271              		.loc 1 65 31 is_stmt 0 view .LVU58
+ 272 0036 59F82460 		ldr	r6, [r9, r4, lsl #2]
+ 273              	.L17:
+  64:src/persist.cpp ****         set_name(i, VOICES[i].name);     // point at the RAM buffer (editable)
+ 274              		.loc 1 64 9 is_stmt 1 view .LVU59
+  64:src/persist.cpp ****         set_name(i, VOICES[i].name);     // point at the RAM buffer (editable)
+ 275              		.loc 1 64 19 is_stmt 0 view .LVU60
+ 276 003a B022     		movs	r2, #176
+ 277 003c 09EB8401 		add	r1, r9, r4, lsl #2
+ 278 0040 08EB8400 		add	r0, r8, r4, lsl #2
+ 279 0044 FFF7FEFF 		bl	memcpy
+ 280              	.LVL13:
+  65:src/persist.cpp ****     }
+ 281              		.loc 1 65 9 is_stmt 1 view .LVU61
+ 282              	.LBB77:
+ 283              	.LBI70:
+  55:src/persist.cpp ****     strncpy(g_names[i], src ? src : "", VOICE_NAME_MAX - 1);
+ 284              		.loc 1 55 13 view .LVU62
+ 285              	.LBB74:
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 286              		.loc 1 56 5 view .LVU63
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 287              		.loc 1 56 12 is_stmt 0 view .LVU64
+ 288 0048 1722     		movs	r2, #23
+ 289 004a 2846     		mov	r0, r5
+ 290 004c 002E     		cmp	r6, #0
+ 291 004e E5D1     		bne	.L15
+ 292 0050 834E     		ldr	r6, .L61+8
+ 293 0052 E3E7     		b	.L15
+ 294              	.L16:
+ 295              	.LBE74:
+ 296              	.LBE77:
+ 297              	.LBE78:
+ 298              	.LBE80:
+  89:src/persist.cpp ****     static PersistentStorage<StoredBank> store(hw.qspi);
+ 299              		.loc 1 89 5 is_stmt 1 view .LVU65
+ 300              		.loc 1 89 55 is_stmt 0 view .LVU66
+ 301 0054 DFF83C82 		ldr	r8, .L61+60
+ 302 0058 98F80010 		ldrb	r1, [r8]	@ zero_extendqisi2
+ 303 005c BFF35B8F 		dmb	ish
+ 304 0060 11F00104 		ands	r4, r1, #1
+ 305 0064 00F0D080 		beq	.L18
+ 306 0068 7E4E     		ldr	r6, .L61+12
+ 307 006a 06F58055 		add	r5, r6, #4096
+ 308              	.L19:
+  90:src/persist.cpp ****     g_store = &store;
+ 309              		.loc 1 90 5 is_stmt 1 view .LVU67
+ 310              		.loc 1 90 13 is_stmt 0 view .LVU68
+ 311 006e 7E4B     		ldr	r3, .L61+16
+  91:src/persist.cpp ****     StoredBank def;
+  92:src/persist.cpp ****     serialize(def);                  // factory blob = the default
+ 312              		.loc 1 92 14 view .LVU69
+ 313 0070 03A8     		add	r0, sp, #12
+  90:src/persist.cpp ****     g_store = &store;
+ 314              		.loc 1 90 13 view .LVU70
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 9
+
+
+ 315 0072 1E60     		str	r6, [r3]
+  91:src/persist.cpp ****     StoredBank def;
+ 316              		.loc 1 91 5 is_stmt 1 view .LVU71
+ 317              		.loc 1 92 5 view .LVU72
+ 318              		.loc 1 92 14 is_stmt 0 view .LVU73
+ 319 0074 FFF7FEFF 		bl	_ZL9serializeR10StoredBank
+ 320              	.LVL14:
+  93:src/persist.cpp ****     store.Init(def);
+ 321              		.loc 1 93 5 is_stmt 1 view .LVU74
+ 322              	.LBB81:
+ 323              	.LBI81:
+ 324              		.file 2 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h"
+   1:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** #pragma once
+   2:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+   3:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** #include "daisy_core.h"
+   4:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** #include "per/qspi.h"
+   5:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** #include "sys/dma.h"
+   6:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+   7:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** namespace daisy
+   8:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** {
+   9:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** /** @brief Non Volatile storage class for persistent settings on an external flash device.
+  10:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****  *  @author shensley
+  11:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****  * 
+  12:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****  *  Storage occupied by the struct will be one word larger than 
+  13:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****  *  the SettingStruct used. The extra word is used to store the
+  14:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****  *  state of the data, and whether it's been overwritten or not.
+  15:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****  * 
+  16:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****  *  \todo - Make Save() non-blocking
+  17:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****  *  \todo - Add wear leveling
+  18:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****  * 
+  19:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****  **/
+  20:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** template <typename SettingStruct>
+  21:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** class PersistentStorage
+  22:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** {
+  23:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****   public:
+  24:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     /** State of the storage. 
+  25:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *  When created, prior to initialiation, the state will be Unknown
+  26:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *  
+  27:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *  During initialization, the state will be changed to either FACTORY,
+  28:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *  or USER. 
+  29:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      * 
+  30:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *  If this is the first time these settings are being written to the
+  31:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *  target address, the defaults will be written to that location,
+  32:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *  and the state will be set to FACTORY.
+  33:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      * 
+  34:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *  Once the first user-trigger save has been made, the state will be 
+  35:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *  updated to USER to indicate that the defaults have overwritten.
+  36:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      */
+  37:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     enum class State
+  38:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+  39:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         UNKNOWN = 0,
+  40:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         FACTORY = 1,
+  41:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         USER    = 2,
+  42:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     };
+  43:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+  44:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     /** Constructor for storage class 
+  45:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *  \param qspi reference to the hardware qspi peripheral.
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 10
+
+
+  46:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      */
+  47:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     PersistentStorage(QSPIHandle &qspi)
+  48:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     : qspi_(qspi),
+  49:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****       address_offset_(0),
+  50:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****       default_settings_(),
+  51:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****       settings_(),
+  52:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****       state_(State::UNKNOWN)
+  53:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+  54:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     }
+  55:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+  56:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     /** Initialize Storage class
+  57:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *
+  58:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *  The values in this class will be stored as the default
+  59:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *  for restoration to 'factory' settings.
+  60:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *
+  61:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *  \param defaults should be a setting structure containing the default values.
+  62:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *      this will be updated to contain the stored data.
+  63:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *  \param address_offset offset for location on the QSPI chip (offset to base address of devic
+  64:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *      This defaults to the first address on the chip, and will be masked to the nearest multi
+  65:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      **/
+  66:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     void Init(const SettingStruct &defaults, uint32_t address_offset = 0)
+ 325              		.loc 2 66 10 view .LVU75
+ 326              	.LBB82:
+  67:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+  68:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         default_settings_ = defaults;
+ 327              		.loc 2 68 9 is_stmt 0 view .LVU76
+ 328 0078 03A9     		add	r1, sp, #12
+ 329              	.LVL15:
+ 330              		.loc 2 68 9 view .LVU77
+ 331 007a 40F6FC32 		movw	r2, #3068
+ 332 007e 7B48     		ldr	r0, .L61+20
+ 333 0080 0191     		str	r1, [sp, #4]
+ 334 0082 FFF7FEFF 		bl	memcpy
+ 335              	.LVL16:
+  69:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         settings_         = defaults;
+ 336              		.loc 2 69 9 view .LVU78
+ 337 0086 40F6FC32 		movw	r2, #3068
+ 338 008a 0199     		ldr	r1, [sp, #4]
+ 339 008c 7848     		ldr	r0, .L61+24
+ 340 008e FFF7FEFF 		bl	memcpy
+ 341              	.LVL17:
+  70:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         address_offset_   = address_offset & (uint32_t)(~0xff);
+ 342              		.loc 2 70 27 view .LVU79
+ 343 0092 0021     		movs	r1, #0
+  71:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         auto storage_data
+  72:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****             = reinterpret_cast<SaveStruct *>(qspi_.GetData(address_offset_));
+ 344              		.loc 2 72 59 view .LVU80
+ 345 0094 3068     		ldr	r0, [r6]
+  70:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         address_offset_   = address_offset & (uint32_t)(~0xff);
+ 346              		.loc 2 70 27 view .LVU81
+ 347 0096 7160     		str	r1, [r6, #4]
+ 348              		.loc 2 72 59 view .LVU82
+ 349 0098 FFF7FEFF 		bl	_ZN5daisy10QSPIHandle7GetDataEm
+ 350              	.LVL18:
+  73:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+  74:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         // check to see if the state is already in use.
+  75:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         State cur_state = storage_data->storage_state;
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 11
+
+
+ 351              		.loc 2 75 15 view .LVU83
+ 352 009c 0368     		ldr	r3, [r0]
+ 353              	.LVL19:
+  76:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         if(cur_state != State::FACTORY && cur_state != State::USER)
+ 354              		.loc 2 76 40 view .LVU84
+ 355 009e 5A1E     		subs	r2, r3, #1
+ 356              		.loc 2 76 9 view .LVU85
+ 357 00a0 012A     		cmp	r2, #1
+ 358 00a2 4FD8     		bhi	.L56
+  77:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         {
+  78:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****             // Initialize the Data store State::FACTORY, and the DefaultSettings
+  79:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****             state_ = State::FACTORY;
+  80:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****             StoreSettingsIfChanged();
+  81:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         }
+  82:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         else
+  83:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         {
+  84:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****             state_    = cur_state;
+  85:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****             settings_ = storage_data->user_data;
+ 359              		.loc 2 85 13 view .LVU86
+ 360 00a4 011D     		adds	r1, r0, #4
+ 361 00a6 40F6FC32 		movw	r2, #3068
+ 362 00aa 7148     		ldr	r0, .L61+24
+ 363              	.LVL20:
+  84:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****             settings_ = storage_data->user_data;
+ 364              		.loc 2 84 23 view .LVU87
+ 365 00ac C5F80038 		str	r3, [r5, #2048]
+ 366              		.loc 2 85 13 view .LVU88
+ 367 00b0 FFF7FEFF 		bl	memcpy
+ 368              	.LVL21:
+ 369              	.L24:
+ 370              		.loc 2 85 13 view .LVU89
+ 371              	.LBE82:
+ 372              	.LBE81:
+  94:src/persist.cpp ****     StoredBank &s = store.GetSettings();
+ 373              		.loc 1 94 5 is_stmt 1 view .LVU90
+  95:src/persist.cpp ****     if(s.magic == BANK_MAGIC) {
+ 374              		.loc 1 95 5 view .LVU91
+ 375 00b4 6F4B     		ldr	r3, .L61+28
+ 376 00b6 D6F8042C 		ldr	r2, [r6, #3076]
+ 377 00ba 9A42     		cmp	r2, r3
+ 378 00bc 73D0     		beq	.L57
+ 379              	.L25:
+  96:src/persist.cpp ****         deserialize(s);
+  97:src/persist.cpp ****         if(s.voice_idx >= 0 && s.voice_idx < NUM_VOICES) g_voice_idx = s.voice_idx;
+  98:src/persist.cpp ****     } else {
+  99:src/persist.cpp ****         // Foreign / old-format data at this offset → reset to factory.
+ 100:src/persist.cpp ****         s = def;
+ 380              		.loc 1 100 9 view .LVU92
+ 381              		.loc 1 100 11 is_stmt 0 view .LVU93
+ 382 00be 40F6FC32 		movw	r2, #3068
+ 383 00c2 03A9     		add	r1, sp, #12
+ 384 00c4 6A48     		ldr	r0, .L61+24
+ 385              	.LVL22:
+ 386              	.LBB93:
+ 387              	.LBB94:
+ 388              	.LBB95:
+ 389              	.LBB96:
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 12
+
+
+  86:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         }
+  87:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     }
+  88:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+  89:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     /** Returns the state of the Persistent Data */
+  90:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     State GetState() const { return state_; }
+  91:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+  92:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     /** Returns a reference to the setting struct */
+  93:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     SettingStruct &GetSettings() { return settings_; }
+  94:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+  95:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     /** Performs the save operation, storing the storage */
+  96:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     void Save()
+  97:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+  98:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         state_ = State::USER;
+  99:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         StoreSettingsIfChanged();
+ 100:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     }
+ 101:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+ 102:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     /** Restores the settings stored in the QSPI */
+ 103:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     void RestoreDefaults()
+ 104:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+ 105:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         settings_ = default_settings_;
+ 106:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         state_    = State::FACTORY;
+ 107:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         StoreSettingsIfChanged();
+ 108:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     }
+ 109:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+ 110:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****   private:
+ 111:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     struct SaveStruct
+ 112:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+ 113:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         State         storage_state;
+ 114:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         SettingStruct user_data;
+ 115:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     };
+ 116:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+ 117:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     void StoreSettingsIfChanged()
+ 118:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+ 119:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         SaveStruct s;
+ 120:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         s.storage_state = state_;
+ 390              		.loc 2 120 25 view .LVU94
+ 391 00c6 0DF60848 		addw	r8, sp, #3080
+ 392              	.LBE96:
+ 393              	.LBE95:
+ 394              	.LBE94:
+ 395              	.LBE93:
+ 396              		.loc 1 100 11 view .LVU95
+ 397 00ca FFF7FEFF 		bl	memcpy
+ 398              	.LVL23:
+ 101:src/persist.cpp ****         store.Save();
+ 399              		.loc 1 101 9 is_stmt 1 view .LVU96
+ 400              	.LBB107:
+ 401              	.LBI93:
+  96:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+ 402              		.loc 2 96 10 view .LVU97
+ 403              	.LBB105:
+  98:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         StoreSettingsIfChanged();
+ 404              		.loc 2 98 16 is_stmt 0 view .LVU98
+ 405 00ce 0223     		movs	r3, #2
+ 406              	.LBB102:
+ 407              	.LBB99:
+ 121:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         s.user_data     = settings_;
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 13
+
+
+ 408              		.loc 2 121 9 view .LVU99
+ 409 00d0 40F6FC32 		movw	r2, #3068
+ 410 00d4 6649     		ldr	r1, .L61+24
+ 411              	.LVL24:
+ 120:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         s.user_data     = settings_;
+ 412              		.loc 2 120 25 view .LVU100
+ 413 00d6 C8F80030 		str	r3, [r8]
+ 414              		.loc 2 121 9 view .LVU101
+ 415 00da 0DF60C40 		addw	r0, sp, #3084
+ 416              	.LBE99:
+ 417              	.LBE102:
+  98:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         StoreSettingsIfChanged();
+ 418              		.loc 2 98 16 view .LVU102
+ 419 00de C5F80038 		str	r3, [r5, #2048]
+ 420              	.LVL25:
+ 421              	.LBB103:
+ 422              	.LBI95:
+ 117:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+ 423              		.loc 2 117 10 is_stmt 1 view .LVU103
+ 424              	.LBB100:
+ 425              		.loc 2 121 9 is_stmt 0 view .LVU104
+ 426 00e2 FFF7FEFF 		bl	memcpy
+ 427              	.LVL26:
+ 122:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+ 123:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         void *data_ptr = qspi_.GetData(address_offset_);
+ 428              		.loc 2 123 39 view .LVU105
+ 429 00e6 D6E90001 		ldrd	r0, r1, [r6]
+ 430 00ea FFF7FEFF 		bl	_ZN5daisy10QSPIHandle7GetDataEm
+ 431              	.LVL27:
+ 432 00ee 0446     		mov	r4, r0
+ 433              	.LVL28:
+ 124:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+ 125:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** #if !UNIT_TEST
+ 126:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         // Caching behavior is different when running programs outside internal flash
+ 127:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         // so we need to explicitly invalidate the QSPI mapped memory to ensure we are
+ 128:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         // comparing the local settings with the most recently persisted settings.
+ 129:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         if(System::GetProgramMemoryRegion()
+ 434              		.loc 2 129 42 view .LVU106
+ 435 00f0 FFF7FEFF 		bl	_ZN5daisy6System22GetProgramMemoryRegionEv
+ 436              	.LVL29:
+ 437              		.loc 2 129 9 view .LVU107
+ 438 00f4 00BB     		cbnz	r0, .L58
+ 439              	.L29:
+ 440              	.LVL30:
+ 441              	.LBB97:
+ 442              	.LBI97:
+  26:src/persist.cpp **** };
+ 443              		.loc 1 26 10 is_stmt 1 view .LVU108
+ 444              	.LBB98:
+  26:src/persist.cpp **** };
+ 445              		.loc 1 26 50 view .LVU109
+  26:src/persist.cpp **** };
+ 446              		.loc 1 26 63 is_stmt 0 view .LVU110
+ 447 00f6 40F6FC32 		movw	r2, #3068
+ 448 00fa 211D     		adds	r1, r4, #4
+ 449              	.LVL31:
+  26:src/persist.cpp **** };
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 14
+
+
+ 450              		.loc 1 26 63 view .LVU111
+ 451 00fc 5C48     		ldr	r0, .L61+24
+ 452              	.LVL32:
+  26:src/persist.cpp **** };
+ 453              		.loc 1 26 63 view .LVU112
+ 454 00fe FFF7FEFF 		bl	memcmp
+ 455              	.LVL33:
+  26:src/persist.cpp **** };
+ 456              		.loc 1 26 63 view .LVU113
+ 457              	.LBE98:
+ 458              	.LBE97:
+ 130:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****            != System::MemoryRegion::INTERNAL_FLASH)
+ 131:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         {
+ 132:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****             dsy_dma_invalidate_cache_for_buffer((uint8_t *)data_ptr, sizeof(s));
+ 133:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         }
+ 134:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** #endif
+ 135:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+ 136:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         // Only actually save if the new data is different
+ 137:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         // Use the `==operator` in custom SettingStruct to fine tune
+ 138:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         // what may or may not trigger the erase/save.
+ 139:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         auto storage_data = reinterpret_cast<SaveStruct *>(data_ptr);
+ 140:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         if(settings_ != storage_data->user_data)
+ 459              		.loc 2 140 9 view .LVU114
+ 460 0102 58B9     		cbnz	r0, .L51
+ 461              	.L55:
+ 462              		.loc 2 140 9 view .LVU115
+ 463 0104 5C4B     		ldr	r3, .L61+32
+ 464              	.LVL34:
+ 465              	.L28:
+ 466              		.loc 2 140 9 view .LVU116
+ 467              	.LBE100:
+ 468              	.LBE103:
+ 469              	.LBE105:
+ 470              	.LBE107:
+ 102:src/persist.cpp ****     }
+ 103:src/persist.cpp ****     g_active_voice = (g_voice_idx == MULTI_IDX) ? MULTI_ZONES[0] : g_voice_idx;
+ 471              		.loc 1 103 5 is_stmt 1 view .LVU117
+ 472              		.loc 1 103 35 is_stmt 0 view .LVU118
+ 473 0106 1A68     		ldr	r2, [r3]
+ 474              		.loc 1 103 49 view .LVU119
+ 475 0108 0E2A     		cmp	r2, #14
+ 476 010a 7BD0     		beq	.L33
+ 477              	.L60:
+ 478              		.loc 1 103 49 discriminator 2 view .LVU120
+ 479 010c 1A68     		ldr	r2, [r3]
+ 480              	.L31:
+ 481              		.loc 1 103 20 discriminator 4 view .LVU121
+ 482 010e 5B4B     		ldr	r3, .L61+36
+ 483 0110 1A60     		str	r2, [r3]
+ 104:src/persist.cpp **** }
+ 484              		.loc 1 104 1 discriminator 4 view .LVU122
+ 485 0112 0DF5C05D 		add	sp, sp, #6144
+ 486 0116 03B0     		add	sp, sp, #12
+ 487              		.cfi_remember_state
+ 488              		.cfi_def_cfa_offset 28
+ 489              		@ sp needed
+ 490 0118 BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 15
+
+
+ 491              	.LVL35:
+ 492              	.L51:
+ 493              		.cfi_restore_state
+ 494              	.LBB108:
+ 495              	.LBB106:
+ 496              	.LBB104:
+ 497              	.LBB101:
+ 141:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         {
+ 142:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****             qspi_.Erase(address_offset_, address_offset_ + sizeof(s));
+ 498              		.loc 2 142 24 view .LVU123
+ 499 011c 7168     		ldr	r1, [r6, #4]
+ 500 011e 3068     		ldr	r0, [r6]
+ 501 0120 01F54062 		add	r2, r1, #3072
+ 502 0124 FFF7FEFF 		bl	_ZN5daisy10QSPIHandle5EraseEmm
+ 503              	.LVL36:
+ 143:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****             qspi_.Write(address_offset_, sizeof(s), (uint8_t *)&s);
+ 504              		.loc 2 143 24 view .LVU124
+ 505 0128 4346     		mov	r3, r8
+ 506 012a 4FF44062 		mov	r2, #3072
+ 507 012e D6E90001 		ldrd	r0, r1, [r6]
+ 508 0132 FFF7FEFF 		bl	_ZN5daisy10QSPIHandle5WriteEmmPh
+ 509              	.LVL37:
+ 510 0136 E5E7     		b	.L55
+ 511              	.LVL38:
+ 512              	.L58:
+ 132:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         }
+ 513              		.loc 2 132 48 view .LVU125
+ 514 0138 4FF44061 		mov	r1, #3072
+ 515 013c 2046     		mov	r0, r4
+ 516 013e FFF7FEFF 		bl	dsy_dma_invalidate_cache_for_buffer
+ 517              	.LVL39:
+ 518 0142 D8E7     		b	.L29
+ 519              	.LVL40:
+ 520              	.L56:
+ 132:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         }
+ 521              		.loc 2 132 48 view .LVU126
+ 522              	.LBE101:
+ 523              	.LBE104:
+ 524              	.LBE106:
+ 525              	.LBE108:
+ 526              	.LBB109:
+ 527              	.LBB91:
+  79:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****             StoreSettingsIfChanged();
+ 528              		.loc 2 79 20 view .LVU127
+ 529 0144 0123     		movs	r3, #1
+ 530              	.LVL41:
+ 531              	.LBB83:
+ 532              	.LBB84:
+ 121:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+ 533              		.loc 2 121 9 view .LVU128
+ 534 0146 40F6FC32 		movw	r2, #3068
+ 535 014a 4949     		ldr	r1, .L61+24
+ 536 014c 0DF60C40 		addw	r0, sp, #3084
+ 537              	.LVL42:
+ 120:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         s.user_data     = settings_;
+ 538              		.loc 2 120 25 view .LVU129
+ 539 0150 CDF8083C 		str	r3, [sp, #3080]
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 16
+
+
+ 120:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         s.user_data     = settings_;
+ 540              		.loc 2 120 25 view .LVU130
+ 541 0154 0DF60848 		addw	r8, sp, #3080
+ 542              	.LBE84:
+ 543              	.LBE83:
+  79:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****             StoreSettingsIfChanged();
+ 544              		.loc 2 79 20 view .LVU131
+ 545 0158 C5F80038 		str	r3, [r5, #2048]
+ 546              	.LVL43:
+ 547              	.LBB89:
+ 548              	.LBI83:
+ 117:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+ 549              		.loc 2 117 10 is_stmt 1 view .LVU132
+ 550              	.LBB87:
+ 121:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+ 551              		.loc 2 121 9 is_stmt 0 view .LVU133
+ 552 015c FFF7FEFF 		bl	memcpy
+ 553              	.LVL44:
+ 123:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+ 554              		.loc 2 123 39 view .LVU134
+ 555 0160 D6E90001 		ldrd	r0, r1, [r6]
+ 556 0164 FFF7FEFF 		bl	_ZN5daisy10QSPIHandle7GetDataEm
+ 557              	.LVL45:
+ 558 0168 0446     		mov	r4, r0
+ 559              	.LVL46:
+ 129:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****            != System::MemoryRegion::INTERNAL_FLASH)
+ 560              		.loc 2 129 42 view .LVU135
+ 561 016a FFF7FEFF 		bl	_ZN5daisy6System22GetProgramMemoryRegionEv
+ 562              	.LVL47:
+ 129:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****            != System::MemoryRegion::INTERNAL_FLASH)
+ 563              		.loc 2 129 9 view .LVU136
+ 564 016e 0028     		cmp	r0, #0
+ 565 0170 52D1     		bne	.L59
+ 566              	.L22:
+ 567              	.LVL48:
+ 568              	.LBB85:
+ 569              	.LBI85:
+  26:src/persist.cpp **** };
+ 570              		.loc 1 26 10 is_stmt 1 view .LVU137
+ 571              	.LBB86:
+  26:src/persist.cpp **** };
+ 572              		.loc 1 26 50 view .LVU138
+  26:src/persist.cpp **** };
+ 573              		.loc 1 26 63 is_stmt 0 view .LVU139
+ 574 0172 211D     		adds	r1, r4, #4
+ 575              	.LVL49:
+  26:src/persist.cpp **** };
+ 576              		.loc 1 26 63 view .LVU140
+ 577 0174 40F6FC32 		movw	r2, #3068
+ 578 0178 3D48     		ldr	r0, .L61+24
+ 579              	.LVL50:
+  26:src/persist.cpp **** };
+ 580              		.loc 1 26 63 view .LVU141
+ 581 017a FFF7FEFF 		bl	memcmp
+ 582              	.LVL51:
+  26:src/persist.cpp **** };
+ 583              		.loc 1 26 63 view .LVU142
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 17
+
+
+ 584              	.LBE86:
+ 585              	.LBE85:
+ 140:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         {
+ 586              		.loc 2 140 9 view .LVU143
+ 587 017e 0028     		cmp	r0, #0
+ 588 0180 98D0     		beq	.L24
+ 142:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****             qspi_.Write(address_offset_, sizeof(s), (uint8_t *)&s);
+ 589              		.loc 2 142 24 view .LVU144
+ 590 0182 D6E90001 		ldrd	r0, r1, [r6]
+ 591 0186 01F54062 		add	r2, r1, #3072
+ 592 018a FFF7FEFF 		bl	_ZN5daisy10QSPIHandle5EraseEmm
+ 593              	.LVL52:
+ 594              		.loc 2 143 24 view .LVU145
+ 595 018e 4346     		mov	r3, r8
+ 596 0190 4FF44062 		mov	r2, #3072
+ 597 0194 D6E90001 		ldrd	r0, r1, [r6]
+ 598 0198 FFF7FEFF 		bl	_ZN5daisy10QSPIHandle5WriteEmmPh
+ 599              	.LVL53:
+ 600              		.loc 2 143 24 view .LVU146
+ 601              	.LBE87:
+ 602              	.LBE89:
+ 603              	.LBE91:
+ 604              	.LBE109:
+  94:src/persist.cpp ****     if(s.magic == BANK_MAGIC) {
+ 605              		.loc 1 94 5 is_stmt 1 view .LVU147
+  95:src/persist.cpp ****         deserialize(s);
+ 606              		.loc 1 95 5 view .LVU148
+ 607 019c 354B     		ldr	r3, .L61+28
+ 608 019e D6F8042C 		ldr	r2, [r6, #3076]
+ 609 01a2 9A42     		cmp	r2, r3
+ 610 01a4 8BD1     		bne	.L25
+ 611              	.LVL54:
+ 612              	.L57:
+  95:src/persist.cpp ****         deserialize(s);
+ 613              		.loc 1 95 5 is_stmt 0 view .LVU149
+ 614 01a6 364C     		ldr	r4, .L61+40
+ 615 01a8 364D     		ldr	r5, .L61+44
+ 616 01aa 04F52568 		add	r8, r4, #2640
+ 617              	.L27:
+ 618              	.LBB110:
+ 619              	.LBB111:
+  80:src/persist.cpp ****         set_name(i, b.voices[i].name);
+ 620              		.loc 1 80 9 is_stmt 1 view .LVU150
+  80:src/persist.cpp ****         set_name(i, b.voices[i].name);
+ 621              		.loc 1 80 19 is_stmt 0 view .LVU151
+ 622 01ae A5F1B001 		sub	r1, r5, #176
+ 623 01b2 B022     		movs	r2, #176
+ 624 01b4 2046     		mov	r0, r4
+ 625 01b6 FFF7FEFF 		bl	memcpy
+ 626              	.LVL55:
+  81:src/persist.cpp ****         g_bank[i].scale = id_scale(b.voices[i].scale_id);
+ 627              		.loc 1 81 9 is_stmt 1 view .LVU152
+ 628              	.LBB112:
+ 629              	.LBI112:
+  55:src/persist.cpp ****     strncpy(g_names[i], src ? src : "", VOICE_NAME_MAX - 1);
+ 630              		.loc 1 55 13 view .LVU153
+ 631              	.LBB113:
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 18
+
+
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 632              		.loc 1 56 5 view .LVU154
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 633              		.loc 1 56 12 is_stmt 0 view .LVU155
+ 634 01ba 2946     		mov	r1, r5
+ 635 01bc 1722     		movs	r2, #23
+ 636 01be 3846     		mov	r0, r7
+ 637 01c0 FFF7FEFF 		bl	strncpy
+ 638              	.LVL56:
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 639              		.loc 1 57 5 is_stmt 1 view .LVU156
+ 640 01c4 2B7E     		ldrb	r3, [r5, #24]	@ zero_extendqisi2
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 641              		.loc 1 57 36 is_stmt 0 view .LVU157
+ 642 01c6 0022     		movs	r2, #0
+ 643              	.LBE113:
+ 644              	.LBE112:
+  82:src/persist.cpp ****         g_bank[i].scale_len = id_scale_len(b.voices[i].scale_id);
+ 645              		.loc 1 82 25 view .LVU158
+ 646 01c8 DFF8CCC0 		ldr	ip, .L61+64
+ 647 01cc 013B     		subs	r3, r3, #1
+ 648 01ce 2E48     		ldr	r0, .L61+48
+ 649 01d0 1146     		mov	r1, r2
+ 650              	.LBB115:
+ 651              	.LBB114:
+  58:src/persist.cpp **** }
+ 652              		.loc 1 58 20 view .LVU159
+ 653 01d2 2760     		str	r7, [r4]
+ 654 01d4 DBB2     		uxtb	r3, r3
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 655              		.loc 1 57 36 view .LVU160
+ 656 01d6 FA75     		strb	r2, [r7, #23]
+  58:src/persist.cpp **** }
+ 657              		.loc 1 58 5 is_stmt 1 view .LVU161
+ 658              	.LVL57:
+  58:src/persist.cpp **** }
+ 659              		.loc 1 58 5 is_stmt 0 view .LVU162
+ 660              	.LBE114:
+ 661              	.LBE115:
+  82:src/persist.cpp ****         g_bank[i].scale_len = id_scale_len(b.voices[i].scale_id);
+ 662              		.loc 1 82 9 is_stmt 1 view .LVU163
+ 663              	.LBB116:
+ 664              	.LBI116:
+  38:src/persist.cpp ****     switch(id) {
+ 665              		.loc 1 38 22 view .LVU164
+ 666              	.LBE116:
+ 667              	.LBE111:
+ 668              	.LBE110:
+  39:src/persist.cpp ****         case 1: return SCALE_CHROMATIC;
+ 669              		.loc 1 39 5 view .LVU165
+ 670 01d8 022B     		cmp	r3, #2
+ 671 01da 03D8     		bhi	.L54
+ 672              	.LBB118:
+ 673              	.LBB117:
+  82:src/persist.cpp ****         g_bank[i].scale_len = id_scale_len(b.voices[i].scale_id);
+ 674              		.loc 1 82 25 is_stmt 0 view .LVU166
+ 675 01dc 5CF82320 		ldr	r2, [ip, r3, lsl #2]
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 19
+
+
+ 676 01e0 50F82310 		ldr	r1, [r0, r3, lsl #2]
+ 677              	.L54:
+  79:src/persist.cpp ****         g_bank[i] = b.voices[i].v;                 // raw (pointers fixed up next)
+ 678              		.loc 1 79 22 view .LVU167
+ 679 01e4 1837     		adds	r7, r7, #24
+ 680 01e6 CC35     		adds	r5, r5, #204
+ 681              	.LVL58:
+  83:src/persist.cpp ****     }
+ 682              		.loc 1 83 29 view .LVU168
+ 683 01e8 C4E92321 		strd	r2, r1, [r4, #140]
+  79:src/persist.cpp ****         g_bank[i] = b.voices[i].v;                 // raw (pointers fixed up next)
+ 684              		.loc 1 79 5 is_stmt 1 view .LVU169
+  79:src/persist.cpp ****         g_bank[i] = b.voices[i].v;                 // raw (pointers fixed up next)
+ 685              		.loc 1 79 22 view .LVU170
+ 686 01ec B034     		adds	r4, r4, #176
+ 687 01ee 4445     		cmp	r4, r8
+ 688 01f0 DDD1     		bne	.L27
+ 689              	.LBE117:
+ 690              	.LBE118:
+  97:src/persist.cpp ****     } else {
+ 691              		.loc 1 97 9 view .LVU171
+  97:src/persist.cpp ****     } else {
+ 692              		.loc 1 97 14 is_stmt 0 view .LVU172
+ 693 01f2 D6F8082C 		ldr	r2, [r6, #3080]
+  97:src/persist.cpp ****     } else {
+ 694              		.loc 1 97 70 view .LVU173
+ 695 01f6 204B     		ldr	r3, .L61+32
+  97:src/persist.cpp ****     } else {
+ 696              		.loc 1 97 9 view .LVU174
+ 697 01f8 0E2A     		cmp	r2, #14
+ 698 01fa 84D8     		bhi	.L28
+  97:src/persist.cpp ****     } else {
+ 699              		.loc 1 97 58 is_stmt 1 discriminator 1 view .LVU175
+  97:src/persist.cpp ****     } else {
+ 700              		.loc 1 97 70 is_stmt 0 discriminator 1 view .LVU176
+ 701 01fc 1A60     		str	r2, [r3]
+ 103:src/persist.cpp **** }
+ 702              		.loc 1 103 5 is_stmt 1 discriminator 1 view .LVU177
+ 103:src/persist.cpp **** }
+ 703              		.loc 1 103 35 is_stmt 0 discriminator 1 view .LVU178
+ 704 01fe 1A68     		ldr	r2, [r3]
+ 103:src/persist.cpp **** }
+ 705              		.loc 1 103 49 discriminator 1 view .LVU179
+ 706 0200 0E2A     		cmp	r2, #14
+ 707 0202 83D1     		bne	.L60
+ 708              	.LVL59:
+ 709              	.L33:
+ 103:src/persist.cpp **** }
+ 710              		.loc 1 103 49 view .LVU180
+ 711 0204 0922     		movs	r2, #9
+ 712 0206 82E7     		b	.L31
+ 713              	.LVL60:
+ 714              	.L18:
+  89:src/persist.cpp ****     g_store = &store;
+ 715              		.loc 1 89 55 discriminator 1 view .LVU181
+ 716 0208 4046     		mov	r0, r8
+ 717              	.LBB119:
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 20
+
+
+ 718              	.LBB120:
+ 719              	.LBB121:
+  52:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+ 720              		.loc 2 52 28 discriminator 1 view .LVU182
+ 721 020a 164E     		ldr	r6, .L61+12
+ 722              	.LBE121:
+ 723              	.LBE120:
+ 724              	.LBE119:
+  89:src/persist.cpp ****     g_store = &store;
+ 725              		.loc 1 89 55 discriminator 1 view .LVU183
+ 726 020c FFF7FEFF 		bl	__cxa_guard_acquire
+ 727              	.LVL61:
+ 728 0210 40B9     		cbnz	r0, .L49
+ 729 0212 06F58055 		add	r5, r6, #4096
+ 730 0216 2AE7     		b	.L19
+ 731              	.LVL62:
+ 732              	.L59:
+ 733              	.LBB126:
+ 734              	.LBB92:
+ 735              	.LBB90:
+ 736              	.LBB88:
+ 132:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         }
+ 737              		.loc 2 132 48 view .LVU184
+ 738 0218 4FF44061 		mov	r1, #3072
+ 739 021c 2046     		mov	r0, r4
+ 740 021e FFF7FEFF 		bl	dsy_dma_invalidate_cache_for_buffer
+ 741              	.LVL63:
+ 742 0222 A6E7     		b	.L22
+ 743              	.LVL64:
+ 744              	.L49:
+ 132:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         }
+ 745              		.loc 2 132 48 view .LVU185
+ 746              	.LBE88:
+ 747              	.LBE90:
+ 748              	.LBE92:
+ 749              	.LBE126:
+ 750              	.LBB127:
+ 751              	.LBI119:
+  47:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     : qspi_(qspi),
+ 752              		.loc 2 47 5 is_stmt 1 view .LVU186
+ 753              	.LBB124:
+ 754              	.LBB122:
+  52:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+ 755              		.loc 2 52 28 is_stmt 0 view .LVU187
+ 756 0224 194B     		ldr	r3, .L61+52
+ 757 0226 2146     		mov	r1, r4
+ 758 0228 40F6FC32 		movw	r2, #3068
+ 759 022c 06F10800 		add	r0, r6, #8
+ 760 0230 06F58055 		add	r5, r6, #4096
+ 761 0234 C6E90034 		strd	r3, r4, [r6]
+ 762 0238 FFF7FEFF 		bl	memset
+ 763              	.LVL65:
+ 764 023c 40F6FC32 		movw	r2, #3068
+ 765 0240 2146     		mov	r1, r4
+ 766 0242 06F60440 		addw	r0, r6, #3076
+ 767 0246 FFF7FEFF 		bl	memset
+ 768              	.LVL66:
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 21
+
+
+ 769              	.LBE122:
+ 770              	.LBE124:
+ 771              	.LBE127:
+  89:src/persist.cpp ****     g_store = &store;
+ 772              		.loc 1 89 55 view .LVU188
+ 773 024a 4046     		mov	r0, r8
+ 774              	.LBB128:
+ 775              	.LBB125:
+ 776              	.LBB123:
+  52:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+ 777              		.loc 2 52 28 view .LVU189
+ 778 024c C5F80048 		str	r4, [r5, #2048]
+ 779              	.LVL67:
+  52:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+ 780              		.loc 2 52 28 view .LVU190
+ 781              	.LBE123:
+ 782              	.LBE125:
+ 783              	.LBE128:
+  89:src/persist.cpp ****     g_store = &store;
+ 784              		.loc 1 89 55 view .LVU191
+ 785 0250 FFF7FEFF 		bl	__cxa_guard_release
+ 786              	.LVL68:
+ 787 0254 0BE7     		b	.L19
+ 788              	.L62:
+ 789 0256 00BF     		.align	2
+ 790              	.L61:
+ 791 0258 00000000 		.word	.LANCHOR4
+ 792 025c 00000000 		.word	.LC0
+ 793 0260 08000000 		.word	.LC1
+ 794 0264 00000000 		.word	_ZZ12persist_initvE5store
+ 795 0268 00000000 		.word	.LANCHOR7
+ 796 026c 08000000 		.word	_ZZ12persist_initvE5store+8
+ 797 0270 040C0000 		.word	_ZZ12persist_initvE5store+3076
+ 798 0274 31425647 		.word	1196835377
+ 799 0278 00000000 		.word	g_voice_idx
+ 800 027c 00000000 		.word	g_active_voice
+ 801 0280 00000000 		.word	.LANCHOR0
+ 802 0284 BC0C0000 		.word	_ZZ12persist_initvE5store+3260
+ 803 0288 00000000 		.word	.LANCHOR9
+ 804 028c 00000000 		.word	hw
+ 805 0290 00000000 		.word	.LANCHOR5
+ 806 0294 00000000 		.word	.LANCHOR6
+ 807 0298 00000000 		.word	.LANCHOR8
+ 808              		.cfi_endproc
+ 809              	.LFE2588:
+ 811              		.section	.text._Z8bank_setiRK5VoicePKc,"ax",%progbits
+ 812              		.align	1
+ 813              		.p2align 2,,3
+ 814              		.global	_Z8bank_setiRK5VoicePKc
+ 815              		.syntax unified
+ 816              		.thumb
+ 817              		.thumb_func
+ 819              	_Z8bank_setiRK5VoicePKc:
+ 820              	.LVL69:
+ 821              	.LFB2590:
+ 105:src/persist.cpp **** 
+ 106:src/persist.cpp **** void persist_save_bank() {
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 22
+
+
+ 107:src/persist.cpp ****     if(!g_store) return;
+ 108:src/persist.cpp ****     serialize(g_store->GetSettings());
+ 109:src/persist.cpp ****     g_store->Save();                 // erases/writes QSPI only if the blob changed
+ 110:src/persist.cpp **** }
+ 111:src/persist.cpp **** 
+ 112:src/persist.cpp **** void bank_set(int idx, const Voice &src, const char *name) {
+ 822              		.loc 1 112 60 is_stmt 1 view -0
+ 823              		.cfi_startproc
+ 824              		@ args = 0, pretend = 0, frame = 0
+ 825              		@ frame_needed = 0, uses_anonymous_args = 0
+ 113:src/persist.cpp ****     if(idx < 0 || idx >= NUM_VOICES) return;
+ 826              		.loc 1 113 5 view .LVU193
+ 827 0000 0E28     		cmp	r0, #14
+ 828 0002 00D9     		bls	.L70
+ 829 0004 7047     		bx	lr
+ 830              	.L70:
+ 114:src/persist.cpp ****     g_bank[idx] = src;
+ 831              		.loc 1 114 5 view .LVU194
+ 112:src/persist.cpp ****     if(idx < 0 || idx >= NUM_VOICES) return;
+ 832              		.loc 1 112 60 is_stmt 0 view .LVU195
+ 833 0006 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 834              		.cfi_def_cfa_offset 24
+ 835              		.cfi_offset 4, -24
+ 836              		.cfi_offset 5, -20
+ 837              		.cfi_offset 6, -16
+ 838              		.cfi_offset 7, -12
+ 839              		.cfi_offset 8, -8
+ 840              		.cfi_offset 14, -4
+ 841 000a 1546     		mov	r5, r2
+ 842              		.loc 1 114 17 view .LVU196
+ 843 000c DFF84C80 		ldr	r8, .L72+8
+ 844 0010 B022     		movs	r2, #176
+ 845              	.LVL70:
+ 846              		.loc 1 114 17 view .LVU197
+ 847 0012 0446     		mov	r4, r0
+ 848              	.LBB131:
+ 849              	.LBB132:
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 850              		.loc 1 56 22 view .LVU198
+ 851 0014 4700     		lsls	r7, r0, #1
+ 852 0016 0F4E     		ldr	r6, .L72
+ 853              	.LBE132:
+ 854              	.LBE131:
+ 855              		.loc 1 114 17 view .LVU199
+ 856 0018 02FB0080 		mla	r0, r2, r0, r8
+ 857              	.LVL71:
+ 858              		.loc 1 114 17 view .LVU200
+ 859 001c FFF7FEFF 		bl	memcpy
+ 860              	.LVL72:
+ 115:src/persist.cpp ****     set_name(idx, name);             // repoint name at the slot's RAM buffer
+ 861              		.loc 1 115 5 is_stmt 1 view .LVU201
+ 862              	.LBB135:
+ 863              	.LBI131:
+  55:src/persist.cpp ****     strncpy(g_names[i], src ? src : "", VOICE_NAME_MAX - 1);
+ 864              		.loc 1 55 13 view .LVU202
+ 865              	.LBB133:
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 23
+
+
+ 866              		.loc 1 56 5 view .LVU203
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 867              		.loc 1 56 22 is_stmt 0 view .LVU204
+ 868 0020 04EB4403 		add	r3, r4, r4, lsl #1
+ 869 0024 06EBC303 		add	r3, r6, r3, lsl #3
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 870              		.loc 1 56 12 view .LVU205
+ 871 0028 8DB1     		cbz	r5, .L71
+ 872              	.LVL73:
+ 873              	.L65:
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 874              		.loc 1 56 12 view .LVU206
+ 875 002a 1722     		movs	r2, #23
+ 876 002c 1846     		mov	r0, r3
+ 877 002e 2946     		mov	r1, r5
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 878              		.loc 1 57 36 view .LVU207
+ 879 0030 2744     		add	r7, r7, r4
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 880              		.loc 1 56 12 view .LVU208
+ 881 0032 FFF7FEFF 		bl	strncpy
+ 882              	.LVL74:
+ 883 0036 0346     		mov	r3, r0
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 884              		.loc 1 57 5 is_stmt 1 view .LVU209
+  58:src/persist.cpp **** }
+ 885              		.loc 1 58 20 is_stmt 0 view .LVU210
+ 886 0038 B020     		movs	r0, #176
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 887              		.loc 1 57 36 view .LVU211
+ 888 003a 06EBC706 		add	r6, r6, r7, lsl #3
+ 889 003e 0022     		movs	r2, #0
+  58:src/persist.cpp **** }
+ 890              		.loc 1 58 20 view .LVU212
+ 891 0040 00FB04F4 		mul	r4, r0, r4
+ 892              	.LVL75:
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 893              		.loc 1 57 36 view .LVU213
+ 894 0044 F275     		strb	r2, [r6, #23]
+  58:src/persist.cpp **** }
+ 895              		.loc 1 58 5 is_stmt 1 view .LVU214
+  58:src/persist.cpp **** }
+ 896              		.loc 1 58 20 is_stmt 0 view .LVU215
+ 897 0046 48F80430 		str	r3, [r8, r4]
+ 898              	.LVL76:
+  58:src/persist.cpp **** }
+ 899              		.loc 1 58 20 view .LVU216
+ 900              	.LBE133:
+ 901              	.LBE135:
+ 116:src/persist.cpp **** }
+ 902              		.loc 1 116 1 view .LVU217
+ 903 004a BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 904              	.LVL77:
+ 905              	.L71:
+ 906              	.LBB136:
+ 907              	.LBB134:
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 24
+
+
+ 908              		.loc 1 56 12 view .LVU218
+ 909 004e 024D     		ldr	r5, .L72+4
+ 910              	.LVL78:
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 911              		.loc 1 56 12 view .LVU219
+ 912 0050 EBE7     		b	.L65
+ 913              	.L73:
+ 914 0052 00BF     		.align	2
+ 915              	.L72:
+ 916 0054 00000000 		.word	.LANCHOR4
+ 917 0058 08000000 		.word	.LC1
+ 918 005c 00000000 		.word	.LANCHOR0
+ 919              	.LBE134:
+ 920              	.LBE136:
+ 921              		.cfi_endproc
+ 922              	.LFE2590:
+ 924              		.section	.text._Z17bank_revert_voicei,"ax",%progbits
+ 925              		.align	1
+ 926              		.p2align 2,,3
+ 927              		.global	_Z17bank_revert_voicei
+ 928              		.syntax unified
+ 929              		.thumb
+ 930              		.thumb_func
+ 932              	_Z17bank_revert_voicei:
+ 933              	.LVL79:
+ 934              	.LFB2591:
+ 117:src/persist.cpp **** 
+ 118:src/persist.cpp **** void bank_revert_voice(int idx) {
+ 935              		.loc 1 118 33 is_stmt 1 view -0
+ 936              		.cfi_startproc
+ 937              		@ args = 0, pretend = 0, frame = 0
+ 938              		@ frame_needed = 0, uses_anonymous_args = 0
+ 119:src/persist.cpp ****     if(idx < 0 || idx >= NUM_VOICES) return;
+ 939              		.loc 1 119 5 view .LVU221
+ 940 0000 0E28     		cmp	r0, #14
+ 941 0002 00D9     		bls	.L81
+ 942 0004 7047     		bx	lr
+ 943              	.L81:
+ 944              	.LVL80:
+ 945              	.LBB141:
+ 946              	.LBI141:
+ 118:src/persist.cpp ****     if(idx < 0 || idx >= NUM_VOICES) return;
+ 947              		.loc 1 118 6 view .LVU222
+ 948              	.LBB142:
+ 120:src/persist.cpp ****     g_bank[idx] = VOICES[idx];
+ 949              		.loc 1 120 5 view .LVU223
+ 950              		.loc 1 120 17 is_stmt 0 view .LVU224
+ 951 0006 B022     		movs	r2, #176
+ 952              	.LBE142:
+ 953              	.LBE141:
+ 118:src/persist.cpp ****     if(idx < 0 || idx >= NUM_VOICES) return;
+ 954              		.loc 1 118 33 view .LVU225
+ 955 0008 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 956              		.cfi_def_cfa_offset 32
+ 957              		.cfi_offset 3, -32
+ 958              		.cfi_offset 4, -28
+ 959              		.cfi_offset 5, -24
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 25
+
+
+ 960              		.cfi_offset 6, -20
+ 961              		.cfi_offset 7, -16
+ 962              		.cfi_offset 8, -12
+ 963              		.cfi_offset 9, -8
+ 964              		.cfi_offset 14, -4
+ 965              	.LBB153:
+ 966              	.LBB151:
+ 967              		.loc 1 120 17 view .LVU226
+ 968 000c 02FB00F8 		mul	r8, r2, r0
+ 969 0010 DFF85490 		ldr	r9, .L83+12
+ 970 0014 114F     		ldr	r7, .L83
+ 971 0016 0446     		mov	r4, r0
+ 972 0018 09EB0801 		add	r1, r9, r8
+ 973              	.LBB143:
+ 974              	.LBB144:
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 975              		.loc 1 56 22 view .LVU227
+ 976 001c 4600     		lsls	r6, r0, #1
+ 977              	.LBE144:
+ 978              	.LBE143:
+ 979              		.loc 1 120 17 view .LVU228
+ 980 001e 07EB0800 		add	r0, r7, r8
+ 981              	.LVL81:
+ 982              	.LBB148:
+ 983              	.LBB145:
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 984              		.loc 1 56 22 view .LVU229
+ 985 0022 0F4D     		ldr	r5, .L83+4
+ 986              	.LBE145:
+ 987              	.LBE148:
+ 988              		.loc 1 120 17 view .LVU230
+ 989 0024 FFF7FEFF 		bl	memcpy
+ 990              	.LVL82:
+ 121:src/persist.cpp ****     set_name(idx, VOICES[idx].name);
+ 991              		.loc 1 121 5 is_stmt 1 view .LVU231
+ 992              		.loc 1 121 31 is_stmt 0 view .LVU232
+ 993 0028 59F80810 		ldr	r1, [r9, r8]
+ 994              	.LVL83:
+ 995              	.LBB149:
+ 996              	.LBI143:
+  55:src/persist.cpp ****     strncpy(g_names[i], src ? src : "", VOICE_NAME_MAX - 1);
+ 997              		.loc 1 55 13 is_stmt 1 view .LVU233
+ 998              	.LBB146:
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 999              		.loc 1 56 5 view .LVU234
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 1000              		.loc 1 56 22 is_stmt 0 view .LVU235
+ 1001 002c 04EB4403 		add	r3, r4, r4, lsl #1
+ 1002 0030 05EBC303 		add	r3, r5, r3, lsl #3
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 1003              		.loc 1 56 12 view .LVU236
+ 1004 0034 79B1     		cbz	r1, .L82
+ 1005              	.LVL84:
+ 1006              	.L76:
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 1007              		.loc 1 56 12 view .LVU237
+ 1008 0036 1722     		movs	r2, #23
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 26
+
+
+ 1009 0038 1846     		mov	r0, r3
+ 1010 003a FFF7FEFF 		bl	strncpy
+ 1011              	.LVL85:
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 1012              		.loc 1 57 36 view .LVU238
+ 1013 003e 3219     		adds	r2, r6, r4
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 1014              		.loc 1 56 12 view .LVU239
+ 1015 0040 0346     		mov	r3, r0
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 1016              		.loc 1 57 5 is_stmt 1 view .LVU240
+  58:src/persist.cpp **** }
+ 1017              		.loc 1 58 20 is_stmt 0 view .LVU241
+ 1018 0042 B020     		movs	r0, #176
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 1019              		.loc 1 57 36 view .LVU242
+ 1020 0044 05EBC202 		add	r2, r5, r2, lsl #3
+ 1021 0048 0021     		movs	r1, #0
+  58:src/persist.cpp **** }
+ 1022              		.loc 1 58 20 view .LVU243
+ 1023 004a 00FB04F4 		mul	r4, r0, r4
+ 1024              	.LVL86:
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 1025              		.loc 1 57 36 view .LVU244
+ 1026 004e D175     		strb	r1, [r2, #23]
+  58:src/persist.cpp **** }
+ 1027              		.loc 1 58 5 is_stmt 1 view .LVU245
+  58:src/persist.cpp **** }
+ 1028              		.loc 1 58 20 is_stmt 0 view .LVU246
+ 1029 0050 3B51     		str	r3, [r7, r4]
+ 1030              	.LVL87:
+  58:src/persist.cpp **** }
+ 1031              		.loc 1 58 20 view .LVU247
+ 1032              	.LBE146:
+ 1033              	.LBE149:
+ 1034              	.LBE151:
+ 1035              	.LBE153:
+ 122:src/persist.cpp **** }
+ 1036              		.loc 1 122 1 view .LVU248
+ 1037 0052 BDE8F883 		pop	{r3, r4, r5, r6, r7, r8, r9, pc}
+ 1038              	.LVL88:
+ 1039              	.L82:
+ 1040              	.LBB154:
+ 1041              	.LBB152:
+ 1042              	.LBB150:
+ 1043              	.LBB147:
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 1044              		.loc 1 56 12 view .LVU249
+ 1045 0056 0349     		ldr	r1, .L83+8
+ 1046              	.LVL89:
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 1047              		.loc 1 56 12 view .LVU250
+ 1048 0058 EDE7     		b	.L76
+ 1049              	.L84:
+ 1050 005a 00BF     		.align	2
+ 1051              	.L83:
+ 1052 005c 00000000 		.word	.LANCHOR0
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 27
+
+
+ 1053 0060 00000000 		.word	.LANCHOR4
+ 1054 0064 08000000 		.word	.LC1
+ 1055 0068 00000000 		.word	.LANCHOR5
+ 1056              	.LBE147:
+ 1057              	.LBE150:
+ 1058              	.LBE152:
+ 1059              	.LBE154:
+ 1060              		.cfi_endproc
+ 1061              	.LFE2591:
+ 1063              		.section	.text._Z15bank_revert_allv,"ax",%progbits
+ 1064              		.align	1
+ 1065              		.p2align 2,,3
+ 1066              		.global	_Z15bank_revert_allv
+ 1067              		.syntax unified
+ 1068              		.thumb
+ 1069              		.thumb_func
+ 1071              	_Z15bank_revert_allv:
+ 1072              	.LFB2592:
+ 123:src/persist.cpp **** 
+ 124:src/persist.cpp **** void bank_revert_all() {
+ 1073              		.loc 1 124 24 is_stmt 1 view -0
+ 1074              		.cfi_startproc
+ 1075              		@ args = 0, pretend = 0, frame = 0
+ 1076              		@ frame_needed = 0, uses_anonymous_args = 0
+ 125:src/persist.cpp ****     for(int i = 0; i < NUM_VOICES; i++) bank_revert_voice(i);
+ 1077              		.loc 1 125 5 view .LVU252
+ 1078              	.LVL90:
+ 1079              	.LBB162:
+ 1080              		.loc 1 125 22 view .LVU253
+ 1081              	.LBE162:
+ 124:src/persist.cpp ****     for(int i = 0; i < NUM_VOICES; i++) bank_revert_voice(i);
+ 1082              		.loc 1 124 24 is_stmt 0 view .LVU254
+ 1083 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 1084              		.cfi_def_cfa_offset 24
+ 1085              		.cfi_offset 4, -24
+ 1086              		.cfi_offset 5, -20
+ 1087              		.cfi_offset 6, -16
+ 1088              		.cfi_offset 7, -12
+ 1089              		.cfi_offset 8, -8
+ 1090              		.cfi_offset 14, -4
+ 1091 0004 124D     		ldr	r5, .L90
+ 124:src/persist.cpp ****     for(int i = 0; i < NUM_VOICES; i++) bank_revert_voice(i);
+ 1092              		.loc 1 124 24 view .LVU255
+ 1093 0006 0024     		movs	r4, #0
+ 1094 0008 124E     		ldr	r6, .L90+4
+ 1095 000a 134F     		ldr	r7, .L90+8
+ 1096 000c DFF85080 		ldr	r8, .L90+16
+ 1097 0010 0EE0     		b	.L88
+ 1098              	.LVL91:
+ 1099              	.L86:
+ 1100              	.LBB187:
+ 1101              	.LBB163:
+ 1102              	.LBB164:
+ 1103              	.LBB165:
+ 1104              	.LBB166:
+ 1105              	.LBB167:
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 28
+
+
+ 1106              		.loc 1 56 12 view .LVU256
+ 1107 0012 3146     		mov	r1, r6
+ 1108 0014 FFF7FEFF 		bl	strncpy
+ 1109              	.LVL92:
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 1110              		.loc 1 57 5 is_stmt 1 view .LVU257
+  58:src/persist.cpp **** }
+ 1111              		.loc 1 58 20 is_stmt 0 view .LVU258
+ 1112 0018 47F82450 		str	r5, [r7, r4, lsl #2]
+ 1113              	.LBE167:
+ 1114              	.LBE166:
+ 1115              	.LBE165:
+ 1116              	.LBE164:
+ 1117              	.LBE163:
+ 1118              		.loc 1 125 22 view .LVU259
+ 1119 001c 2C34     		adds	r4, r4, #44
+ 1120              	.LBB182:
+ 1121              	.LBB178:
+ 1122              	.LBB174:
+ 1123              	.LBB171:
+ 1124              	.LBB168:
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 1125              		.loc 1 57 36 view .LVU260
+ 1126 001e 0023     		movs	r3, #0
+ 1127              	.LBE168:
+ 1128              	.LBE171:
+ 1129              	.LBE174:
+ 1130              	.LBE178:
+ 1131              	.LBE182:
+ 1132              		.loc 1 125 22 view .LVU261
+ 1133 0020 1835     		adds	r5, r5, #24
+ 1134 0022 B4F5257F 		cmp	r4, #660
+ 1135              	.LBB183:
+ 1136              	.LBB179:
+ 1137              	.LBB175:
+ 1138              	.LBB172:
+ 1139              	.LBB169:
+  57:src/persist.cpp ****     g_bank[i].name = g_names[i];
+ 1140              		.loc 1 57 36 view .LVU262
+ 1141 0026 05F8013C 		strb	r3, [r5, #-1]
+  58:src/persist.cpp **** }
+ 1142              		.loc 1 58 5 is_stmt 1 view .LVU263
+ 1143              	.LBE169:
+ 1144              	.LBE172:
+ 1145              	.LBE175:
+ 1146              	.LBE179:
+ 1147              	.LBE183:
+ 1148              		.loc 1 125 5 view .LVU264
+ 1149              		.loc 1 125 22 view .LVU265
+ 1150 002a 0ED0     		beq	.L85
+ 1151              	.LBB184:
+ 1152              	.LBB180:
+ 1153              	.LBB176:
+ 121:src/persist.cpp **** }
+ 1154              		.loc 1 121 31 is_stmt 0 view .LVU266
+ 1155 002c 58F82460 		ldr	r6, [r8, r4, lsl #2]
+ 1156              	.L88:
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 29
+
+
+ 1157              	.LBE176:
+ 1158              	.LBE180:
+ 1159              	.LBE184:
+ 1160              		.loc 1 125 41 is_stmt 1 view .LVU267
+ 1161              	.LBB185:
+ 1162              	.LBI163:
+ 118:src/persist.cpp ****     if(idx < 0 || idx >= NUM_VOICES) return;
+ 1163              		.loc 1 118 6 view .LVU268
+ 1164              	.LBE185:
+ 1165              	.LBE187:
+ 119:src/persist.cpp ****     g_bank[idx] = VOICES[idx];
+ 1166              		.loc 1 119 5 view .LVU269
+ 1167              	.LBB188:
+ 1168              	.LBB186:
+ 1169              	.LBB181:
+ 1170              	.LBI164:
+ 118:src/persist.cpp ****     if(idx < 0 || idx >= NUM_VOICES) return;
+ 1171              		.loc 1 118 6 view .LVU270
+ 1172              	.LBB177:
+ 120:src/persist.cpp ****     set_name(idx, VOICES[idx].name);
+ 1173              		.loc 1 120 5 view .LVU271
+ 120:src/persist.cpp ****     set_name(idx, VOICES[idx].name);
+ 1174              		.loc 1 120 17 is_stmt 0 view .LVU272
+ 1175 0030 B022     		movs	r2, #176
+ 1176 0032 08EB8401 		add	r1, r8, r4, lsl #2
+ 1177 0036 07EB8400 		add	r0, r7, r4, lsl #2
+ 1178 003a FFF7FEFF 		bl	memcpy
+ 1179              	.LVL93:
+ 121:src/persist.cpp **** }
+ 1180              		.loc 1 121 5 is_stmt 1 view .LVU273
+ 1181              	.LBB173:
+ 1182              	.LBI166:
+  55:src/persist.cpp ****     strncpy(g_names[i], src ? src : "", VOICE_NAME_MAX - 1);
+ 1183              		.loc 1 55 13 view .LVU274
+ 1184              	.LBB170:
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 1185              		.loc 1 56 5 view .LVU275
+  56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
+ 1186              		.loc 1 56 12 is_stmt 0 view .LVU276
+ 1187 003e 1722     		movs	r2, #23
+ 1188 0040 2846     		mov	r0, r5
+ 1189 0042 002E     		cmp	r6, #0
+ 1190 0044 E5D1     		bne	.L86
+ 1191 0046 054E     		ldr	r6, .L90+12
+ 1192 0048 E3E7     		b	.L86
+ 1193              	.L85:
+ 1194              	.LBE170:
+ 1195              	.LBE173:
+ 1196              	.LBE177:
+ 1197              	.LBE181:
+ 1198              	.LBE186:
+ 1199              	.LBE188:
+ 126:src/persist.cpp **** }
+ 1200              		.loc 1 126 1 view .LVU277
+ 1201 004a BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 1202              	.L91:
+ 1203 004e 00BF     		.align	2
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 30
+
+
+ 1204              	.L90:
+ 1205 0050 00000000 		.word	.LANCHOR4
+ 1206 0054 00000000 		.word	.LC0
+ 1207 0058 00000000 		.word	.LANCHOR0
+ 1208 005c 08000000 		.word	.LC1
+ 1209 0060 00000000 		.word	.LANCHOR5
+ 1210              		.cfi_endproc
+ 1211              	.LFE2592:
+ 1213              		.section	.text._ZN5daisy17PersistentStorageI10StoredBankE22StoreSettingsIfChangedEv,"axG",%progbit
+ 1214              		.align	1
+ 1215              		.p2align 2,,3
+ 1216              		.weak	_ZN5daisy17PersistentStorageI10StoredBankE22StoreSettingsIfChangedEv
+ 1217              		.syntax unified
+ 1218              		.thumb
+ 1219              		.thumb_func
+ 1221              	_ZN5daisy17PersistentStorageI10StoredBankE22StoreSettingsIfChangedEv:
+ 1222              	.LVL94:
+ 1223              	.LFB2614:
+ 117:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+ 1224              		.loc 2 117 10 is_stmt 1 view -0
+ 1225              		.cfi_startproc
+ 1226              		@ args = 0, pretend = 0, frame = 3072
+ 1227              		@ frame_needed = 0, uses_anonymous_args = 0
+ 117:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+ 1228              		.loc 2 117 10 is_stmt 0 view .LVU279
+ 1229 0000 70B5     		push	{r4, r5, r6, lr}
+ 1230              		.cfi_def_cfa_offset 16
+ 1231              		.cfi_offset 4, -16
+ 1232              		.cfi_offset 5, -12
+ 1233              		.cfi_offset 6, -8
+ 1234              		.cfi_offset 14, -4
+ 1235 0002 0446     		mov	r4, r0
+ 1236 0004 ADF5406D 		sub	sp, sp, #3072
+ 1237              		.cfi_def_cfa_offset 3088
+ 121:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+ 1238              		.loc 2 121 9 view .LVU280
+ 1239 0008 40F6FC32 		movw	r2, #3068
+ 120:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         s.user_data     = settings_;
+ 1240              		.loc 2 120 27 view .LVU281
+ 1241 000c 04F58053 		add	r3, r4, #4096
+ 121:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+ 1242              		.loc 2 121 9 view .LVU282
+ 1243 0010 04F60446 		addw	r6, r4, #3076
+ 1244 0014 01A8     		add	r0, sp, #4
+ 1245              	.LVL95:
+ 120:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         s.user_data     = settings_;
+ 1246              		.loc 2 120 25 view .LVU283
+ 1247 0016 D3F80038 		ldr	r3, [r3, #2048]
+ 121:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+ 1248              		.loc 2 121 9 view .LVU284
+ 1249 001a 3146     		mov	r1, r6
+ 120:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         s.user_data     = settings_;
+ 1250              		.loc 2 120 25 view .LVU285
+ 1251 001c 0093     		str	r3, [sp]
+ 121:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+ 1252              		.loc 2 121 9 view .LVU286
+ 1253 001e FFF7FEFF 		bl	memcpy
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 31
+
+
+ 1254              	.LVL96:
+ 123:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+ 1255              		.loc 2 123 39 view .LVU287
+ 1256 0022 D4E90001 		ldrd	r0, r1, [r4]
+ 1257 0026 FFF7FEFF 		bl	_ZN5daisy10QSPIHandle7GetDataEm
+ 1258              	.LVL97:
+ 1259 002a 0546     		mov	r5, r0
+ 1260              	.LVL98:
+ 129:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****            != System::MemoryRegion::INTERNAL_FLASH)
+ 1261              		.loc 2 129 42 view .LVU288
+ 1262 002c FFF7FEFF 		bl	_ZN5daisy6System22GetProgramMemoryRegionEv
+ 1263              	.LVL99:
+ 129:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****            != System::MemoryRegion::INTERNAL_FLASH)
+ 1264              		.loc 2 129 9 view .LVU289
+ 1265 0030 48B9     		cbnz	r0, .L102
+ 1266              	.LVL100:
+ 1267              	.LBB189:
+ 1268              	.LBI189:
+  26:src/persist.cpp **** };
+ 1269              		.loc 1 26 10 is_stmt 1 view .LVU290
+ 1270              	.LBB190:
+  26:src/persist.cpp **** };
+ 1271              		.loc 1 26 50 view .LVU291
+  26:src/persist.cpp **** };
+ 1272              		.loc 1 26 63 is_stmt 0 view .LVU292
+ 1273 0032 40F6FC32 		movw	r2, #3068
+ 1274 0036 291D     		adds	r1, r5, #4
+ 1275              	.LVL101:
+  26:src/persist.cpp **** };
+ 1276              		.loc 1 26 63 view .LVU293
+ 1277 0038 3046     		mov	r0, r6
+ 1278 003a FFF7FEFF 		bl	memcmp
+ 1279              	.LVL102:
+  26:src/persist.cpp **** };
+ 1280              		.loc 1 26 63 view .LVU294
+ 1281              	.LBE190:
+ 1282              	.LBE189:
+ 140:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         {
+ 1283              		.loc 2 140 9 view .LVU295
+ 1284 003e 78B9     		cbnz	r0, .L103
+ 1285              	.L92:
+ 144:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         }
+ 145:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     }
+ 1286              		.loc 2 145 5 view .LVU296
+ 1287 0040 0DF5406D 		add	sp, sp, #3072
+ 1288              		.cfi_remember_state
+ 1289              		.cfi_def_cfa_offset 16
+ 1290              		@ sp needed
+ 1291 0044 70BD     		pop	{r4, r5, r6, pc}
+ 1292              	.LVL103:
+ 1293              	.L102:
+ 1294              		.cfi_restore_state
+ 132:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         }
+ 1295              		.loc 2 132 48 view .LVU297
+ 1296 0046 4FF44061 		mov	r1, #3072
+ 1297 004a 2846     		mov	r0, r5
+ 1298 004c FFF7FEFF 		bl	dsy_dma_invalidate_cache_for_buffer
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 32
+
+
+ 1299              	.LVL104:
+ 1300              	.LBB192:
+  26:src/persist.cpp **** };
+ 1301              		.loc 1 26 10 is_stmt 1 view .LVU298
+ 1302              	.LBB191:
+  26:src/persist.cpp **** };
+ 1303              		.loc 1 26 50 view .LVU299
+  26:src/persist.cpp **** };
+ 1304              		.loc 1 26 63 is_stmt 0 view .LVU300
+ 1305 0050 40F6FC32 		movw	r2, #3068
+ 1306 0054 291D     		adds	r1, r5, #4
+ 1307              	.LVL105:
+  26:src/persist.cpp **** };
+ 1308              		.loc 1 26 63 view .LVU301
+ 1309 0056 3046     		mov	r0, r6
+ 1310 0058 FFF7FEFF 		bl	memcmp
+ 1311              	.LVL106:
+  26:src/persist.cpp **** };
+ 1312              		.loc 1 26 63 view .LVU302
+ 1313              	.LBE191:
+ 1314              	.LBE192:
+ 140:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         {
+ 1315              		.loc 2 140 9 view .LVU303
+ 1316 005c 0028     		cmp	r0, #0
+ 1317 005e EFD0     		beq	.L92
+ 1318              	.L103:
+ 142:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****             qspi_.Write(address_offset_, sizeof(s), (uint8_t *)&s);
+ 1319              		.loc 2 142 24 view .LVU304
+ 1320 0060 6168     		ldr	r1, [r4, #4]
+ 1321 0062 2068     		ldr	r0, [r4]
+ 1322 0064 01F54062 		add	r2, r1, #3072
+ 1323 0068 FFF7FEFF 		bl	_ZN5daisy10QSPIHandle5EraseEmm
+ 1324              	.LVL107:
+ 143:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         }
+ 1325              		.loc 2 143 24 view .LVU305
+ 1326 006c 6B46     		mov	r3, sp
+ 1327 006e 4FF44062 		mov	r2, #3072
+ 1328 0072 D4E90001 		ldrd	r0, r1, [r4]
+ 1329 0076 FFF7FEFF 		bl	_ZN5daisy10QSPIHandle5WriteEmmPh
+ 1330              	.LVL108:
+ 1331              		.loc 2 145 5 view .LVU306
+ 1332 007a 0DF5406D 		add	sp, sp, #3072
+ 1333              		.cfi_def_cfa_offset 16
+ 1334              		@ sp needed
+ 1335 007e 70BD     		pop	{r4, r5, r6, pc}
+ 1336              		.loc 2 145 5 view .LVU307
+ 1337              		.cfi_endproc
+ 1338              	.LFE2614:
+ 1340              		.section	.text._Z17persist_save_bankv,"ax",%progbits
+ 1341              		.align	1
+ 1342              		.p2align 2,,3
+ 1343              		.global	_Z17persist_save_bankv
+ 1344              		.syntax unified
+ 1345              		.thumb
+ 1346              		.thumb_func
+ 1348              	_Z17persist_save_bankv:
+ 1349              	.LFB2589:
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 33
+
+
+ 106:src/persist.cpp ****     if(!g_store) return;
+ 1350              		.loc 1 106 26 is_stmt 1 view -0
+ 1351              		.cfi_startproc
+ 1352              		@ args = 0, pretend = 0, frame = 0
+ 1353              		@ frame_needed = 0, uses_anonymous_args = 0
+ 107:src/persist.cpp ****     serialize(g_store->GetSettings());
+ 1354              		.loc 1 107 5 view .LVU309
+ 107:src/persist.cpp ****     serialize(g_store->GetSettings());
+ 1355              		.loc 1 107 8 is_stmt 0 view .LVU310
+ 1356 0000 084B     		ldr	r3, .L110
+ 106:src/persist.cpp ****     if(!g_store) return;
+ 1357              		.loc 1 106 26 view .LVU311
+ 1358 0002 10B5     		push	{r4, lr}
+ 1359              		.cfi_def_cfa_offset 8
+ 1360              		.cfi_offset 4, -8
+ 1361              		.cfi_offset 14, -4
+ 107:src/persist.cpp ****     serialize(g_store->GetSettings());
+ 1362              		.loc 1 107 8 view .LVU312
+ 1363 0004 1C68     		ldr	r4, [r3]
+ 107:src/persist.cpp ****     serialize(g_store->GetSettings());
+ 1364              		.loc 1 107 5 view .LVU313
+ 1365 0006 5CB1     		cbz	r4, .L104
+ 108:src/persist.cpp ****     g_store->Save();                 // erases/writes QSPI only if the blob changed
+ 1366              		.loc 1 108 5 is_stmt 1 view .LVU314
+ 1367              	.LVL109:
+ 1368              	.LBB193:
+ 1369              	.LBI193:
+  93:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+ 1370              		.loc 2 93 20 view .LVU315
+  93:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
+ 1371              		.loc 2 93 20 is_stmt 0 view .LVU316
+ 1372              	.LBE193:
+ 108:src/persist.cpp ****     g_store->Save();                 // erases/writes QSPI only if the blob changed
+ 1373              		.loc 1 108 14 view .LVU317
+ 1374 0008 04F60440 		addw	r0, r4, #3076
+ 1375 000c FFF7FEFF 		bl	_ZL9serializeR10StoredBank
+ 1376              	.LVL110:
+ 109:src/persist.cpp **** }
+ 1377              		.loc 1 109 5 is_stmt 1 view .LVU318
+ 1378              	.LBB194:
+ 1379              	.LBI194:
+  96:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
+ 1380              		.loc 2 96 10 view .LVU319
+ 1381              	.LBB195:
+  98:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         StoreSettingsIfChanged();
+ 1382              		.loc 2 98 16 is_stmt 0 view .LVU320
+ 1383 0010 04F58053 		add	r3, r4, #4096
+ 1384 0014 0222     		movs	r2, #2
+  99:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     }
+ 1385              		.loc 2 99 31 view .LVU321
+ 1386 0016 2046     		mov	r0, r4
+  98:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         StoreSettingsIfChanged();
+ 1387              		.loc 2 98 16 view .LVU322
+ 1388 0018 C3F80028 		str	r2, [r3, #2048]
+  99:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     }
+ 1389              		.loc 2 99 31 view .LVU323
+ 1390 001c FFF7FEFF 		bl	_ZN5daisy17PersistentStorageI10StoredBankE22StoreSettingsIfChangedEv
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 34
+
+
+ 1391              	.LVL111:
+ 1392              	.L104:
+  99:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     }
+ 1393              		.loc 2 99 31 view .LVU324
+ 1394              	.LBE195:
+ 1395              	.LBE194:
+ 110:src/persist.cpp **** 
+ 1396              		.loc 1 110 1 view .LVU325
+ 1397 0020 10BD     		pop	{r4, pc}
+ 1398              	.L111:
+ 1399 0022 00BF     		.align	2
+ 1400              	.L110:
+ 1401 0024 00000000 		.word	.LANCHOR7
+ 1402              		.cfi_endproc
+ 1403              	.LFE2589:
+ 1405              		.global	g_bank
+ 1406              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 1407              		.align	2
+ 1408              	.LC2:
+ 1409 0000 42617373 		.ascii	"Bass\000"
+ 1409      00
+ 1410 0005 000000   		.align	2
+ 1411              	.LC3:
+ 1412 0008 4F70656E 		.ascii	"OpenBass\000"
+ 1412      42617373 
+ 1412      00
+ 1413 0011 000000   		.align	2
+ 1414              	.LC4:
+ 1415 0014 52696368 		.ascii	"RichBass\000"
+ 1415      42617373 
+ 1415      00
+ 1416 001d 000000   		.align	2
+ 1417              	.LC5:
+ 1418 0020 4F726761 		.ascii	"Organ\000"
+ 1418      6E00
+ 1419 0026 0000     		.align	2
+ 1420              	.LC6:
+ 1421 0028 53637265 		.ascii	"Scream\000"
+ 1421      616D00
+ 1422 002f 00       		.align	2
+ 1423              	.LC7:
+ 1424 0030 47756974 		.ascii	"Guitar\000"
+ 1424      617200
+ 1425 0037 00       		.align	2
+ 1426              	.LC8:
+ 1427 0038 50616400 		.ascii	"Pad\000"
+ 1428              		.align	2
+ 1429              	.LC9:
+ 1430 003c 546F6D00 		.ascii	"Tom\000"
+ 1431              		.align	2
+ 1432              	.LC10:
+ 1433 0040 4B69636B 		.ascii	"Kick\000"
+ 1433      00
+ 1434 0045 000000   		.align	2
+ 1435              	.LC11:
+ 1436 0048 536E6172 		.ascii	"Snare\000"
+ 1436      6500
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 35
+
+
+ 1437 004e 0000     		.align	2
+ 1438              	.LC12:
+ 1439 0050 48694861 		.ascii	"HiHat\000"
+ 1439      7400
+ 1440 0056 0000     		.align	2
+ 1441              	.LC13:
+ 1442 0058 53482D31 		.ascii	"SH-101 min\000"
+ 1442      3031206D 
+ 1442      696E00
+ 1443 0063 00       		.align	2
+ 1444              	.LC14:
+ 1445 0064 53482D31 		.ascii	"SH-101 maj\000"
+ 1445      3031206D 
+ 1445      616A00
+ 1446 006f 00       		.align	2
+ 1447              	.LC15:
+ 1448 0070 4472756D 		.ascii	"Drums\000"
+ 1448      7300
+ 1449              		.section	.bss._ZGVZ12persist_initvE5store,"aw",%nobits
+ 1450              		.align	2
+ 1451              		.set	.LANCHOR6,. + 0
+ 1454              	_ZGVZ12persist_initvE5store:
+ 1455 0000 00000000 		.space	4
+ 1456              		.section	.bss._ZL7g_names,"aw",%nobits
+ 1457              		.align	2
+ 1458              		.set	.LANCHOR4,. + 0
+ 1461              	_ZL7g_names:
+ 1462 0000 00000000 		.space	360
+ 1462      00000000 
+ 1462      00000000 
+ 1462      00000000 
+ 1462      00000000 
+ 1463              		.section	.bss._ZL7g_store,"aw",%nobits
+ 1464              		.align	2
+ 1465              		.set	.LANCHOR7,. + 0
+ 1468              	_ZL7g_store:
+ 1469 0000 00000000 		.space	4
+ 1470              		.section	.bss._ZZ12persist_initvE5store,"aw",%nobits
+ 1471              		.align	2
+ 1474              	_ZZ12persist_initvE5store:
+ 1475 0000 00000000 		.space	6148
+ 1475      00000000 
+ 1475      00000000 
+ 1475      00000000 
+ 1475      00000000 
+ 1476              		.section	.bss.g_bank,"aw",%nobits
+ 1477              		.align	2
+ 1478              		.set	.LANCHOR0,. + 0
+ 1481              	g_bank:
+ 1482 0000 00000000 		.space	2640
+ 1482      00000000 
+ 1482      00000000 
+ 1482      00000000 
+ 1482      00000000 
+ 1483              		.section	.rodata.CSWTCH.16,"a"
+ 1484              		.align	2
+ 1485              		.set	.LANCHOR8,. + 0
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 36
+
+
+ 1488              	CSWTCH.16:
+ 1489 0000 00000000 		.word	_ZL15SCALE_CHROMATIC
+ 1490 0004 00000000 		.word	_ZL11SCALE_MAJOR
+ 1491 0008 00000000 		.word	_ZL11SCALE_MINOR
+ 1492              		.section	.rodata.CSWTCH.18,"a"
+ 1493              		.align	2
+ 1494              		.set	.LANCHOR9,. + 0
+ 1497              	CSWTCH.18:
+ 1498 0000 0C000000 		.word	12
+ 1499 0004 07000000 		.word	7
+ 1500 0008 07000000 		.word	7
+ 1501              		.section	.rodata._ZL11SCALE_MAJOR,"a"
+ 1502              		.align	2
+ 1503              		.set	.LANCHOR2,. + 0
+ 1506              	_ZL11SCALE_MAJOR:
+ 1507 0000 00020405 		.ascii	"\000\002\004\005\007\011\013"
+ 1507      07090B
+ 1508              		.section	.rodata._ZL11SCALE_MINOR,"a"
+ 1509              		.align	2
+ 1510              		.set	.LANCHOR3,. + 0
+ 1513              	_ZL11SCALE_MINOR:
+ 1514 0000 00020305 		.ascii	"\000\002\003\005\007\010\012"
+ 1514      07080A
+ 1515              		.section	.rodata._ZL15SCALE_CHROMATIC,"a"
+ 1516              		.align	2
+ 1517              		.set	.LANCHOR1,. + 0
+ 1520              	_ZL15SCALE_CHROMATIC:
+ 1521 0000 00010203 		.ascii	"\000\001\002\003\004\005\006\007\010\011\012\013"
+ 1521      04050607 
+ 1521      08090A0B 
+ 1522              		.section	.rodata._ZL6VOICES,"a"
+ 1523              		.align	2
+ 1524              		.set	.LANCHOR5,. + 0
+ 1527              	_ZL6VOICES:
+ 1528 0000 00000000 		.word	.LC0
+ 1529 0004 00004842 		.word	1112014848
+ 1530 0008 00009643 		.word	1133903872
+ 1531 000c 6458E53F 		.word	1071994980
+ 1532 0010 0000803F 		.word	1065353216
+ 1533 0014 0000003F 		.word	1056964608
+ 1534 0018 00       		.byte	0
+ 1535 0019 000000   		.space	3
+ 1536 001c 0000803F 		.word	1065353216
+ 1537 0020 AE47613E 		.word	1046562734
+ 1538 0024 00       		.byte	0
+ 1539 0025 000000   		.space	3
+ 1540 0028 0000003F 		.word	1056964608
+ 1541 002c EC51383E 		.word	1043878380
+ 1542 0030 00       		.byte	0
+ 1543 0031 000000   		.space	3
+ 1544 0034 00000040 		.word	1073741824
+ 1545 0038 9A99193E 		.word	1041865114
+ 1546 003c 00       		.byte	0
+ 1547 003d 01       		.byte	1
+ 1548 003e 0000     		.space	2
+ 1549 0040 9A99993E 		.word	1050253722
+ 1550 0044 00004041 		.word	1094713344
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 37
+
+
+ 1551 0048 0000403F 		.word	1061158912
+ 1552 004c 00002040 		.word	1075838976
+ 1553 0050 00000000 		.word	0
+ 1554 0054 0000803F 		.word	1065353216
+ 1555 0058 0000803F 		.word	1065353216
+ 1556 005c 9A99193E 		.word	1041865114
+ 1557 0060 EC51383E 		.word	1043878380
+ 1558 0064 00008040 		.word	1082130432
+ 1559 0068 0000C843 		.word	1137180672
+ 1560 006c 00002042 		.word	1109393408
+ 1561 0070 00000000 		.space	64
+ 1561      00000000 
+ 1561      00000000 
+ 1561      00000000 
+ 1561      00000000 
+ 1562 00b0 00000000 		.word	.LC2
+ 1563 00b4 00002042 		.word	1109393408
+ 1564 00b8 00002043 		.word	1126170624
+ 1565 00bc F371B13F 		.word	1068593651
+ 1566 00c0 0000803F 		.word	1065353216
+ 1567 00c4 6666E63E 		.word	1055286886
+ 1568 00c8 00       		.byte	0
+ 1569 00c9 000000   		.space	3
+ 1570 00cc 9FC8BF3F 		.word	1069533343
+ 1571 00d0 9A99993E 		.word	1050253722
+ 1572 00d4 00       		.byte	0
+ 1573 00d5 000000   		.space	3
+ 1574 00d8 0000003F 		.word	1056964608
+ 1575 00dc 7B14AE3E 		.word	1051595899
+ 1576 00e0 00       		.byte	0
+ 1577 00e1 000000   		.space	3
+ 1578 00e4 00000040 		.word	1073741824
+ 1579 00e8 CDCC4C3E 		.word	1045220557
+ 1580 00ec 00       		.byte	0
+ 1581 00ed 00       		.byte	0
+ 1582 00ee 0000     		.space	2
+ 1583 00f0 0000803E 		.word	1048576000
+ 1584 00f4 0000E040 		.word	1088421888
+ 1585 00f8 0000003F 		.word	1056964608
+ 1586 00fc 0000803F 		.word	1065353216
+ 1587 0100 00000000 		.word	0
+ 1588 0104 0000803F 		.word	1065353216
+ 1589 0108 0000803F 		.word	1065353216
+ 1590 010c 8FC2F53D 		.word	1039516303
+ 1591 0110 8FC2F53D 		.word	1039516303
+ 1592 0114 0000C040 		.word	1086324736
+ 1593 0118 00009643 		.word	1133903872
+ 1594 011c 0000C841 		.word	1103626240
+ 1595 0120 00000000 		.space	64
+ 1595      00000000 
+ 1595      00000000 
+ 1595      00000000 
+ 1595      00000000 
+ 1596 0160 08000000 		.word	.LC3
+ 1597 0164 00002042 		.word	1109393408
+ 1598 0168 00003443 		.word	1127481344
+ 1599 016c B285C03F 		.word	1069581746
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 38
+
+
+ 1600 0170 0000803F 		.word	1065353216
+ 1601 0174 6666E63E 		.word	1055286886
+ 1602 0178 00       		.byte	0
+ 1603 0179 000000   		.space	3
+ 1604 017c 9FC8BF3F 		.word	1069533343
+ 1605 0180 9A99993E 		.word	1050253722
+ 1606 0184 00       		.byte	0
+ 1607 0185 000000   		.space	3
+ 1608 0188 0000003F 		.word	1056964608
+ 1609 018c 9A99993E 		.word	1050253722
+ 1610 0190 00       		.byte	0
+ 1611 0191 000000   		.space	3
+ 1612 0194 00000040 		.word	1073741824
+ 1613 0198 AE47613E 		.word	1046562734
+ 1614 019c 00       		.byte	0
+ 1615 019d 00       		.byte	0
+ 1616 019e 0000     		.space	2
+ 1617 01a0 0000003F 		.word	1056964608
+ 1618 01a4 00002041 		.word	1092616192
+ 1619 01a8 6666263F 		.word	1059481190
+ 1620 01ac 6666E63F 		.word	1072064102
+ 1621 01b0 00000000 		.word	0
+ 1622 01b4 0000803F 		.word	1065353216
+ 1623 01b8 0000803F 		.word	1065353216
+ 1624 01bc 9A99193E 		.word	1041865114
+ 1625 01c0 9A99193E 		.word	1041865114
+ 1626 01c4 0000A040 		.word	1084227584
+ 1627 01c8 0000AF43 		.word	1135542272
+ 1628 01cc 0000C841 		.word	1103626240
+ 1629 01d0 00000000 		.space	64
+ 1629      00000000 
+ 1629      00000000 
+ 1629      00000000 
+ 1629      00000000 
+ 1630 0210 14000000 		.word	.LC4
+ 1631 0214 00002042 		.word	1109393408
+ 1632 0218 00002043 		.word	1126170624
+ 1633 021c F371B13F 		.word	1068593651
+ 1634 0220 0000803F 		.word	1065353216
+ 1635 0224 CDCCCC3E 		.word	1053609165
+ 1636 0228 03       		.byte	3
+ 1637 0229 000000   		.space	3
+ 1638 022c 9FC8BF3F 		.word	1069533343
+ 1639 0230 B81E853E 		.word	1048911544
+ 1640 0234 02       		.byte	2
+ 1641 0235 000000   		.space	3
+ 1642 0238 0000003F 		.word	1056964608
+ 1643 023c 0AD7A33E 		.word	1050924810
+ 1644 0240 01       		.byte	1
+ 1645 0241 000000   		.space	3
+ 1646 0244 00000040 		.word	1073741824
+ 1647 0248 EC51383E 		.word	1043878380
+ 1648 024c 03       		.byte	3
+ 1649 024d 00       		.byte	0
+ 1650 024e 0000     		.space	2
+ 1651 0250 CDCC4C3E 		.word	1045220557
+ 1652 0254 00005041 		.word	1095761920
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 39
+
+
+ 1653 0258 85EB513F 		.word	1062333317
+ 1654 025c CDCC0C40 		.word	1074580685
+ 1655 0260 00000000 		.word	0
+ 1656 0264 0000803F 		.word	1065353216
+ 1657 0268 0000803F 		.word	1065353216
+ 1658 026c CDCC4C3E 		.word	1045220557
+ 1659 0270 CDCC4C3E 		.word	1045220557
+ 1660 0274 00004040 		.word	1077936128
+ 1661 0278 00007A43 		.word	1132068864
+ 1662 027c 00009041 		.word	1099956224
+ 1663 0280 00000000 		.space	64
+ 1663      00000000 
+ 1663      00000000 
+ 1663      00000000 
+ 1663      00000000 
+ 1664 02c0 20000000 		.word	.LC5
+ 1665 02c4 00008242 		.word	1115815936
+ 1666 02c8 00000244 		.word	1140981760
+ 1667 02cc 8C150540 		.word	1074075020
+ 1668 02d0 0000803F 		.word	1065353216
+ 1669 02d4 6666E63E 		.word	1055286886
+ 1670 02d8 01       		.byte	1
+ 1671 02d9 000000   		.space	3
+ 1672 02dc D7A3803F 		.word	1065395159
+ 1673 02e0 CDCCCC3E 		.word	1053609165
+ 1674 02e4 01       		.byte	1
+ 1675 02e5 000000   		.space	3
+ 1676 02e8 0000003F 		.word	1056964608
+ 1677 02ec 9A99993E 		.word	1050253722
+ 1678 02f0 01       		.byte	1
+ 1679 02f1 000000   		.space	3
+ 1680 02f4 00000040 		.word	1073741824
+ 1681 02f8 295C8F3E 		.word	1049582633
+ 1682 02fc 01       		.byte	1
+ 1683 02fd 00       		.byte	0
+ 1684 02fe 0000     		.space	2
+ 1685 0300 00000040 		.word	1073741824
+ 1686 0304 0000A040 		.word	1084227584
+ 1687 0308 CDCC4C3E 		.word	1045220557
+ 1688 030c CDCC4C3F 		.word	1061997773
+ 1689 0310 8FC2F53C 		.word	1022739087
+ 1690 0314 0000803F 		.word	1065353216
+ 1691 0318 0000803F 		.word	1065353216
+ 1692 031c CDCC4C3D 		.word	1028443341
+ 1693 0320 00000000 		.word	0
+ 1694 0324 00000041 		.word	1090519040
+ 1695 0328 0000F042 		.word	1123024896
+ 1696 032c 00000041 		.word	1090519040
+ 1697 0330 00000000 		.word	0
+ 1698 0334 00000000 		.word	0
+ 1699 0338 00000000 		.word	0
+ 1700 033c 00       		.byte	0
+ 1701 033d 000000   		.space	3
+ 1702 0340 00000000 		.word	0
+ 1703 0344 00000000 		.word	0
+ 1704 0348 01       		.byte	1
+ 1705 0349 000000   		.space	3
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 40
+
+
+ 1706 034c 00000000 		.word	_ZL11SCALE_MINOR
+ 1707 0350 07000000 		.word	7
+ 1708 0354 00000000 		.word	0
+ 1709 0358 00000000 		.word	0
+ 1710 035c 00       		.byte	0
+ 1711 035d 000000   		.space	3
+ 1712 0360 00000000 		.word	0
+ 1713 0364 00000000 		.word	0
+ 1714 0368 9A99193F 		.word	1058642330
+ 1715 036c 6666E63E 		.word	1055286886
+ 1716 0370 28000000 		.word	.LC6
+ 1717 0374 0000B442 		.word	1119092736
+ 1718 0378 00003444 		.word	1144258560
+ 1719 037c 8C150540 		.word	1074075020
+ 1720 0380 0000803F 		.word	1065353216
+ 1721 0384 3D0AD73E 		.word	1054280253
+ 1722 0388 03       		.byte	3
+ 1723 0389 000000   		.space	3
+ 1724 038c 2506813F 		.word	1065420325
+ 1725 0390 5C8FC23E 		.word	1052938076
+ 1726 0394 03       		.byte	3
+ 1727 0395 000000   		.space	3
+ 1728 0398 0000003F 		.word	1056964608
+ 1729 039c CDCC4C3E 		.word	1045220557
+ 1730 03a0 03       		.byte	3
+ 1731 03a1 000000   		.space	3
+ 1732 03a4 00000040 		.word	1073741824
+ 1733 03a8 9A99993E 		.word	1050253722
+ 1734 03ac 03       		.byte	3
+ 1735 03ad 00       		.byte	0
+ 1736 03ae 0000     		.space	2
+ 1737 03b0 00004040 		.word	1077936128
+ 1738 03b4 00003041 		.word	1093664768
+ 1739 03b8 6666663F 		.word	1063675494
+ 1740 03bc 00008040 		.word	1082130432
+ 1741 03c0 CDCC4C3D 		.word	1028443341
+ 1742 03c4 0000803F 		.word	1065353216
+ 1743 03c8 00002040 		.word	1075838976
+ 1744 03cc CDCCCC3E 		.word	1053609165
+ 1745 03d0 9A99993E 		.word	1050253722
+ 1746 03d4 00000040 		.word	1073741824
+ 1747 03d8 00004843 		.word	1128792064
+ 1748 03dc 00000C42 		.word	1108082688
+ 1749 03e0 00000000 		.space	64
+ 1749      00000000 
+ 1749      00000000 
+ 1749      00000000 
+ 1749      00000000 
+ 1750 0420 30000000 		.word	.LC7
+ 1751 0424 0000A042 		.word	1117782016
+ 1752 0428 0000A043 		.word	1134559232
+ 1753 042c F371B13F 		.word	1068593651
+ 1754 0430 0000803F 		.word	1065353216
+ 1755 0434 CDCCCC3E 		.word	1053609165
+ 1756 0438 03       		.byte	3
+ 1757 0439 000000   		.space	3
+ 1758 043c 9FC8BF3F 		.word	1069533343
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 41
+
+
+ 1759 0440 9A99993E 		.word	1050253722
+ 1760 0444 03       		.byte	3
+ 1761 0445 000000   		.space	3
+ 1762 0448 0000003F 		.word	1056964608
+ 1763 044c AE47613E 		.word	1046562734
+ 1764 0450 03       		.byte	3
+ 1765 0451 000000   		.space	3
+ 1766 0454 00000040 		.word	1073741824
+ 1767 0458 EC51383E 		.word	1043878380
+ 1768 045c 03       		.byte	3
+ 1769 045d 00       		.byte	0
+ 1770 045e 0000     		.space	2
+ 1771 0460 0000C03F 		.word	1069547520
+ 1772 0464 0000C040 		.word	1086324736
+ 1773 0468 3D0AD73E 		.word	1054280253
+ 1774 046c 66666640 		.word	1080452710
+ 1775 0470 8FC2F53C 		.word	1022739087
+ 1776 0474 0000803F 		.word	1065353216
+ 1777 0478 0000803F 		.word	1065353216
+ 1778 047c 8FC2F53D 		.word	1039516303
+ 1779 0480 9A99193E 		.word	1041865114
+ 1780 0484 00004040 		.word	1077936128
+ 1781 0488 00008C43 		.word	1133248512
+ 1782 048c 00000041 		.word	1090519040
+ 1783 0490 8FC2F53D 		.word	1039516303
+ 1784 0494 00009041 		.word	1099956224
+ 1785 0498 00000000 		.word	0
+ 1786 049c 00       		.byte	0
+ 1787 049d 000000   		.space	3
+ 1788 04a0 00000000 		.word	0
+ 1789 04a4 00000000 		.word	0
+ 1790 04a8 01       		.byte	1
+ 1791 04a9 000000   		.space	3
+ 1792 04ac 00000000 		.word	_ZL11SCALE_MAJOR
+ 1793 04b0 07000000 		.word	7
+ 1794 04b4 00009644 		.word	1150681088
+ 1795 04b8 00000000 		.word	0
+ 1796 04bc 00000000 		.space	20
+ 1796      00000000 
+ 1796      00000000 
+ 1796      00000000 
+ 1796      00000000 
+ 1797 04d0 38000000 		.word	.LC8
+ 1798 04d4 00008C42 		.word	1116471296
+ 1799 04d8 00000C44 		.word	1141637120
+ 1800 04dc 8C150540 		.word	1074075020
+ 1801 04e0 0000803F 		.word	1065353216
+ 1802 04e4 0AD7A33E 		.word	1050924810
+ 1803 04e8 03       		.byte	3
+ 1804 04e9 000000   		.space	3
+ 1805 04ec 9CC4803F 		.word	1065403548
+ 1806 04f0 9A99993E 		.word	1050253722
+ 1807 04f4 03       		.byte	3
+ 1808 04f5 000000   		.space	3
+ 1809 04f8 0000003F 		.word	1056964608
+ 1810 04fc AE47613E 		.word	1046562734
+ 1811 0500 00       		.byte	0
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 42
+
+
+ 1812 0501 000000   		.space	3
+ 1813 0504 00000040 		.word	1073741824
+ 1814 0508 EC51383E 		.word	1043878380
+ 1815 050c 01       		.byte	1
+ 1816 050d 00       		.byte	0
+ 1817 050e 0000     		.space	2
+ 1818 0510 9A99993F 		.word	1067030938
+ 1819 0514 00004040 		.word	1077936128
+ 1820 0518 CDCC4C3E 		.word	1045220557
+ 1821 051c 9A99193F 		.word	1058642330
+ 1822 0520 8FC2753C 		.word	1014350479
+ 1823 0524 0000803F 		.word	1065353216
+ 1824 0528 0000803F 		.word	1065353216
+ 1825 052c 00000000 		.word	0
+ 1826 0530 0AD7A33D 		.word	1034147594
+ 1827 0534 00800945 		.word	1158250496
+ 1828 0538 0000FA44 		.word	1157234688
+ 1829 053c 0000A042 		.word	1117782016
+ 1830 0540 00000000 		.space	64
+ 1830      00000000 
+ 1830      00000000 
+ 1830      00000000 
+ 1830      00000000 
+ 1831 0580 3C000000 		.word	.LC9
+ 1832 0584 00002042 		.word	1109393408
+ 1833 0588 0000C843 		.word	1137180672
+ 1834 058c A25D1340 		.word	1075010978
+ 1835 0590 0000803F 		.word	1065353216
+ 1836 0594 AE47613E 		.word	1046562734
+ 1837 0598 01       		.byte	1
+ 1838 0599 000000   		.space	3
+ 1839 059c CDCCCC3F 		.word	1070386381
+ 1840 05a0 9A99193E 		.word	1041865114
+ 1841 05a4 01       		.byte	1
+ 1842 05a5 000000   		.space	3
+ 1843 05a8 0000003F 		.word	1056964608
+ 1844 05ac CDCCCC3D 		.word	1036831949
+ 1845 05b0 01       		.byte	1
+ 1846 05b1 000000   		.space	3
+ 1847 05b4 00000040 		.word	1073741824
+ 1848 05b8 00000000 		.word	0
+ 1849 05bc 01       		.byte	1
+ 1850 05bd 00       		.byte	0
+ 1851 05be 0000     		.space	2
+ 1852 05c0 00004040 		.word	1077936128
+ 1853 05c4 00004040 		.word	1077936128
+ 1854 05c8 9A99993E 		.word	1050253722
+ 1855 05cc 0000C03F 		.word	1069547520
+ 1856 05d0 3333333F 		.word	1060320051
+ 1857 05d4 9A99993E 		.word	1050253722
+ 1858 05d8 0000803F 		.word	1065353216
+ 1859 05dc 00000000 		.word	0
+ 1860 05e0 CDCCCC3D 		.word	1036831949
+ 1861 05e4 0000803F 		.word	1065353216
+ 1862 05e8 00001643 		.word	1125515264
+ 1863 05ec 0000A040 		.word	1084227584
+ 1864 05f0 0000803F 		.word	1065353216
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 43
+
+
+ 1865 05f4 0000A042 		.word	1117782016
+ 1866 05f8 00000000 		.word	0
+ 1867 05fc 01       		.byte	1
+ 1868 05fd 000000   		.space	3
+ 1869 0600 9A99593F 		.word	1062836634
+ 1870 0604 0000C843 		.word	1137180672
+ 1871 0608 00000000 		.space	40
+ 1871      00000000 
+ 1871      00000000 
+ 1871      00000000 
+ 1871      00000000 
+ 1872 0630 40000000 		.word	.LC10
+ 1873 0634 0000F041 		.word	1106247680
+ 1874 0638 0000A042 		.word	1117782016
+ 1875 063c AD177B3F 		.word	1065031597
+ 1876 0640 0000803F 		.word	1065353216
+ 1877 0644 CDCC0C3F 		.word	1057803469
+ 1878 0648 01       		.byte	1
+ 1879 0649 000000   		.space	3
+ 1880 064c 00000040 		.word	1073741824
+ 1881 0650 CDCCCC3D 		.word	1036831949
+ 1882 0654 01       		.byte	1
+ 1883 0655 000000   		.space	3
+ 1884 0658 0000003F 		.word	1056964608
+ 1885 065c 9A99193E 		.word	1041865114
+ 1886 0660 01       		.byte	1
+ 1887 0661 000000   		.space	3
+ 1888 0664 00000040 		.word	1073741824
+ 1889 0668 00000000 		.word	0
+ 1890 066c 01       		.byte	1
+ 1891 066d 00       		.byte	0
+ 1892 066e 0000     		.space	2
+ 1893 0670 00004040 		.word	1077936128
+ 1894 0674 00000040 		.word	1073741824
+ 1895 0678 CDCC4C3E 		.word	1045220557
+ 1896 067c 6666E63F 		.word	1072064102
+ 1897 0680 0AD7A33D 		.word	1034147594
+ 1898 0684 0000003F 		.word	1056964608
+ 1899 0688 0000803F 		.word	1065353216
+ 1900 068c 00000000 		.word	0
+ 1901 0690 00000000 		.word	0
+ 1902 0694 0000803F 		.word	1065353216
+ 1903 0698 00002043 		.word	1126170624
+ 1904 069c 0000A040 		.word	1084227584
+ 1905 06a0 00000040 		.word	1073741824
+ 1906 06a4 00003442 		.word	1110704128
+ 1907 06a8 00000000 		.word	0
+ 1908 06ac 01       		.byte	1
+ 1909 06ad 000000   		.space	3
+ 1910 06b0 9A99593F 		.word	1062836634
+ 1911 06b4 0000C843 		.word	1137180672
+ 1912 06b8 00000000 		.space	40
+ 1912      00000000 
+ 1912      00000000 
+ 1912      00000000 
+ 1912      00000000 
+ 1913 06e0 48000000 		.word	.LC11
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 44
+
+
+ 1914 06e4 00001643 		.word	1125515264
+ 1915 06e8 0000FA43 		.word	1140457472
+ 1916 06ec B01B9A3F 		.word	1067064240
+ 1917 06f0 0000803F 		.word	1065353216
+ 1918 06f4 9A99193E 		.word	1041865114
+ 1919 06f8 01       		.byte	1
+ 1920 06f9 000000   		.space	3
+ 1921 06fc 6666E63F 		.word	1072064102
+ 1922 0700 8FC2F53D 		.word	1039516303
+ 1923 0704 00       		.byte	0
+ 1924 0705 000000   		.space	3
+ 1925 0708 0000003F 		.word	1056964608
+ 1926 070c CDCC4C3D 		.word	1028443341
+ 1927 0710 01       		.byte	1
+ 1928 0711 000000   		.space	3
+ 1929 0714 00000040 		.word	1073741824
+ 1930 0718 00000000 		.word	0
+ 1931 071c 01       		.byte	1
+ 1932 071d 00       		.byte	0
+ 1933 071e 0000     		.space	2
+ 1934 0720 00009041 		.word	1099956224
+ 1935 0724 00008040 		.word	1082130432
+ 1936 0728 9A99993E 		.word	1050253722
+ 1937 072c 0000C03F 		.word	1069547520
+ 1938 0730 EC51383F 		.word	1060655596
+ 1939 0734 9A99993E 		.word	1050253722
+ 1940 0738 0000803F 		.word	1065353216
+ 1941 073c 00000000 		.word	0
+ 1942 0740 CDCCCC3D 		.word	1036831949
+ 1943 0744 0000803F 		.word	1065353216
+ 1944 0748 00000C43 		.word	1124859904
+ 1945 074c 0000A040 		.word	1084227584
+ 1946 0750 3333333F 		.word	1060320051
+ 1947 0754 0000F041 		.word	1106247680
+ 1948 0758 00000000 		.word	0
+ 1949 075c 01       		.byte	1
+ 1950 075d 000000   		.space	3
+ 1951 0760 9A99593F 		.word	1062836634
+ 1952 0764 0000C843 		.word	1137180672
+ 1953 0768 00000000 		.space	40
+ 1953      00000000 
+ 1953      00000000 
+ 1953      00000000 
+ 1953      00000000 
+ 1954 0790 50000000 		.word	.LC12
+ 1955 0794 00007A45 		.word	1165623296
+ 1956 0798 00E02B46 		.word	1177280512
+ 1957 079c 1C7C813F 		.word	1065450524
+ 1958 07a0 0000803F 		.word	1065353216
+ 1959 07a4 CDCCCC3D 		.word	1036831949
+ 1960 07a8 02       		.byte	2
+ 1961 07a9 000000   		.space	3
+ 1962 07ac 3D0AD73F 		.word	1071057469
+ 1963 07b0 0AD7A33D 		.word	1034147594
+ 1964 07b4 02       		.byte	2
+ 1965 07b5 000000   		.space	3
+ 1966 07b8 0000003F 		.word	1056964608
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 45
+
+
+ 1967 07bc 00000000 		.word	0
+ 1968 07c0 01       		.byte	1
+ 1969 07c1 000000   		.space	3
+ 1970 07c4 00000040 		.word	1073741824
+ 1971 07c8 8FC2753D 		.word	1031127695
+ 1972 07cc 02       		.byte	2
+ 1973 07cd 00       		.byte	0
+ 1974 07ce 0000     		.space	2
+ 1975 07d0 0000C841 		.word	1103626240
+ 1976 07d4 00000040 		.word	1073741824
+ 1977 07d8 CDCC4C3E 		.word	1045220557
+ 1978 07dc 9A99993F 		.word	1067030938
+ 1979 07e0 CDCC4C3F 		.word	1061997773
+ 1980 07e4 CDCC4C3E 		.word	1045220557
+ 1981 07e8 0000803F 		.word	1065353216
+ 1982 07ec 00000000 		.word	0
+ 1983 07f0 CDCC4C3D 		.word	1028443341
+ 1984 07f4 0000803F 		.word	1065353216
+ 1985 07f8 00002043 		.word	1126170624
+ 1986 07fc 00004040 		.word	1077936128
+ 1987 0800 00000000 		.word	0
+ 1988 0804 00000000 		.word	0
+ 1989 0808 0000803F 		.word	1065353216
+ 1990 080c 01       		.byte	1
+ 1991 080d 000000   		.space	3
+ 1992 0810 9A99593F 		.word	1062836634
+ 1993 0814 0000C843 		.word	1137180672
+ 1994 0818 00000000 		.space	40
+ 1994      00000000 
+ 1994      00000000 
+ 1994      00000000 
+ 1994      00000000 
+ 1995 0840 58000000 		.word	.LC13
+ 1996 0844 00002042 		.word	1109393408
+ 1997 0848 0000C843 		.word	1137180672
+ 1998 084c A25D1340 		.word	1075010978
+ 1999 0850 0000803F 		.word	1065353216
+ 2000 0854 3D0AD73E 		.word	1054280253
+ 2001 0858 03       		.byte	3
+ 2002 0859 000000   		.space	3
+ 2003 085c 0000803F 		.word	1065353216
+ 2004 0860 295C8F3E 		.word	1049582633
+ 2005 0864 02       		.byte	2
+ 2006 0865 000000   		.space	3
+ 2007 0868 0000003F 		.word	1056964608
+ 2008 086c CDCCCC3E 		.word	1053609165
+ 2009 0870 02       		.byte	2
+ 2010 0871 000000   		.space	3
+ 2011 0874 00000040 		.word	1073741824
+ 2012 0878 00000000 		.word	0
+ 2013 087c 02       		.byte	2
+ 2014 087d 00       		.byte	0
+ 2015 087e 0000     		.space	2
+ 2016 0880 CDCC4C3F 		.word	1061997773
+ 2017 0884 00001041 		.word	1091567616
+ 2018 0888 CDCC4C3F 		.word	1061997773
+ 2019 088c 6666E63F 		.word	1072064102
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 46
+
+
+ 2020 0890 0AD7A33C 		.word	1017370378
+ 2021 0894 0000803F 		.word	1065353216
+ 2022 0898 0000803F 		.word	1065353216
+ 2023 089c CDCCCC3D 		.word	1036831949
+ 2024 08a0 8FC2F53D 		.word	1039516303
+ 2025 08a4 00000040 		.word	1073741824
+ 2026 08a8 00005C43 		.word	1130102784
+ 2027 08ac 0000F041 		.word	1106247680
+ 2028 08b0 00000000 		.word	0
+ 2029 08b4 00000000 		.word	0
+ 2030 08b8 00000000 		.word	0
+ 2031 08bc 00       		.byte	0
+ 2032 08bd 000000   		.space	3
+ 2033 08c0 00000000 		.word	0
+ 2034 08c4 00000000 		.word	0
+ 2035 08c8 01       		.byte	1
+ 2036 08c9 000000   		.space	3
+ 2037 08cc 00000000 		.word	_ZL11SCALE_MINOR
+ 2038 08d0 07000000 		.word	7
+ 2039 08d4 00000000 		.word	0
+ 2040 08d8 00000000 		.word	0
+ 2041 08dc 01       		.byte	1
+ 2042 08dd 000000   		.space	3
+ 2043 08e0 6666663F 		.word	1063675494
+ 2044 08e4 01000000 		.word	1
+ 2045 08e8 00000000 		.space	8
+ 2045      00000000 
+ 2046 08f0 64000000 		.word	.LC14
+ 2047 08f4 00002042 		.word	1109393408
+ 2048 08f8 0000C843 		.word	1137180672
+ 2049 08fc A25D1340 		.word	1075010978
+ 2050 0900 0000803F 		.word	1065353216
+ 2051 0904 3D0AD73E 		.word	1054280253
+ 2052 0908 03       		.byte	3
+ 2053 0909 000000   		.space	3
+ 2054 090c 0000803F 		.word	1065353216
+ 2055 0910 295C8F3E 		.word	1049582633
+ 2056 0914 02       		.byte	2
+ 2057 0915 000000   		.space	3
+ 2058 0918 0000003F 		.word	1056964608
+ 2059 091c CDCCCC3E 		.word	1053609165
+ 2060 0920 02       		.byte	2
+ 2061 0921 000000   		.space	3
+ 2062 0924 00000040 		.word	1073741824
+ 2063 0928 00000000 		.word	0
+ 2064 092c 02       		.byte	2
+ 2065 092d 00       		.byte	0
+ 2066 092e 0000     		.space	2
+ 2067 0930 CDCC4C3F 		.word	1061997773
+ 2068 0934 00001041 		.word	1091567616
+ 2069 0938 CDCC4C3F 		.word	1061997773
+ 2070 093c 6666E63F 		.word	1072064102
+ 2071 0940 0AD7A33C 		.word	1017370378
+ 2072 0944 0000803F 		.word	1065353216
+ 2073 0948 0000803F 		.word	1065353216
+ 2074 094c CDCCCC3D 		.word	1036831949
+ 2075 0950 8FC2F53D 		.word	1039516303
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 47
+
+
+ 2076 0954 00000040 		.word	1073741824
+ 2077 0958 00005C43 		.word	1130102784
+ 2078 095c 0000F041 		.word	1106247680
+ 2079 0960 00000000 		.word	0
+ 2080 0964 00000000 		.word	0
+ 2081 0968 00000000 		.word	0
+ 2082 096c 00       		.byte	0
+ 2083 096d 000000   		.space	3
+ 2084 0970 00000000 		.word	0
+ 2085 0974 00000000 		.word	0
+ 2086 0978 01       		.byte	1
+ 2087 0979 000000   		.space	3
+ 2088 097c 00000000 		.word	_ZL11SCALE_MAJOR
+ 2089 0980 07000000 		.word	7
+ 2090 0984 00000000 		.word	0
+ 2091 0988 00000000 		.word	0
+ 2092 098c 01       		.byte	1
+ 2093 098d 000000   		.space	3
+ 2094 0990 6666663F 		.word	1063675494
+ 2095 0994 01000000 		.word	1
+ 2096 0998 00000000 		.space	8
+ 2096      00000000 
+ 2097 09a0 70000000 		.word	.LC15
+ 2098 09a4 0000F041 		.word	1106247680
+ 2099 09a8 0000A042 		.word	1117782016
+ 2100 09ac AD177B3F 		.word	1065031597
+ 2101 09b0 0000803F 		.word	1065353216
+ 2102 09b4 CDCC0C3F 		.word	1057803469
+ 2103 09b8 01       		.byte	1
+ 2104 09b9 000000   		.space	3
+ 2105 09bc 0000803F 		.word	1065353216
+ 2106 09c0 00000000 		.word	0
+ 2107 09c4 01       		.byte	1
+ 2108 09c5 000000   		.space	3
+ 2109 09c8 0000003F 		.word	1056964608
+ 2110 09cc 00000000 		.word	0
+ 2111 09d0 01       		.byte	1
+ 2112 09d1 000000   		.space	3
+ 2113 09d4 00000040 		.word	1073741824
+ 2114 09d8 00000000 		.word	0
+ 2115 09dc 01       		.byte	1
+ 2116 09dd 00       		.byte	0
+ 2117 09de 0000     		.space	2
+ 2118 09e0 00004040 		.word	1077936128
+ 2119 09e4 00000040 		.word	1073741824
+ 2120 09e8 CDCC4C3E 		.word	1045220557
+ 2121 09ec 0000803F 		.word	1065353216
+ 2122 09f0 00000000 		.word	0
+ 2123 09f4 0000003F 		.word	1056964608
+ 2124 09f8 0000803F 		.word	1065353216
+ 2125 09fc 00000000 		.word	0
+ 2126 0a00 00000000 		.word	0
+ 2127 0a04 0000803F 		.word	1065353216
+ 2128 0a08 00002043 		.word	1126170624
+ 2129 0a0c 0000A040 		.word	1084227584
+ 2130 0a10 00000000 		.word	0
+ 2131 0a14 00000000 		.word	0
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 48
+
+
+ 2132 0a18 00000000 		.word	0
+ 2133 0a1c 00000000 		.space	52
+ 2133      00000000 
+ 2133      00000000 
+ 2133      00000000 
+ 2133      00000000 
+ 2134              		.text
+ 2135              	.Letext0:
+ 2136              		.file 3 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/machine/_default_types.h"
+ 2137              		.file 4 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/_stdint.h"
+ 2138              		.file 5 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/stdint.h"
+ 2139              		.file 6 "/Library/DaisyToolchain/0.2.0/arm/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
+ 2140              		.file 7 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cmath"
+ 2141              		.file 8 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/std_abs.h"
+ 2142              		.file 9 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdint"
+ 2143              		.file 10 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdlib"
+ 2144              		.file 11 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/type_traits"
+ 2145              		.file 12 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/debug/debug.h"
+ 2146              		.file 13 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v
+ 2147              		.file 14 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/algorithmfwd.h"
+ 2148              		.file 15 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/stl_pair.h"
+ 2149              		.file 16 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/exception_ptr.h"
+ 2150              		.file 17 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdarg"
+ 2151              		.file 18 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdio"
+ 2152              		.file 19 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstring"
+ 2153              		.file 20 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/predefined_ops.h
+ 2154              		.file 21 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/_types.h"
+ 2155              		.file 22 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/reent.h"
+ 2156              		.file 23 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/lock.h"
+ 2157              		.file 24 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/math.h"
+ 2158              		.file 25 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/stdlib.h"
+ 2159              		.file 26 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/math.h"
+ 2160              		.file 27 "src/voice.h"
+ 2161              		.file 28 "src/persist.h"
+ 2162              		.file 29 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/stdlib.h"
+ 2163              		.file 30 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h"
+ 2164              		.file 31 "src/dsp.h"
+ 2165              		.file 32 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/tim.h"
+ 2166              		.file 33 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/system.h"
+ 2167              		.file 34 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h"
+ 2168              		.file 35 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/dac.h"
+ 2169              		.file 36 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h"
+ 2170              		.file 37 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h"
+ 2171              		.file 38 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h"
+ 2172              		.file 39 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/usb.h"
+ 2173              		.file 40 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/wav_format.h"
+ 2174              		.file 41 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/dev/max11300.h"
+ 2175              		.file 42 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h"
+ 2176              		.file 43 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h"
+ 2177              		.file 44 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/dev/sdram.h"
+ 2178              		.file 45 "/Library/DaisyToolchain/0.2.0/arm/lib/gcc/arm-none-eabi/10.3.1/include/stdarg.h"
+ 2179              		.file 46 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/stdio.h"
+ 2180              		.file 47 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/dev/sr_595.h"
+ 2181              		.file 48 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/string.h"
+ 2182              		.file 49 "src/touch.h"
+ 2183              		.file 50 "src/engine.h"
+ 2184              		.file 51 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/dma.h"
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 49
+
+
+ 2185              		.file 52 "<built-in>"
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 50
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 persist.cpp
+/tmp/claude-502/cc6UQdav.s:19     .text._ZL9serializeR10StoredBank:0000000000000000 $t
+/tmp/claude-502/cc6UQdav.s:25     .text._ZL9serializeR10StoredBank:0000000000000000 _ZL9serializeR10StoredBank
+/tmp/claude-502/cc6UQdav.s:168    .text._ZL9serializeR10StoredBank:000000000000006c $d
+/tmp/claude-502/cc6UQdav.s:181    .rodata._Z12persist_initv.str1.4:0000000000000000 $d
+/tmp/claude-502/cc6UQdav.s:188    .text._Z12persist_initv:0000000000000000 $t
+/tmp/claude-502/cc6UQdav.s:195    .text._Z12persist_initv:0000000000000000 _Z12persist_initv
+/tmp/claude-502/cc6UQdav.s:791    .text._Z12persist_initv:0000000000000258 $d
+/tmp/claude-502/cc6UQdav.s:1474   .bss._ZZ12persist_initvE5store:0000000000000000 _ZZ12persist_initvE5store
+/tmp/claude-502/cc6UQdav.s:812    .text._Z8bank_setiRK5VoicePKc:0000000000000000 $t
+/tmp/claude-502/cc6UQdav.s:819    .text._Z8bank_setiRK5VoicePKc:0000000000000000 _Z8bank_setiRK5VoicePKc
+/tmp/claude-502/cc6UQdav.s:916    .text._Z8bank_setiRK5VoicePKc:0000000000000054 $d
+/tmp/claude-502/cc6UQdav.s:925    .text._Z17bank_revert_voicei:0000000000000000 $t
+/tmp/claude-502/cc6UQdav.s:932    .text._Z17bank_revert_voicei:0000000000000000 _Z17bank_revert_voicei
+/tmp/claude-502/cc6UQdav.s:1052   .text._Z17bank_revert_voicei:000000000000005c $d
+/tmp/claude-502/cc6UQdav.s:1064   .text._Z15bank_revert_allv:0000000000000000 $t
+/tmp/claude-502/cc6UQdav.s:1071   .text._Z15bank_revert_allv:0000000000000000 _Z15bank_revert_allv
+/tmp/claude-502/cc6UQdav.s:1205   .text._Z15bank_revert_allv:0000000000000050 $d
+/tmp/claude-502/cc6UQdav.s:1214   .text._ZN5daisy17PersistentStorageI10StoredBankE22StoreSettingsIfChangedEv:0000000000000000 $t
+/tmp/claude-502/cc6UQdav.s:1221   .text._ZN5daisy17PersistentStorageI10StoredBankE22StoreSettingsIfChangedEv:0000000000000000 _ZN5daisy17PersistentStorageI10StoredBankE22StoreSettingsIfChangedEv
+/tmp/claude-502/cc6UQdav.s:1341   .text._Z17persist_save_bankv:0000000000000000 $t
+/tmp/claude-502/cc6UQdav.s:1348   .text._Z17persist_save_bankv:0000000000000000 _Z17persist_save_bankv
+/tmp/claude-502/cc6UQdav.s:1401   .text._Z17persist_save_bankv:0000000000000024 $d
+/tmp/claude-502/cc6UQdav.s:1481   .bss.g_bank:0000000000000000 g_bank
+/tmp/claude-502/cc6UQdav.s:1407   .rodata.str1.4:0000000000000000 $d
+/tmp/claude-502/cc6UQdav.s:1450   .bss._ZGVZ12persist_initvE5store:0000000000000000 $d
+/tmp/claude-502/cc6UQdav.s:1454   .bss._ZGVZ12persist_initvE5store:0000000000000000 _ZGVZ12persist_initvE5store
+/tmp/claude-502/cc6UQdav.s:1457   .bss._ZL7g_names:0000000000000000 $d
+/tmp/claude-502/cc6UQdav.s:1461   .bss._ZL7g_names:0000000000000000 _ZL7g_names
+/tmp/claude-502/cc6UQdav.s:1464   .bss._ZL7g_store:0000000000000000 $d
+/tmp/claude-502/cc6UQdav.s:1468   .bss._ZL7g_store:0000000000000000 _ZL7g_store
+/tmp/claude-502/cc6UQdav.s:1471   .bss._ZZ12persist_initvE5store:0000000000000000 $d
+/tmp/claude-502/cc6UQdav.s:1477   .bss.g_bank:0000000000000000 $d
+/tmp/claude-502/cc6UQdav.s:1484   .rodata.CSWTCH.16:0000000000000000 $d
+/tmp/claude-502/cc6UQdav.s:1488   .rodata.CSWTCH.16:0000000000000000 CSWTCH.16
+/tmp/claude-502/cc6UQdav.s:1520   .rodata._ZL15SCALE_CHROMATIC:0000000000000000 _ZL15SCALE_CHROMATIC
+/tmp/claude-502/cc6UQdav.s:1506   .rodata._ZL11SCALE_MAJOR:0000000000000000 _ZL11SCALE_MAJOR
+/tmp/claude-502/cc6UQdav.s:1513   .rodata._ZL11SCALE_MINOR:0000000000000000 _ZL11SCALE_MINOR
+/tmp/claude-502/cc6UQdav.s:1493   .rodata.CSWTCH.18:0000000000000000 $d
+/tmp/claude-502/cc6UQdav.s:1497   .rodata.CSWTCH.18:0000000000000000 CSWTCH.18
+/tmp/claude-502/cc6UQdav.s:1502   .rodata._ZL11SCALE_MAJOR:0000000000000000 $d
+/tmp/claude-502/cc6UQdav.s:1509   .rodata._ZL11SCALE_MINOR:0000000000000000 $d
+/tmp/claude-502/cc6UQdav.s:1516   .rodata._ZL15SCALE_CHROMATIC:0000000000000000 $d
+/tmp/claude-502/cc6UQdav.s:1523   .rodata._ZL6VOICES:0000000000000000 $d
+/tmp/claude-502/cc6UQdav.s:1527   .rodata._ZL6VOICES:0000000000000000 _ZL6VOICES
+
+UNDEFINED SYMBOLS
+memcpy
+strncpy
+g_voice_idx
+_ZN5daisy10QSPIHandle7GetDataEm
+_ZN5daisy6System22GetProgramMemoryRegionEv
+memcmp
+_ZN5daisy10QSPIHandle5EraseEmm
+_ZN5daisy10QSPIHandle5WriteEmmPh
+dsy_dma_invalidate_cache_for_buffer
+ARM GAS  /tmp/claude-502/cc6UQdav.s 			page 51
+
+
+__cxa_guard_acquire
+memset
+__cxa_guard_release
+g_active_voice
+hw

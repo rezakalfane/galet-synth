@@ -180,7 +180,7 @@ build/main.o: src/main.cpp \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/fatfs.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/WavWriter.h \
  src/config.h src/dsp.h src/voice.h src/mpr121.h src/touch.h src/engine.h \
- src/serialtune.h
+ src/serialtune.h src/persist.h
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h:
@@ -368,3 +368,4 @@ src/mpr121.h:
 src/touch.h:
 src/engine.h:
 src/serialtune.h:
+src/persist.h:
