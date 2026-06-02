@@ -4,6 +4,16 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: SH-101-style mono synth voice`
+- New **`VOICE_SH101`** ("SH-101"): a Roland SH-101 homage — saw + unison square
+  (pulse) over a square sub-oscillator an octave down (the fat single-VCO stack),
+  through the resonant 4-pole ladder. Cutoff sits closed-ish and finger pressure
+  sweeps it wide open with high resonance for the squelchy acid "wow"; portamento
+  glide + chromatic quantize keep acid lines in tune with bendable slides. Placed
+  after the raw drums in the bank so the drum indices (and `MULTI_ZONES`) stay
+  put; it's cyclable and shows up after Pad in the FSR cycle. Bumped the bank-size
+  asserts in the host test (NUM_VOICES 13→14, cyclable 9→10).
+
 ### Added — `feat: electric guitar voice + per-voice amp decay-to-sustain`
 - New **`VOICE_GUITAR`** ("Guitar") replacing `VOICE_BASS_CLOSED` in the bank slot
   before Pad: a driven sawtooth **power chord** (root + fixed 5th + octave-down

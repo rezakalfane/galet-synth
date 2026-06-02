@@ -745,7 +745,65 @@ static constexpr Voice VOICE_HIHAT = {
     // PITCH QUANTIZE
 };
 
-// ── Voice 12: MultiVoice "Drums" ──────────────────────────────────────────────
+// ── Voice 12: SH-101-style mono synth ─────────────────────────────────────────
+//   A Roland SH-101 homage: one "VCO" putting out saw + square (pulse) together
+//   over a square sub-oscillator an octave down — the fat single-osc stack the
+//   SH-101 is loved for — through the resonant 4-pole ladder. The cutoff sits
+//   fairly closed and pressure sweeps it wide open with high resonance for the
+//   squelchy acid "wow" (the SH-101's filter-env squelch, here played by finger
+//   pressure). A whisper of noise, portamento glide between notes, and chromatic
+//   quantize so acid lines stay in tune while slides bend freely. Bass + leads.
+static constexpr Voice VOICE_SH101 = {
+    "SH-101",
+    // FREQUENCY RANGE
+    40.0f,
+    400.0f,
+    2.30259f,            // 40–400 Hz, ln(10) — bass up to lead
+    // OSCILLATOR STACK
+    1.0f,
+    0.42f,
+    WAVE_SAW,            // osc1  — the saw VCO
+    // SECONDARY OSCILLATOR
+    1.0f,
+    0.28f,
+    WAVE_SQUARE,         // osc2  — pulse, in unison (saw + pulse = the SH-101 blend)
+    // SUB OSCILLATOR
+    0.5f,
+    0.40f,
+    WAVE_SQUARE,         // sub   — the iconic square sub-osc, one octave down
+    // OCTAVE OSCILLATOR
+    2.0f,
+    0.0f,
+    WAVE_SQUARE,         // oct   — off (the SH-101 has no up-octave)
+    // FILTER
+    false,               // osc2 is a fixed unison, not finger-2 detune
+    0.8f,
+    9.0f,
+    0.80f,               // closed-ish base, huge pressure sweep, squelchy acid res
+    // DRIVE
+    1.8f,                // a little drive for warmth/grit
+    // NOISE
+    0.02f,               // noise level — a whisper (the SH-101 noise source)
+    1.0f,                // keytrack
+    1.0f,                // ringmod ratio
+    0.10f,               // ringmod max
+    0.12f,               // fold max
+    2.0f,                // attack — snappy
+    220.0f,              // release
+    30.0f,               // glide — portamento slide between notes
+    // PITCH ENVELOPE
+    0.0f, 0.0f,          // pitch_env_oct, pitch_env_ms (none)
+    // noise_hp, no_cycle, vel_sens, retrig_ms (defaults)
+    0.0f, false, 0.0f, 0.0f,
+    // PITCH QUANTIZE — chromatic: acid lines stay in tune, slides still bend
+    true,
+    SCALE_CHROMATIC, (int)(sizeof(SCALE_CHROMATIC) / sizeof(SCALE_CHROMATIC[0])),
+    // AMP DECAY — none: sustained mono synth (hold the note; pressure does the wow)
+    0.0f,                // decay_ms
+    0.0f                 // sustain (ignored when decay_ms == 0)
+};
+
+// ── Voice 13: MultiVoice "Drums" ──────────────────────────────────────────────
 //   A meta-voice: when selected, the slider splits into 4 equal zones, each
 //   triggering one drum on tap, with the fine position snapping the pitch to an
 //   interval (see MULTI_* below). This struct is just a placeholder so it lives
@@ -810,6 +868,8 @@ static constexpr Voice VOICES[] = {
     VOICE_LEAD,  VOICE_BASS,   VOICE_BASS_OPEN,   VOICE_BASS_RICH,
     VOICE_ORGAN, VOICE_SCREAM, VOICE_GUITAR,      VOICE_PAD,
     VOICE_TOM,   VOICE_KICK,   VOICE_SNARE,       VOICE_HIHAT,
+    VOICE_SH101, // SH-101 mono synth (cyclable; kept after the raw drums so their
+                 // bank indices — and MULTI_ZONES — stay put)
     VOICE_DRUMS, // MultiVoice — must stay last (MULTI_IDX = NUM_VOICES-1)
 };
 static constexpr int NUM_VOICES = (int)(sizeof(VOICES) / sizeof(VOICES[0]));

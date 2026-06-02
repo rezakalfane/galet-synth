@@ -125,13 +125,13 @@ static void test_touch()
 // ── voice ─────────────────────────────────────────────────────────────────────
 static void test_voice()
 {
-    CHECK(NUM_VOICES == 13);
+    CHECK(NUM_VOICES == 14);
     CHECK(MULTI_IDX == NUM_VOICES - 1);
 
-    // 4 raw drums are no_cycle → 9 cyclable (8 instruments + Drums).
+    // 4 raw drums are no_cycle → 10 cyclable (9 instruments + Drums).
     int cyclable = 0;
     for(int i = 0; i < NUM_VOICES; i++) if(!VOICES[i].no_cycle) cyclable++;
-    CHECK(cyclable == 9);
+    CHECK(cyclable == 10);
     CHECK(cycle_total() == cyclable);
 
     // cycle_next always lands on a cyclable voice, and wrapping visits exactly
