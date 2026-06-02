@@ -110,7 +110,7 @@ static volatile int    g_voice_idx = 2;  // ← boot voice (index into VOICES[];
 | 2 | `VOICE_BASS` | Round, dark power chord (osc2 = fixed perfect 5th → root + 5th + octave + sub) |
 | 3 | `VOICE_BASS_OPEN` | Same chord stack, brighter base and a wider pressure sweep |
 | 4 | `VOICE_BASS_RICH` | Mixed saw/square/sine waveforms, dark base, huge acid-style filter sweep |
-| 5 | `VOICE_ORGAN` | Clean all-sine organ/flute, higher register, slow chorus shimmer, breath noise |
+| 5 | `VOICE_ORGAN` | Clean all-sine organ/flute, higher register, slow chorus shimmer, breath noise — plus a roomy **reverb + delay** wash (the test voice for the shared effects) |
 | 6 | `VOICE_SCREAM` | Aggressive detuned saws, heavy drive, near-self-oscillating resonance, inharmonic metallic ring-mod |
 | 7 | `VOICE_GUITAR` | Electric guitar power chord — driven saw stack (root + fixed 5th + octave), **quantized to major**, fast pluck attack + amp **decay-to-silence** (~1.2 s) so it plucks and rings out |
 | 8 | `VOICE_PAD` | Warm ensemble pad — detuned saws + sine top, dark filter, very slow swell and long tail |
@@ -215,6 +215,10 @@ Noise  (white)                          × noise_level
     Output soft clip (fast_tanh × 1.3)
          │
     Amplitude envelope  (per-voice attack_ms / release_ms)
+         │
+    Reverb + Delay  ← parallel per-voice aux sends (reverb_send / delay_send)
+         │            into one shared reverb + one shared delay; global
+         │            tail/time/feedback/level (g_reverb_* / g_delay_*)
          │
     L + R out (identical / mono)
 ```
@@ -504,7 +508,7 @@ POS  |----------1--------------------2----------|
 ## Possible Extensions
 
 - **MIDI output** — map finger 1 position to MIDI note + pitch bend, pressure to aftertouch
-- **Reverb** — a simple Schroeder reverb or plate reverb tail would suit the long release
+- **Make the effect globals playable** — the shared reverb + delay have global tail/time/feedback/level params (`g_reverb_*` / `g_delay_*`) that are fixed in firmware; wiring them to a gesture / finger-2 zone would make them tweakable live
 - **Per-voice vibrato / LFO routing** — LFO rate, depth and destination (filter/amp) are still global; moving them into the `Voice` would unlock auto-wah / tremolo
 - **More voices** — the `Voice` struct makes new presets cheap; bells, pads, leads all fit
 - **Second glass slider** — add a second MPR121 for a two-dimensional control surface

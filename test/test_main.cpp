@@ -156,6 +156,18 @@ static void test_voice()
     CHECK(MULTI_INTERVALS[0] == 1.0f);
     CHECK(MULTI_NINTERVALS == 4);
 
+    // Reverb / delay sends are 0..1 aux-send fractions; at least one voice (the
+    // Organ) currently feeds each shared effect.
+    int reverb_voices = 0, delay_voices = 0;
+    for(int i = 0; i < NUM_VOICES; i++){
+        CHECK(VOICES[i].reverb_send >= 0.0f && VOICES[i].reverb_send <= 1.0f);
+        CHECK(VOICES[i].delay_send  >= 0.0f && VOICES[i].delay_send  <= 1.0f);
+        if(VOICES[i].reverb_send > 0.0f) reverb_voices++;
+        if(VOICES[i].delay_send  > 0.0f) delay_voices++;
+    }
+    CHECK(reverb_voices >= 1);
+    CHECK(delay_voices  >= 1);
+
     // Chords: the two SH-101 twins build diatonic triads, and a chord voice must
     // quantize to a musical (non-chromatic) scale or the triad degenerates to a
     // cluster.

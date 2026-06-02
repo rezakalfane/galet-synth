@@ -26,6 +26,16 @@ extern volatile float g_master_vol;   // 0-1, master volume from the FSR
 // extra note). Ignored by single-note voices.
 extern volatile float g_chord_ratio2, g_chord_ratio3;
 
+// Shared reverb (one instance, fed per-voice via Voice::reverb_send). These are
+// the GLOBAL controls — meant to be made adjustable later. g_reverb_decay = tail
+// length (0..~0.96), g_reverb_level = wet return gain (overall reverb loudness).
+extern volatile float g_reverb_decay, g_reverb_level;
+
+// Shared delay/echo (one instance, fed per-voice via Voice::delay_send). Global
+// controls, also meant to be made adjustable later. g_delay_time_ms = echo time,
+// g_delay_feedback = repeats (0..~0.95), g_delay_level = wet return gain.
+extern volatile float g_delay_time_ms, g_delay_feedback, g_delay_level;
+
 // ── Polyphonic drum engine (Drums MultiVoice only) ────────────────────────────
 // A pool of independent drum voices, one per finger. Each is a self-contained
 // slice of the synth (oscillators + noise + ladder filter + amp & pitch

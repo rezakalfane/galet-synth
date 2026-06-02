@@ -17,6 +17,11 @@ volatile float g_led3_duty      = 0.0f;     // 0–1, sigma-delta'd to LED3 in a
 volatile float g_master_vol     = 1.0f;     // 0–1, master volume from FSR on A1
 volatile float g_chord_ratio2   = 1.0f;     // chord 3rd  ratio vs root (1 = unison)
 volatile float g_chord_ratio3   = 1.0f;     // chord 5th  ratio vs root (1 = unison)
+volatile float g_reverb_decay   = 0.85f;    // reverb tail length (comb feedback)
+volatile float g_reverb_level   = 1.5f;     // reverb wet return gain (overall level)
+volatile float g_delay_time_ms  = 380.0f;   // delay/echo time
+volatile float g_delay_feedback = 0.40f;    // delay repeats (0..~0.95)
+volatile float g_delay_level    = 0.55f;    // delay wet return gain
 
 // ── Audio DSP state (audio callback only) ─────────────────────────────────────
 static float s_freq      = 65.41f;
@@ -43,6 +48,18 @@ static float s_phase1c   = 0.0f, s_phase2c = 0.0f; // 5th
 
 // Moog ladder filter state
 static float s_flt[4]    = {0,0,0,0};
+
+// Shared reverb — one instance, fed by whichever voice has a reverb_send. Its
+// ~66 KB of delay lines live in static storage (zero-initialised = silent). HF
+// damping is fixed for now; tail length / level are the global g_reverb_* params.
+static Reverb s_reverb;
+static constexpr float REVERB_DAMP = 0.4f;
+
+// Shared delay/echo — one instance, fed by whichever voice has a delay_send. Its
+// 750 ms buffer (~144 KB) is static (zero = silent). Feedback HF damping fixed;
+// time / feedback / level are the global g_delay_* params.
+static Delay s_delay;
+static constexpr float DELAY_DAMP = 0.30f;
 
 // White-noise generator state (xorshift32) for the per-voice noise oscillator.
 static uint32_t s_noise_rng = 0x1234567u;
@@ -154,7 +171,12 @@ void AudioCallback(AudioHandle::InputBuffer,
     float tmvol  = g_master_vol;
     float tcr2   = g_chord_ratio2;   // chord 3rd ratio (used only when VOICE.chords)
     float tcr3   = g_chord_ratio3;   // chord 5th ratio
+    float trvdec = g_reverb_decay;   // reverb tail length
+    float trvlvl = g_reverb_level;   // reverb wet return gain
     float sr     = hw.AudioSampleRate();
+    int   tdlys  = (int)(g_delay_time_ms * 0.001f * sr);  // delay time in samples
+    float tdlyfb = g_delay_feedback; // delay repeats
+    float tdlylv = g_delay_level;    // delay wet return gain
 
     // Snapshot the active voice once per block, so a mid-block switch from the
     // touch loop can't tear fields across the block. All VOICE.* reads below
@@ -352,8 +374,20 @@ void AudioCallback(AudioHandle::InputBuffer,
         // Wavefold distortion (finger 2 pressure)
         float crushed = wavefold(filtered, s_bitcrush);
 
-        // Soft clip output
-        float sample = fast_tanh(crushed * 1.3f) * s_amp * s_master_vol;
+        // Soft clip output → the dry instrument signal (pre master volume).
+        float dry = fast_tanh(crushed * 1.3f) * s_amp;
+
+        // Reverb + delay as parallel aux sends. Both read the clean instrument
+        // signal (`src`) and add their wet return on top, so they don't cascade
+        // into each other. Each is skipped when the voice doesn't send (saves CPU
+        // and lets the tail decay out naturally). Time/feedback/level/decay are
+        // the global g_reverb_* / g_delay_* params.
+        float src = dry;
+        if(VOICE.reverb_send > 0.0f)
+            dry += s_reverb.process(src * VOICE.reverb_send, trvdec, REVERB_DAMP) * trvlvl;
+        if(VOICE.delay_send > 0.0f)
+            dry += s_delay.process(src * VOICE.delay_send, tdlys, tdlyfb, DELAY_DAMP) * tdlylv;
+        float sample = dry * s_master_vol;
 
         // Drums MultiVoice: replace the (silent) mono output with the summed
         // polyphonic drum voices, soft-clipped, at master volume.
