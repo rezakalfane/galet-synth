@@ -184,7 +184,13 @@ void AudioCallback(AudioHandle::InputBuffer,
     // MultiVoice mode, where the touch loop routes it per tap to a drum.
     int vi = g_active_voice;
     if(vi < 0 || vi >= NUM_VOICES) vi = 0;
-    const Voice& VOICE = VOICES[vi];
+    // Live tuning: play the mutable working copy instead of the const bank voice
+    // (see serialtune.cpp). A tune-mode transition forces a full coeff recompute
+    // (+ state snap) below, since vi itself doesn't change across it.
+    static bool s_was_tuning = false;
+    bool tune_changed = (s_was_tuning != g_live_tune);
+    s_was_tuning = g_live_tune;
+    const Voice& VOICE = g_live_tune ? g_live_voice : VOICES[vi];
 
     // In the Drums MultiVoice the polyphonic drum engine plays instead of the
     // mono path (which the touch loop holds silent). Decided once per block.
@@ -198,7 +204,7 @@ void AudioCallback(AudioHandle::InputBuffer,
     static float s_penv_start;  // pitch multiplier at onset = 2^pitch_env_oct
     static float s_decay_c;     // amp decay-to-sustain coefficient (0 = no decay)
     static float s_sustain;     // level the gated amp decays to (1 = hold full)
-    if(s_coeff_vi != vi){
+    if(s_coeff_vi != vi || tune_changed){
         s_glide_c    = ms_to_coeff(VOICE.glide_ms,     sr);
         s_atk_c      = ms_to_coeff(VOICE.attack_ms,    sr);
         s_rel_c      = ms_to_coeff(VOICE.release_ms,   sr);
@@ -221,6 +227,21 @@ void AudioCallback(AudioHandle::InputBuffer,
         s_bitcrush = tbc;
         s_ringmod  = trm;
         s_flt[0] = s_flt[1] = s_flt[2] = s_flt[3] = 0.0f;
+    }
+
+    // Live tuning: when a `set` edits the working voice (g_live_rev bumps) but vi
+    // is unchanged, recompute just the ms→coeff conversions — no state snap, so
+    // glide / cutoff / filter keep flowing smoothly as you turn the "knobs".
+    static uint32_t s_live_seen = 0;
+    if(g_live_tune && s_live_seen != g_live_rev){
+        s_glide_c    = ms_to_coeff(VOICE.glide_ms,     sr);
+        s_atk_c      = ms_to_coeff(VOICE.attack_ms,    sr);
+        s_rel_c      = ms_to_coeff(VOICE.release_ms,   sr);
+        s_penv_c     = ms_to_coeff(VOICE.pitch_env_ms, sr);
+        s_penv_start = exp2f(VOICE.pitch_env_oct);
+        s_decay_c    = (VOICE.decay_ms > 0.0f) ? ms_to_coeff(VOICE.decay_ms, sr) : 0.0f;
+        s_sustain    = (VOICE.decay_ms > 0.0f) ? VOICE.sustain : 1.0f;
+        s_live_seen  = g_live_rev;
     }
 
     // Pitch-envelope trigger: on a note onset (amp target rising from silence),

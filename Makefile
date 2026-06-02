@@ -21,7 +21,7 @@ CPP_SOURCES = $(TARGET).cpp
 
 # The synth (src/main) is split across modules; the tools stay standalone.
 ifeq ($(TARGET),src/main)
-CPP_SOURCES += src/mpr121.cpp src/touch.cpp src/engine.cpp
+CPP_SOURCES += src/mpr121.cpp src/touch.cpp src/engine.cpp src/serialtune.cpp
 endif
 
 libdaisy_dir = ../libDaisy
