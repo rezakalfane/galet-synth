@@ -165,12 +165,18 @@ void AudioCallback(AudioHandle::InputBuffer,
     static float s_glide_c, s_atk_c, s_rel_c;
     static float s_penv_c;      // pitch-env decay coefficient
     static float s_penv_start;  // pitch multiplier at onset = 2^pitch_env_oct
+    static float s_decay_c;     // amp decay-to-sustain coefficient (0 = no decay)
+    static float s_sustain;     // level the gated amp decays to (1 = hold full)
     if(s_coeff_vi != vi){
         s_glide_c    = ms_to_coeff(VOICE.glide_ms,     sr);
         s_atk_c      = ms_to_coeff(VOICE.attack_ms,    sr);
         s_rel_c      = ms_to_coeff(VOICE.release_ms,   sr);
         s_penv_c     = ms_to_coeff(VOICE.pitch_env_ms, sr);
         s_penv_start = exp2f(VOICE.pitch_env_oct);   // 1.0 when pitch_env_oct == 0
+        // decay_ms == 0 → no decay: floor 1.0 so s_decay stays pinned at 1 (the
+        // gated note holds full, unchanged). decay_ms > 0 → decay toward sustain.
+        s_decay_c    = (VOICE.decay_ms > 0.0f) ? ms_to_coeff(VOICE.decay_ms, sr) : 0.0f;
+        s_sustain    = (VOICE.decay_ms > 0.0f) ? VOICE.sustain : 1.0f;
         s_coeff_vi   = vi;
         // New voice: snap the continuous DSP state to this voice's targets so the
         // previous voice's settings don't bleed in (esp. the slow-closing cutoff
@@ -190,12 +196,13 @@ void AudioCallback(AudioHandle::InputBuffer,
     // jump the pitch multiplier up; it decays back to 1.0 over pitch_env_ms.
     static float s_pmult     = 1.0f;
     static float s_prev_tamp = 0.0f;
+    static float s_decay     = 1.0f;   // amp decay-to-sustain level (1 = peak)
     bool onset = (tamp > 0.001f && s_prev_tamp <= 0.001f);
     // Mono re-articulation: a re-attack while the note is held restarts the amp
     // envelope from zero and retriggers the pitch envelope (poly drums handle
     // their own retrigger via drum_trigger, so ignore it here).
     if(g_retrig){ g_retrig = false; if(!poly_drums){ onset = true; s_amp = 0.0f; } }
-    if(onset) s_pmult = s_penv_start;
+    if(onset){ s_pmult = s_penv_start; s_decay = 1.0f; }  // fresh note → reset decay to peak
     s_prev_tamp = tamp;
 
     for(size_t i=0;i<size;i++)
@@ -214,9 +221,16 @@ void AudioCallback(AudioHandle::InputBuffer,
           s_bitcrush = s_bitcrush * sa + tbc  * (1.0f - sa); }
         { float sa = trm      > s_ringmod  ? SLEW_F2_A : SLEW_F2_R;
           s_ringmod  = s_ringmod  * sa + trm  * (1.0f - sa); }
-        // Asymmetric envelope: per-voice attack (rising) and release (falling)
-        float slew_amp = (tamp > s_amp) ? s_atk_c : s_rel_c;
-        s_amp = s_amp * slew_amp + tamp * (1.0f - slew_amp);
+        // Amp decay-to-sustain: s_decay rides 1 → sustain over decay_ms while the
+        // note is gated (stays pinned at 1 when decay_ms == 0, i.e. every other
+        // voice). It scales the gated target so the note plucks down to `sustain`.
+        s_decay = s_decay * s_decay_c + s_sustain * (1.0f - s_decay_c);
+        float eff_tamp = tamp * s_decay;
+        // Asymmetric envelope: attack while rising OR decaying-while-held (track the
+        // decay shape quickly — its rate comes from s_decay); release only once the
+        // note is actually let go (tamp → 0).
+        float slew_amp = (eff_tamp > s_amp || tamp > 0.001f) ? s_atk_c : s_rel_c;
+        s_amp = s_amp * slew_amp + eff_tamp * (1.0f - slew_amp);
         // Master volume slew (smooths FSR jitter / 16 Hz update steps).
         s_master_vol = s_master_vol * SLEW_MISC + tmvol * (1.0f - SLEW_MISC);
         // Pitch envelope decays toward 1.0 (no-op when pitch_env_oct == 0).

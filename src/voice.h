@@ -76,7 +76,8 @@ struct Voice {
 
   // Pitch quantize: true = snap finger-1 to the nearest note of `scale` on
   // touch-down, then bend freely while sliding (see quantize_midi in main.cpp).
-  // false = fully continuous pitch. Default false; only the Organ sets it.
+  // false = fully continuous pitch. Default false; the Organ (minor) and Guitar
+  // (major) enable it.
   bool quantize;
 
   // Quantize scale: the scale degrees (semitone offsets within an octave) that
@@ -85,6 +86,15 @@ struct Voice {
   // is false, so non-quantizing voices leave these at their defaults.
   const int8_t *scale;
   int scale_len;
+
+  // Amp decay-to-sustain — for plucked sounds (e.g. the guitar). decay_ms = 0
+  // (default) → NO decay: the note holds at full while the finger is down, exactly
+  // as before (every other voice). decay_ms > 0 → after the attack the level falls
+  // to `sustain` (0..1 fraction of full; default 0 = decays to silence, a clean
+  // pluck) over decay_ms. The release still applies on lift. Appended last so the
+  // positional initializers of the existing presets are unchanged.
+  float decay_ms;
+  float sustain;
 };
 
 // ── Quantize scales ───────────────────────────────────────────────────────────
@@ -394,52 +404,65 @@ static constexpr Voice VOICE_SCREAM = {
     // PITCH QUANTIZE
 };
 
-// ── Voice 6: very closed, dark sub bass ───────────────────────────────────────
-//   The opposite of the scream: a deep, muffled power-chord bass. A clean sine
-//   sub carries the weight under a mellow triangle root; the fifth and octave
-//   are dialed right back. The filter sits down around the fundamental and only
-//   creeps open a couple of octaves at full pressure, so it stays dark and
-//   muted — felt more than heard. Low resonance, almost no drive.
-static constexpr Voice VOICE_BASS_CLOSED = {
-    "ClosedBass",
+// ── Voice 6: electric guitar power chord ──────────────────────────────────────
+//   A driven sawtooth power chord — each note is a root + fixed perfect fifth +
+//   octave-up jangle over a saw octave-down body, so it plays as a chord like a
+//   rock guitar. Heavy-ish drive adds overdrive crunch; the filter sits a touch
+//   above the fundamental and sweeps wide open with pressure (dig in = bright,
+//   pick-attack bite), with resonance for a vocal amp "quack". A fast pitch-env
+//   "twang" + a little pick-grit noise on the onset, then amp decay-to-silence
+//   (decay_ms/sustain below) so each note plucks and rings out over ~1.2 s while
+//   held — like a struck string, not an organ. Quantized to a major scale so
+//   tapped chords land in key. For a BASS guitar instead: drop freq_low/high ~½,
+//   cut drive to ~1.5, use WAVE_TRI, and raise `sustain` if you want it to hold.
+static constexpr Voice VOICE_GUITAR = {
+    "Guitar",
     // FREQUENCY RANGE
-    35.0f,
-    140.0f,
-    1.38629f,            // 35–140 Hz, ln(4) — deep
+    80.0f,
+    320.0f,
+    1.38629f,            // 80–320 Hz, ln(4) — E2-ish up two octaves
     // OSCILLATOR STACK
     1.0f,
-    0.42f,
-    WAVE_TRI,            // osc1  — mellow triangle root
+    0.40f,
+    WAVE_SAW,            // osc1  — saw root (bright, string-like)
     // SECONDARY OSCILLATOR
     RATIO_FIFTH,
-    0.18f,
-    WAVE_TRI,            // osc2  — fifth, dialed back
+    0.30f,
+    WAVE_SAW,            // osc2  — fixed perfect fifth (the power chord)
     // SUB OSCILLATOR
     0.5f,
-    0.44f,
-    WAVE_SINE,           // sub   — clean sine carries the weight
+    0.22f,
+    WAVE_SAW,            // sub   — octave-down body/weight
     // OCTAVE OSCILLATOR
     2.0f,
-    0.10f,
-    WAVE_TRI,            // oct   — barely there, keep it dark
+    0.18f,
+    WAVE_SAW,            // oct   — octave-up jangle / pick brightness
     // FILTER
     false,               // osc2 is a fixed fifth, not finger-2 detune
-    1.0f,
-    2.0f,
-    0.30f,               // cutoff sits near the fundamental, tiny sweep, low res
+    1.5f,
+    6.0f,
+    0.42f,               // bright-ish base, wide sweep, resonant mid "quack" (amp-like)
     // DRIVE
-    0.5f,                // minimal drive — stays clean and round
+    3.6f,                // overdrive crunch — the electric-guitar grit
     // NOISE
-    0.0f,                // noise level
-    0.6f,                // keytrack — less, holds cutoff low as pitch rises
+    0.03f,               // noise level — a little pick grit (rides the amp decay)
+    1.0f,                // keytrack
     1.0f,                // ringmod ratio
-    0.0f,                // ringmod max
-    0.0f,                // fold max
-    10.0f,               // attack
-    500.0f,              // release — long tail
-    30.0f                // glide
-    // PITCH ENVELOPE
-    // PITCH QUANTIZE
+    0.12f,               // ringmod max
+    0.15f,               // fold max
+    3.0f,                // attack — fast pluck onset
+    280.0f,              // release — ring tail after lift
+    8.0f,                // glide — quick, distinct chord changes
+    // PITCH ENVELOPE — fast pick-attack "twang": start ~0.12 oct sharp, settle 18 ms
+    0.12f, 18.0f,        // pitch_env_oct, pitch_env_ms
+    // noise_hp, no_cycle, vel_sens, retrig_ms (defaults)
+    0.0f, false, 0.0f, 0.0f,
+    // PITCH QUANTIZE — snap to a major scale on touch-down so chords land in key
+    true,
+    SCALE_MAJOR, (int)(sizeof(SCALE_MAJOR) / sizeof(SCALE_MAJOR[0])),
+    // AMP DECAY — the pluck: ring out to silence over ~1.2 s while held
+    1200.0f,             // decay_ms
+    0.0f                 // sustain (0 = decays to silence)
 };
 
 // ── Voice 7: warm ensemble pad ────────────────────────────────────────────────
@@ -785,7 +808,7 @@ static constexpr Voice VOICE_DRUMS = {
 // (see the voice-switch gesture in the main loop). Edit the order here to taste.
 static constexpr Voice VOICES[] = {
     VOICE_LEAD,  VOICE_BASS,   VOICE_BASS_OPEN,   VOICE_BASS_RICH,
-    VOICE_ORGAN, VOICE_SCREAM, VOICE_BASS_CLOSED, VOICE_PAD,
+    VOICE_ORGAN, VOICE_SCREAM, VOICE_GUITAR,      VOICE_PAD,
     VOICE_TOM,   VOICE_KICK,   VOICE_SNARE,       VOICE_HIHAT,
     VOICE_DRUMS, // MultiVoice — must stay last (MULTI_IDX = NUM_VOICES-1)
 };

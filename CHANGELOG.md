@@ -4,6 +4,19 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: electric guitar voice + per-voice amp decay-to-sustain`
+- New **`VOICE_GUITAR`** ("Guitar") replacing `VOICE_BASS_CLOSED` in the bank slot
+  before Pad: a driven sawtooth **power chord** (root + fixed 5th + octave-down
+  body + octave-up jangle), **quantized to a major scale** (tapped chords land in
+  key), overdrive grit + resonant mid "quack", a fast pitch-env **pick-attack
+  twang** and a little pick-grit noise on the onset.
+- New **per-voice amp decay-to-sustain** (`Voice::decay_ms` / `Voice::sustain`):
+  after the attack, the gated level falls to `sustain` over `decay_ms`, so a note
+  can pluck and ring out instead of holding flat. `decay_ms = 0` (the default for
+  every other voice) means **no decay** — identical to before, so nothing else is
+  affected. The Guitar uses `decay_ms = 1200`, `sustain = 0` (rings to silence).
+  Implemented as an `s_decay` multiplier on the gated amp target in the engine.
+
 ### Changed — `feat: FSR-hold + tap-the-glass voice select (replaces timed auto-advance)`
 - Reworked the live voice-switch gesture from a slow timed auto-advance into a
   fast, user-paced **hold-FSR / tap-the-glass** cycle:
