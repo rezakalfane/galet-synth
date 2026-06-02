@@ -94,7 +94,7 @@ If this error appears, remove the `LDFLAGS` line from `Makefile`.
 | Constant | Line ~| Purpose |
 |---|---|---|
 | `VOICES[]` / `g_voice_idx` | ~243 | **Voice bank** + active index. Cycled live by the FSR-hold gesture; `g_voice_idx` initializer = boot voice. See [Voices](#voices) |
-| `VOICE_SWITCH_FIRST_MS` / `_REPEAT_MS` | ~263 | FSR-hold gesture timing (3 s to first switch, then every 2 s) |
+| `VOICE_SELECT_ENTER_MS` / `_TAP_GAP_MS` | (voice.h) | Voice-select timing: 2 s full-press-hold (to the mute floor) to enter; min gap between glass-tap advances. Release FSR to keep |
 | `MAX_FINGERS` | ~36 | Fingers tracked (4) — polyphony count for the Drums MultiVoice |
 | `FIX_DRUM` | ~430 | `true` = every drum tap is full 100% pressure (consistent); `false` = `vel_sens` dynamics |
 | `MULTI_ZONES[]` / `MULTI_INTERVALS[]` | ~425 | Drums: zone→drum map and the per-zone pitch intervals |
@@ -104,6 +104,7 @@ If this error appears, remove the `LDFLAGS` line from `Makefile`.
 | `PRESSURE_MIN_REF[12]` | 40 | Per-electrode 0% pressure delta (was `PRESSURE_DEAD_ZONE`) |
 | `MIN_FINGER_SEP` | 44 | Min electrode gap for two-finger detection |
 | `QUANTIZE_ENABLED` | ~247 | `false` = fully continuous pitch, no snapping |
+| `VOICE_PREVIEW_ENABLED` | (config.h) | Voice-select plays the selected voice live on the glass (`false` = silent cycling) |
 | `SLEW_CUT` | ~525 | Cutoff opening slew (~35 ms — smooths stepped pressure targets) |
 | `NOISE_HP_COEF` | ~660 | High-pass corner for `noise_hp` voices (higher = brighter "tsss") |
 | `REG_CONFIG1 / CONFIG2` | ~270 | MPR121 AFE registers (FFI, CDC, CDT, ESI) |
@@ -163,17 +164,49 @@ bank/gesture/header ("Drums"); its own audio fields aren't used (the zone drums
 are). Other voices stay monophonic; in mono a held re-attack re-articulates via
 `g_retrig` (only voices with `retrig_ms > 0`).
 
-### Switching voices live — FSR-hold gesture
+### Switching voices live — FSR-hold + tap-the-glass gesture
 
-Hold the FSR pressed to the mute floor (`fsr_raw <= FSR_MIN`): the first voice
-advance fires after `VOICE_SWITCH_FIRST_MS` (3 s), then it keeps advancing every
-`VOICE_SWITCH_REPEAT_MS` (2 s) while still held; releasing re-arms the 3 s wait.
-The cycle **skips voices flagged `no_cycle`** (`cycle_next`) — so the raw drums
-are out, and the gesture steps through the instruments + the Drums MultiVoice.
-Each switch flashes all three LEDs **N times = position in the cycle**
-(`cycle_pos`, via `flash_voice_leds`) and prints `[voice n/total] name`. The
-gesture freezes the idle-chase / rebaseline timers while held. To change the
-**boot** voice, edit the `g_voice_idx` initializer; to change cycle order or
+A three-phase gesture (state machine in the control loop, `sel_mode`):
+- **Enter** — press the FSR **fully to the mute floor** (`fsr_raw <= FSR_MIN`)
+  while **not touching the glass** for `VOICE_SELECT_ENTER_MS` (2 s). Note the FSR
+  reads **inversely**: a hard press pulls `fsr_raw` (and `vol`) down to 0, easing
+  off raises it. Requiring no touch is deliberate — a hard press alone is just
+  "muted", so the no-touch condition keeps normal muting from tripping select.
+  The LEDs blink the current voice's cycle position (N blinks). (While in select mode
+  `g_master_vol` is forced to a fixed monitor level so previews stay audible even
+  though pressing the FSR would otherwise mute them.)
+- **Advance / play** — with the FSR **still held**, each **glass tap** (a bridged
+  rising edge of `touching`, debounced by `VOICE_SELECT_TAP_GAP_MS`) steps to the
+  next cyclable voice via `cycle_next`, **wrapping** after the last; a single LED
+  blink marks the change (the full position count shows on enter and save). If
+  `VOICE_PREVIEW_ENABLED` (config.h), a **mono** voice then plays through the
+  **real note path** (the select branch falls through instead of `continue`ing)
+  driven by your actual glass **pressure + position** — so every filter/effect is
+  identical to playing it: press for the Moog cutoff sweep, **slide** for pitch,
+  lift to release. (Loudness stays steady — the instruments have `vel_sens = 0` —
+  so only the filter responds to pressure.) The **Drums** kit instead fires a
+  canned kick + snare "one-two" (`preview_drum`, snare via `drum2_at`) and
+  `continue`s. Set the flag false for silent (LED-only) cycling. (Entry blinks the
+  current position; play starts on the first glass tap.)
+- **Keep** — **release the FSR** (it climbs back up, `vol >= 0.4`) → persist
+  `g_voice_idx` (`storage.Save()`) and exit immediately. The **saved voice's
+  number** then blinks **non-blocking** (`blink_start`, driven by the LED-section
+  overlay) — so you can start playing right away instead of waiting out the flash.
+
+The cycle **skips voices flagged `no_cycle`** (`cycle_next`) — the raw drums are
+out, so it steps through the instruments + the Drums MultiVoice. The LEDs are
+driven by a **non-blocking** blinker (`blink_start`/`blink_tick`) that overlays
+the position display **only while a blink is actually animating** (entry count,
+per-advance tick, saved-voice confirm) — so during the mono preview the LEDs
+**follow the finger** like normal play, and the save blink runs while you already
+play (the blocking `flash_voice_leds` is now startup-only). Because the mono
+preview falls through to the real note path, the **finger-2 effects** (detune /
+wavefold / ring-mod) and **finger-1 pressure → Moog cutoff** apply in preview too.
+The idle chase (5 s no-touch LED pulse + FSR recal) also exits on an FSR press to
+the floor — not just a glass touch — so the voice-select gesture works straight
+from idle without touching the glass first. On enter the gesture silences any held note
+(`g_amp_target = 0`) and freezes the idle-chase / rebaseline timers. To change
+the **boot** voice, edit the `g_voice_idx` initializer; to change cycle order or
 membership, reorder `VOICES[]` or flip `no_cycle`.
 
 ### Persistence (QSPI flash)
@@ -182,8 +215,9 @@ The selected voice survives power-off. A `PersistentStorage<PersistSettings>`
 (libDaisy, `util/PersistentStorage.h`) stores `g_voice_idx` in QSPI flash at
 offset 0 — fine because this app runs from **internal** flash, so QSPI is free.
 At boot `storage.Init(...)` restores it (first boot writes the `g_voice_idx`
-initializer as the factory default); each FSR-gesture switch calls
-`storage.Save()` (only erases/writes if the value changed → minimal wear).
+initializer as the factory default); committing a voice-select (the "Keep"
+phase) calls `storage.Save()` (only erases/writes if the value changed → minimal
+wear — so taps while cycling don't touch flash, only the final kept voice does).
 Out-of-range stored values are ignored, falling back to the default.
 
 ### Voice struct fields

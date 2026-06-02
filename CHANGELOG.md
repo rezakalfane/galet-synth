@@ -4,6 +4,49 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Changed — `feat: FSR-hold + tap-the-glass voice select (replaces timed auto-advance)`
+- Reworked the live voice-switch gesture from a slow timed auto-advance into a
+  fast, user-paced **hold-FSR / tap-the-glass** cycle:
+  - **Enter** by pressing the FSR fully to the mute floor *with no glass touch*
+    for 2 s (`VOICE_SELECT_ENTER_MS`). The FSR reads inversely (hard press → vol 0),
+    and requiring no touch keeps normal muting from tripping it. LEDs blink the
+    current position. (Master volume is forced to a monitor level in select mode
+    so previews stay audible despite the press muting.)
+  - **Advance** by tapping the **glass** while the FSR is held (rising-edge,
+    debounced by `VOICE_SELECT_TAP_GAP_MS`) — steps to the next cyclable voice and
+    **wraps** after the last; a single LED blink per advance (the preview IDs the voice).
+  - **Keep** by **releasing the FSR** (it climbs back up) → persists and exits
+    immediately, blinking the **saved voice's number** to confirm.
+  - LEDs blink the **current voice number** on enter and the **saved number** on
+    save; single blink per tap-advance in between.
+- **Live audio preview**: while cycling, the selected voice plays **live** on the
+  glass so you recognise it by ear. A **mono** voice plays through the **real note
+  path** (the select branch falls through instead of skipping) driven by your real
+  glass pressure/position, so the preview is identical to the actual voice — every
+  filter and effect applies (including the **Moog cutoff sweep**; the earlier
+  hand-rolled preview omitted it and vibrato/quantize). Press for the filter, slide
+  for pitch, lift to release; the Drums kit fires a kick + snare one-shot "one-two".
+  Gated by `VOICE_PREVIEW_ENABLED`
+  (config.h, default on; false = silent LED-only cycling). Preview drums fire as
+  **one-shots** (jump to full amp + immediately ungate) so they decay instead of
+  sustaining — a gated preview drum had no finger-lift to release it, which left
+  the Drums kit's noise running at 100 % once selected.
+- The **saved-voice confirm blink is now non-blocking** (was blocking
+  `flash_voice_leds`): it overlays the LED position display from the normal loop,
+  so you can play immediately after releasing the FSR instead of waiting it out.
+- During the mono preview the **LEDs follow the finger** (the blink overlays only
+  while actually animating), and **finger-2 effects** (detune / wavefold / ring-mod)
+  apply — both fall out of the preview using the real note path.
+- The **idle chase** (5 s no-touch LED pulse) now also exits on an FSR press to the
+  floor, so voice-select can be entered straight from idle without first touching
+  the glass.
+- LED feedback is now driven by a **non-blocking** blinker (`blink_start` /
+  `blink_tick`) so fast taps register while it flashes; the old blocking
+  `flash_voice_leds` is startup-only.
+- Persistence now writes QSPI **once on commit** instead of on every step
+  (less flash wear). Removed `VOICE_SWITCH_FIRST_MS` / `_REPEAT_MS`; added
+  `VOICE_SELECT_ENTER_MS` / `_TAP_GAP_MS`.
+
 ### Changed — `feat: per-voice pitch quantize (Organ only)`
 - Pitch quantization is now a per-voice property: added a `quantize` field to the
   `Voice` struct (default `false`). Only `VOICE_ORGAN` enables it, so the Organ
