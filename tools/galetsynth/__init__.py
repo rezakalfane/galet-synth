@@ -6,5 +6,6 @@ command-line REPL and the PySide6 GUI never duplicate that logic.
 from .link import Link, find_port
 from .codegen import gen_cpp
 from . import schema
+from . import bank
 
-__all__ = ["Link", "find_port", "gen_cpp", "schema"]
+__all__ = ["Link", "find_port", "gen_cpp", "schema", "bank"]
