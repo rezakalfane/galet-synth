@@ -10,6 +10,7 @@ glass to hear them. Export writes a paste-ready C++ Voice{...} block.
     python3 tools/voicelab_gui.py            # auto-detect /dev/tty.usbmodem*
 """
 import sys
+import time
 
 sys.path.insert(0, __file__.rsplit("/", 1)[0])  # find the galetsynth package
 from galetsynth import Link, find_port, gen_cpp          # noqa: E402
@@ -232,14 +233,26 @@ class Tuner(QtWidgets.QMainWindow):
         QtCore.QTimer.singleShot(120, self.refresh)
 
     def refresh(self):
+        # Reload the *current* voice's parameters from the device. `tune 1`
+        # re-snapshots the active bank voice into the live working copy (reverting
+        # any live edits to that voice's stored preset); then pull the values into
+        # the controls. Without the re-snapshot, dump would just echo back the
+        # edits already shown — which is why Refresh looked like a no-op.
+        self.link.send("tune 1")
+        time.sleep(0.06)            # let the snapshot apply + the reply drain
         kv = self.link.dump()
         if not kv:
-            self.append_log("! no dump (is the synth connected / in tune mode?)")
+            self.append_log("! no dump (is the synth connected?)")
             return
         for row in self.rows.values():
             row.load(kv)
-        if "name" in kv:
-            self.append_log(f"loaded {kv['name']}")
+        name = kv.get("name", "")
+        # keep the voice picker in sync with what the device reports
+        if name in schema.VOICE_NAMES:
+            self.voice.blockSignals(True)
+            self.voice.setCurrentIndex(schema.VOICE_NAMES.index(name))
+            self.voice.blockSignals(False)
+        self.append_log(f"reloaded {name}" if name else "reloaded")
 
     def export(self):
         kv = self.link.dump()
