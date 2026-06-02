@@ -11,12 +11,15 @@ Glass touch bass synth for Daisy Seed + MPR121 capacitive sensor.
   - `mpr121.{h,cpp}` — bit-bang I2C + MPR121 driver (`mpr_init`, `read_electrodes`, `capture_baseline`)
   - `touch.{h,cpp}` — finger detection/tracking (`detect_raw`, `update_tracked`, `tracked[]`)
   - `engine.{h,cpp}` — audio engine: synth state, drum voices, `AudioCallback`, the `g_*` control params
+  - `serialtune.{h,cpp}` — live voice tuning over USB serial: the RX path + line protocol (`tune`/`set`/`select`/`dump`/`mon`), the mutable `g_live_voice`, and the field table. See [Voice tuner](#voice-tuner)
 - The **`g_*` params** (in `engine.h`, defined in `engine.cpp`) are the seam: the
   control loop in `main.cpp` writes them, the audio callback reads them. `hw`,
   `led3`, `g_voice_idx`, `g_active_voice` are defined in `main.cpp` and `extern`'d
   to the engine.
 - `.cpp` modules are added to the build by the Makefile (only for `TARGET=src/main`);
-  tools stay standalone. Diagnostic / calibration tools: `tools/*.cpp`
+  tools stay standalone. Diagnostic / calibration tools: `tools/*.cpp`. Host-side
+  **voice tuner** (Python): `tools/voicelab.py` (CLI), `tools/voicelab_gui.py`
+  (PySide6 GUI), both on the shared `tools/galetsynth/` package. See [Voice tuner](#voice-tuner)
 
 ## Build
 
@@ -291,6 +294,42 @@ silence). All three fields default to 0 (off) for voices that omit them.
 | `SH101` | SH-101-style synth ("SH-101 min") — saw + unison square (pulse) over a square sub-osc one octave down, resonant ladder swept by pressure for the squelchy acid "wow", portamento glide. **Plays diatonic triads** (`chords = true`) quantized to a **minor** scale: each tap is a root + 3rd + 5th that stays in key; slides bend the whole chord. Kept after the raw drums in the bank (so `MULTI_ZONES` indices are stable) but cyclable — appears after Pad in the cycle |
 | `SH101_MAJ` | "SH-101 maj" — identical to `SH101` but quantizes to **major**, so the triads come out bright (I, ii, iii…). Cycle to it to flip the chord flavor live (this is how major/minor is "switchable" — two bank voices, no special control). Sits right after `SH101` in the bank/cycle |
 | `DRUMS` | **MultiVoice** — slider splits into 4 zones (Kick/Snare/Tom/Hat); each tap triggers the zone's drum, fine position snaps pitch to root/4th/5th/octave (see the MultiVoice subsection above) |
+
+## Voice tuner
+
+Design voices on the laptop **against the real hardware** — every parameter
+edited live while you play the glass, then exported as a C++ `Voice`.
+
+- **Firmware side** (`serialtune.{h,cpp}`): the USB CDC logger is normally
+  write-only; this adds an RX callback (a ring buffer; parsing happens in the
+  control loop, not the ISR) and a line protocol. While **tune mode** is on the
+  engine + control loop read a mutable **`g_live_voice`** (extern'd on the engine
+  seam) instead of `VOICES[g_active_voice]`. Protocol (ASCII, `\n` *or* `\r`
+  terminated; replies prefixed `ok`/`err`):
+  - `tune 1|0` — enter/leave (entering snapshots the active voice into `g_live_voice`)
+  - `set <field> <value>` — edit a `Voice` field (float/int/bool/waveform/`scale`)
+    or a global effect param (`reverb_decay`/`reverb_level`/`delay_time_ms`/
+    `delay_feedback`/`delay_level`); bumps `g_live_rev`
+  - `select <n>` · `dump` (every field as `field=value`) · `mon 0|1` · `help`
+  - Editing recomputes the `ms→coeff` envelopes (`g_live_rev`) **without** the
+    voice-change state snap, so glide/cutoff stay smooth. The status display +
+    `[rebaseline]`/`[fsr recal]` prints are muted in tune mode unless `mon 1`.
+  - **Flash budget**: internal flash is only 128 KB. Reuse `StartLog` for TX
+    (`SetReceiveCallback` doesn't re-init USB), and avoid `stdio`/`atof`/`snprintf`
+    (newlib pulls ~16 KB) — float printing uses the logger's `%c%d.%0Nd`, numbers
+    use hand-rolled parsers. Don't reintroduce `printf`-family float formatting.
+- **Laptop side** (`tools/`): the shared **`galetsynth`** package is the single
+  source of truth — `link.py` (serial + reader + `dump`), `schema.py` (`SPEC`
+  field model in struct order, ranges, `GROUPS`, `WAVES`/`SCALES`/`GLOBAL_SPEC`),
+  `codegen.py` (`dump` dict → C++ `Voice{…}`). Two thin front-ends:
+  `voicelab.py` (CLI REPL) and `voicelab_gui.py` (PySide6: grouped sliders, voice
+  picker, Refresh, Export, resizable log with the in-place `mon` dashboard).
+  **Adding a `Voice` field?** update `schema.py::SPEC` (and a `GROUPS` entry) and
+  `serialtune.cpp`'s field table — then CLI + GUI + export all follow.
+- **Deps / run**: pyserial + PySide6 in a project `.venv` (Homebrew Python blocks
+  system installs, PEP 668; `.venv` is git-ignored). Run with
+  `.venv/bin/python tools/voicelab_gui.py`. The port is shared — close `screen`
+  first (a busy port surfaces as "Resource busy").
 
 ## Hardware
 
