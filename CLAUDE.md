@@ -284,6 +284,7 @@ silence). All three fields default to 0 (off) for voices that omit them.
 | `KICK` | **Tap** — deep punchy thud, low sine + sub, 2-oct/45 ms pitch "boom", very closed filter; tunes 30–80 Hz |
 | `SNARE` | **Tap** — bright noisy rattle over two tonal modes, open filter, quick 0.7-oct/30 ms snap; tunes 150–500 Hz |
 | `HIHAT` | **Tap** — crisp high "tsss": high-passed noise (`noise_hp=1`) + faint metallic squares, short sizzle tail; tunes 4–11 kHz |
+| `SH101` | SH-101-style mono synth — saw + unison square (pulse) over a square sub-osc one octave down, resonant ladder swept by pressure for the squelchy acid "wow", portamento glide, chromatic quantize. Kept after the raw drums in the bank (so `MULTI_ZONES` indices are stable) but cyclable — appears after Pad in the cycle |
 | `DRUMS` | **MultiVoice** — slider splits into 4 zones (Kick/Snare/Tom/Hat); each tap triggers the zone's drum, fine position snaps pitch to root/4th/5th/octave (see the MultiVoice subsection above) |
 
 ## Hardware

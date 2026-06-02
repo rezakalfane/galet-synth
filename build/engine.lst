@@ -1,4 +1,4 @@
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   27:src/engine.cpp **** static float s_amp       = 0.0f;
   28:src/engine.cpp **** static float s_master_vol= 1.0f;
   29:src/engine.cpp **** 
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 2
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 2
 
 
   30:src/engine.cpp **** static float s_phase1    = 0.0f;
@@ -118,7 +118,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   79:src/engine.cpp ****     // 1-pole lowpass coefficient from the (latched) cutoff: a = 1 - e^(-2π·fc/sr).
   80:src/engine.cpp ****     h.lp_state = 0.0f;
   81:src/engine.cpp ****     h.lp_coeff = clampf(1.0f - expf(-6.2831853f * cutoff / sr), 0.0f, 1.0f);
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 3
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 3
 
 
   35              		.loc 1 81 49 is_stmt 0 view .LVU2
@@ -178,7 +178,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   75:src/engine.cpp ****     h.freq=freq; h.amp_tgt=amp_tgt; h.cutoff=cutoff; h.drive=drive;
   77              		.loc 1 75 20 view .LVU17
   75:src/engine.cpp ****     h.freq=freq; h.amp_tgt=amp_tgt; h.cutoff=cutoff; h.drive=drive;
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 4
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 4
 
 
   78              		.loc 1 75 33 view .LVU18
@@ -238,7 +238,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
    6:src/dsp.h     **** // Oscillator shape — set per oscillator, so one voice can mix (e.g. saw root +
    7:src/dsp.h     **** // square fifth + sine sub). SQUARE and SAW are naive (not band-limited) — they
    8:src/dsp.h     **** // alias at high pitch, but on a low bass voice that just reads as rich harmonics
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 5
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 5
 
 
    9:src/dsp.h     **** // for the filter to chew.
@@ -298,7 +298,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   33:src/dsp.h     **** static inline float ms_to_coeff(float ms, float sr){
  140              		.loc 2 33 21 is_stmt 1 view .LVU46
  141              	.LBB73:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 6
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 6
 
 
   34:src/dsp.h     ****     if(ms <= 0.0f) return 0.0f;            // instant
@@ -358,7 +358,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  189              	.LBB79:
  190              	.LBI79:
   33:src/dsp.h     ****     if(ms <= 0.0f) return 0.0f;            // instant
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 7
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 7
 
 
  191              		.loc 2 33 21 view .LVU62
@@ -418,7 +418,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  240              		.loc 2 35 29 view .LVU80
  241 00fa 67EE827A 		vmul.f32	s15, s15, s4
  242              	.LVL16:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 8
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 8
 
 
  243              		.loc 2 35 38 view .LVU81
@@ -478,7 +478,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  291              	.L8:
   13:src/dsp.h     **** }
  292              		.loc 2 13 16 view .LVU95
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 9
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 9
 
 
  293              	.LBE71:
@@ -538,7 +538,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   93:src/engine.cpp ****     // Amp envelope: attack while gated, release on lift; free the slot when done.
   94:src/engine.cpp ****     float tgt = h.gate ? h.amp_tgt : 0.0f;
   95:src/engine.cpp ****     float c   = (tgt > h.amp) ? h.atk_c : h.rel_c;
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 10
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 10
 
 
   96:src/engine.cpp ****     h.amp = h.amp*c + tgt*(1.0f-c);
@@ -598,7 +598,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  136:src/engine.cpp ****     if(duty_target < 0.0f) duty_target = 0.0f; else if(duty_target > 1.0f) duty_target = 1.0f;
  355              		.loc 1 136 5 is_stmt 1 view .LVU107
  356 0006 F5EEC07A 		vcmpe.f32	s15, #0
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 11
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 11
 
 
  126:src/engine.cpp ****     // LED3 fixed-frequency PWM (200 Hz, 240 levels). Per-sample duty smoother
@@ -658,7 +658,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  137:src/engine.cpp **** 
  138:src/engine.cpp ****     // Snapshot targets
  139:src/engine.cpp ****     float tfreq  = g_target_freq;
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 12
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 12
 
 
  408              		.loc 1 139 5 is_stmt 1 view .LVU115
@@ -718,7 +718,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  445              		.loc 1 139 20 view .LVU133
  446 0068 CDED077A 		vstr.32	s15, [sp, #28]
  447              	.LVL32:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 13
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 13
 
 
  140:src/engine.cpp ****     float tdet   = g_target_detune;
@@ -778,7 +778,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  477              		.loc 1 155 5 is_stmt 1 view .LVU151
  161:src/engine.cpp **** 
  162:src/engine.cpp ****     // Per-voice envelope/glide coefficients (expf isn't constexpr). Recompute
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 14
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 14
 
 
  163:src/engine.cpp ****     // only when the active voice changes.
@@ -796,7 +796,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  481 0084 1B68     		ldr	r3, [r3]
  155:src/engine.cpp ****     const Voice& VOICE = VOICES[vi];
  482              		.loc 1 155 39 view .LVU154
- 483 0086 0D2A     		cmp	r2, #13
+ 483 0086 0E2A     		cmp	r2, #14
  160:src/engine.cpp **** 
  484              		.loc 1 160 36 view .LVU155
  485 0088 0893     		str	r3, [sp, #32]
@@ -838,7 +838,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  510 009c 03FB0253 		mla	r3, r3, r2, r5
  511 00a0 D3ED1B7A 		vldr.32	s15, [r3, #108]
  512              	.LVL40:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 15
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 15
 
 
  513              	.LBB323:
@@ -898,7 +898,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  560              		.loc 1 171 22 view .LVU183
  561 00da 83ED000A 		vstr.32	s0, [r3]
  562              		.loc 1 172 9 is_stmt 1 view .LVU184
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 16
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 16
 
 
  563              	.LVL45:
@@ -958,7 +958,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  610 0110 83ED000A 		vstr.32	s0, [r3]
  611              		.loc 1 173 9 is_stmt 1 view .LVU199
  612              	.LVL49:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 17
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 17
 
 
  613              	.LBB341:
@@ -1018,7 +1018,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  660              	.LBB343:
   34:src/dsp.h     ****     return expf(-1.0f / (ms * 0.001f * sr));
  661              		.loc 2 34 5 view .LVU216
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 18
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 18
 
 
  662 0146 0023     		movs	r3, #0
@@ -1078,7 +1078,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  178:src/engine.cpp ****         s_decay_c    = (VOICE.decay_ms > 0.0f) ? ms_to_coeff(VOICE.decay_ms, sr) : 0.0f;
  711              		.loc 1 178 31 view .LVU231
  712 017e D6ED257A 		vldr.32	s15, [r6, #148]
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 19
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 19
 
 
  175:src/engine.cpp ****         // decay_ms == 0 → no decay: floor 1.0 so s_decay stays pinned at 1 (the
@@ -1138,7 +1138,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  183:src/engine.cpp ****         // and the ladder filter's stored energy). Voice changes only happen while
  184:src/engine.cpp ****         // silent (FSR gesture) or at a drum-tap onset, so snapping is clean and
  185:src/engine.cpp ****         // gives each MultiVoice hit a fresh start.
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 20
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 20
 
 
  186:src/engine.cpp ****         s_freq     = tfreq;
@@ -1198,7 +1198,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  794 01e8 2A4B     		ldr	r3, .L354+100
  188:src/engine.cpp ****         s_detune   = tdet;
  795              		.loc 1 188 20 discriminator 4 view .LVU268
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 21
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 21
 
 
  796 01ea C8ED009A 		vstr.32	s19, [r8]
@@ -1258,7 +1258,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  832              		.loc 1 204 5 view .LVU286
  833 0220 0029     		cmp	r1, #0
  834 0222 51D0     		beq	.L34
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 22
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 22
 
 
  835              		.loc 1 204 19 is_stmt 1 view .LVU287
@@ -1267,7 +1267,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  838 0226 1170     		strb	r1, [r2]
  839              		.loc 1 204 37 is_stmt 1 view .LVU289
  840 0228 089A     		ldr	r2, [sp, #32]
- 841 022a 0C2A     		cmp	r2, #12
+ 841 022a 0D2A     		cmp	r2, #13
  842 022c 48D1     		bne	.L32
  843 022e 4BE0     		b	.L34
  844              	.L355:
@@ -1318,11 +1318,11 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  889 02b6 0021     		movs	r1, #0
  890 02b8 1170     		strb	r1, [r2]
  891              		.loc 1 204 37 is_stmt 1 view .LVU295
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 23
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 23
 
 
  892 02ba 089A     		ldr	r2, [sp, #32]
- 893 02bc 0C2A     		cmp	r2, #12
+ 893 02bc 0D2A     		cmp	r2, #13
  894 02be 0DD0     		beq	.L33
  895              	.LVL63:
  896              	.L32:
@@ -1378,7 +1378,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  219:src/engine.cpp ****           s_detune   = s_detune   * sa + tdet * (1.0f - sa); }
  220:src/engine.cpp ****         { float sa = tbc      > s_bitcrush ? SLEW_F2_A : SLEW_F2_R;
  221:src/engine.cpp ****           s_bitcrush = s_bitcrush * sa + tbc  * (1.0f - sa); }
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 24
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 24
 
 
  222:src/engine.cpp ****         { float sa = trm      > s_ringmod  ? SLEW_F2_A : SLEW_F2_R;
@@ -1438,7 +1438,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  270:src/engine.cpp ****         if(VOICE.osc2_detune) {
  937              		.loc 1 270 18 view .LVU312
  938 02f0 009A     		ldr	r2, [sp]
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 25
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 25
 
 
  939 02f2 9C23     		movs	r3, #156
@@ -1498,7 +1498,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  215:src/engine.cpp ****         s_vibdepth= s_vibdepth* SLEW_MISC + tvib * (1.0f - SLEW_MISC);
  971              		.loc 1 215 50 view .LVU321
  972 032c 29EEA77A 		vmul.f32	s14, s19, s15
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 26
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 26
 
 
  973              		.loc 1 289 47 view .LVU322
@@ -1558,7 +1558,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   67:src/dsp.h     **** // Moog 4-pole ladder, operating on a caller-supplied state array (so multiple
   68:src/dsp.h     **** // voices can each have their own filter).
   69:src/dsp.h     **** static inline float moog_st(float in, float cutoff, float res, float sr, float st[4])
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 27
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 27
 
 
   70:src/dsp.h     **** {
@@ -1618,7 +1618,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1028 0392 CDED057A 		vstr.32	s15, [sp, #20]
  1029              	.LBE452:
  296:src/engine.cpp ****             s_noise_rng ^= s_noise_rng << 13;
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 28
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 28
 
 
  297:src/engine.cpp ****             s_noise_rng ^= s_noise_rng >> 17;
@@ -1678,7 +1678,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1040 03ac 1B93     		str	r3, [sp, #108]
  1041 03ae 124B     		ldr	r3, .L356+48
  1042 03b0 0193     		str	r3, [sp, #4]
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 29
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 29
 
 
  1043 03b2 124B     		ldr	r3, .L356+52
@@ -1738,7 +1738,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1095              	.LBB434:
   71:src/dsp.h     ****     if(f>0.98f)f=0.98f;
  1096              		.loc 2 71 19 view .LVU342
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 30
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 30
 
 
  1097 0438 75EEA55A 		vadd.f32	s11, s11, s11
@@ -1798,7 +1798,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1137              		.loc 2 75 5 view .LVU356
   76:src/dsp.h     ****     st[0]+=f*(fast_tanh(x)    -fast_tanh(st[0]));
  1138              		.loc 2 76 5 view .LVU357
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 31
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 31
 
 
  1139              	.LBB361:
@@ -1858,7 +1858,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1180              	.LBE364:
  1181              	.LBE363:
  1182              	.LBE362:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 32
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 32
 
 
  1183              	.LBE361:
@@ -1918,7 +1918,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1224              	.LBE370:
  1225              	.LBE369:
  1226              	.LBE368:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 33
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 33
 
 
  1227              	.LBE367:
@@ -1978,7 +1978,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   28:src/dsp.h     **** }
  1271              		.loc 2 28 5 is_stmt 1 view .LVU397
   28:src/dsp.h     **** }
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 34
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 34
 
 
  1272              		.loc 2 28 31 is_stmt 0 view .LVU398
@@ -2038,7 +2038,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1315              	.LVL87:
   28:src/dsp.h     **** }
  1316              		.loc 2 28 5 is_stmt 1 view .LVU410
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 35
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 35
 
 
   28:src/dsp.h     **** }
@@ -2098,7 +2098,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1361 058c 00F1C585 		bmi	.L235
  1362              	.LVL91:
  1363              	.LBB391:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 36
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 36
 
 
  1364              	.LBI391:
@@ -2158,7 +2158,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1405 05c8 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  1406 05cc 00F1A185 		bmi	.L237
  1407              	.LVL96:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 37
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 37
 
 
  1408              	.LBB399:
@@ -2218,7 +2218,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1450              		.loc 2 79 5 is_stmt 1 view .LVU451
  1451              	.LVL100:
  1452              	.LBB410:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 38
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 38
 
 
  1453              	.LBI403:
@@ -2278,7 +2278,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1494              	.LBE410:
  1495              	.LBB411:
  1496              	.LBI411:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 39
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 39
 
 
   23:src/dsp.h     **** {
@@ -2338,7 +2338,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1538              	.LBE411:
  1539              		.loc 2 79 31 view .LVU478
  1540 067c 76EEE46A 		vsub.f32	s13, s13, s9
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 40
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 40
 
 
  1541              		.loc 2 79 10 view .LVU479
@@ -2398,7 +2398,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1580              	.LBB463:
   90:src/dsp.h     ****     // Fold: reflect signal at ±1 boundary repeatedly
   91:src/dsp.h     ****     // fold(x) = 1 - |((x+1) mod 2) - 1|  (triangle fold)
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 41
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 41
 
 
   92:src/dsp.h     ****     float x = driven;
@@ -2458,7 +2458,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1613              	.LVL117:
   97:src/dsp.h     ****         x = x * 2.0f - 1.0f;           // back to -1..1
  1614              		.loc 2 97 9 is_stmt 1 view .LVU505
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 42
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 42
 
 
   96:src/dsp.h     ****         x = 1.0f - fabsf(2.0f*x - 1.0f); // triangle fold
@@ -2518,7 +2518,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   97:src/dsp.h     ****         x = x * 2.0f - 1.0f;           // back to -1..1
  1652              		.loc 2 97 11 view .LVU523
  1653 06fa 74EE655A 		vsub.f32	s11, s8, s11
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 43
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 43
 
 
  1654              	.LVL125:
@@ -2578,7 +2578,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   27:src/dsp.h     ****     return x*(27.0f+x2)/(27.0f+9.0f*x2);
  1698              		.loc 2 27 5 view .LVU538
   28:src/dsp.h     **** }
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 44
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 44
 
 
  1699              		.loc 2 28 20 is_stmt 0 view .LVU539
@@ -2625,7 +2625,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  330:src/engine.cpp ****             float m = 0.0f;
  1731              		.loc 1 330 9 is_stmt 1 view .LVU549
  1732              	.LBB632:
- 1733 075e 0C2B     		cmp	r3, #12
+ 1733 075e 0D2B     		cmp	r3, #13
  1734 0760 00F0F784 		beq	.L338
  1735              	.LVL135:
  1736              	.L117:
@@ -2638,7 +2638,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1741 0764 9DED177A 		vldr.32	s14, [sp, #92]
  336:src/engine.cpp ****         out[1][i] = sample;
  1742              		.loc 1 336 19 view .LVU553
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 45
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 45
 
 
  1743 0768 3B68     		ldr	r3, [r7]
@@ -2698,7 +2698,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1775              		.loc 1 347 26 view .LVU570
  1776 0796 9FEDDC6A 		vldr.32	s12, .L358+8
  1777              	.LVL138:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 46
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 46
 
 
  340:src/engine.cpp ****         s_phase2   += freq2   /sr;  if(s_phase2  >=1.0f)s_phase2  -=1.0f;
@@ -2758,7 +2758,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1814 07dc 83ED009A 		vstr.32	s18, [r3]
  342:src/engine.cpp ****         s_phase_oct+= freq_oct/sr;  if(s_phase_oct>=1.0f)s_phase_oct-=1.0f;
  1815              		.loc 1 342 9 is_stmt 1 view .LVU589
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 47
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 47
 
 
  342:src/engine.cpp ****         s_phase_oct+= freq_oct/sr;  if(s_phase_oct>=1.0f)s_phase_oct-=1.0f;
@@ -2818,7 +2818,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1851              		.loc 1 344 9 is_stmt 1 view .LVU608
  344:src/engine.cpp **** 
  1852              		.loc 1 344 37 view .LVU609
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 48
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 48
 
 
  348:src/engine.cpp ****         if(threshold > PWM_LEVELS) threshold = PWM_LEVELS;
@@ -2878,7 +2878,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1892              		.loc 1 350 53 is_stmt 0 view .LVU627
  1893 085c 84BF     		itt	hi
  1894 085e 0023     		movhi	r3, #0
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 49
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 49
 
 
  1895 0860 A74A     		ldrhi	r2, .L358
@@ -2938,7 +2938,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  211:src/engine.cpp ****         // Cutoff: fast when opening (smoothed), slow when closing (with release)
  1941              		.loc 1 211 54 view .LVU643
  1942 088e F7EE005A 		vmov.f32	s11, #1.0e+0
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 50
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 50
 
 
  211:src/engine.cpp ****         // Cutoff: fast when opening (smoothed), slow when closing (with release)
@@ -2998,7 +2998,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  1981              		.loc 1 214 51 discriminator 2 view .LVU659
  1982 08c6 75EEC35A 		vsub.f32	s11, s11, s6
  1983              	.L36:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 51
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 51
 
 
  1984              	.LVL147:
@@ -3058,7 +3058,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  218:src/engine.cpp ****           s_detune   = s_detune   * sa + tdet * (1.0f - sa); }
  2027              		.loc 1 218 44 discriminator 4 view .LVU671
  2028 0900 54BF     		ite	pl
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 52
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 52
 
 
  2029 0902 F0EE661A 		vmovpl.f32	s3, s13
@@ -3118,7 +3118,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2072              	.LBB654:
  219:src/engine.cpp ****         { float sa = tbc      > s_bitcrush ? SLEW_F2_A : SLEW_F2_R;
  2073              		.loc 1 219 40 discriminator 4 view .LVU683
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 53
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 53
 
 
  2074 0936 E7EEA31A 		vfma.f32	s3, s15, s7
@@ -3178,7 +3178,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2117              	.LBE661:
  216:src/engine.cpp ****         // Finger 2 params: fast attack, slow release
  2118              		.loc 1 216 43 discriminator 4 view .LVU695
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 54
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 54
 
 
  2119 0974 9DED0C1A 		vldr.32	s2, [sp, #48]
@@ -3238,7 +3238,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2158 09b0 A7EE841A 		vfma.f32	s2, s15, s8
  216:src/engine.cpp ****         // Finger 2 params: fast attack, slow release
  2159              		.loc 1 216 19 discriminator 4 view .LVU711
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 55
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 55
 
 
  2160 09b4 83ED001A 		vstr.32	s2, [r3]
@@ -3298,7 +3298,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2197              	.L43:
  2198              	.LVL151:
  233:src/engine.cpp ****         // Master volume slew (smooths FSR jitter / 16 Hz update steps).
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 56
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 56
 
 
  2199              		.loc 1 233 9 is_stmt 1 discriminator 6 view .LVU729
@@ -3358,7 +3358,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2237              	.LVL155:
  237:src/engine.cpp **** 
  2238              		.loc 1 237 17 discriminator 6 view .LVU746
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 57
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 57
 
 
  2239 0a22 CAED007A 		vstr.32	s15, [r10]
@@ -3418,7 +3418,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2282              	.LBE671:
  2283              	.LBE670:
  257:src/engine.cpp ****         if(s_lfo_phase>=1.0f)s_lfo_phase-=1.0f;
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 58
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 58
 
 
  2284              		.loc 1 257 9 is_stmt 1 view .LVU758
@@ -3478,7 +3478,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2325              		.loc 2 41 19 view .LVU771
  2326 0aa8 FFEE007A 		vmov.f32	s15, #-1.0e+0
  2327 0aac E4EEA07A 		vfma.f32	s15, s9, s1
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 59
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 59
 
 
  2328              	.L53:
@@ -3538,7 +3538,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  272:src/engine.cpp ****         } else {
  2367              		.loc 1 272 38 view .LVU787
  2368 0adc 03FB0253 		mla	r3, r3, r2, r5
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 60
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 60
 
 
  271:src/engine.cpp ****             freq2 = freq_vib * VOICE.osc2_ratio * det_ratio;
@@ -3598,7 +3598,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2412 0b38 77BE7F3F 		.word	1065336439
  2413 0b3c A4707D3F 		.word	1065185444
  2414 0b40 00000000 		.word	.LANCHOR31
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 61
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 61
 
 
  2415 0b44 00000000 		.word	.LANCHOR32
@@ -3658,7 +3658,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2458              	.LBI683:
   57:src/dsp.h     ****     switch(w){
  2459              		.loc 2 57 21 is_stmt 1 view .LVU810
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 62
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 62
 
 
   57:src/dsp.h     ****     switch(w){
@@ -3718,7 +3718,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2504              	.LBI713:
   57:src/dsp.h     ****     switch(w){
  2505              		.loc 2 57 21 is_stmt 1 view .LVU821
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 63
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 63
 
 
  2506              	.LBB714:
@@ -3778,7 +3778,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2549              	.LBE716:
  2550              	.LBE724:
  2551              	.LBE740:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 64
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 64
 
 
  2552              	.LBE753:
@@ -3838,7 +3838,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2596              	.LBE756:
  2597              	.LBE755:
  2598              	.LBE912:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 65
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 65
 
 
  2599              	.LBE923:
@@ -3898,7 +3898,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2643              	.L83:
  289:src/engine.cpp **** 
  2644              		.loc 1 289 9 is_stmt 1 view .LVU853
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 66
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 66
 
 
  289:src/engine.cpp **** 
@@ -3958,7 +3958,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2687 0c3a F6EE004A 		vmov.f32	s9, #5.0e-1
  2688 0c3e B4EEE40A 		vcmpe.f32	s0, s9
  2689 0c42 F1EE004A 		vmov.f32	s9, #4.0e+0
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 67
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 67
 
 
  2690 0c46 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
@@ -4018,7 +4018,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2733              		.loc 1 301 50 view .LVU876
  2734 0c78 D2ED004A 		vldr.32	s9, [r2]
  296:src/engine.cpp ****             s_noise_rng ^= s_noise_rng >> 17;
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 68
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 68
 
 
  2735              		.loc 1 296 25 view .LVU877
@@ -4078,7 +4078,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2771              		.loc 1 301 24 view .LVU895
  2772 0cba C2ED004A 		vstr.32	s9, [r2]
  302:src/engine.cpp ****             // Blend white → high-passed by noise_hp (×2 to make up lost level).
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 69
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 69
 
 
  2773              		.loc 1 302 13 is_stmt 1 view .LVU896
@@ -4138,7 +4138,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2810              		.loc 1 309 39 view .LVU913
  2811 0cec 37EE027A 		vadd.f32	s14, s14, s4
  312:src/engine.cpp ****         mix = mix*(1.0f-s_ringmod) + (mix*rm_carrier)*s_ringmod;
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 70
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 70
 
 
  2812              		.loc 1 312 31 view .LVU914
@@ -4198,7 +4198,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2852              		.loc 2 25 5 is_stmt 0 view .LVU928
  2853 0d26 F0EE086A 		vmov.f32	s13, #3.0e+0
  2854              	.LBE843:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 71
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 71
 
 
  2855              	.LBE842:
@@ -4258,7 +4258,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2895 0d62 67EE2AAA 		vmul.f32	s21, s14, s21
  2896              	.LVL194:
   28:src/dsp.h     **** }
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 72
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 72
 
 
  2897              		.loc 2 28 39 view .LVU943
@@ -4318,7 +4318,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  2939              		.loc 1 243 22 view .LVU955
  2940 0d92 D4ED013A 		vldr.32	s7, [r4, #4]
  244:src/engine.cpp ****             s_flt[3] *= 0.999f;
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 73
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 73
 
 
  2941              		.loc 1 244 22 view .LVU956
@@ -4378,7 +4378,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  274:src/engine.cpp ****         }
  2979              		.loc 1 274 38 is_stmt 0 view .LVU973
  2980 0dca 9C23     		movs	r3, #156
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 74
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 74
 
 
  2981 0dcc 009A     		ldr	r2, [sp]
@@ -4438,7 +4438,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  3025              		.loc 2 53 21 view .LVU983
  3026              	.LBB813:
   53:src/dsp.h     **** 
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 75
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 75
 
 
  3027              		.loc 2 53 40 view .LVU984
@@ -4498,7 +4498,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  3074              	.LBE829:
  3075              	.LBE857:
  3076              	.LBB858:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 76
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 76
 
 
  3077              	.LBB704:
@@ -4558,7 +4558,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   58:src/dsp.h     ****         case WAVE_SINE:   return osc_sine(ph);
  3121              		.loc 2 58 5 view .LVU1002
  3122 0e26 149B     		ldr	r3, [sp, #80]
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 77
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 77
 
 
  3123 0e28 022B     		cmp	r3, #2
@@ -4618,7 +4618,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   58:src/dsp.h     ****         case WAVE_SINE:   return osc_sine(ph);
  3165              		.loc 2 58 5 view .LVU1015
  3166              	.LBE784:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 78
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 78
 
 
  3167              	.LBE862:
@@ -4678,7 +4678,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  3208              	.LBB865:
   57:src/dsp.h     ****     switch(w){
  3209              		.loc 2 57 21 view .LVU1029
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 79
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 79
 
 
  3210              	.LBB831:
@@ -4738,7 +4738,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  3254              	.LBB408:
  3255 0ea8 F7EE006A 		vmov.f32	s13, #1.0e+0
  3256 0eac FFF7C6BB 		b	.L111
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 80
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 80
 
 
  3257              	.LVL219:
@@ -4798,7 +4798,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  3306              	.L228:
   25:src/dsp.h     ****     if(x<-3.0f)return -1.0f;
  3307              		.loc 2 25 24 view .LVU1045
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 81
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 81
 
 
  3308              	.LBE847:
@@ -4858,7 +4858,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  3359              		.loc 2 59 9 is_stmt 1 view .LVU1048
   59:src/dsp.h     ****         case WAVE_SQUARE: return osc_square(ph);
  3360              		.loc 2 59 27 view .LVU1049
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 82
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 82
 
 
  3361              	.LBB771:
@@ -4918,7 +4918,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   47:src/dsp.h     ****     y = 0.225f*(y*(y<0?-y:y) - y) + y;         // one refinement pass
  3401              		.loc 2 47 11 view .LVU1064
  3402 0f6a A2EE641A 		vfms.f32	s2, s4, s9
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 83
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 83
 
 
  3403              	.LVL229:
@@ -4978,7 +4978,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   46:src/dsp.h     ****     float y = 1.27323954f*x - 0.405284735f*x*(x<0?-x:x);
  3444              		.loc 2 46 5 view .LVU1078
   46:src/dsp.h     ****     float y = 1.27323954f*x - 0.405284735f*x*(x<0?-x:x);
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 84
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 84
 
 
  3445              		.loc 2 46 17 is_stmt 0 view .LVU1079
@@ -5038,7 +5038,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  3486 0fd4 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  3487 0fd8 54BF     		ite	pl
  3488 0fda B0EE612A 		vmovpl.f32	s4, s3
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 85
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 85
 
 
  3489 0fde B0EE642A 		vmovmi.f32	s4, s9
@@ -5098,7 +5098,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  3529 1004 E2EE074A 		vfma.f32	s9, s4, s14
  3530              	.LVL237:
   47:src/dsp.h     ****     y = 0.225f*(y*(y<0?-y:y) - y) + y;         // one refinement pass
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 86
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 86
 
 
  3531              		.loc 2 47 5 is_stmt 1 view .LVU1107
@@ -5158,7 +5158,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  3571 104c DDED204A 		vldr.32	s9, [sp, #128]
  3572 1050 27EE647A 		vnmul.f32	s14, s14, s9
  3573 1054 8DED037A 		vstr.32	s14, [sp, #12]
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 87
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 87
 
 
  3574              	.LBB876:
@@ -5218,7 +5218,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   61:src/dsp.h     ****         case WAVE_TRI:
  3617              		.loc 2 61 44 view .LVU1133
  3618 106e B8E5     		b	.L73
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 88
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 88
 
 
  3619              	.LVL243:
@@ -5278,7 +5278,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   61:src/dsp.h     ****         case WAVE_TRI:
  3662              		.loc 2 61 44 view .LVU1145
  3663              	.LBE791:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 89
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 89
 
 
  3664              	.LBE882:
@@ -5338,7 +5338,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  3703 10aa 64EEA00A 		vmul.f32	s1, s9, s1
   47:src/dsp.h     ****     y = 0.225f*(y*(y<0?-y:y) - y) + y;         // one refinement pass
  3704              		.loc 2 47 50 view .LVU1161
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 90
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 90
 
 
  3705 10ae F1EE10FA 		vmrs	APSR_nzcv, FPSCR
@@ -5398,7 +5398,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  3748 10e8 FFF7A8B9 		b	.L102
  3749              	.LVL252:
  3750              	.L56:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 91
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 91
 
 
   59:src/dsp.h     ****         case WAVE_SQUARE: return osc_square(ph);
@@ -5458,7 +5458,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  3796              	.LVL255:
  3797              	.L235:
   26:src/dsp.h     ****     float x2=x*x;
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 92
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 92
 
 
  3798              		.loc 2 26 24 view .LVU1182
@@ -5518,7 +5518,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  3847              	.LBE449:
  3848              	.LBE888:
  3849              	.LBB889:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 93
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 93
 
 
  330:src/engine.cpp ****             float m = 0.0f;
@@ -5528,7 +5528,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  3853              	.LVL261:
  330:src/engine.cpp ****             float m = 0.0f;
  3854              		.loc 1 330 9 view .LVU1189
- 3855 1148 0C2B     		cmp	r3, #12
+ 3855 1148 0D2B     		cmp	r3, #13
  3856              	.LBE889:
  326:src/engine.cpp **** 
  3857              		.loc 1 326 60 view .LVU1190
@@ -5578,7 +5578,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  3891              		.loc 1 92 5 is_stmt 1 view .LVU1200
   94:src/engine.cpp ****     float c   = (tgt > h.amp) ? h.atk_c : h.rel_c;
  3892              		.loc 1 94 19 is_stmt 0 view .LVU1201
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 94
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 94
 
 
  3893 116e 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
@@ -5638,7 +5638,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   99:src/engine.cpp ****     float f = h.freq * h.pmult;
  3933              		.loc 1 99 5 is_stmt 1 view .LVU1216
   99:src/engine.cpp ****     float f = h.freq * h.pmult;
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 95
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 95
 
 
  3934              		.loc 1 99 31 is_stmt 0 view .LVU1217
@@ -5698,7 +5698,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  3973              	.LBB493:
   58:src/dsp.h     ****         case WAVE_SINE:   return osc_sine(ph);
  3974              		.loc 2 58 5 view .LVU1233
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 96
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 96
 
 
  3975 11ea 00F0C380 		beq	.L125
@@ -5758,7 +5758,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4021 1214 87E0     		b	.L132
  4022              	.LVL271:
  4023              	.L223:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 97
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 97
 
 
   41:src/dsp.h     **** }
@@ -5818,7 +5818,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4071              		.loc 1 332 30 view .LVU1248
  4072 1228 4C33     		adds	r3, r3, #76
  332:src/engine.cpp ****             sample = fast_tanh(m) * s_master_vol;
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 98
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 98
 
 
  4073              		.loc 1 332 45 view .LVU1249
@@ -5878,7 +5878,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4115 1262 B2EE026A 		vmov.f32	s12, #9.0e+0
  4116 1266 F0EE665A 		vmov.f32	s11, s13
  4117 126a E7EE065A 		vfma.f32	s11, s14, s12
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 99
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 99
 
 
  4118              	.LVL278:
@@ -5938,7 +5938,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4165              	.LBB722:
  4166              	.LBB719:
   41:src/dsp.h     **** }
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 100
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 100
 
 
  4167              		.loc 2 41 19 view .LVU1269
@@ -5998,7 +5998,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4215              	.LBE764:
  4216              	.LBE780:
  4217              	.LBE793:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 101
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 101
 
 
  4218              	.LBE899:
@@ -6058,7 +6058,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4266              	.LBE926:
  353:src/engine.cpp ****     }
  354:src/engine.cpp **** }
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 102
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 102
 
 
  4267              		.loc 1 354 1 view .LVU1282
@@ -6118,7 +6118,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4315              		.loc 2 46 17 is_stmt 0 view .LVU1290
  4316 12ce 73EE034A 		vadd.f32	s9, s6, s6
   46:src/dsp.h     ****     float y = 1.27323954f*x - 0.405284735f*x*(x<0?-x:x);
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 103
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 103
 
 
  4317              		.loc 2 46 11 view .LVU1291
@@ -6178,7 +6178,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4357 1322 B1EE477A 		vneg.f32	s14, s14
  4358              	.LVL295:
  4359              	.L132:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 104
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 104
 
 
   49:src/dsp.h     **** }
@@ -6238,7 +6238,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4402              	.LBE600:
  4403              	.LBE607:
  4404              	.LBE619:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 105
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 105
 
 
  4405              	.LBE627:
@@ -6298,7 +6298,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   53:src/dsp.h     **** 
  4450              		.loc 2 53 21 view .LVU1327
  4451              	.LBB489:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 106
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 106
 
 
   53:src/dsp.h     **** 
@@ -6358,7 +6358,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4493              		.loc 2 44 21 view .LVU1340
  4494              	.LBB510:
   45:src/dsp.h     ****     float x = ph*2.0f*PI - PI;                 // -π..π (angle shifted by π)
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 107
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 107
 
 
  4495              		.loc 2 45 5 view .LVU1341
@@ -6418,7 +6418,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4534 13d8 9FED254A 		vldr.32	s8, .L363+28
  4535 13dc E4EE845A 		vfma.f32	s11, s9, s8
  4536              	.LVL305:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 108
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 108
 
 
   49:src/dsp.h     **** }
@@ -6478,7 +6478,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   57:src/dsp.h     ****     switch(w){
  4579              		.loc 2 57 21 is_stmt 1 view .LVU1369
   57:src/dsp.h     ****     switch(w){
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 109
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 109
 
 
  4580              		.loc 2 57 21 is_stmt 0 view .LVU1370
@@ -6538,7 +6538,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4627              	.LBB519:
   61:src/dsp.h     ****         case WAVE_TRI:
  4628              		.loc 2 61 9 is_stmt 1 view .LVU1378
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 110
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 110
 
 
   61:src/dsp.h     ****         case WAVE_TRI:
@@ -6598,7 +6598,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4672 146c 7B81CF3E 		.word	1053786491
  4673 1470 6666663E 		.word	1046898278
  4674 1474 00000030 		.word	805306368
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 111
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 111
 
 
  4675 1478 CDCC4C3F 		.word	1061997773
@@ -6658,7 +6658,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4714 14a8 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  4715 14ac 48BF     		it	mi
  4716 14ae F1EE644A 		vnegmi.f32	s9, s9
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 112
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 112
 
 
  4717              	.LVL314:
@@ -6718,7 +6718,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   57:src/dsp.h     ****     switch(w){
  4758              		.loc 2 57 21 is_stmt 1 view .LVU1418
  4759              	.LBB550:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 113
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 113
 
 
   58:src/dsp.h     ****         case WAVE_SINE:   return osc_sine(ph);
@@ -6778,7 +6778,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4805              	.LBB553:
   41:src/dsp.h     **** }
  4806              		.loc 2 41 5 view .LVU1428
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 114
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 114
 
 
   41:src/dsp.h     **** }
@@ -6838,7 +6838,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4849              		.loc 2 52 21 view .LVU1440
  4850              	.LBB538:
   52:src/dsp.h     **** static inline float osc_saw(float ph){ return 2.0f*ph - 1.0f; }
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 115
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 115
 
 
  4851              		.loc 2 52 43 view .LVU1441
@@ -6898,7 +6898,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   47:src/dsp.h     ****     y = 0.225f*(y*(y<0?-y:y) - y) + y;         // one refinement pass
  4892              		.loc 2 47 43 view .LVU1455
  4893 1566 62EEA11A 		vmul.f32	s3, s5, s3
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 116
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 116
 
 
   47:src/dsp.h     ****     y = 0.225f*(y*(y<0?-y:y) - y) + y;         // one refinement pass
@@ -6958,7 +6958,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  4935              		.loc 1 105 42 view .LVU1468
  4936 15ac D0ED0E2A 		vldr.32	s5, [r0, #56]
  4937              	.LBB576:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 117
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 117
 
 
  106:src/engine.cpp ****         s_noise_rng ^= s_noise_rng<<13; s_noise_rng ^= s_noise_rng>>17; s_noise_rng ^= s_noise_rng<
@@ -7018,7 +7018,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  109:src/engine.cpp ****         float bright = white - h.noise_lp;
  4976              		.loc 1 109 9 is_stmt 1 view .LVU1485
  109:src/engine.cpp ****         float bright = white - h.noise_lp;
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 118
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 118
 
 
  4977              		.loc 1 109 47 is_stmt 0 view .LVU1486
@@ -7078,7 +7078,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   26:src/dsp.h     ****     float x2=x*x;
  5017              		.loc 2 26 5 view .LVU1501
  5018 1626 F8EE085A 		vmov.f32	s11, #-3.0e+0
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 119
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 119
 
 
  5019 162a B4EEE57A 		vcmpe.f32	s14, s11
@@ -7138,7 +7138,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  5059              		.loc 1 118 18 view .LVU1515
  5060 1660 9C20     		movs	r0, #156
  117:src/engine.cpp ****     h.ph2 += f*V.osc2_ratio/sr; if(h.ph2>=1.0f)h.ph2-=1.0f;
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 120
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 120
 
 
  5061              		.loc 1 117 15 view .LVU1516
@@ -7198,7 +7198,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  119:src/engine.cpp ****     h.pho += f*V.oct_ratio /sr; if(h.pho>=1.0f)h.pho-=1.0f;
  5098              		.loc 1 119 18 view .LVU1534
  5099 16a6 00FB0250 		mla	r0, r0, r2, r5
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 121
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 121
 
 
  118:src/engine.cpp ****     h.phs += f*V.sub_ratio /sr; if(h.phs>=1.0f)h.phs-=1.0f;
@@ -7258,7 +7258,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  5137 16f0 D2ED0D5A 		vldr.32	s11, [r2, #52]
  5138 16f4 26EE256A 		vmul.f32	s12, s12, s11
  5139              	.LVL342:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 122
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 122
 
 
  119:src/engine.cpp ****     h.pho += f*V.oct_ratio /sr; if(h.pho>=1.0f)h.pho-=1.0f;
@@ -7318,7 +7318,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  5180 173e 2AD4     		bmi	.L353
  5181              	.LVL344:
  5182              	.LBB586:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 123
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 123
 
 
  5183              	.LBI586:
@@ -7378,7 +7378,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  5224              	.LBE582:
  5225              	.LBE590:
  5226              	.LBB591:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 124
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 124
 
 
  5227              	.LBB567:
@@ -7438,7 +7438,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  5268              	.LVL354:
  5269              	.L253:
   52:src/dsp.h     **** static inline float osc_saw(float ph){ return 2.0f*ph - 1.0f; }
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 125
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 125
 
 
  5270              		.loc 2 52 58 view .LVU1592
@@ -7498,7 +7498,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  5315              	.LBB531:
  5316              	.LBB530:
  5317 17b4 F0EE085A 		vmov.f32	s11, #3.0e+0
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 126
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 126
 
 
  5318 17b8 E4EE645A 		vfms.f32	s11, s8, s9
@@ -7558,7 +7558,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
   34:src/dsp.h     ****     return expf(-1.0f / (ms * 0.001f * sr));
  5369              		.loc 2 34 27 view .LVU1605
  5370 17d2 1FEDD50A 		vldr.32	s0, .L363+44
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 127
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 127
 
 
  5371              	.LVL361:
@@ -7618,7 +7618,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  5415              		.loc 1 174 22 view .LVU1615
  5416 17fc 1360     		str	r3, [r2]	@ float
  175:src/engine.cpp ****         // decay_ms == 0 → no decay: floor 1.0 so s_decay stays pinned at 1 (the
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 128
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 128
 
 
  5417              		.loc 1 175 9 is_stmt 1 view .LVU1616
@@ -7678,7 +7678,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  5461 1838 00000000 		.word	.LANCHOR17
  5462              		.cfi_endproc
  5463              	.LFE2582:
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 129
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 129
 
 
  5465              		.global	g_hits
@@ -7738,7 +7738,7 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  5509 004d 000000   		.align	2
  5510              	.LC10:
  5511 0050 536E6172 		.ascii	"Snare\000"
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 130
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 130
 
 
  5511      6500
@@ -7748,1091 +7748,1152 @@ ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 1
  5514      7400
  5515 005e 0000     		.align	2
  5516              	.LC12:
- 5517 0060 4472756D 		.ascii	"Drums\000"
- 5517      7300
- 5518              		.section	.bss._ZL10s_bitcrush,"aw",%nobits
- 5519              		.align	2
- 5520              		.set	.LANCHOR23,. + 0
- 5523              	_ZL10s_bitcrush:
- 5524 0000 00000000 		.space	4
- 5525              		.section	.bss._ZL10s_noise_lp,"aw",%nobits
- 5526              		.align	2
- 5527              		.set	.LANCHOR39,. + 0
- 5530              	_ZL10s_noise_lp:
- 5531 0000 00000000 		.space	4
- 5532              		.section	.bss._ZL10s_phase_rm,"aw",%nobits
- 5533              		.align	2
- 5534              		.set	.LANCHOR40,. + 0
- 5537              	_ZL10s_phase_rm:
- 5538 0000 00000000 		.space	4
- 5539              		.section	.bss._ZL10s_vibdepth,"aw",%nobits
- 5540              		.align	2
- 5541              		.set	.LANCHOR31,. + 0
- 5544              	_ZL10s_vibdepth:
- 5545 0000 00000000 		.space	4
- 5546              		.section	.bss._ZL11s_lfo_phase,"aw",%nobits
- 5547              		.align	2
- 5548              		.set	.LANCHOR33,. + 0
- 5551              	_ZL11s_lfo_phase:
- 5552 0000 00000000 		.space	4
- 5553              		.section	.bss._ZL11s_phase_oct,"aw",%nobits
- 5554              		.align	2
- 5555              		.set	.LANCHOR37,. + 0
- 5558              	_ZL11s_phase_oct:
- 5559 0000 00000000 		.space	4
- 5560              		.section	.bss._ZL11s_phase_sub,"aw",%nobits
- 5561              		.align	2
- 5562              		.set	.LANCHOR36,. + 0
- 5565              	_ZL11s_phase_sub:
- 5566 0000 00000000 		.space	4
- 5567              		.section	.bss._ZL5s_amp,"aw",%nobits
- 5568              		.align	2
- 5569              		.set	.LANCHOR28,. + 0
- 5572              	_ZL5s_amp:
- 5573 0000 00000000 		.space	4
- 5574              		.section	.bss._ZL5s_flt,"aw",%nobits
- 5575              		.align	2
- 5576              		.set	.LANCHOR25,. + 0
- 5579              	_ZL5s_flt:
- 5580 0000 00000000 		.space	16
- 5580      00000000 
- 5580      00000000 
- 5580      00000000 
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 131
+ 5517 0060 53482D31 		.ascii	"SH-101\000"
+ 5517      303100
+ 5518 0067 00       		.align	2
+ 5519              	.LC13:
+ 5520 0068 4472756D 		.ascii	"Drums\000"
+ 5520      7300
+ 5521              		.section	.bss._ZL10s_bitcrush,"aw",%nobits
+ 5522              		.align	2
+ 5523              		.set	.LANCHOR23,. + 0
+ 5526              	_ZL10s_bitcrush:
+ 5527 0000 00000000 		.space	4
+ 5528              		.section	.bss._ZL10s_noise_lp,"aw",%nobits
+ 5529              		.align	2
+ 5530              		.set	.LANCHOR39,. + 0
+ 5533              	_ZL10s_noise_lp:
+ 5534 0000 00000000 		.space	4
+ 5535              		.section	.bss._ZL10s_phase_rm,"aw",%nobits
+ 5536              		.align	2
+ 5537              		.set	.LANCHOR40,. + 0
+ 5540              	_ZL10s_phase_rm:
+ 5541 0000 00000000 		.space	4
+ 5542              		.section	.bss._ZL10s_vibdepth,"aw",%nobits
+ 5543              		.align	2
+ 5544              		.set	.LANCHOR31,. + 0
+ 5547              	_ZL10s_vibdepth:
+ 5548 0000 00000000 		.space	4
+ 5549              		.section	.bss._ZL11s_lfo_phase,"aw",%nobits
+ 5550              		.align	2
+ 5551              		.set	.LANCHOR33,. + 0
+ 5554              	_ZL11s_lfo_phase:
+ 5555 0000 00000000 		.space	4
+ 5556              		.section	.bss._ZL11s_phase_oct,"aw",%nobits
+ 5557              		.align	2
+ 5558              		.set	.LANCHOR37,. + 0
+ 5561              	_ZL11s_phase_oct:
+ 5562 0000 00000000 		.space	4
+ 5563              		.section	.bss._ZL11s_phase_sub,"aw",%nobits
+ 5564              		.align	2
+ 5565              		.set	.LANCHOR36,. + 0
+ 5568              	_ZL11s_phase_sub:
+ 5569 0000 00000000 		.space	4
+ 5570              		.section	.bss._ZL5s_amp,"aw",%nobits
+ 5571              		.align	2
+ 5572              		.set	.LANCHOR28,. + 0
+ 5575              	_ZL5s_amp:
+ 5576 0000 00000000 		.space	4
+ 5577              		.section	.bss._ZL5s_flt,"aw",%nobits
+ 5578              		.align	2
+ 5579              		.set	.LANCHOR25,. + 0
+ 5582              	_ZL5s_flt:
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 131
 
 
- 5581              		.section	.bss._ZL8s_detune,"aw",%nobits
- 5582              		.align	2
- 5583              		.set	.LANCHOR22,. + 0
- 5586              	_ZL8s_detune:
- 5587 0000 00000000 		.space	4
- 5588              		.section	.bss._ZL8s_phase1,"aw",%nobits
- 5589              		.align	2
- 5590              		.set	.LANCHOR34,. + 0
- 5593              	_ZL8s_phase1:
- 5594 0000 00000000 		.space	4
- 5595              		.section	.bss._ZL8s_phase2,"aw",%nobits
- 5596              		.align	2
- 5597              		.set	.LANCHOR35,. + 0
- 5600              	_ZL8s_phase2:
- 5601 0000 00000000 		.space	4
- 5602              		.section	.bss._ZL9s_ringmod,"aw",%nobits
- 5603              		.align	2
- 5604              		.set	.LANCHOR24,. + 0
- 5607              	_ZL9s_ringmod:
- 5608 0000 00000000 		.space	4
- 5609              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE10led3_state,"aw",%nobits
- 5610              		.set	.LANCHOR44,. + 0
- 5613              	_ZZ13AudioCallbackPKPKfPPfjE10led3_state:
- 5614 0000 00       		.space	1
- 5615              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE11pwm_counter,"aw",%nobits
- 5616              		.align	2
- 5617              		.set	.LANCHOR43,. + 0
- 5620              	_ZZ13AudioCallbackPKPKfPPfjE11pwm_counter:
- 5621 0000 00000000 		.space	4
- 5622              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE11s_prev_tamp,"aw",%nobits
- 5623              		.align	2
- 5624              		.set	.LANCHOR26,. + 0
- 5627              	_ZZ13AudioCallbackPKPKfPPfjE11s_prev_tamp:
- 5628 0000 00000000 		.space	4
- 5629              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE12s_penv_start,"aw",%nobits
- 5630              		.align	2
- 5631              		.set	.LANCHOR16,. + 0
- 5634              	_ZZ13AudioCallbackPKPKfPPfjE12s_penv_start:
- 5635 0000 00000000 		.space	4
- 5636              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE16led3_duty_smooth,"aw",%nobits
- 5637              		.align	2
- 5638              		.set	.LANCHOR42,. + 0
- 5641              	_ZZ13AudioCallbackPKPKfPPfjE16led3_duty_smooth:
- 5642 0000 00000000 		.space	4
- 5643              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE7s_atk_c,"aw",%nobits
- 5644              		.align	2
- 5645              		.set	.LANCHOR13,. + 0
- 5648              	_ZZ13AudioCallbackPKPKfPPfjE7s_atk_c:
- 5649 0000 00000000 		.space	4
- 5650              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE7s_rel_c,"aw",%nobits
- 5651              		.align	2
- 5652              		.set	.LANCHOR14,. + 0
- 5655              	_ZZ13AudioCallbackPKPKfPPfjE7s_rel_c:
- 5656 0000 00000000 		.space	4
- 5657              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE8s_penv_c,"aw",%nobits
- 5658              		.align	2
- 5659              		.set	.LANCHOR15,. + 0
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 132
+ 5583 0000 00000000 		.space	16
+ 5583      00000000 
+ 5583      00000000 
+ 5583      00000000 
+ 5584              		.section	.bss._ZL8s_detune,"aw",%nobits
+ 5585              		.align	2
+ 5586              		.set	.LANCHOR22,. + 0
+ 5589              	_ZL8s_detune:
+ 5590 0000 00000000 		.space	4
+ 5591              		.section	.bss._ZL8s_phase1,"aw",%nobits
+ 5592              		.align	2
+ 5593              		.set	.LANCHOR34,. + 0
+ 5596              	_ZL8s_phase1:
+ 5597 0000 00000000 		.space	4
+ 5598              		.section	.bss._ZL8s_phase2,"aw",%nobits
+ 5599              		.align	2
+ 5600              		.set	.LANCHOR35,. + 0
+ 5603              	_ZL8s_phase2:
+ 5604 0000 00000000 		.space	4
+ 5605              		.section	.bss._ZL9s_ringmod,"aw",%nobits
+ 5606              		.align	2
+ 5607              		.set	.LANCHOR24,. + 0
+ 5610              	_ZL9s_ringmod:
+ 5611 0000 00000000 		.space	4
+ 5612              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE10led3_state,"aw",%nobits
+ 5613              		.set	.LANCHOR44,. + 0
+ 5616              	_ZZ13AudioCallbackPKPKfPPfjE10led3_state:
+ 5617 0000 00       		.space	1
+ 5618              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE11pwm_counter,"aw",%nobits
+ 5619              		.align	2
+ 5620              		.set	.LANCHOR43,. + 0
+ 5623              	_ZZ13AudioCallbackPKPKfPPfjE11pwm_counter:
+ 5624 0000 00000000 		.space	4
+ 5625              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE11s_prev_tamp,"aw",%nobits
+ 5626              		.align	2
+ 5627              		.set	.LANCHOR26,. + 0
+ 5630              	_ZZ13AudioCallbackPKPKfPPfjE11s_prev_tamp:
+ 5631 0000 00000000 		.space	4
+ 5632              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE12s_penv_start,"aw",%nobits
+ 5633              		.align	2
+ 5634              		.set	.LANCHOR16,. + 0
+ 5637              	_ZZ13AudioCallbackPKPKfPPfjE12s_penv_start:
+ 5638 0000 00000000 		.space	4
+ 5639              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE16led3_duty_smooth,"aw",%nobits
+ 5640              		.align	2
+ 5641              		.set	.LANCHOR42,. + 0
+ 5644              	_ZZ13AudioCallbackPKPKfPPfjE16led3_duty_smooth:
+ 5645 0000 00000000 		.space	4
+ 5646              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE7s_atk_c,"aw",%nobits
+ 5647              		.align	2
+ 5648              		.set	.LANCHOR13,. + 0
+ 5651              	_ZZ13AudioCallbackPKPKfPPfjE7s_atk_c:
+ 5652 0000 00000000 		.space	4
+ 5653              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE7s_rel_c,"aw",%nobits
+ 5654              		.align	2
+ 5655              		.set	.LANCHOR14,. + 0
+ 5658              	_ZZ13AudioCallbackPKPKfPPfjE7s_rel_c:
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 132
 
 
- 5662              	_ZZ13AudioCallbackPKPKfPPfjE8s_penv_c:
- 5663 0000 00000000 		.space	4
- 5664              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE9s_decay_c,"aw",%nobits
- 5665              		.align	2
- 5666              		.set	.LANCHOR17,. + 0
- 5669              	_ZZ13AudioCallbackPKPKfPPfjE9s_decay_c:
- 5670 0000 00000000 		.space	4
- 5671              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE9s_glide_c,"aw",%nobits
- 5672              		.align	2
- 5673              		.set	.LANCHOR12,. + 0
- 5676              	_ZZ13AudioCallbackPKPKfPPfjE9s_glide_c:
- 5677 0000 00000000 		.space	4
- 5678              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE9s_sustain,"aw",%nobits
- 5679              		.align	2
- 5680              		.set	.LANCHOR18,. + 0
- 5683              	_ZZ13AudioCallbackPKPKfPPfjE9s_sustain:
- 5684 0000 00000000 		.space	4
- 5685              		.section	.bss.g_amp_target,"aw",%nobits
- 5686              		.align	2
- 5687              		.set	.LANCHOR9,. + 0
- 5690              	g_amp_target:
- 5691 0000 00000000 		.space	4
- 5692              		.section	.bss.g_bitcrush,"aw",%nobits
- 5693              		.align	2
- 5694              		.set	.LANCHOR7,. + 0
- 5697              	g_bitcrush:
- 5698 0000 00000000 		.space	4
- 5699              		.section	.bss.g_finger_on,"aw",%nobits
- 5702              	g_finger_on:
- 5703 0000 00       		.space	1
- 5704              		.section	.bss.g_led3_duty,"aw",%nobits
- 5705              		.align	2
- 5706              		.set	.LANCHOR1,. + 0
- 5709              	g_led3_duty:
- 5710 0000 00000000 		.space	4
- 5711              		.section	.bss.g_retrig,"aw",%nobits
- 5712              		.set	.LANCHOR27,. + 0
- 5715              	g_retrig:
- 5716 0000 00       		.space	1
- 5717              		.section	.bss.g_ringmod,"aw",%nobits
- 5718              		.align	2
- 5719              		.set	.LANCHOR8,. + 0
- 5722              	g_ringmod:
- 5723 0000 00000000 		.space	4
- 5724              		.section	.bss.g_target_detune,"aw",%nobits
- 5725              		.align	2
- 5726              		.set	.LANCHOR4,. + 0
- 5729              	g_target_detune:
- 5730 0000 00000000 		.space	4
- 5731              		.section	.bss.g_vibrato_depth,"aw",%nobits
- 5732              		.align	2
- 5733              		.set	.LANCHOR6,. + 0
- 5736              	g_vibrato_depth:
- 5737 0000 00000000 		.space	4
- 5738              		.section	.data._ZL11s_noise_rng,"aw"
- 5739              		.align	2
- 5740              		.set	.LANCHOR38,. + 0
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 133
+ 5659 0000 00000000 		.space	4
+ 5660              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE8s_penv_c,"aw",%nobits
+ 5661              		.align	2
+ 5662              		.set	.LANCHOR15,. + 0
+ 5665              	_ZZ13AudioCallbackPKPKfPPfjE8s_penv_c:
+ 5666 0000 00000000 		.space	4
+ 5667              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE9s_decay_c,"aw",%nobits
+ 5668              		.align	2
+ 5669              		.set	.LANCHOR17,. + 0
+ 5672              	_ZZ13AudioCallbackPKPKfPPfjE9s_decay_c:
+ 5673 0000 00000000 		.space	4
+ 5674              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE9s_glide_c,"aw",%nobits
+ 5675              		.align	2
+ 5676              		.set	.LANCHOR12,. + 0
+ 5679              	_ZZ13AudioCallbackPKPKfPPfjE9s_glide_c:
+ 5680 0000 00000000 		.space	4
+ 5681              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE9s_sustain,"aw",%nobits
+ 5682              		.align	2
+ 5683              		.set	.LANCHOR18,. + 0
+ 5686              	_ZZ13AudioCallbackPKPKfPPfjE9s_sustain:
+ 5687 0000 00000000 		.space	4
+ 5688              		.section	.bss.g_amp_target,"aw",%nobits
+ 5689              		.align	2
+ 5690              		.set	.LANCHOR9,. + 0
+ 5693              	g_amp_target:
+ 5694 0000 00000000 		.space	4
+ 5695              		.section	.bss.g_bitcrush,"aw",%nobits
+ 5696              		.align	2
+ 5697              		.set	.LANCHOR7,. + 0
+ 5700              	g_bitcrush:
+ 5701 0000 00000000 		.space	4
+ 5702              		.section	.bss.g_finger_on,"aw",%nobits
+ 5705              	g_finger_on:
+ 5706 0000 00       		.space	1
+ 5707              		.section	.bss.g_led3_duty,"aw",%nobits
+ 5708              		.align	2
+ 5709              		.set	.LANCHOR1,. + 0
+ 5712              	g_led3_duty:
+ 5713 0000 00000000 		.space	4
+ 5714              		.section	.bss.g_retrig,"aw",%nobits
+ 5715              		.set	.LANCHOR27,. + 0
+ 5718              	g_retrig:
+ 5719 0000 00       		.space	1
+ 5720              		.section	.bss.g_ringmod,"aw",%nobits
+ 5721              		.align	2
+ 5722              		.set	.LANCHOR8,. + 0
+ 5725              	g_ringmod:
+ 5726 0000 00000000 		.space	4
+ 5727              		.section	.bss.g_target_detune,"aw",%nobits
+ 5728              		.align	2
+ 5729              		.set	.LANCHOR4,. + 0
+ 5732              	g_target_detune:
+ 5733 0000 00000000 		.space	4
+ 5734              		.section	.bss.g_vibrato_depth,"aw",%nobits
+ 5735              		.align	2
+ 5736              		.set	.LANCHOR6,. + 0
+ 5739              	g_vibrato_depth:
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 133
 
 
- 5743              	_ZL11s_noise_rng:
- 5744 0000 67452301 		.word	19088743
- 5745              		.section	.data._ZL12s_master_vol,"aw"
- 5746              		.align	2
- 5747              		.set	.LANCHOR32,. + 0
- 5750              	_ZL12s_master_vol:
- 5751 0000 0000803F 		.word	1065353216
- 5752              		.section	.data._ZL6s_freq,"aw"
- 5753              		.align	2
- 5754              		.set	.LANCHOR19,. + 0
- 5757              	_ZL6s_freq:
- 5758 0000 ECD18242 		.word	1115869676
- 5759              		.section	.data._ZL7s_drive,"aw"
- 5760              		.align	2
- 5761              		.set	.LANCHOR21,. + 0
- 5764              	_ZL7s_drive:
- 5765 0000 0000803F 		.word	1065353216
- 5766              		.section	.data._ZL8s_cutoff,"aw"
- 5767              		.align	2
- 5768              		.set	.LANCHOR20,. + 0
- 5771              	_ZL8s_cutoff:
- 5772 0000 0000C842 		.word	1120403456
- 5773              		.section	.data._ZZ13AudioCallbackPKPKfPPfjE10s_coeff_vi,"aw"
- 5774              		.align	2
- 5775              		.set	.LANCHOR11,. + 0
- 5778              	_ZZ13AudioCallbackPKPKfPPfjE10s_coeff_vi:
- 5779 0000 FFFFFFFF 		.word	-1
- 5780              		.section	.data._ZZ13AudioCallbackPKPKfPPfjE7s_decay,"aw"
- 5781              		.align	2
- 5782              		.set	.LANCHOR30,. + 0
- 5785              	_ZZ13AudioCallbackPKPKfPPfjE7s_decay:
- 5786 0000 0000803F 		.word	1065353216
- 5787              		.section	.data._ZZ13AudioCallbackPKPKfPPfjE7s_pmult,"aw"
- 5788              		.align	2
- 5789              		.set	.LANCHOR29,. + 0
- 5792              	_ZZ13AudioCallbackPKPKfPPfjE7s_pmult:
- 5793 0000 0000803F 		.word	1065353216
- 5794              		.section	.data.g_hits,"aw"
- 5795              		.align	2
- 5796              		.set	.LANCHOR41,. + 0
- 5799              	g_hits:
- 5800 0000 00       		.byte	0
- 5801 0001 00       		.byte	0
- 5802 0002 0000     		.space	2
- 5803 0004 09000000 		.word	9
- 5804 0008 0000A042 		.word	1117782016
- 5805 000c 00000000 		.word	0
- 5806 0010 00004843 		.word	1128792064
- 5807 0014 0000803F 		.word	1065353216
- 5808 0018 00000000 		.word	0
- 5809 001c 00000000 		.word	0
- 5810 0020 00000000 		.word	0
- 5811 0024 00000000 		.word	0
- 5812 0028 00000000 		.word	0
- 5813 002c 0000803F 		.word	1065353216
- 5814 0030 00000000 		.word	0
- 5815 0034 00000000 		.word	0
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 134
+ 5740 0000 00000000 		.space	4
+ 5741              		.section	.data._ZL11s_noise_rng,"aw"
+ 5742              		.align	2
+ 5743              		.set	.LANCHOR38,. + 0
+ 5746              	_ZL11s_noise_rng:
+ 5747 0000 67452301 		.word	19088743
+ 5748              		.section	.data._ZL12s_master_vol,"aw"
+ 5749              		.align	2
+ 5750              		.set	.LANCHOR32,. + 0
+ 5753              	_ZL12s_master_vol:
+ 5754 0000 0000803F 		.word	1065353216
+ 5755              		.section	.data._ZL6s_freq,"aw"
+ 5756              		.align	2
+ 5757              		.set	.LANCHOR19,. + 0
+ 5760              	_ZL6s_freq:
+ 5761 0000 ECD18242 		.word	1115869676
+ 5762              		.section	.data._ZL7s_drive,"aw"
+ 5763              		.align	2
+ 5764              		.set	.LANCHOR21,. + 0
+ 5767              	_ZL7s_drive:
+ 5768 0000 0000803F 		.word	1065353216
+ 5769              		.section	.data._ZL8s_cutoff,"aw"
+ 5770              		.align	2
+ 5771              		.set	.LANCHOR20,. + 0
+ 5774              	_ZL8s_cutoff:
+ 5775 0000 0000C842 		.word	1120403456
+ 5776              		.section	.data._ZZ13AudioCallbackPKPKfPPfjE10s_coeff_vi,"aw"
+ 5777              		.align	2
+ 5778              		.set	.LANCHOR11,. + 0
+ 5781              	_ZZ13AudioCallbackPKPKfPPfjE10s_coeff_vi:
+ 5782 0000 FFFFFFFF 		.word	-1
+ 5783              		.section	.data._ZZ13AudioCallbackPKPKfPPfjE7s_decay,"aw"
+ 5784              		.align	2
+ 5785              		.set	.LANCHOR30,. + 0
+ 5788              	_ZZ13AudioCallbackPKPKfPPfjE7s_decay:
+ 5789 0000 0000803F 		.word	1065353216
+ 5790              		.section	.data._ZZ13AudioCallbackPKPKfPPfjE7s_pmult,"aw"
+ 5791              		.align	2
+ 5792              		.set	.LANCHOR29,. + 0
+ 5795              	_ZZ13AudioCallbackPKPKfPPfjE7s_pmult:
+ 5796 0000 0000803F 		.word	1065353216
+ 5797              		.section	.data.g_hits,"aw"
+ 5798              		.align	2
+ 5799              		.set	.LANCHOR41,. + 0
+ 5802              	g_hits:
+ 5803 0000 00       		.byte	0
+ 5804 0001 00       		.byte	0
+ 5805 0002 0000     		.space	2
+ 5806 0004 09000000 		.word	9
+ 5807 0008 0000A042 		.word	1117782016
+ 5808 000c 00000000 		.word	0
+ 5809 0010 00004843 		.word	1128792064
+ 5810 0014 0000803F 		.word	1065353216
+ 5811 0018 00000000 		.word	0
+ 5812 001c 00000000 		.word	0
+ 5813 0020 00000000 		.word	0
+ 5814 0024 00000000 		.word	0
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 134
 
 
- 5816 0038 0000803F 		.word	1065353216
- 5817 003c 00000000 		.word	0
- 5818 0040 00000000 		.word	0
- 5819 0044 00000000 		.word	0
- 5820 0048 0000803F 		.word	1065353216
- 5821 004c 00       		.byte	0
- 5822 004d 00       		.byte	0
- 5823 004e 0000     		.space	2
- 5824 0050 09000000 		.word	9
- 5825 0054 0000A042 		.word	1117782016
- 5826 0058 00000000 		.word	0
- 5827 005c 00004843 		.word	1128792064
- 5828 0060 0000803F 		.word	1065353216
- 5829 0064 00000000 		.word	0
- 5830 0068 00000000 		.word	0
- 5831 006c 00000000 		.word	0
- 5832 0070 00000000 		.word	0
- 5833 0074 00000000 		.word	0
- 5834 0078 0000803F 		.word	1065353216
- 5835 007c 00000000 		.word	0
- 5836 0080 00000000 		.word	0
- 5837 0084 0000803F 		.word	1065353216
- 5838 0088 00000000 		.word	0
- 5839 008c 00000000 		.word	0
- 5840 0090 00000000 		.word	0
- 5841 0094 0000803F 		.word	1065353216
- 5842 0098 00       		.byte	0
- 5843 0099 00       		.byte	0
- 5844 009a 0000     		.space	2
- 5845 009c 09000000 		.word	9
- 5846 00a0 0000A042 		.word	1117782016
- 5847 00a4 00000000 		.word	0
- 5848 00a8 00004843 		.word	1128792064
- 5849 00ac 0000803F 		.word	1065353216
- 5850 00b0 00000000 		.word	0
- 5851 00b4 00000000 		.word	0
- 5852 00b8 00000000 		.word	0
- 5853 00bc 00000000 		.word	0
- 5854 00c0 00000000 		.word	0
- 5855 00c4 0000803F 		.word	1065353216
- 5856 00c8 00000000 		.word	0
- 5857 00cc 00000000 		.word	0
- 5858 00d0 0000803F 		.word	1065353216
- 5859 00d4 00000000 		.word	0
- 5860 00d8 00000000 		.word	0
- 5861 00dc 00000000 		.word	0
- 5862 00e0 0000803F 		.word	1065353216
- 5863 00e4 00       		.byte	0
- 5864 00e5 00       		.byte	0
- 5865 00e6 0000     		.space	2
- 5866 00e8 09000000 		.word	9
- 5867 00ec 0000A042 		.word	1117782016
- 5868 00f0 00000000 		.word	0
- 5869 00f4 00004843 		.word	1128792064
- 5870 00f8 0000803F 		.word	1065353216
- 5871 00fc 00000000 		.word	0
- 5872 0100 00000000 		.word	0
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 135
+ 5815 0028 00000000 		.word	0
+ 5816 002c 0000803F 		.word	1065353216
+ 5817 0030 00000000 		.word	0
+ 5818 0034 00000000 		.word	0
+ 5819 0038 0000803F 		.word	1065353216
+ 5820 003c 00000000 		.word	0
+ 5821 0040 00000000 		.word	0
+ 5822 0044 00000000 		.word	0
+ 5823 0048 0000803F 		.word	1065353216
+ 5824 004c 00       		.byte	0
+ 5825 004d 00       		.byte	0
+ 5826 004e 0000     		.space	2
+ 5827 0050 09000000 		.word	9
+ 5828 0054 0000A042 		.word	1117782016
+ 5829 0058 00000000 		.word	0
+ 5830 005c 00004843 		.word	1128792064
+ 5831 0060 0000803F 		.word	1065353216
+ 5832 0064 00000000 		.word	0
+ 5833 0068 00000000 		.word	0
+ 5834 006c 00000000 		.word	0
+ 5835 0070 00000000 		.word	0
+ 5836 0074 00000000 		.word	0
+ 5837 0078 0000803F 		.word	1065353216
+ 5838 007c 00000000 		.word	0
+ 5839 0080 00000000 		.word	0
+ 5840 0084 0000803F 		.word	1065353216
+ 5841 0088 00000000 		.word	0
+ 5842 008c 00000000 		.word	0
+ 5843 0090 00000000 		.word	0
+ 5844 0094 0000803F 		.word	1065353216
+ 5845 0098 00       		.byte	0
+ 5846 0099 00       		.byte	0
+ 5847 009a 0000     		.space	2
+ 5848 009c 09000000 		.word	9
+ 5849 00a0 0000A042 		.word	1117782016
+ 5850 00a4 00000000 		.word	0
+ 5851 00a8 00004843 		.word	1128792064
+ 5852 00ac 0000803F 		.word	1065353216
+ 5853 00b0 00000000 		.word	0
+ 5854 00b4 00000000 		.word	0
+ 5855 00b8 00000000 		.word	0
+ 5856 00bc 00000000 		.word	0
+ 5857 00c0 00000000 		.word	0
+ 5858 00c4 0000803F 		.word	1065353216
+ 5859 00c8 00000000 		.word	0
+ 5860 00cc 00000000 		.word	0
+ 5861 00d0 0000803F 		.word	1065353216
+ 5862 00d4 00000000 		.word	0
+ 5863 00d8 00000000 		.word	0
+ 5864 00dc 00000000 		.word	0
+ 5865 00e0 0000803F 		.word	1065353216
+ 5866 00e4 00       		.byte	0
+ 5867 00e5 00       		.byte	0
+ 5868 00e6 0000     		.space	2
+ 5869 00e8 09000000 		.word	9
+ 5870 00ec 0000A042 		.word	1117782016
+ 5871 00f0 00000000 		.word	0
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 135
 
 
- 5873 0104 00000000 		.word	0
- 5874 0108 00000000 		.word	0
- 5875 010c 00000000 		.word	0
- 5876 0110 0000803F 		.word	1065353216
- 5877 0114 00000000 		.word	0
- 5878 0118 00000000 		.word	0
- 5879 011c 0000803F 		.word	1065353216
- 5880 0120 00000000 		.word	0
- 5881 0124 00000000 		.word	0
- 5882 0128 00000000 		.word	0
- 5883 012c 0000803F 		.word	1065353216
- 5884              		.section	.data.g_master_vol,"aw"
- 5885              		.align	2
- 5886              		.set	.LANCHOR10,. + 0
- 5889              	g_master_vol:
- 5890 0000 0000803F 		.word	1065353216
- 5891              		.section	.data.g_target_cutoff,"aw"
- 5892              		.align	2
- 5893              		.set	.LANCHOR3,. + 0
- 5896              	g_target_cutoff:
- 5897 0000 0000C842 		.word	1120403456
- 5898              		.section	.data.g_target_drive,"aw"
- 5899              		.align	2
- 5900              		.set	.LANCHOR5,. + 0
- 5903              	g_target_drive:
- 5904 0000 0000803F 		.word	1065353216
- 5905              		.section	.data.g_target_freq,"aw"
- 5906              		.align	2
- 5907              		.set	.LANCHOR2,. + 0
- 5910              	g_target_freq:
- 5911 0000 ECD18242 		.word	1115869676
- 5912              		.section	.rodata._ZL11SCALE_MAJOR,"a"
- 5913              		.align	2
- 5916              	_ZL11SCALE_MAJOR:
- 5917 0000 00020405 		.ascii	"\000\002\004\005\007\011\013"
- 5917      07090B
- 5918              		.section	.rodata._ZL11SCALE_MINOR,"a"
- 5919              		.align	2
- 5922              	_ZL11SCALE_MINOR:
- 5923 0000 00020305 		.ascii	"\000\002\003\005\007\010\012"
- 5923      07080A
- 5924              		.section	.rodata._ZL6VOICES,"a"
- 5925              		.align	2
- 5926              		.set	.LANCHOR0,. + 0
- 5929              	_ZL6VOICES:
- 5930 0000 00000000 		.word	.LC0
- 5931 0004 00004842 		.word	1112014848
- 5932 0008 00009643 		.word	1133903872
- 5933 000c 6458E53F 		.word	1071994980
- 5934 0010 0000803F 		.word	1065353216
- 5935 0014 0000003F 		.word	1056964608
- 5936 0018 00       		.byte	0
- 5937 0019 000000   		.space	3
- 5938 001c 0000803F 		.word	1065353216
- 5939 0020 AE47613E 		.word	1046562734
- 5940 0024 00       		.byte	0
- 5941 0025 000000   		.space	3
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 136
+ 5872 00f4 00004843 		.word	1128792064
+ 5873 00f8 0000803F 		.word	1065353216
+ 5874 00fc 00000000 		.word	0
+ 5875 0100 00000000 		.word	0
+ 5876 0104 00000000 		.word	0
+ 5877 0108 00000000 		.word	0
+ 5878 010c 00000000 		.word	0
+ 5879 0110 0000803F 		.word	1065353216
+ 5880 0114 00000000 		.word	0
+ 5881 0118 00000000 		.word	0
+ 5882 011c 0000803F 		.word	1065353216
+ 5883 0120 00000000 		.word	0
+ 5884 0124 00000000 		.word	0
+ 5885 0128 00000000 		.word	0
+ 5886 012c 0000803F 		.word	1065353216
+ 5887              		.section	.data.g_master_vol,"aw"
+ 5888              		.align	2
+ 5889              		.set	.LANCHOR10,. + 0
+ 5892              	g_master_vol:
+ 5893 0000 0000803F 		.word	1065353216
+ 5894              		.section	.data.g_target_cutoff,"aw"
+ 5895              		.align	2
+ 5896              		.set	.LANCHOR3,. + 0
+ 5899              	g_target_cutoff:
+ 5900 0000 0000C842 		.word	1120403456
+ 5901              		.section	.data.g_target_drive,"aw"
+ 5902              		.align	2
+ 5903              		.set	.LANCHOR5,. + 0
+ 5906              	g_target_drive:
+ 5907 0000 0000803F 		.word	1065353216
+ 5908              		.section	.data.g_target_freq,"aw"
+ 5909              		.align	2
+ 5910              		.set	.LANCHOR2,. + 0
+ 5913              	g_target_freq:
+ 5914 0000 ECD18242 		.word	1115869676
+ 5915              		.section	.rodata._ZL11SCALE_MAJOR,"a"
+ 5916              		.align	2
+ 5919              	_ZL11SCALE_MAJOR:
+ 5920 0000 00020405 		.ascii	"\000\002\004\005\007\011\013"
+ 5920      07090B
+ 5921              		.section	.rodata._ZL11SCALE_MINOR,"a"
+ 5922              		.align	2
+ 5925              	_ZL11SCALE_MINOR:
+ 5926 0000 00020305 		.ascii	"\000\002\003\005\007\010\012"
+ 5926      07080A
+ 5927              		.section	.rodata._ZL15SCALE_CHROMATIC,"a"
+ 5928              		.align	2
+ 5931              	_ZL15SCALE_CHROMATIC:
+ 5932 0000 00010203 		.ascii	"\000\001\002\003\004\005\006\007\010\011\012\013"
+ 5932      04050607 
+ 5932      08090A0B 
+ 5933              		.section	.rodata._ZL6VOICES,"a"
+ 5934              		.align	2
+ 5935              		.set	.LANCHOR0,. + 0
+ 5938              	_ZL6VOICES:
+ 5939 0000 00000000 		.word	.LC0
+ 5940 0004 00004842 		.word	1112014848
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 136
 
 
- 5942 0028 0000003F 		.word	1056964608
- 5943 002c EC51383E 		.word	1043878380
- 5944 0030 00       		.byte	0
- 5945 0031 000000   		.space	3
- 5946 0034 00000040 		.word	1073741824
- 5947 0038 9A99193E 		.word	1041865114
- 5948 003c 00       		.byte	0
- 5949 003d 01       		.byte	1
- 5950 003e 0000     		.space	2
- 5951 0040 9A99993E 		.word	1050253722
- 5952 0044 00004041 		.word	1094713344
- 5953 0048 0000403F 		.word	1061158912
- 5954 004c 00002040 		.word	1075838976
- 5955 0050 00000000 		.word	0
- 5956 0054 0000803F 		.word	1065353216
- 5957 0058 0000803F 		.word	1065353216
- 5958 005c 9A99193E 		.word	1041865114
- 5959 0060 EC51383E 		.word	1043878380
- 5960 0064 00008040 		.word	1082130432
- 5961 0068 0000C843 		.word	1137180672
- 5962 006c 00002042 		.word	1109393408
- 5963 0070 00000000 		.space	44
- 5963      00000000 
- 5963      00000000 
- 5963      00000000 
- 5963      00000000 
- 5964 009c 08000000 		.word	.LC1
- 5965 00a0 00002042 		.word	1109393408
- 5966 00a4 00002043 		.word	1126170624
- 5967 00a8 F371B13F 		.word	1068593651
- 5968 00ac 0000803F 		.word	1065353216
- 5969 00b0 6666E63E 		.word	1055286886
- 5970 00b4 00       		.byte	0
- 5971 00b5 000000   		.space	3
- 5972 00b8 9FC8BF3F 		.word	1069533343
- 5973 00bc 9A99993E 		.word	1050253722
- 5974 00c0 00       		.byte	0
- 5975 00c1 000000   		.space	3
- 5976 00c4 0000003F 		.word	1056964608
- 5977 00c8 7B14AE3E 		.word	1051595899
- 5978 00cc 00       		.byte	0
- 5979 00cd 000000   		.space	3
- 5980 00d0 00000040 		.word	1073741824
- 5981 00d4 CDCC4C3E 		.word	1045220557
- 5982 00d8 00       		.byte	0
- 5983 00d9 00       		.byte	0
- 5984 00da 0000     		.space	2
- 5985 00dc 0000803E 		.word	1048576000
- 5986 00e0 0000E040 		.word	1088421888
- 5987 00e4 0000003F 		.word	1056964608
- 5988 00e8 0000803F 		.word	1065353216
- 5989 00ec 00000000 		.word	0
- 5990 00f0 0000803F 		.word	1065353216
- 5991 00f4 0000803F 		.word	1065353216
- 5992 00f8 8FC2F53D 		.word	1039516303
- 5993 00fc 8FC2F53D 		.word	1039516303
- 5994 0100 0000C040 		.word	1086324736
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 137
+ 5941 0008 00009643 		.word	1133903872
+ 5942 000c 6458E53F 		.word	1071994980
+ 5943 0010 0000803F 		.word	1065353216
+ 5944 0014 0000003F 		.word	1056964608
+ 5945 0018 00       		.byte	0
+ 5946 0019 000000   		.space	3
+ 5947 001c 0000803F 		.word	1065353216
+ 5948 0020 AE47613E 		.word	1046562734
+ 5949 0024 00       		.byte	0
+ 5950 0025 000000   		.space	3
+ 5951 0028 0000003F 		.word	1056964608
+ 5952 002c EC51383E 		.word	1043878380
+ 5953 0030 00       		.byte	0
+ 5954 0031 000000   		.space	3
+ 5955 0034 00000040 		.word	1073741824
+ 5956 0038 9A99193E 		.word	1041865114
+ 5957 003c 00       		.byte	0
+ 5958 003d 01       		.byte	1
+ 5959 003e 0000     		.space	2
+ 5960 0040 9A99993E 		.word	1050253722
+ 5961 0044 00004041 		.word	1094713344
+ 5962 0048 0000403F 		.word	1061158912
+ 5963 004c 00002040 		.word	1075838976
+ 5964 0050 00000000 		.word	0
+ 5965 0054 0000803F 		.word	1065353216
+ 5966 0058 0000803F 		.word	1065353216
+ 5967 005c 9A99193E 		.word	1041865114
+ 5968 0060 EC51383E 		.word	1043878380
+ 5969 0064 00008040 		.word	1082130432
+ 5970 0068 0000C843 		.word	1137180672
+ 5971 006c 00002042 		.word	1109393408
+ 5972 0070 00000000 		.space	44
+ 5972      00000000 
+ 5972      00000000 
+ 5972      00000000 
+ 5972      00000000 
+ 5973 009c 08000000 		.word	.LC1
+ 5974 00a0 00002042 		.word	1109393408
+ 5975 00a4 00002043 		.word	1126170624
+ 5976 00a8 F371B13F 		.word	1068593651
+ 5977 00ac 0000803F 		.word	1065353216
+ 5978 00b0 6666E63E 		.word	1055286886
+ 5979 00b4 00       		.byte	0
+ 5980 00b5 000000   		.space	3
+ 5981 00b8 9FC8BF3F 		.word	1069533343
+ 5982 00bc 9A99993E 		.word	1050253722
+ 5983 00c0 00       		.byte	0
+ 5984 00c1 000000   		.space	3
+ 5985 00c4 0000003F 		.word	1056964608
+ 5986 00c8 7B14AE3E 		.word	1051595899
+ 5987 00cc 00       		.byte	0
+ 5988 00cd 000000   		.space	3
+ 5989 00d0 00000040 		.word	1073741824
+ 5990 00d4 CDCC4C3E 		.word	1045220557
+ 5991 00d8 00       		.byte	0
+ 5992 00d9 00       		.byte	0
+ 5993 00da 0000     		.space	2
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 137
 
 
- 5995 0104 00009643 		.word	1133903872
- 5996 0108 0000C841 		.word	1103626240
- 5997 010c 00000000 		.space	44
- 5997      00000000 
- 5997      00000000 
- 5997      00000000 
- 5997      00000000 
- 5998 0138 10000000 		.word	.LC2
- 5999 013c 00002042 		.word	1109393408
- 6000 0140 00003443 		.word	1127481344
- 6001 0144 B285C03F 		.word	1069581746
- 6002 0148 0000803F 		.word	1065353216
- 6003 014c 6666E63E 		.word	1055286886
- 6004 0150 00       		.byte	0
- 6005 0151 000000   		.space	3
- 6006 0154 9FC8BF3F 		.word	1069533343
- 6007 0158 9A99993E 		.word	1050253722
- 6008 015c 00       		.byte	0
- 6009 015d 000000   		.space	3
- 6010 0160 0000003F 		.word	1056964608
- 6011 0164 9A99993E 		.word	1050253722
- 6012 0168 00       		.byte	0
- 6013 0169 000000   		.space	3
- 6014 016c 00000040 		.word	1073741824
- 6015 0170 AE47613E 		.word	1046562734
- 6016 0174 00       		.byte	0
- 6017 0175 00       		.byte	0
- 6018 0176 0000     		.space	2
- 6019 0178 0000003F 		.word	1056964608
- 6020 017c 00002041 		.word	1092616192
- 6021 0180 6666263F 		.word	1059481190
- 6022 0184 6666E63F 		.word	1072064102
- 6023 0188 00000000 		.word	0
- 6024 018c 0000803F 		.word	1065353216
- 6025 0190 0000803F 		.word	1065353216
- 6026 0194 9A99193E 		.word	1041865114
- 6027 0198 9A99193E 		.word	1041865114
- 6028 019c 0000A040 		.word	1084227584
- 6029 01a0 0000AF43 		.word	1135542272
- 6030 01a4 0000C841 		.word	1103626240
- 6031 01a8 00000000 		.space	44
- 6031      00000000 
- 6031      00000000 
- 6031      00000000 
- 6031      00000000 
- 6032 01d4 1C000000 		.word	.LC3
- 6033 01d8 00002042 		.word	1109393408
- 6034 01dc 00002043 		.word	1126170624
- 6035 01e0 F371B13F 		.word	1068593651
- 6036 01e4 0000803F 		.word	1065353216
- 6037 01e8 CDCCCC3E 		.word	1053609165
- 6038 01ec 03       		.byte	3
- 6039 01ed 000000   		.space	3
- 6040 01f0 9FC8BF3F 		.word	1069533343
- 6041 01f4 B81E853E 		.word	1048911544
- 6042 01f8 02       		.byte	2
- 6043 01f9 000000   		.space	3
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 138
+ 5994 00dc 0000803E 		.word	1048576000
+ 5995 00e0 0000E040 		.word	1088421888
+ 5996 00e4 0000003F 		.word	1056964608
+ 5997 00e8 0000803F 		.word	1065353216
+ 5998 00ec 00000000 		.word	0
+ 5999 00f0 0000803F 		.word	1065353216
+ 6000 00f4 0000803F 		.word	1065353216
+ 6001 00f8 8FC2F53D 		.word	1039516303
+ 6002 00fc 8FC2F53D 		.word	1039516303
+ 6003 0100 0000C040 		.word	1086324736
+ 6004 0104 00009643 		.word	1133903872
+ 6005 0108 0000C841 		.word	1103626240
+ 6006 010c 00000000 		.space	44
+ 6006      00000000 
+ 6006      00000000 
+ 6006      00000000 
+ 6006      00000000 
+ 6007 0138 10000000 		.word	.LC2
+ 6008 013c 00002042 		.word	1109393408
+ 6009 0140 00003443 		.word	1127481344
+ 6010 0144 B285C03F 		.word	1069581746
+ 6011 0148 0000803F 		.word	1065353216
+ 6012 014c 6666E63E 		.word	1055286886
+ 6013 0150 00       		.byte	0
+ 6014 0151 000000   		.space	3
+ 6015 0154 9FC8BF3F 		.word	1069533343
+ 6016 0158 9A99993E 		.word	1050253722
+ 6017 015c 00       		.byte	0
+ 6018 015d 000000   		.space	3
+ 6019 0160 0000003F 		.word	1056964608
+ 6020 0164 9A99993E 		.word	1050253722
+ 6021 0168 00       		.byte	0
+ 6022 0169 000000   		.space	3
+ 6023 016c 00000040 		.word	1073741824
+ 6024 0170 AE47613E 		.word	1046562734
+ 6025 0174 00       		.byte	0
+ 6026 0175 00       		.byte	0
+ 6027 0176 0000     		.space	2
+ 6028 0178 0000003F 		.word	1056964608
+ 6029 017c 00002041 		.word	1092616192
+ 6030 0180 6666263F 		.word	1059481190
+ 6031 0184 6666E63F 		.word	1072064102
+ 6032 0188 00000000 		.word	0
+ 6033 018c 0000803F 		.word	1065353216
+ 6034 0190 0000803F 		.word	1065353216
+ 6035 0194 9A99193E 		.word	1041865114
+ 6036 0198 9A99193E 		.word	1041865114
+ 6037 019c 0000A040 		.word	1084227584
+ 6038 01a0 0000AF43 		.word	1135542272
+ 6039 01a4 0000C841 		.word	1103626240
+ 6040 01a8 00000000 		.space	44
+ 6040      00000000 
+ 6040      00000000 
+ 6040      00000000 
+ 6040      00000000 
+ 6041 01d4 1C000000 		.word	.LC3
+ 6042 01d8 00002042 		.word	1109393408
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 138
 
 
- 6044 01fc 0000003F 		.word	1056964608
- 6045 0200 0AD7A33E 		.word	1050924810
- 6046 0204 01       		.byte	1
- 6047 0205 000000   		.space	3
- 6048 0208 00000040 		.word	1073741824
- 6049 020c EC51383E 		.word	1043878380
- 6050 0210 03       		.byte	3
- 6051 0211 00       		.byte	0
- 6052 0212 0000     		.space	2
- 6053 0214 CDCC4C3E 		.word	1045220557
- 6054 0218 00005041 		.word	1095761920
- 6055 021c 85EB513F 		.word	1062333317
- 6056 0220 CDCC0C40 		.word	1074580685
- 6057 0224 00000000 		.word	0
- 6058 0228 0000803F 		.word	1065353216
- 6059 022c 0000803F 		.word	1065353216
- 6060 0230 CDCC4C3E 		.word	1045220557
- 6061 0234 CDCC4C3E 		.word	1045220557
- 6062 0238 00004040 		.word	1077936128
- 6063 023c 00007A43 		.word	1132068864
- 6064 0240 00009041 		.word	1099956224
- 6065 0244 00000000 		.space	44
- 6065      00000000 
- 6065      00000000 
- 6065      00000000 
- 6065      00000000 
- 6066 0270 28000000 		.word	.LC4
- 6067 0274 00008242 		.word	1115815936
- 6068 0278 00000244 		.word	1140981760
- 6069 027c 8C150540 		.word	1074075020
- 6070 0280 0000803F 		.word	1065353216
- 6071 0284 6666E63E 		.word	1055286886
- 6072 0288 01       		.byte	1
- 6073 0289 000000   		.space	3
- 6074 028c D7A3803F 		.word	1065395159
- 6075 0290 CDCCCC3E 		.word	1053609165
- 6076 0294 01       		.byte	1
- 6077 0295 000000   		.space	3
- 6078 0298 0000003F 		.word	1056964608
- 6079 029c 9A99993E 		.word	1050253722
- 6080 02a0 01       		.byte	1
- 6081 02a1 000000   		.space	3
- 6082 02a4 00000040 		.word	1073741824
- 6083 02a8 295C8F3E 		.word	1049582633
- 6084 02ac 01       		.byte	1
- 6085 02ad 00       		.byte	0
- 6086 02ae 0000     		.space	2
- 6087 02b0 00000040 		.word	1073741824
- 6088 02b4 0000A040 		.word	1084227584
- 6089 02b8 CDCC4C3E 		.word	1045220557
- 6090 02bc CDCC4C3F 		.word	1061997773
- 6091 02c0 8FC2F53C 		.word	1022739087
- 6092 02c4 0000803F 		.word	1065353216
- 6093 02c8 0000803F 		.word	1065353216
- 6094 02cc CDCC4C3D 		.word	1028443341
- 6095 02d0 00000000 		.word	0
- 6096 02d4 00000041 		.word	1090519040
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 139
+ 6043 01dc 00002043 		.word	1126170624
+ 6044 01e0 F371B13F 		.word	1068593651
+ 6045 01e4 0000803F 		.word	1065353216
+ 6046 01e8 CDCCCC3E 		.word	1053609165
+ 6047 01ec 03       		.byte	3
+ 6048 01ed 000000   		.space	3
+ 6049 01f0 9FC8BF3F 		.word	1069533343
+ 6050 01f4 B81E853E 		.word	1048911544
+ 6051 01f8 02       		.byte	2
+ 6052 01f9 000000   		.space	3
+ 6053 01fc 0000003F 		.word	1056964608
+ 6054 0200 0AD7A33E 		.word	1050924810
+ 6055 0204 01       		.byte	1
+ 6056 0205 000000   		.space	3
+ 6057 0208 00000040 		.word	1073741824
+ 6058 020c EC51383E 		.word	1043878380
+ 6059 0210 03       		.byte	3
+ 6060 0211 00       		.byte	0
+ 6061 0212 0000     		.space	2
+ 6062 0214 CDCC4C3E 		.word	1045220557
+ 6063 0218 00005041 		.word	1095761920
+ 6064 021c 85EB513F 		.word	1062333317
+ 6065 0220 CDCC0C40 		.word	1074580685
+ 6066 0224 00000000 		.word	0
+ 6067 0228 0000803F 		.word	1065353216
+ 6068 022c 0000803F 		.word	1065353216
+ 6069 0230 CDCC4C3E 		.word	1045220557
+ 6070 0234 CDCC4C3E 		.word	1045220557
+ 6071 0238 00004040 		.word	1077936128
+ 6072 023c 00007A43 		.word	1132068864
+ 6073 0240 00009041 		.word	1099956224
+ 6074 0244 00000000 		.space	44
+ 6074      00000000 
+ 6074      00000000 
+ 6074      00000000 
+ 6074      00000000 
+ 6075 0270 28000000 		.word	.LC4
+ 6076 0274 00008242 		.word	1115815936
+ 6077 0278 00000244 		.word	1140981760
+ 6078 027c 8C150540 		.word	1074075020
+ 6079 0280 0000803F 		.word	1065353216
+ 6080 0284 6666E63E 		.word	1055286886
+ 6081 0288 01       		.byte	1
+ 6082 0289 000000   		.space	3
+ 6083 028c D7A3803F 		.word	1065395159
+ 6084 0290 CDCCCC3E 		.word	1053609165
+ 6085 0294 01       		.byte	1
+ 6086 0295 000000   		.space	3
+ 6087 0298 0000003F 		.word	1056964608
+ 6088 029c 9A99993E 		.word	1050253722
+ 6089 02a0 01       		.byte	1
+ 6090 02a1 000000   		.space	3
+ 6091 02a4 00000040 		.word	1073741824
+ 6092 02a8 295C8F3E 		.word	1049582633
+ 6093 02ac 01       		.byte	1
+ 6094 02ad 00       		.byte	0
+ 6095 02ae 0000     		.space	2
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 139
 
 
- 6097 02d8 0000F042 		.word	1123024896
- 6098 02dc 00000041 		.word	1090519040
- 6099 02e0 00000000 		.word	0
- 6100 02e4 00000000 		.word	0
- 6101 02e8 00000000 		.word	0
- 6102 02ec 00       		.byte	0
- 6103 02ed 000000   		.space	3
- 6104 02f0 00000000 		.word	0
- 6105 02f4 00000000 		.word	0
- 6106 02f8 01       		.byte	1
- 6107 02f9 000000   		.space	3
- 6108 02fc 00000000 		.word	_ZL11SCALE_MINOR
- 6109 0300 07000000 		.word	7
- 6110 0304 00000000 		.space	8
- 6110      00000000 
- 6111 030c 30000000 		.word	.LC5
- 6112 0310 0000B442 		.word	1119092736
- 6113 0314 00003444 		.word	1144258560
- 6114 0318 8C150540 		.word	1074075020
- 6115 031c 0000803F 		.word	1065353216
- 6116 0320 3D0AD73E 		.word	1054280253
- 6117 0324 03       		.byte	3
- 6118 0325 000000   		.space	3
- 6119 0328 2506813F 		.word	1065420325
- 6120 032c 5C8FC23E 		.word	1052938076
- 6121 0330 03       		.byte	3
- 6122 0331 000000   		.space	3
- 6123 0334 0000003F 		.word	1056964608
- 6124 0338 CDCC4C3E 		.word	1045220557
- 6125 033c 03       		.byte	3
- 6126 033d 000000   		.space	3
- 6127 0340 00000040 		.word	1073741824
- 6128 0344 9A99993E 		.word	1050253722
- 6129 0348 03       		.byte	3
- 6130 0349 00       		.byte	0
- 6131 034a 0000     		.space	2
- 6132 034c 00004040 		.word	1077936128
- 6133 0350 00003041 		.word	1093664768
- 6134 0354 6666663F 		.word	1063675494
- 6135 0358 00008040 		.word	1082130432
- 6136 035c CDCC4C3D 		.word	1028443341
- 6137 0360 0000803F 		.word	1065353216
- 6138 0364 00002040 		.word	1075838976
- 6139 0368 CDCCCC3E 		.word	1053609165
- 6140 036c 9A99993E 		.word	1050253722
- 6141 0370 00000040 		.word	1073741824
- 6142 0374 00004843 		.word	1128792064
- 6143 0378 00000C42 		.word	1108082688
- 6144 037c 00000000 		.space	44
- 6144      00000000 
- 6144      00000000 
- 6144      00000000 
- 6144      00000000 
- 6145 03a8 38000000 		.word	.LC6
- 6146 03ac 0000A042 		.word	1117782016
- 6147 03b0 0000A043 		.word	1134559232
- 6148 03b4 F371B13F 		.word	1068593651
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 140
+ 6096 02b0 00000040 		.word	1073741824
+ 6097 02b4 0000A040 		.word	1084227584
+ 6098 02b8 CDCC4C3E 		.word	1045220557
+ 6099 02bc CDCC4C3F 		.word	1061997773
+ 6100 02c0 8FC2F53C 		.word	1022739087
+ 6101 02c4 0000803F 		.word	1065353216
+ 6102 02c8 0000803F 		.word	1065353216
+ 6103 02cc CDCC4C3D 		.word	1028443341
+ 6104 02d0 00000000 		.word	0
+ 6105 02d4 00000041 		.word	1090519040
+ 6106 02d8 0000F042 		.word	1123024896
+ 6107 02dc 00000041 		.word	1090519040
+ 6108 02e0 00000000 		.word	0
+ 6109 02e4 00000000 		.word	0
+ 6110 02e8 00000000 		.word	0
+ 6111 02ec 00       		.byte	0
+ 6112 02ed 000000   		.space	3
+ 6113 02f0 00000000 		.word	0
+ 6114 02f4 00000000 		.word	0
+ 6115 02f8 01       		.byte	1
+ 6116 02f9 000000   		.space	3
+ 6117 02fc 00000000 		.word	_ZL11SCALE_MINOR
+ 6118 0300 07000000 		.word	7
+ 6119 0304 00000000 		.space	8
+ 6119      00000000 
+ 6120 030c 30000000 		.word	.LC5
+ 6121 0310 0000B442 		.word	1119092736
+ 6122 0314 00003444 		.word	1144258560
+ 6123 0318 8C150540 		.word	1074075020
+ 6124 031c 0000803F 		.word	1065353216
+ 6125 0320 3D0AD73E 		.word	1054280253
+ 6126 0324 03       		.byte	3
+ 6127 0325 000000   		.space	3
+ 6128 0328 2506813F 		.word	1065420325
+ 6129 032c 5C8FC23E 		.word	1052938076
+ 6130 0330 03       		.byte	3
+ 6131 0331 000000   		.space	3
+ 6132 0334 0000003F 		.word	1056964608
+ 6133 0338 CDCC4C3E 		.word	1045220557
+ 6134 033c 03       		.byte	3
+ 6135 033d 000000   		.space	3
+ 6136 0340 00000040 		.word	1073741824
+ 6137 0344 9A99993E 		.word	1050253722
+ 6138 0348 03       		.byte	3
+ 6139 0349 00       		.byte	0
+ 6140 034a 0000     		.space	2
+ 6141 034c 00004040 		.word	1077936128
+ 6142 0350 00003041 		.word	1093664768
+ 6143 0354 6666663F 		.word	1063675494
+ 6144 0358 00008040 		.word	1082130432
+ 6145 035c CDCC4C3D 		.word	1028443341
+ 6146 0360 0000803F 		.word	1065353216
+ 6147 0364 00002040 		.word	1075838976
+ 6148 0368 CDCCCC3E 		.word	1053609165
+ 6149 036c 9A99993E 		.word	1050253722
+ 6150 0370 00000040 		.word	1073741824
+ 6151 0374 00004843 		.word	1128792064
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 140
 
 
- 6149 03b8 0000803F 		.word	1065353216
- 6150 03bc CDCCCC3E 		.word	1053609165
- 6151 03c0 03       		.byte	3
- 6152 03c1 000000   		.space	3
- 6153 03c4 9FC8BF3F 		.word	1069533343
- 6154 03c8 9A99993E 		.word	1050253722
- 6155 03cc 03       		.byte	3
- 6156 03cd 000000   		.space	3
- 6157 03d0 0000003F 		.word	1056964608
- 6158 03d4 AE47613E 		.word	1046562734
- 6159 03d8 03       		.byte	3
- 6160 03d9 000000   		.space	3
- 6161 03dc 00000040 		.word	1073741824
- 6162 03e0 EC51383E 		.word	1043878380
- 6163 03e4 03       		.byte	3
- 6164 03e5 00       		.byte	0
- 6165 03e6 0000     		.space	2
- 6166 03e8 0000C03F 		.word	1069547520
- 6167 03ec 0000C040 		.word	1086324736
- 6168 03f0 3D0AD73E 		.word	1054280253
- 6169 03f4 66666640 		.word	1080452710
- 6170 03f8 8FC2F53C 		.word	1022739087
- 6171 03fc 0000803F 		.word	1065353216
- 6172 0400 0000803F 		.word	1065353216
- 6173 0404 8FC2F53D 		.word	1039516303
- 6174 0408 9A99193E 		.word	1041865114
- 6175 040c 00004040 		.word	1077936128
- 6176 0410 00008C43 		.word	1133248512
- 6177 0414 00000041 		.word	1090519040
- 6178 0418 8FC2F53D 		.word	1039516303
- 6179 041c 00009041 		.word	1099956224
- 6180 0420 00000000 		.word	0
- 6181 0424 00       		.byte	0
- 6182 0425 000000   		.space	3
- 6183 0428 00000000 		.word	0
- 6184 042c 00000000 		.word	0
- 6185 0430 01       		.byte	1
- 6186 0431 000000   		.space	3
- 6187 0434 00000000 		.word	_ZL11SCALE_MAJOR
- 6188 0438 07000000 		.word	7
- 6189 043c 00009644 		.word	1150681088
- 6190 0440 00000000 		.word	0
- 6191 0444 40000000 		.word	.LC7
- 6192 0448 00008C42 		.word	1116471296
- 6193 044c 00000C44 		.word	1141637120
- 6194 0450 8C150540 		.word	1074075020
- 6195 0454 0000803F 		.word	1065353216
- 6196 0458 0AD7A33E 		.word	1050924810
- 6197 045c 03       		.byte	3
- 6198 045d 000000   		.space	3
- 6199 0460 9CC4803F 		.word	1065403548
- 6200 0464 9A99993E 		.word	1050253722
- 6201 0468 03       		.byte	3
- 6202 0469 000000   		.space	3
- 6203 046c 0000003F 		.word	1056964608
- 6204 0470 AE47613E 		.word	1046562734
- 6205 0474 00       		.byte	0
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 141
+ 6152 0378 00000C42 		.word	1108082688
+ 6153 037c 00000000 		.space	44
+ 6153      00000000 
+ 6153      00000000 
+ 6153      00000000 
+ 6153      00000000 
+ 6154 03a8 38000000 		.word	.LC6
+ 6155 03ac 0000A042 		.word	1117782016
+ 6156 03b0 0000A043 		.word	1134559232
+ 6157 03b4 F371B13F 		.word	1068593651
+ 6158 03b8 0000803F 		.word	1065353216
+ 6159 03bc CDCCCC3E 		.word	1053609165
+ 6160 03c0 03       		.byte	3
+ 6161 03c1 000000   		.space	3
+ 6162 03c4 9FC8BF3F 		.word	1069533343
+ 6163 03c8 9A99993E 		.word	1050253722
+ 6164 03cc 03       		.byte	3
+ 6165 03cd 000000   		.space	3
+ 6166 03d0 0000003F 		.word	1056964608
+ 6167 03d4 AE47613E 		.word	1046562734
+ 6168 03d8 03       		.byte	3
+ 6169 03d9 000000   		.space	3
+ 6170 03dc 00000040 		.word	1073741824
+ 6171 03e0 EC51383E 		.word	1043878380
+ 6172 03e4 03       		.byte	3
+ 6173 03e5 00       		.byte	0
+ 6174 03e6 0000     		.space	2
+ 6175 03e8 0000C03F 		.word	1069547520
+ 6176 03ec 0000C040 		.word	1086324736
+ 6177 03f0 3D0AD73E 		.word	1054280253
+ 6178 03f4 66666640 		.word	1080452710
+ 6179 03f8 8FC2F53C 		.word	1022739087
+ 6180 03fc 0000803F 		.word	1065353216
+ 6181 0400 0000803F 		.word	1065353216
+ 6182 0404 8FC2F53D 		.word	1039516303
+ 6183 0408 9A99193E 		.word	1041865114
+ 6184 040c 00004040 		.word	1077936128
+ 6185 0410 00008C43 		.word	1133248512
+ 6186 0414 00000041 		.word	1090519040
+ 6187 0418 8FC2F53D 		.word	1039516303
+ 6188 041c 00009041 		.word	1099956224
+ 6189 0420 00000000 		.word	0
+ 6190 0424 00       		.byte	0
+ 6191 0425 000000   		.space	3
+ 6192 0428 00000000 		.word	0
+ 6193 042c 00000000 		.word	0
+ 6194 0430 01       		.byte	1
+ 6195 0431 000000   		.space	3
+ 6196 0434 00000000 		.word	_ZL11SCALE_MAJOR
+ 6197 0438 07000000 		.word	7
+ 6198 043c 00009644 		.word	1150681088
+ 6199 0440 00000000 		.word	0
+ 6200 0444 40000000 		.word	.LC7
+ 6201 0448 00008C42 		.word	1116471296
+ 6202 044c 00000C44 		.word	1141637120
+ 6203 0450 8C150540 		.word	1074075020
+ 6204 0454 0000803F 		.word	1065353216
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 141
 
 
- 6206 0475 000000   		.space	3
- 6207 0478 00000040 		.word	1073741824
- 6208 047c EC51383E 		.word	1043878380
- 6209 0480 01       		.byte	1
- 6210 0481 00       		.byte	0
- 6211 0482 0000     		.space	2
- 6212 0484 9A99993F 		.word	1067030938
- 6213 0488 00004040 		.word	1077936128
- 6214 048c CDCC4C3E 		.word	1045220557
- 6215 0490 9A99193F 		.word	1058642330
- 6216 0494 8FC2753C 		.word	1014350479
- 6217 0498 0000803F 		.word	1065353216
- 6218 049c 0000803F 		.word	1065353216
- 6219 04a0 00000000 		.word	0
- 6220 04a4 0AD7A33D 		.word	1034147594
- 6221 04a8 00800945 		.word	1158250496
- 6222 04ac 0000FA44 		.word	1157234688
- 6223 04b0 0000A042 		.word	1117782016
- 6224 04b4 00000000 		.space	44
- 6224      00000000 
- 6224      00000000 
- 6224      00000000 
- 6224      00000000 
- 6225 04e0 44000000 		.word	.LC8
- 6226 04e4 00002042 		.word	1109393408
- 6227 04e8 0000C843 		.word	1137180672
- 6228 04ec A25D1340 		.word	1075010978
- 6229 04f0 0000803F 		.word	1065353216
- 6230 04f4 AE47613E 		.word	1046562734
- 6231 04f8 01       		.byte	1
- 6232 04f9 000000   		.space	3
- 6233 04fc CDCCCC3F 		.word	1070386381
- 6234 0500 9A99193E 		.word	1041865114
- 6235 0504 01       		.byte	1
- 6236 0505 000000   		.space	3
- 6237 0508 0000003F 		.word	1056964608
- 6238 050c CDCCCC3D 		.word	1036831949
- 6239 0510 01       		.byte	1
- 6240 0511 000000   		.space	3
- 6241 0514 00000040 		.word	1073741824
- 6242 0518 00000000 		.word	0
- 6243 051c 01       		.byte	1
- 6244 051d 00       		.byte	0
- 6245 051e 0000     		.space	2
- 6246 0520 00004040 		.word	1077936128
- 6247 0524 00004040 		.word	1077936128
- 6248 0528 9A99993E 		.word	1050253722
- 6249 052c 0000C03F 		.word	1069547520
- 6250 0530 3333333F 		.word	1060320051
- 6251 0534 9A99993E 		.word	1050253722
- 6252 0538 0000803F 		.word	1065353216
- 6253 053c 00000000 		.word	0
- 6254 0540 CDCCCC3D 		.word	1036831949
- 6255 0544 0000803F 		.word	1065353216
- 6256 0548 00001643 		.word	1125515264
- 6257 054c 0000A040 		.word	1084227584
- 6258 0550 0000803F 		.word	1065353216
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 142
+ 6205 0458 0AD7A33E 		.word	1050924810
+ 6206 045c 03       		.byte	3
+ 6207 045d 000000   		.space	3
+ 6208 0460 9CC4803F 		.word	1065403548
+ 6209 0464 9A99993E 		.word	1050253722
+ 6210 0468 03       		.byte	3
+ 6211 0469 000000   		.space	3
+ 6212 046c 0000003F 		.word	1056964608
+ 6213 0470 AE47613E 		.word	1046562734
+ 6214 0474 00       		.byte	0
+ 6215 0475 000000   		.space	3
+ 6216 0478 00000040 		.word	1073741824
+ 6217 047c EC51383E 		.word	1043878380
+ 6218 0480 01       		.byte	1
+ 6219 0481 00       		.byte	0
+ 6220 0482 0000     		.space	2
+ 6221 0484 9A99993F 		.word	1067030938
+ 6222 0488 00004040 		.word	1077936128
+ 6223 048c CDCC4C3E 		.word	1045220557
+ 6224 0490 9A99193F 		.word	1058642330
+ 6225 0494 8FC2753C 		.word	1014350479
+ 6226 0498 0000803F 		.word	1065353216
+ 6227 049c 0000803F 		.word	1065353216
+ 6228 04a0 00000000 		.word	0
+ 6229 04a4 0AD7A33D 		.word	1034147594
+ 6230 04a8 00800945 		.word	1158250496
+ 6231 04ac 0000FA44 		.word	1157234688
+ 6232 04b0 0000A042 		.word	1117782016
+ 6233 04b4 00000000 		.space	44
+ 6233      00000000 
+ 6233      00000000 
+ 6233      00000000 
+ 6233      00000000 
+ 6234 04e0 44000000 		.word	.LC8
+ 6235 04e4 00002042 		.word	1109393408
+ 6236 04e8 0000C843 		.word	1137180672
+ 6237 04ec A25D1340 		.word	1075010978
+ 6238 04f0 0000803F 		.word	1065353216
+ 6239 04f4 AE47613E 		.word	1046562734
+ 6240 04f8 01       		.byte	1
+ 6241 04f9 000000   		.space	3
+ 6242 04fc CDCCCC3F 		.word	1070386381
+ 6243 0500 9A99193E 		.word	1041865114
+ 6244 0504 01       		.byte	1
+ 6245 0505 000000   		.space	3
+ 6246 0508 0000003F 		.word	1056964608
+ 6247 050c CDCCCC3D 		.word	1036831949
+ 6248 0510 01       		.byte	1
+ 6249 0511 000000   		.space	3
+ 6250 0514 00000040 		.word	1073741824
+ 6251 0518 00000000 		.word	0
+ 6252 051c 01       		.byte	1
+ 6253 051d 00       		.byte	0
+ 6254 051e 0000     		.space	2
+ 6255 0520 00004040 		.word	1077936128
+ 6256 0524 00004040 		.word	1077936128
+ 6257 0528 9A99993E 		.word	1050253722
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 142
 
 
- 6259 0554 0000A042 		.word	1117782016
- 6260 0558 00000000 		.word	0
- 6261 055c 01       		.byte	1
- 6262 055d 000000   		.space	3
- 6263 0560 9A99593F 		.word	1062836634
- 6264 0564 0000C843 		.word	1137180672
- 6265 0568 00000000 		.space	20
- 6265      00000000 
- 6265      00000000 
- 6265      00000000 
- 6265      00000000 
- 6266 057c 48000000 		.word	.LC9
- 6267 0580 0000F041 		.word	1106247680
- 6268 0584 0000A042 		.word	1117782016
- 6269 0588 AD177B3F 		.word	1065031597
- 6270 058c 0000803F 		.word	1065353216
- 6271 0590 CDCC0C3F 		.word	1057803469
- 6272 0594 01       		.byte	1
- 6273 0595 000000   		.space	3
- 6274 0598 00000040 		.word	1073741824
- 6275 059c CDCCCC3D 		.word	1036831949
- 6276 05a0 01       		.byte	1
- 6277 05a1 000000   		.space	3
- 6278 05a4 0000003F 		.word	1056964608
- 6279 05a8 9A99193E 		.word	1041865114
- 6280 05ac 01       		.byte	1
- 6281 05ad 000000   		.space	3
- 6282 05b0 00000040 		.word	1073741824
- 6283 05b4 00000000 		.word	0
- 6284 05b8 01       		.byte	1
- 6285 05b9 00       		.byte	0
- 6286 05ba 0000     		.space	2
- 6287 05bc 00004040 		.word	1077936128
- 6288 05c0 00000040 		.word	1073741824
- 6289 05c4 CDCC4C3E 		.word	1045220557
- 6290 05c8 6666E63F 		.word	1072064102
- 6291 05cc 0AD7A33D 		.word	1034147594
- 6292 05d0 0000003F 		.word	1056964608
- 6293 05d4 0000803F 		.word	1065353216
- 6294 05d8 00000000 		.word	0
- 6295 05dc 00000000 		.word	0
- 6296 05e0 0000803F 		.word	1065353216
- 6297 05e4 00002043 		.word	1126170624
- 6298 05e8 0000A040 		.word	1084227584
- 6299 05ec 00000040 		.word	1073741824
- 6300 05f0 00003442 		.word	1110704128
- 6301 05f4 00000000 		.word	0
- 6302 05f8 01       		.byte	1
- 6303 05f9 000000   		.space	3
- 6304 05fc 9A99593F 		.word	1062836634
- 6305 0600 0000C843 		.word	1137180672
- 6306 0604 00000000 		.space	20
- 6306      00000000 
- 6306      00000000 
- 6306      00000000 
- 6306      00000000 
- 6307 0618 50000000 		.word	.LC10
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 143
+ 6258 052c 0000C03F 		.word	1069547520
+ 6259 0530 3333333F 		.word	1060320051
+ 6260 0534 9A99993E 		.word	1050253722
+ 6261 0538 0000803F 		.word	1065353216
+ 6262 053c 00000000 		.word	0
+ 6263 0540 CDCCCC3D 		.word	1036831949
+ 6264 0544 0000803F 		.word	1065353216
+ 6265 0548 00001643 		.word	1125515264
+ 6266 054c 0000A040 		.word	1084227584
+ 6267 0550 0000803F 		.word	1065353216
+ 6268 0554 0000A042 		.word	1117782016
+ 6269 0558 00000000 		.word	0
+ 6270 055c 01       		.byte	1
+ 6271 055d 000000   		.space	3
+ 6272 0560 9A99593F 		.word	1062836634
+ 6273 0564 0000C843 		.word	1137180672
+ 6274 0568 00000000 		.space	20
+ 6274      00000000 
+ 6274      00000000 
+ 6274      00000000 
+ 6274      00000000 
+ 6275 057c 48000000 		.word	.LC9
+ 6276 0580 0000F041 		.word	1106247680
+ 6277 0584 0000A042 		.word	1117782016
+ 6278 0588 AD177B3F 		.word	1065031597
+ 6279 058c 0000803F 		.word	1065353216
+ 6280 0590 CDCC0C3F 		.word	1057803469
+ 6281 0594 01       		.byte	1
+ 6282 0595 000000   		.space	3
+ 6283 0598 00000040 		.word	1073741824
+ 6284 059c CDCCCC3D 		.word	1036831949
+ 6285 05a0 01       		.byte	1
+ 6286 05a1 000000   		.space	3
+ 6287 05a4 0000003F 		.word	1056964608
+ 6288 05a8 9A99193E 		.word	1041865114
+ 6289 05ac 01       		.byte	1
+ 6290 05ad 000000   		.space	3
+ 6291 05b0 00000040 		.word	1073741824
+ 6292 05b4 00000000 		.word	0
+ 6293 05b8 01       		.byte	1
+ 6294 05b9 00       		.byte	0
+ 6295 05ba 0000     		.space	2
+ 6296 05bc 00004040 		.word	1077936128
+ 6297 05c0 00000040 		.word	1073741824
+ 6298 05c4 CDCC4C3E 		.word	1045220557
+ 6299 05c8 6666E63F 		.word	1072064102
+ 6300 05cc 0AD7A33D 		.word	1034147594
+ 6301 05d0 0000003F 		.word	1056964608
+ 6302 05d4 0000803F 		.word	1065353216
+ 6303 05d8 00000000 		.word	0
+ 6304 05dc 00000000 		.word	0
+ 6305 05e0 0000803F 		.word	1065353216
+ 6306 05e4 00002043 		.word	1126170624
+ 6307 05e8 0000A040 		.word	1084227584
+ 6308 05ec 00000040 		.word	1073741824
+ 6309 05f0 00003442 		.word	1110704128
+ 6310 05f4 00000000 		.word	0
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 143
 
 
- 6308 061c 00001643 		.word	1125515264
- 6309 0620 0000FA43 		.word	1140457472
- 6310 0624 B01B9A3F 		.word	1067064240
- 6311 0628 0000803F 		.word	1065353216
- 6312 062c 9A99193E 		.word	1041865114
- 6313 0630 01       		.byte	1
- 6314 0631 000000   		.space	3
- 6315 0634 6666E63F 		.word	1072064102
- 6316 0638 8FC2F53D 		.word	1039516303
- 6317 063c 00       		.byte	0
- 6318 063d 000000   		.space	3
- 6319 0640 0000003F 		.word	1056964608
- 6320 0644 CDCC4C3D 		.word	1028443341
- 6321 0648 01       		.byte	1
- 6322 0649 000000   		.space	3
- 6323 064c 00000040 		.word	1073741824
- 6324 0650 00000000 		.word	0
- 6325 0654 01       		.byte	1
- 6326 0655 00       		.byte	0
- 6327 0656 0000     		.space	2
- 6328 0658 00009041 		.word	1099956224
- 6329 065c 00008040 		.word	1082130432
- 6330 0660 9A99993E 		.word	1050253722
- 6331 0664 0000C03F 		.word	1069547520
- 6332 0668 EC51383F 		.word	1060655596
- 6333 066c 9A99993E 		.word	1050253722
- 6334 0670 0000803F 		.word	1065353216
- 6335 0674 00000000 		.word	0
- 6336 0678 CDCCCC3D 		.word	1036831949
- 6337 067c 0000803F 		.word	1065353216
- 6338 0680 00000C43 		.word	1124859904
- 6339 0684 0000A040 		.word	1084227584
- 6340 0688 3333333F 		.word	1060320051
- 6341 068c 0000F041 		.word	1106247680
- 6342 0690 00000000 		.word	0
- 6343 0694 01       		.byte	1
- 6344 0695 000000   		.space	3
- 6345 0698 9A99593F 		.word	1062836634
- 6346 069c 0000C843 		.word	1137180672
- 6347 06a0 00000000 		.space	20
- 6347      00000000 
- 6347      00000000 
- 6347      00000000 
- 6347      00000000 
- 6348 06b4 58000000 		.word	.LC11
- 6349 06b8 00007A45 		.word	1165623296
- 6350 06bc 00E02B46 		.word	1177280512
- 6351 06c0 1C7C813F 		.word	1065450524
- 6352 06c4 0000803F 		.word	1065353216
- 6353 06c8 CDCCCC3D 		.word	1036831949
- 6354 06cc 02       		.byte	2
- 6355 06cd 000000   		.space	3
- 6356 06d0 3D0AD73F 		.word	1071057469
- 6357 06d4 0AD7A33D 		.word	1034147594
- 6358 06d8 02       		.byte	2
- 6359 06d9 000000   		.space	3
- 6360 06dc 0000003F 		.word	1056964608
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 144
+ 6311 05f8 01       		.byte	1
+ 6312 05f9 000000   		.space	3
+ 6313 05fc 9A99593F 		.word	1062836634
+ 6314 0600 0000C843 		.word	1137180672
+ 6315 0604 00000000 		.space	20
+ 6315      00000000 
+ 6315      00000000 
+ 6315      00000000 
+ 6315      00000000 
+ 6316 0618 50000000 		.word	.LC10
+ 6317 061c 00001643 		.word	1125515264
+ 6318 0620 0000FA43 		.word	1140457472
+ 6319 0624 B01B9A3F 		.word	1067064240
+ 6320 0628 0000803F 		.word	1065353216
+ 6321 062c 9A99193E 		.word	1041865114
+ 6322 0630 01       		.byte	1
+ 6323 0631 000000   		.space	3
+ 6324 0634 6666E63F 		.word	1072064102
+ 6325 0638 8FC2F53D 		.word	1039516303
+ 6326 063c 00       		.byte	0
+ 6327 063d 000000   		.space	3
+ 6328 0640 0000003F 		.word	1056964608
+ 6329 0644 CDCC4C3D 		.word	1028443341
+ 6330 0648 01       		.byte	1
+ 6331 0649 000000   		.space	3
+ 6332 064c 00000040 		.word	1073741824
+ 6333 0650 00000000 		.word	0
+ 6334 0654 01       		.byte	1
+ 6335 0655 00       		.byte	0
+ 6336 0656 0000     		.space	2
+ 6337 0658 00009041 		.word	1099956224
+ 6338 065c 00008040 		.word	1082130432
+ 6339 0660 9A99993E 		.word	1050253722
+ 6340 0664 0000C03F 		.word	1069547520
+ 6341 0668 EC51383F 		.word	1060655596
+ 6342 066c 9A99993E 		.word	1050253722
+ 6343 0670 0000803F 		.word	1065353216
+ 6344 0674 00000000 		.word	0
+ 6345 0678 CDCCCC3D 		.word	1036831949
+ 6346 067c 0000803F 		.word	1065353216
+ 6347 0680 00000C43 		.word	1124859904
+ 6348 0684 0000A040 		.word	1084227584
+ 6349 0688 3333333F 		.word	1060320051
+ 6350 068c 0000F041 		.word	1106247680
+ 6351 0690 00000000 		.word	0
+ 6352 0694 01       		.byte	1
+ 6353 0695 000000   		.space	3
+ 6354 0698 9A99593F 		.word	1062836634
+ 6355 069c 0000C843 		.word	1137180672
+ 6356 06a0 00000000 		.space	20
+ 6356      00000000 
+ 6356      00000000 
+ 6356      00000000 
+ 6356      00000000 
+ 6357 06b4 58000000 		.word	.LC11
+ 6358 06b8 00007A45 		.word	1165623296
+ 6359 06bc 00E02B46 		.word	1177280512
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 144
 
 
- 6361 06e0 00000000 		.word	0
- 6362 06e4 01       		.byte	1
- 6363 06e5 000000   		.space	3
- 6364 06e8 00000040 		.word	1073741824
- 6365 06ec 8FC2753D 		.word	1031127695
- 6366 06f0 02       		.byte	2
- 6367 06f1 00       		.byte	0
- 6368 06f2 0000     		.space	2
- 6369 06f4 0000C841 		.word	1103626240
- 6370 06f8 00000040 		.word	1073741824
- 6371 06fc CDCC4C3E 		.word	1045220557
- 6372 0700 9A99993F 		.word	1067030938
- 6373 0704 CDCC4C3F 		.word	1061997773
- 6374 0708 CDCC4C3E 		.word	1045220557
- 6375 070c 0000803F 		.word	1065353216
- 6376 0710 00000000 		.word	0
- 6377 0714 CDCC4C3D 		.word	1028443341
- 6378 0718 0000803F 		.word	1065353216
- 6379 071c 00002043 		.word	1126170624
- 6380 0720 00004040 		.word	1077936128
- 6381 0724 00000000 		.word	0
- 6382 0728 00000000 		.word	0
- 6383 072c 0000803F 		.word	1065353216
- 6384 0730 01       		.byte	1
- 6385 0731 000000   		.space	3
- 6386 0734 9A99593F 		.word	1062836634
- 6387 0738 0000C843 		.word	1137180672
- 6388 073c 00000000 		.space	20
- 6388      00000000 
- 6388      00000000 
- 6388      00000000 
- 6388      00000000 
- 6389 0750 60000000 		.word	.LC12
- 6390 0754 0000F041 		.word	1106247680
- 6391 0758 0000A042 		.word	1117782016
- 6392 075c AD177B3F 		.word	1065031597
- 6393 0760 0000803F 		.word	1065353216
- 6394 0764 CDCC0C3F 		.word	1057803469
- 6395 0768 01       		.byte	1
- 6396 0769 000000   		.space	3
- 6397 076c 0000803F 		.word	1065353216
- 6398 0770 00000000 		.word	0
- 6399 0774 01       		.byte	1
- 6400 0775 000000   		.space	3
- 6401 0778 0000003F 		.word	1056964608
- 6402 077c 00000000 		.word	0
- 6403 0780 01       		.byte	1
- 6404 0781 000000   		.space	3
- 6405 0784 00000040 		.word	1073741824
- 6406 0788 00000000 		.word	0
- 6407 078c 01       		.byte	1
- 6408 078d 00       		.byte	0
- 6409 078e 0000     		.space	2
- 6410 0790 00004040 		.word	1077936128
- 6411 0794 00000040 		.word	1073741824
- 6412 0798 CDCC4C3E 		.word	1045220557
- 6413 079c 0000803F 		.word	1065353216
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 145
+ 6360 06c0 1C7C813F 		.word	1065450524
+ 6361 06c4 0000803F 		.word	1065353216
+ 6362 06c8 CDCCCC3D 		.word	1036831949
+ 6363 06cc 02       		.byte	2
+ 6364 06cd 000000   		.space	3
+ 6365 06d0 3D0AD73F 		.word	1071057469
+ 6366 06d4 0AD7A33D 		.word	1034147594
+ 6367 06d8 02       		.byte	2
+ 6368 06d9 000000   		.space	3
+ 6369 06dc 0000003F 		.word	1056964608
+ 6370 06e0 00000000 		.word	0
+ 6371 06e4 01       		.byte	1
+ 6372 06e5 000000   		.space	3
+ 6373 06e8 00000040 		.word	1073741824
+ 6374 06ec 8FC2753D 		.word	1031127695
+ 6375 06f0 02       		.byte	2
+ 6376 06f1 00       		.byte	0
+ 6377 06f2 0000     		.space	2
+ 6378 06f4 0000C841 		.word	1103626240
+ 6379 06f8 00000040 		.word	1073741824
+ 6380 06fc CDCC4C3E 		.word	1045220557
+ 6381 0700 9A99993F 		.word	1067030938
+ 6382 0704 CDCC4C3F 		.word	1061997773
+ 6383 0708 CDCC4C3E 		.word	1045220557
+ 6384 070c 0000803F 		.word	1065353216
+ 6385 0710 00000000 		.word	0
+ 6386 0714 CDCC4C3D 		.word	1028443341
+ 6387 0718 0000803F 		.word	1065353216
+ 6388 071c 00002043 		.word	1126170624
+ 6389 0720 00004040 		.word	1077936128
+ 6390 0724 00000000 		.word	0
+ 6391 0728 00000000 		.word	0
+ 6392 072c 0000803F 		.word	1065353216
+ 6393 0730 01       		.byte	1
+ 6394 0731 000000   		.space	3
+ 6395 0734 9A99593F 		.word	1062836634
+ 6396 0738 0000C843 		.word	1137180672
+ 6397 073c 00000000 		.space	20
+ 6397      00000000 
+ 6397      00000000 
+ 6397      00000000 
+ 6397      00000000 
+ 6398 0750 60000000 		.word	.LC12
+ 6399 0754 00002042 		.word	1109393408
+ 6400 0758 0000C843 		.word	1137180672
+ 6401 075c A25D1340 		.word	1075010978
+ 6402 0760 0000803F 		.word	1065353216
+ 6403 0764 3D0AD73E 		.word	1054280253
+ 6404 0768 03       		.byte	3
+ 6405 0769 000000   		.space	3
+ 6406 076c 0000803F 		.word	1065353216
+ 6407 0770 295C8F3E 		.word	1049582633
+ 6408 0774 02       		.byte	2
+ 6409 0775 000000   		.space	3
+ 6410 0778 0000003F 		.word	1056964608
+ 6411 077c CDCCCC3E 		.word	1053609165
+ 6412 0780 02       		.byte	2
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 145
 
 
- 6414 07a0 00000000 		.word	0
- 6415 07a4 0000003F 		.word	1056964608
- 6416 07a8 0000803F 		.word	1065353216
- 6417 07ac 00000000 		.word	0
- 6418 07b0 00000000 		.word	0
- 6419 07b4 0000803F 		.word	1065353216
- 6420 07b8 00002043 		.word	1126170624
- 6421 07bc 0000A040 		.word	1084227584
- 6422 07c0 00000000 		.word	0
- 6423 07c4 00000000 		.word	0
- 6424 07c8 00000000 		.word	0
- 6425 07cc 00000000 		.space	32
- 6425      00000000 
- 6425      00000000 
- 6425      00000000 
- 6425      00000000 
- 6426              		.text
- 6427              	.Letext0:
- 6428              		.file 3 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/machine/_default_types.h"
- 6429              		.file 4 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/_stdint.h"
- 6430              		.file 5 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/stdint.h"
- 6431              		.file 6 "/Library/DaisyToolchain/0.2.0/arm/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
- 6432              		.file 7 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cmath"
- 6433              		.file 8 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/std_abs.h"
- 6434              		.file 9 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdlib"
- 6435              		.file 10 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdint"
- 6436              		.file 11 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/type_traits"
- 6437              		.file 12 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/debug/debug.h"
- 6438              		.file 13 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v
- 6439              		.file 14 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/algorithmfwd.h"
- 6440              		.file 15 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/stl_pair.h"
- 6441              		.file 16 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/exception_ptr.h"
- 6442              		.file 17 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdarg"
- 6443              		.file 18 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdio"
- 6444              		.file 19 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstring"
- 6445              		.file 20 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/predefined_ops.h
- 6446              		.file 21 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/_types.h"
- 6447              		.file 22 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/reent.h"
- 6448              		.file 23 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/lock.h"
- 6449              		.file 24 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/math.h"
- 6450              		.file 25 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/stdlib.h"
- 6451              		.file 26 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/math.h"
- 6452              		.file 27 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/stdlib.h"
- 6453              		.file 28 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h"
- 6454              		.file 29 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/tim.h"
- 6455              		.file 30 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/system.h"
- 6456              		.file 31 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h"
- 6457              		.file 32 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/dac.h"
- 6458              		.file 33 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h"
- 6459              		.file 34 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h"
- 6460              		.file 35 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h"
- 6461              		.file 36 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h"
- 6462              		.file 37 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/usb.h"
- 6463              		.file 38 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/wav_format.h"
- 6464              		.file 39 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/dev/max11300.h"
- 6465              		.file 40 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h"
- 6466              		.file 41 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/dev/sdram.h"
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 146
+ 6413 0781 000000   		.space	3
+ 6414 0784 00000040 		.word	1073741824
+ 6415 0788 00000000 		.word	0
+ 6416 078c 02       		.byte	2
+ 6417 078d 00       		.byte	0
+ 6418 078e 0000     		.space	2
+ 6419 0790 CDCC4C3F 		.word	1061997773
+ 6420 0794 00001041 		.word	1091567616
+ 6421 0798 CDCC4C3F 		.word	1061997773
+ 6422 079c 6666E63F 		.word	1072064102
+ 6423 07a0 0AD7A33C 		.word	1017370378
+ 6424 07a4 0000803F 		.word	1065353216
+ 6425 07a8 0000803F 		.word	1065353216
+ 6426 07ac CDCCCC3D 		.word	1036831949
+ 6427 07b0 8FC2F53D 		.word	1039516303
+ 6428 07b4 00000040 		.word	1073741824
+ 6429 07b8 00005C43 		.word	1130102784
+ 6430 07bc 0000F041 		.word	1106247680
+ 6431 07c0 00000000 		.word	0
+ 6432 07c4 00000000 		.word	0
+ 6433 07c8 00000000 		.word	0
+ 6434 07cc 00       		.byte	0
+ 6435 07cd 000000   		.space	3
+ 6436 07d0 00000000 		.word	0
+ 6437 07d4 00000000 		.word	0
+ 6438 07d8 01       		.byte	1
+ 6439 07d9 000000   		.space	3
+ 6440 07dc 00000000 		.word	_ZL15SCALE_CHROMATIC
+ 6441 07e0 0C000000 		.word	12
+ 6442 07e4 00000000 		.word	0
+ 6443 07e8 00000000 		.word	0
+ 6444 07ec 68000000 		.word	.LC13
+ 6445 07f0 0000F041 		.word	1106247680
+ 6446 07f4 0000A042 		.word	1117782016
+ 6447 07f8 AD177B3F 		.word	1065031597
+ 6448 07fc 0000803F 		.word	1065353216
+ 6449 0800 CDCC0C3F 		.word	1057803469
+ 6450 0804 01       		.byte	1
+ 6451 0805 000000   		.space	3
+ 6452 0808 0000803F 		.word	1065353216
+ 6453 080c 00000000 		.word	0
+ 6454 0810 01       		.byte	1
+ 6455 0811 000000   		.space	3
+ 6456 0814 0000003F 		.word	1056964608
+ 6457 0818 00000000 		.word	0
+ 6458 081c 01       		.byte	1
+ 6459 081d 000000   		.space	3
+ 6460 0820 00000040 		.word	1073741824
+ 6461 0824 00000000 		.word	0
+ 6462 0828 01       		.byte	1
+ 6463 0829 00       		.byte	0
+ 6464 082a 0000     		.space	2
+ 6465 082c 00004040 		.word	1077936128
+ 6466 0830 00000040 		.word	1073741824
+ 6467 0834 CDCC4C3E 		.word	1045220557
+ 6468 0838 0000803F 		.word	1065353216
+ 6469 083c 00000000 		.word	0
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 146
 
 
- 6467              		.file 42 "/Library/DaisyToolchain/0.2.0/arm/lib/gcc/arm-none-eabi/10.3.1/include/stdarg.h"
- 6468              		.file 43 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/stdio.h"
- 6469              		.file 44 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/string.h"
- 6470              		.file 45 "src/voice.h"
- 6471              		.file 46 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/dev/sr_595.h"
- 6472              		.file 47 "src/touch.h"
- 6473              		.file 48 "src/engine.h"
- 6474              		.file 49 "<built-in>"
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 147
+ 6470 0840 0000003F 		.word	1056964608
+ 6471 0844 0000803F 		.word	1065353216
+ 6472 0848 00000000 		.word	0
+ 6473 084c 00000000 		.word	0
+ 6474 0850 0000803F 		.word	1065353216
+ 6475 0854 00002043 		.word	1126170624
+ 6476 0858 0000A040 		.word	1084227584
+ 6477 085c 00000000 		.word	0
+ 6478 0860 00000000 		.word	0
+ 6479 0864 00000000 		.word	0
+ 6480 0868 00000000 		.space	32
+ 6480      00000000 
+ 6480      00000000 
+ 6480      00000000 
+ 6480      00000000 
+ 6481              		.text
+ 6482              	.Letext0:
+ 6483              		.file 3 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/machine/_default_types.h"
+ 6484              		.file 4 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/_stdint.h"
+ 6485              		.file 5 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/stdint.h"
+ 6486              		.file 6 "/Library/DaisyToolchain/0.2.0/arm/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
+ 6487              		.file 7 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cmath"
+ 6488              		.file 8 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/std_abs.h"
+ 6489              		.file 9 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdlib"
+ 6490              		.file 10 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdint"
+ 6491              		.file 11 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/type_traits"
+ 6492              		.file 12 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/debug/debug.h"
+ 6493              		.file 13 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v
+ 6494              		.file 14 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/algorithmfwd.h"
+ 6495              		.file 15 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/stl_pair.h"
+ 6496              		.file 16 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/exception_ptr.h"
+ 6497              		.file 17 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdarg"
+ 6498              		.file 18 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstdio"
+ 6499              		.file 19 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cstring"
+ 6500              		.file 20 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/predefined_ops.h
+ 6501              		.file 21 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/_types.h"
+ 6502              		.file 22 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/reent.h"
+ 6503              		.file 23 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/lock.h"
+ 6504              		.file 24 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/math.h"
+ 6505              		.file 25 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/stdlib.h"
+ 6506              		.file 26 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/math.h"
+ 6507              		.file 27 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/stdlib.h"
+ 6508              		.file 28 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h"
+ 6509              		.file 29 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/tim.h"
+ 6510              		.file 30 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/system.h"
+ 6511              		.file 31 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h"
+ 6512              		.file 32 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/dac.h"
+ 6513              		.file 33 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h"
+ 6514              		.file 34 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h"
+ 6515              		.file 35 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h"
+ 6516              		.file 36 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h"
+ 6517              		.file 37 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/usb.h"
+ 6518              		.file 38 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/wav_format.h"
+ 6519              		.file 39 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/dev/max11300.h"
+ 6520              		.file 40 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h"
+ 6521              		.file 41 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/dev/sdram.h"
+ 6522              		.file 42 "/Library/DaisyToolchain/0.2.0/arm/lib/gcc/arm-none-eabi/10.3.1/include/stdarg.h"
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 147
+
+
+ 6523              		.file 43 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/stdio.h"
+ 6524              		.file 44 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/string.h"
+ 6525              		.file 45 "src/voice.h"
+ 6526              		.file 46 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/dev/sr_595.h"
+ 6527              		.file 47 "src/touch.h"
+ 6528              		.file 48 "src/engine.h"
+ 6529              		.file 49 "<built-in>"
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 148
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 engine.cpp
-/tmp/claude-502/ccNU1q1g.s:19     .text._Z12drum_triggerR7DrumHitifffff:0000000000000000 $t
-/tmp/claude-502/ccNU1q1g.s:26     .text._Z12drum_triggerR7DrumHitifffff:0000000000000000 _Z12drum_triggerR7DrumHitifffff
-/tmp/claude-502/ccNU1q1g.s:321    .text._Z12drum_triggerR7DrumHitifffff:0000000000000144 $d
-/tmp/claude-502/ccNU1q1g.s:331    .text._Z13AudioCallbackPKPKfPPfj:0000000000000000 $t
-/tmp/claude-502/ccNU1q1g.s:338    .text._Z13AudioCallbackPKPKfPPfj:0000000000000000 _Z13AudioCallbackPKPKfPPfj
-/tmp/claude-502/ccNU1q1g.s:847    .text._Z13AudioCallbackPKPKfPPfj:0000000000000230 $d
-/tmp/claude-502/ccNU1q1g.s:883    .text._Z13AudioCallbackPKPKfPPfj:00000000000002b0 $t
-/tmp/claude-502/ccNU1q1g.s:1057   .text._Z13AudioCallbackPKPKfPPfj:00000000000003c8 $d
-/tmp/claude-502/ccNU1q1g.s:1086   .text._Z13AudioCallbackPKPKfPPfj:0000000000000428 $t
-/tmp/claude-502/ccNU1q1g.s:2398   .text._Z13AudioCallbackPKPKfPPfj:0000000000000b00 $d
-/tmp/claude-502/ccNU1q1g.s:2422   .text._Z13AudioCallbackPKPKfPPfj:0000000000000b58 $t
-/tmp/claude-502/ccNU1q1g.s:3329   .text._Z13AudioCallbackPKPKfPPfj:0000000000000ee8 $d
-/tmp/claude-502/ccNU1q1g.s:3368   .text._Z13AudioCallbackPKPKfPPfj:0000000000000f38 $t
-/tmp/claude-502/ccNU1q1g.s:4666   .text._Z13AudioCallbackPKPKfPPfj:0000000000001454 $d
-/tmp/claude-502/ccNU1q1g.s:4696   .text._Z13AudioCallbackPKPKfPPfj:0000000000001484 $t
-/tmp/claude-502/ccNU1q1g.s:5459   .text._Z13AudioCallbackPKPKfPPfj:0000000000001830 $d
-/tmp/claude-502/ccNU1q1g.s:5799   .data.g_hits:0000000000000000 g_hits
-/tmp/claude-502/ccNU1q1g.s:5889   .data.g_master_vol:0000000000000000 g_master_vol
-/tmp/claude-502/ccNU1q1g.s:5709   .bss.g_led3_duty:0000000000000000 g_led3_duty
-/tmp/claude-502/ccNU1q1g.s:5715   .bss.g_retrig:0000000000000000 g_retrig
-/tmp/claude-502/ccNU1q1g.s:5690   .bss.g_amp_target:0000000000000000 g_amp_target
-/tmp/claude-502/ccNU1q1g.s:5702   .bss.g_finger_on:0000000000000000 g_finger_on
-/tmp/claude-502/ccNU1q1g.s:5722   .bss.g_ringmod:0000000000000000 g_ringmod
-/tmp/claude-502/ccNU1q1g.s:5697   .bss.g_bitcrush:0000000000000000 g_bitcrush
-/tmp/claude-502/ccNU1q1g.s:5736   .bss.g_vibrato_depth:0000000000000000 g_vibrato_depth
-/tmp/claude-502/ccNU1q1g.s:5903   .data.g_target_drive:0000000000000000 g_target_drive
-/tmp/claude-502/ccNU1q1g.s:5729   .bss.g_target_detune:0000000000000000 g_target_detune
-/tmp/claude-502/ccNU1q1g.s:5896   .data.g_target_cutoff:0000000000000000 g_target_cutoff
-/tmp/claude-502/ccNU1q1g.s:5910   .data.g_target_freq:0000000000000000 g_target_freq
-/tmp/claude-502/ccNU1q1g.s:5479   .rodata.str1.4:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5519   .bss._ZL10s_bitcrush:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5523   .bss._ZL10s_bitcrush:0000000000000000 _ZL10s_bitcrush
-/tmp/claude-502/ccNU1q1g.s:5526   .bss._ZL10s_noise_lp:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5530   .bss._ZL10s_noise_lp:0000000000000000 _ZL10s_noise_lp
-/tmp/claude-502/ccNU1q1g.s:5533   .bss._ZL10s_phase_rm:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5537   .bss._ZL10s_phase_rm:0000000000000000 _ZL10s_phase_rm
-/tmp/claude-502/ccNU1q1g.s:5540   .bss._ZL10s_vibdepth:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5544   .bss._ZL10s_vibdepth:0000000000000000 _ZL10s_vibdepth
-/tmp/claude-502/ccNU1q1g.s:5547   .bss._ZL11s_lfo_phase:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5551   .bss._ZL11s_lfo_phase:0000000000000000 _ZL11s_lfo_phase
-/tmp/claude-502/ccNU1q1g.s:5554   .bss._ZL11s_phase_oct:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5558   .bss._ZL11s_phase_oct:0000000000000000 _ZL11s_phase_oct
-/tmp/claude-502/ccNU1q1g.s:5561   .bss._ZL11s_phase_sub:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5565   .bss._ZL11s_phase_sub:0000000000000000 _ZL11s_phase_sub
-/tmp/claude-502/ccNU1q1g.s:5568   .bss._ZL5s_amp:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5572   .bss._ZL5s_amp:0000000000000000 _ZL5s_amp
-/tmp/claude-502/ccNU1q1g.s:5575   .bss._ZL5s_flt:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5579   .bss._ZL5s_flt:0000000000000000 _ZL5s_flt
-/tmp/claude-502/ccNU1q1g.s:5582   .bss._ZL8s_detune:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5586   .bss._ZL8s_detune:0000000000000000 _ZL8s_detune
-/tmp/claude-502/ccNU1q1g.s:5589   .bss._ZL8s_phase1:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5593   .bss._ZL8s_phase1:0000000000000000 _ZL8s_phase1
-/tmp/claude-502/ccNU1q1g.s:5596   .bss._ZL8s_phase2:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5600   .bss._ZL8s_phase2:0000000000000000 _ZL8s_phase2
-/tmp/claude-502/ccNU1q1g.s:5603   .bss._ZL9s_ringmod:0000000000000000 $d
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 148
+/tmp/claude-502/ccU8FNgW.s:19     .text._Z12drum_triggerR7DrumHitifffff:0000000000000000 $t
+/tmp/claude-502/ccU8FNgW.s:26     .text._Z12drum_triggerR7DrumHitifffff:0000000000000000 _Z12drum_triggerR7DrumHitifffff
+/tmp/claude-502/ccU8FNgW.s:321    .text._Z12drum_triggerR7DrumHitifffff:0000000000000144 $d
+/tmp/claude-502/ccU8FNgW.s:331    .text._Z13AudioCallbackPKPKfPPfj:0000000000000000 $t
+/tmp/claude-502/ccU8FNgW.s:338    .text._Z13AudioCallbackPKPKfPPfj:0000000000000000 _Z13AudioCallbackPKPKfPPfj
+/tmp/claude-502/ccU8FNgW.s:847    .text._Z13AudioCallbackPKPKfPPfj:0000000000000230 $d
+/tmp/claude-502/ccU8FNgW.s:883    .text._Z13AudioCallbackPKPKfPPfj:00000000000002b0 $t
+/tmp/claude-502/ccU8FNgW.s:1057   .text._Z13AudioCallbackPKPKfPPfj:00000000000003c8 $d
+/tmp/claude-502/ccU8FNgW.s:1086   .text._Z13AudioCallbackPKPKfPPfj:0000000000000428 $t
+/tmp/claude-502/ccU8FNgW.s:2398   .text._Z13AudioCallbackPKPKfPPfj:0000000000000b00 $d
+/tmp/claude-502/ccU8FNgW.s:2422   .text._Z13AudioCallbackPKPKfPPfj:0000000000000b58 $t
+/tmp/claude-502/ccU8FNgW.s:3329   .text._Z13AudioCallbackPKPKfPPfj:0000000000000ee8 $d
+/tmp/claude-502/ccU8FNgW.s:3368   .text._Z13AudioCallbackPKPKfPPfj:0000000000000f38 $t
+/tmp/claude-502/ccU8FNgW.s:4666   .text._Z13AudioCallbackPKPKfPPfj:0000000000001454 $d
+/tmp/claude-502/ccU8FNgW.s:4696   .text._Z13AudioCallbackPKPKfPPfj:0000000000001484 $t
+/tmp/claude-502/ccU8FNgW.s:5459   .text._Z13AudioCallbackPKPKfPPfj:0000000000001830 $d
+/tmp/claude-502/ccU8FNgW.s:5802   .data.g_hits:0000000000000000 g_hits
+/tmp/claude-502/ccU8FNgW.s:5892   .data.g_master_vol:0000000000000000 g_master_vol
+/tmp/claude-502/ccU8FNgW.s:5712   .bss.g_led3_duty:0000000000000000 g_led3_duty
+/tmp/claude-502/ccU8FNgW.s:5718   .bss.g_retrig:0000000000000000 g_retrig
+/tmp/claude-502/ccU8FNgW.s:5693   .bss.g_amp_target:0000000000000000 g_amp_target
+/tmp/claude-502/ccU8FNgW.s:5705   .bss.g_finger_on:0000000000000000 g_finger_on
+/tmp/claude-502/ccU8FNgW.s:5725   .bss.g_ringmod:0000000000000000 g_ringmod
+/tmp/claude-502/ccU8FNgW.s:5700   .bss.g_bitcrush:0000000000000000 g_bitcrush
+/tmp/claude-502/ccU8FNgW.s:5739   .bss.g_vibrato_depth:0000000000000000 g_vibrato_depth
+/tmp/claude-502/ccU8FNgW.s:5906   .data.g_target_drive:0000000000000000 g_target_drive
+/tmp/claude-502/ccU8FNgW.s:5732   .bss.g_target_detune:0000000000000000 g_target_detune
+/tmp/claude-502/ccU8FNgW.s:5899   .data.g_target_cutoff:0000000000000000 g_target_cutoff
+/tmp/claude-502/ccU8FNgW.s:5913   .data.g_target_freq:0000000000000000 g_target_freq
+/tmp/claude-502/ccU8FNgW.s:5479   .rodata.str1.4:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5522   .bss._ZL10s_bitcrush:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5526   .bss._ZL10s_bitcrush:0000000000000000 _ZL10s_bitcrush
+/tmp/claude-502/ccU8FNgW.s:5529   .bss._ZL10s_noise_lp:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5533   .bss._ZL10s_noise_lp:0000000000000000 _ZL10s_noise_lp
+/tmp/claude-502/ccU8FNgW.s:5536   .bss._ZL10s_phase_rm:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5540   .bss._ZL10s_phase_rm:0000000000000000 _ZL10s_phase_rm
+/tmp/claude-502/ccU8FNgW.s:5543   .bss._ZL10s_vibdepth:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5547   .bss._ZL10s_vibdepth:0000000000000000 _ZL10s_vibdepth
+/tmp/claude-502/ccU8FNgW.s:5550   .bss._ZL11s_lfo_phase:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5554   .bss._ZL11s_lfo_phase:0000000000000000 _ZL11s_lfo_phase
+/tmp/claude-502/ccU8FNgW.s:5557   .bss._ZL11s_phase_oct:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5561   .bss._ZL11s_phase_oct:0000000000000000 _ZL11s_phase_oct
+/tmp/claude-502/ccU8FNgW.s:5564   .bss._ZL11s_phase_sub:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5568   .bss._ZL11s_phase_sub:0000000000000000 _ZL11s_phase_sub
+/tmp/claude-502/ccU8FNgW.s:5571   .bss._ZL5s_amp:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5575   .bss._ZL5s_amp:0000000000000000 _ZL5s_amp
+/tmp/claude-502/ccU8FNgW.s:5578   .bss._ZL5s_flt:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5582   .bss._ZL5s_flt:0000000000000000 _ZL5s_flt
+/tmp/claude-502/ccU8FNgW.s:5585   .bss._ZL8s_detune:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5589   .bss._ZL8s_detune:0000000000000000 _ZL8s_detune
+/tmp/claude-502/ccU8FNgW.s:5592   .bss._ZL8s_phase1:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5596   .bss._ZL8s_phase1:0000000000000000 _ZL8s_phase1
+/tmp/claude-502/ccU8FNgW.s:5599   .bss._ZL8s_phase2:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5603   .bss._ZL8s_phase2:0000000000000000 _ZL8s_phase2
+/tmp/claude-502/ccU8FNgW.s:5606   .bss._ZL9s_ringmod:0000000000000000 $d
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 149
 
 
-/tmp/claude-502/ccNU1q1g.s:5607   .bss._ZL9s_ringmod:0000000000000000 _ZL9s_ringmod
-/tmp/claude-502/ccNU1q1g.s:5613   .bss._ZZ13AudioCallbackPKPKfPPfjE10led3_state:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE10led3_state
-/tmp/claude-502/ccNU1q1g.s:5614   .bss._ZZ13AudioCallbackPKPKfPPfjE10led3_state:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5616   .bss._ZZ13AudioCallbackPKPKfPPfjE11pwm_counter:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5620   .bss._ZZ13AudioCallbackPKPKfPPfjE11pwm_counter:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE11pwm_counter
-/tmp/claude-502/ccNU1q1g.s:5623   .bss._ZZ13AudioCallbackPKPKfPPfjE11s_prev_tamp:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5627   .bss._ZZ13AudioCallbackPKPKfPPfjE11s_prev_tamp:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE11s_prev_tamp
-/tmp/claude-502/ccNU1q1g.s:5630   .bss._ZZ13AudioCallbackPKPKfPPfjE12s_penv_start:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5634   .bss._ZZ13AudioCallbackPKPKfPPfjE12s_penv_start:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE12s_penv_start
-/tmp/claude-502/ccNU1q1g.s:5637   .bss._ZZ13AudioCallbackPKPKfPPfjE16led3_duty_smooth:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5641   .bss._ZZ13AudioCallbackPKPKfPPfjE16led3_duty_smooth:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE16led3_duty_smooth
-/tmp/claude-502/ccNU1q1g.s:5644   .bss._ZZ13AudioCallbackPKPKfPPfjE7s_atk_c:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5648   .bss._ZZ13AudioCallbackPKPKfPPfjE7s_atk_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE7s_atk_c
-/tmp/claude-502/ccNU1q1g.s:5651   .bss._ZZ13AudioCallbackPKPKfPPfjE7s_rel_c:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5655   .bss._ZZ13AudioCallbackPKPKfPPfjE7s_rel_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE7s_rel_c
-/tmp/claude-502/ccNU1q1g.s:5658   .bss._ZZ13AudioCallbackPKPKfPPfjE8s_penv_c:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5662   .bss._ZZ13AudioCallbackPKPKfPPfjE8s_penv_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE8s_penv_c
-/tmp/claude-502/ccNU1q1g.s:5665   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_decay_c:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5669   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_decay_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE9s_decay_c
-/tmp/claude-502/ccNU1q1g.s:5672   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_glide_c:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5676   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_glide_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE9s_glide_c
-/tmp/claude-502/ccNU1q1g.s:5679   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_sustain:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5683   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_sustain:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE9s_sustain
-/tmp/claude-502/ccNU1q1g.s:5686   .bss.g_amp_target:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5693   .bss.g_bitcrush:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5703   .bss.g_finger_on:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5705   .bss.g_led3_duty:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5716   .bss.g_retrig:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5718   .bss.g_ringmod:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5725   .bss.g_target_detune:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5732   .bss.g_vibrato_depth:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5739   .data._ZL11s_noise_rng:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5743   .data._ZL11s_noise_rng:0000000000000000 _ZL11s_noise_rng
-/tmp/claude-502/ccNU1q1g.s:5746   .data._ZL12s_master_vol:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5750   .data._ZL12s_master_vol:0000000000000000 _ZL12s_master_vol
-/tmp/claude-502/ccNU1q1g.s:5753   .data._ZL6s_freq:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5757   .data._ZL6s_freq:0000000000000000 _ZL6s_freq
-/tmp/claude-502/ccNU1q1g.s:5760   .data._ZL7s_drive:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5764   .data._ZL7s_drive:0000000000000000 _ZL7s_drive
-/tmp/claude-502/ccNU1q1g.s:5767   .data._ZL8s_cutoff:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5771   .data._ZL8s_cutoff:0000000000000000 _ZL8s_cutoff
-/tmp/claude-502/ccNU1q1g.s:5774   .data._ZZ13AudioCallbackPKPKfPPfjE10s_coeff_vi:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5778   .data._ZZ13AudioCallbackPKPKfPPfjE10s_coeff_vi:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE10s_coeff_vi
-/tmp/claude-502/ccNU1q1g.s:5781   .data._ZZ13AudioCallbackPKPKfPPfjE7s_decay:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5785   .data._ZZ13AudioCallbackPKPKfPPfjE7s_decay:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE7s_decay
-/tmp/claude-502/ccNU1q1g.s:5788   .data._ZZ13AudioCallbackPKPKfPPfjE7s_pmult:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5792   .data._ZZ13AudioCallbackPKPKfPPfjE7s_pmult:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE7s_pmult
-/tmp/claude-502/ccNU1q1g.s:5795   .data.g_hits:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5885   .data.g_master_vol:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5892   .data.g_target_cutoff:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5899   .data.g_target_drive:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5906   .data.g_target_freq:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5913   .rodata._ZL11SCALE_MAJOR:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5916   .rodata._ZL11SCALE_MAJOR:0000000000000000 _ZL11SCALE_MAJOR
-/tmp/claude-502/ccNU1q1g.s:5919   .rodata._ZL11SCALE_MINOR:0000000000000000 $d
-/tmp/claude-502/ccNU1q1g.s:5922   .rodata._ZL11SCALE_MINOR:0000000000000000 _ZL11SCALE_MINOR
-/tmp/claude-502/ccNU1q1g.s:5925   .rodata._ZL6VOICES:0000000000000000 $d
-ARM GAS  /tmp/claude-502/ccNU1q1g.s 			page 149
+/tmp/claude-502/ccU8FNgW.s:5610   .bss._ZL9s_ringmod:0000000000000000 _ZL9s_ringmod
+/tmp/claude-502/ccU8FNgW.s:5616   .bss._ZZ13AudioCallbackPKPKfPPfjE10led3_state:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE10led3_state
+/tmp/claude-502/ccU8FNgW.s:5617   .bss._ZZ13AudioCallbackPKPKfPPfjE10led3_state:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5619   .bss._ZZ13AudioCallbackPKPKfPPfjE11pwm_counter:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5623   .bss._ZZ13AudioCallbackPKPKfPPfjE11pwm_counter:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE11pwm_counter
+/tmp/claude-502/ccU8FNgW.s:5626   .bss._ZZ13AudioCallbackPKPKfPPfjE11s_prev_tamp:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5630   .bss._ZZ13AudioCallbackPKPKfPPfjE11s_prev_tamp:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE11s_prev_tamp
+/tmp/claude-502/ccU8FNgW.s:5633   .bss._ZZ13AudioCallbackPKPKfPPfjE12s_penv_start:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5637   .bss._ZZ13AudioCallbackPKPKfPPfjE12s_penv_start:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE12s_penv_start
+/tmp/claude-502/ccU8FNgW.s:5640   .bss._ZZ13AudioCallbackPKPKfPPfjE16led3_duty_smooth:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5644   .bss._ZZ13AudioCallbackPKPKfPPfjE16led3_duty_smooth:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE16led3_duty_smooth
+/tmp/claude-502/ccU8FNgW.s:5647   .bss._ZZ13AudioCallbackPKPKfPPfjE7s_atk_c:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5651   .bss._ZZ13AudioCallbackPKPKfPPfjE7s_atk_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE7s_atk_c
+/tmp/claude-502/ccU8FNgW.s:5654   .bss._ZZ13AudioCallbackPKPKfPPfjE7s_rel_c:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5658   .bss._ZZ13AudioCallbackPKPKfPPfjE7s_rel_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE7s_rel_c
+/tmp/claude-502/ccU8FNgW.s:5661   .bss._ZZ13AudioCallbackPKPKfPPfjE8s_penv_c:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5665   .bss._ZZ13AudioCallbackPKPKfPPfjE8s_penv_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE8s_penv_c
+/tmp/claude-502/ccU8FNgW.s:5668   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_decay_c:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5672   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_decay_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE9s_decay_c
+/tmp/claude-502/ccU8FNgW.s:5675   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_glide_c:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5679   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_glide_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE9s_glide_c
+/tmp/claude-502/ccU8FNgW.s:5682   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_sustain:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5686   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_sustain:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE9s_sustain
+/tmp/claude-502/ccU8FNgW.s:5689   .bss.g_amp_target:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5696   .bss.g_bitcrush:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5706   .bss.g_finger_on:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5708   .bss.g_led3_duty:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5719   .bss.g_retrig:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5721   .bss.g_ringmod:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5728   .bss.g_target_detune:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5735   .bss.g_vibrato_depth:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5742   .data._ZL11s_noise_rng:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5746   .data._ZL11s_noise_rng:0000000000000000 _ZL11s_noise_rng
+/tmp/claude-502/ccU8FNgW.s:5749   .data._ZL12s_master_vol:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5753   .data._ZL12s_master_vol:0000000000000000 _ZL12s_master_vol
+/tmp/claude-502/ccU8FNgW.s:5756   .data._ZL6s_freq:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5760   .data._ZL6s_freq:0000000000000000 _ZL6s_freq
+/tmp/claude-502/ccU8FNgW.s:5763   .data._ZL7s_drive:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5767   .data._ZL7s_drive:0000000000000000 _ZL7s_drive
+/tmp/claude-502/ccU8FNgW.s:5770   .data._ZL8s_cutoff:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5774   .data._ZL8s_cutoff:0000000000000000 _ZL8s_cutoff
+/tmp/claude-502/ccU8FNgW.s:5777   .data._ZZ13AudioCallbackPKPKfPPfjE10s_coeff_vi:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5781   .data._ZZ13AudioCallbackPKPKfPPfjE10s_coeff_vi:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE10s_coeff_vi
+/tmp/claude-502/ccU8FNgW.s:5784   .data._ZZ13AudioCallbackPKPKfPPfjE7s_decay:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5788   .data._ZZ13AudioCallbackPKPKfPPfjE7s_decay:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE7s_decay
+/tmp/claude-502/ccU8FNgW.s:5791   .data._ZZ13AudioCallbackPKPKfPPfjE7s_pmult:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5795   .data._ZZ13AudioCallbackPKPKfPPfjE7s_pmult:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE7s_pmult
+/tmp/claude-502/ccU8FNgW.s:5798   .data.g_hits:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5888   .data.g_master_vol:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5895   .data.g_target_cutoff:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5902   .data.g_target_drive:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5909   .data.g_target_freq:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5916   .rodata._ZL11SCALE_MAJOR:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5919   .rodata._ZL11SCALE_MAJOR:0000000000000000 _ZL11SCALE_MAJOR
+/tmp/claude-502/ccU8FNgW.s:5922   .rodata._ZL11SCALE_MINOR:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5925   .rodata._ZL11SCALE_MINOR:0000000000000000 _ZL11SCALE_MINOR
+/tmp/claude-502/ccU8FNgW.s:5928   .rodata._ZL15SCALE_CHROMATIC:0000000000000000 $d
+ARM GAS  /tmp/claude-502/ccU8FNgW.s 			page 150
 
 
-/tmp/claude-502/ccNU1q1g.s:5929   .rodata._ZL6VOICES:0000000000000000 _ZL6VOICES
+/tmp/claude-502/ccU8FNgW.s:5931   .rodata._ZL15SCALE_CHROMATIC:0000000000000000 _ZL15SCALE_CHROMATIC
+/tmp/claude-502/ccU8FNgW.s:5934   .rodata._ZL6VOICES:0000000000000000 $d
+/tmp/claude-502/ccU8FNgW.s:5938   .rodata._ZL6VOICES:0000000000000000 _ZL6VOICES
 
 UNDEFINED SYMBOLS
 expf
