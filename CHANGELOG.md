@@ -4,6 +4,16 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Changed — `feat: chord settings are per-voice (level + voicing)`
+- Moved the two hardcoded chord settings onto the `Voice` struct so each chord
+  voice owns its sound: **`chord_level`** (was the `CHORD_UPPER_LEVEL` engine
+  constant — level of the two added notes vs the root) and **`chord_spread`**
+  (was a hardcoded `+12` in the control loop — octaves to lift the 3rd: 0 = close
+  root–3rd–5th, 1 = open root–5th–10th). Both SH-101 twins use `chord_level = 0.9`,
+  `chord_spread = 1`, so the sound is unchanged — chord voicing/balance is now
+  tunable per voice instead of globally. Host test asserts a chord voice sets
+  `chord_level > 0` (else its upper notes would be silent).
+
 ### Added — `feat: diatonic chord voices + SH-101 plays triads`
 - New per-voice **`Voice::chords`** boolean: when true the voice plays a **3-note
   diatonic triad** instead of a single note. The control loop snaps the root to

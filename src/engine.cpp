@@ -36,13 +36,10 @@ static float s_phase_oct = 0.0f; // octave-up oscillator (2x freq)
 static float s_phase_rm  = 0.0f; // ring mod carrier phase
 static float s_lfo_phase = 0.0f;
 // Chord voices (Voice::chords): osc1+osc2 phases for the upper two triad notes.
+// Their level (vs the root) and voicing spread are per-voice — VOICE.chord_level
+// / chord_spread (the latter applied in the control loop's ratio computation).
 static float s_phase1b   = 0.0f, s_phase2b = 0.0f; // 3rd
 static float s_phase1c   = 0.0f, s_phase2c = 0.0f; // 5th
-// Level of each upper chord note relative to the root's osc levels. <1 keeps the
-// root a touch dominant and leaves the drive/filter some headroom (the chord can
-// pile up 3× the saw+pulse energy otherwise). 1.0 = equal weight (fatter, more
-// saturated through the drive/tanh).
-static constexpr float CHORD_UPPER_LEVEL = 0.9f;
 
 // Moog ladder filter state
 static float s_flt[4]    = {0,0,0,0};
@@ -324,16 +321,17 @@ void AudioCallback(AudioHandle::InputBuffer,
         // extra saw+pulse voices above the root. They ride freq_vib (so they
         // glide/vibrato with the root) scaled by the per-note ratios. Sub and
         // noise stay on the root only — keeps the low end tight and the chord
-        // clear — and the upper notes are a touch quieter (CHORD_UPPER_LEVEL) for
-        // headroom. VOICE is a runtime ref (selection is live), so this is a cheap
+        // clear — and the upper notes are scaled by VOICE.chord_level for headroom.
+        // VOICE is a runtime ref (selection is live), so this is a cheap
         // well-predicted branch — skipped each sample for single-note voices.
         if(VOICE.chords){
             float f3 = freq_vib * tcr2;   // 3rd
             float f5 = freq_vib * tcr3;   // 5th
+            float cl = VOICE.chord_level;
             mix += (osc(s_phase1b, VOICE.osc1_wave) * VOICE.osc1_level
-                  + osc(s_phase2b, VOICE.osc2_wave) * VOICE.osc2_level) * CHORD_UPPER_LEVEL;
+                  + osc(s_phase2b, VOICE.osc2_wave) * VOICE.osc2_level) * cl;
             mix += (osc(s_phase1c, VOICE.osc1_wave) * VOICE.osc1_level
-                  + osc(s_phase2c, VOICE.osc2_wave) * VOICE.osc2_level) * CHORD_UPPER_LEVEL;
+                  + osc(s_phase2c, VOICE.osc2_wave) * VOICE.osc2_level) * cl;
             s_phase1b += f3*VOICE.osc1_ratio/sr; if(s_phase1b>=1.0f)s_phase1b-=1.0f;
             s_phase2b += f3*VOICE.osc2_ratio/sr; if(s_phase2b>=1.0f)s_phase2b-=1.0f;
             s_phase1c += f5*VOICE.osc1_ratio/sr; if(s_phase1c>=1.0f)s_phase1c-=1.0f;

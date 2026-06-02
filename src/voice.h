@@ -100,11 +100,20 @@ struct Voice {
   // root is the quantized finger-1 note; the engine adds the scale's 3rd and 5th
   // above it (stacking scale-thirds — see diatonic_triad below), so the chord
   // stays in key. Requires a musical `scale` (major/minor) — over a chromatic
-  // scale stacking thirds degenerates to a whole-tone cluster, not a triad. Only
-  // the SH-101 sets this; appended last so every other preset zero-inits to
-  // false (single-note, unchanged). The upper two notes use osc1+osc2 only (sub
-  // and noise stay on the root) at a reduced level — see engine.cpp.
+  // scale stacking thirds degenerates to a whole-tone cluster, not a triad.
+  // Appended after the older fields so every non-chord preset zero-inits to false
+  // (single-note, unchanged). The upper two notes use osc1+osc2 only (sub and
+  // noise stay on the root) — see engine.cpp. The two SH-101 twins set this.
   bool chords;
+  // chord_level: level of the two added chord notes vs the root's osc levels.
+  // <1 keeps the root dominant and leaves the drive/filter headroom; 1.0 = equal
+  // weight (fatter, more saturated). Only meaningful when chords is true; a chord
+  // voice must set it (>0) or the upper notes are silent.
+  float chord_level;
+  // chord_spread: octaves to lift the 3rd, for the voicing width. 0 = close
+  // (root–3rd–5th cluster); 1 = open (root–5th–10th — clearer over the sub-osc);
+  // 2+ wider still. Only meaningful when chords is true.
+  int chord_spread;
 };
 
 // ── Diatonic triad ──────────────────────────────────────────────────────────
@@ -845,8 +854,10 @@ static constexpr Voice VOICE_SH101 = {
     // AMP DECAY — none: sustained mono synth (hold the note; pressure does the wow)
     0.0f,                // decay_ms
     0.0f,                // sustain (ignored when decay_ms == 0)
-    // CHORDS — play the snapped note as a 3-note diatonic triad (root + 3rd + 5th)
-    true
+    // CHORDS — 3-note diatonic triad; upper notes near-full level, open voicing
+    true,                // chords
+    0.9f,                // chord_level (upper two notes vs root)
+    1                    // chord_spread (octaves on the 3rd: 1 = root–5th–10th)
 };
 
 // ── Voice 13: SH-101, major twin ──────────────────────────────────────────────
@@ -901,8 +912,10 @@ static constexpr Voice VOICE_SH101_MAJ = {
     // AMP DECAY — none
     0.0f,                // decay_ms
     0.0f,                // sustain (ignored when decay_ms == 0)
-    // CHORDS — diatonic triads, same as the minor twin
-    true
+    // CHORDS — diatonic triads, same level/voicing as the minor twin
+    true,                // chords
+    0.9f,                // chord_level
+    1                    // chord_spread
 };
 
 // ── Voice 14: MultiVoice "Drums" ──────────────────────────────────────────────

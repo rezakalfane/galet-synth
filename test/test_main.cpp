@@ -165,6 +165,8 @@ static void test_voice()
         CHECK(VOICES[i].quantize);
         CHECK(VOICES[i].scale != nullptr && VOICES[i].scale_len > 0);
         CHECK(VOICES[i].scale != SCALE_CHROMATIC);
+        CHECK(VOICES[i].chord_level > 0.0f);   // else the added notes are silent
+        CHECK(VOICES[i].chord_spread >= 0);
     }
     CHECK(chord_voices == 2);
 }
