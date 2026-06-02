@@ -35,6 +35,7 @@ using namespace daisy::seed;
 #include "mpr121.h"   // capacitive sensor driver (bit-bang I2C)
 #include "touch.h"    // finger detection / tracking
 #include "engine.h"   // audio engine: synth state, drum voices, AudioCallback
+#include "serialtune.h" // live voice tuning over USB serial
 
 // Persisted settings (saved to QSPI flash, survives power-off).
 struct PersistSettings {
@@ -277,6 +278,7 @@ int main()
 
     // ── USB serial (blocks until host connects) ───────────────────────────────
     hw.StartLog(false); // false = don't wait for serial monitor
+    serial_tune_init(); // add the USB receive path for the live tuning protocol
 
     hw.PrintLine("Glass Moog Synth");
     hw.PrintLine("================");
@@ -426,6 +428,9 @@ int main()
 
     while(true)
     {
+        // Drain any pending USB serial commands (live voice tuning).
+        serial_tune_poll();
+
         // ── FSR → master volume ──────────────────────────────────────────────
         // Full volume through the deadzone (light pressure), then ramps to 0 as
         // pressure increases down to FSR_MIN.
@@ -547,7 +552,7 @@ int main()
             if(System::GetNow()-idle_since>=REBASELINE_IDLE_MS){
                 tracked[0].alive=tracked[1].alive=false;
                 capture_baseline(baseline);
-                hw.PrintLine("[rebaseline]");
+                if(!serial_display_muted()) hw.PrintLine("[rebaseline]");
                 idle_since=System::GetNow();
             }
         }
@@ -559,7 +564,7 @@ int main()
             idle_chase_and_calibrate();
             last_touch_ms = System::GetNow();
             idle_since    = System::GetNow();
-            hw.PrintLine("[fsr recal] fsr_max=%d", (int)fsr_max);
+            if(!serial_display_muted()) hw.PrintLine("[fsr recal] fsr_max=%d", (int)fsr_max);
         }
 
         update_tracked(raw,n_raw);
@@ -630,7 +635,7 @@ int main()
         for(int i = 0; i < MAX_FINGERS; i++) hit_was_alive[i] = deb_alive[i];
 
         // Bind the active voice (last-hit drum in MultiVoice mode) for finger-2 / header.
-        const Voice& VOICE = VOICES[g_active_voice];
+        const Voice& VOICE = g_live_tune ? g_live_voice : VOICES[g_active_voice];
 
         if(f1_on && !multi)
         {
@@ -849,7 +854,10 @@ int main()
         }
 
         // ── Serial display (throttled; the control loop above runs much faster) ─
-        if(System::GetNow() - last_print_ms < PRINT_INTERVAL_MS){
+        // Suppressed while live-tuning so the protocol channel stays clean
+        // (re-enable with `mon 1`).
+        if(serial_display_muted() ||
+           System::GetNow() - last_print_ms < PRINT_INTERVAL_MS){
             System::Delay(CONTROL_DELAY_MS);
             continue;
         }

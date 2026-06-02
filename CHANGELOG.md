@@ -4,6 +4,27 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: live voice tuner (USB serial) + CLI & PySide6 GUI`
+- **Firmware** (`src/serialtune.{h,cpp}`): a USB CDC *receive* path + a small
+  line protocol (`tune`/`set`/`select`/`dump`/`mon`/`help`) so a laptop can
+  reshape the active voice in real time on the hardware. While `tune 1` is on the
+  engine + control loop play a mutable `g_live_voice` (engine seam) instead of the
+  const bank voice; `set <field> <value>` edits it live (floats/ints/bools/
+  waveforms/scale + the global `reverb_*`/`delay_*` effect params). `g_live_rev`
+  triggers a coefficient recompute without a state snap, so glide/cutoff stay
+  smooth while tuning. The status display + rebaseline/recal prints are suppressed
+  in tune mode (`mon 1` re-enables). Kept tiny for the 128 KB internal flash
+  (reuse `StartLog` for TX + add an RX callback; no stdio/atof — hand-rolled
+  parsing). FLASH ~93%.
+- **Laptop tools** (`tools/`): a shared `galetsynth` package (link / schema /
+  codegen — one protocol, one field model, one C++ exporter) with two front-ends
+  on top of it: `voicelab.py` (CLI REPL: local echo, tab-completion, `export`/
+  `save`/`load`) and `voicelab_gui.py` (PySide6 desktop tuner — a slider/checkbox/
+  combo per field grouped into labeled sections across columns, voice picker,
+  Refresh, Export to a paste-ready C++ `Voice{...}`, and a resizable log pane that
+  renders the `mon` status as a smooth in-place dashboard). pyserial + PySide6 live
+  in a project `.venv` (Homebrew/PEP-668); `.gitignore` added.
+
 ### Added — `feat: shared reverb + delay with per-voice sends (Organ)`
 - New **`Reverb`** (compact mono Freeverb — 8 damped comb filters + 4 allpass
   diffusers) and **`Delay`** (mono feedback line with HF damping so repeats

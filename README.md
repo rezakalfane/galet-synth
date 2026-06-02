@@ -64,6 +64,9 @@ dfu-util -a 0 -s 0x08000000:leave -D build/tools/test-slider.bin
 | File | Purpose |
 |---|---|
 | `src/main.cpp` | Main synth — touch tracker + audio engine |
+| `tools/voicelab_gui.py` | **Voice tuner GUI** (PySide6) — reshape the active voice live over USB, export to C++ |
+| `tools/voicelab.py` | Voice tuner CLI (REPL) — same, from the terminal |
+| `tools/galetsynth/` | Shared Python core for the tuners (serial link, field schema, C++ exporter) |
 | `tools/test-slider.cpp` | Live sensor display — delta bars, position and pressure (no audio) |
 | `tools/mpr121_calibrate.cpp` | Full AFE + per-electrode pressure calibration tool |
 | `tools/mpr121_reader.cpp` | Debug tool — shows raw electrode data and deltas |
@@ -502,6 +505,27 @@ POS  |----------1--------------------2----------|
 | Finger identity swaps | Fingers moving faster than `MAX_POS_JUMP` | Raise `MAX_POS_JUMP` |
 | No audio | Codec not initialised | Ensure `hw.Init()` → MPR121 init → `hw.StartAudio()` order |
 | Audio only on one side | TS jack with TRS plug | Use TRS jack or mono headphone |
+
+---
+
+## Live voice tuning
+
+Design sounds on a laptop **against the real instrument** — tweak any parameter
+and hear it on the glass instantly, then export the result as a C++ `Voice`.
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install pyserial PySide6
+.venv/bin/python tools/voicelab_gui.py      # GUI (auto-detects the Daisy port)
+.venv/bin/python tools/voicelab.py          # or the terminal REPL
+```
+
+The firmware speaks a small line protocol over USB (`tune`/`set`/`select`/`dump`/
+`mon`); while tuning it plays a mutable copy of the active voice so edits take
+effect live. The GUI shows a slider/dropdown per field grouped into sections,
+a voice picker, a live status dashboard (`mon`), and **Export** → a paste-ready
+`static constexpr Voice VOICE_…{ }` block for `src/voice.h`. CLI and GUI share one
+core (`tools/galetsynth/`), so the protocol, field model and exporter live in one
+place. (Close any open `screen` first — the serial port is single-user.)
 
 ---
 

@@ -13,6 +13,14 @@ extern daisy::GPIO      led3;
 extern volatile int     g_voice_idx;
 extern volatile int     g_active_voice;
 
+// Live voice tuning over USB serial (defined in serialtune.cpp). While g_live_tune
+// is set, the engine + control loop play the mutable g_live_voice instead of the
+// const bank voice, so `set` commands reshape the sound in real time. g_live_rev
+// bumps on every edit → the engine recomputes the ms→coefficient conversions.
+extern Voice             g_live_voice;
+extern volatile bool     g_live_tune;
+extern volatile uint32_t g_live_rev;
+
 // Audio control params — written by the control loop, read by the audio callback.
 extern volatile float g_target_freq, g_target_cutoff, g_target_detune, g_target_drive;
 extern volatile float g_vibrato_depth, g_bitcrush, g_ringmod;
