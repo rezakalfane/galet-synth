@@ -1,10 +1,14 @@
 #include "serialtune.h"
-#include "engine.h"   // hw, VOICES/NUM_VOICES, MULTI_*, g_* control + tuning seam
+#include "engine.h"   // hw, NUM_VOICES, MULTI_*, g_* control + tuning seam
+#include "persist.h"  // g_bank, bank_set, bank_revert_*, persist_save_bank, VOICE_NAME_MAX
 #include <stddef.h>   // offsetof
 #include <string.h>   // strcmp / strtok
 #include <math.h>     // logf
 
 using namespace daisy;
+
+// Editable name buffer backing g_live_voice.name (so `set name` can rewrite it).
+static char g_live_name[VOICE_NAME_MAX];
 
 // Tiny number parsers — newlib's atof/strtod pull ~16 KB of formatting code into
 // internal flash (which is only 128 KB here), so we roll our own. Good enough for
@@ -165,6 +169,7 @@ static bool set_param(const char *f, const char *v) {
 
 static void dump_voice() {
     hw.PrintLine("dump name=%s", g_live_voice.name);
+    hw.PrintLine("idx=%d", g_voice_idx);   // bank slot, so the host syncs by index (rename-proof)
     const char *base = (const char *)&g_live_voice;
     for(int i = 0; i < NFIELDS; i++) {
         const void *p = base + FIELDS[i].off;
@@ -184,11 +189,16 @@ static void dump_voice() {
     hw.PrintLine("end");
 }
 
-// Snapshot the currently-selected voice into the live working copy.
+// Snapshot the currently-selected bank voice into the live working copy. The
+// name is copied into our own editable buffer so `set name` can rewrite it
+// without touching the bank until `save`.
 static void snapshot_active() {
     int vi = g_active_voice;
     if(vi < 0 || vi >= NUM_VOICES) vi = 0;
-    g_live_voice = VOICES[vi];
+    g_live_voice = g_bank[vi];
+    strncpy(g_live_name, g_bank[vi].name ? g_bank[vi].name : "", VOICE_NAME_MAX - 1);
+    g_live_name[VOICE_NAME_MAX - 1] = 0;
+    g_live_voice.name = g_live_name;
     g_live_rev++;
 }
 
@@ -204,8 +214,20 @@ static void handle_command(char *line) {
         return;
     }
     if(!strcmp(cmd, "set")) {
-        char *f = strtok(NULL, " \t"), *v = strtok(NULL, " \t");
-        if(!f || !v) { hw.PrintLine("err set <field> <value>"); return; }
+        char *f = strtok(NULL, " \t");
+        if(!f) { hw.PrintLine("err set <field> <value>"); return; }
+        if(!strcmp(f, "name")) {
+            // Name is the rest of the line (may contain spaces, e.g. "SH-101 min").
+            char *rest = strtok(NULL, "");
+            while(rest && (*rest == ' ' || *rest == '\t')) rest++;
+            strncpy(g_live_name, rest ? rest : "", VOICE_NAME_MAX - 1);
+            g_live_name[VOICE_NAME_MAX - 1] = 0;
+            g_live_voice.name = g_live_name;
+            hw.PrintLine("ok name=%s", g_live_name);
+            return;
+        }
+        char *v = strtok(NULL, " \t");
+        if(!v) { hw.PrintLine("err set <field> <value>"); return; }
         if(set_param(f, v)) { g_live_rev++; hw.PrintLine("ok %s=%s", f, v); }
         else hw.PrintLine("err unknown field '%s'", f);
         return;
@@ -217,17 +239,49 @@ static void handle_command(char *line) {
             g_voice_idx   = n;
             g_active_voice = (n == MULTI_IDX) ? MULTI_ZONES[0] : n;
             if(g_live_tune) snapshot_active();   // tune the newly selected voice
-            hw.PrintLine("ok select=%d %s", n, VOICES[n].name);
+            hw.PrintLine("ok select=%d %s", n, g_bank[n].name);
         } else hw.PrintLine("err select 0..%d", NUM_VOICES - 1);
         return;
     }
     if(!strcmp(cmd, "dump"))  { dump_voice(); return; }
+    if(!strcmp(cmd, "names")) {
+        // List every bank slot's (possibly edited) name so the host can label its
+        // voice picker from flash, not just the factory defaults.
+        for(int i = 0; i < NUM_VOICES; i++) hw.PrintLine("name %d %s", i, g_bank[i].name);
+        hw.PrintLine("end");
+        return;
+    }
     if(!strcmp(cmd, "mon"))   { char *a = strtok(NULL, " \t"); g_mon = (a && to_i(a));
                                 hw.PrintLine("ok mon=%d", g_mon ? 1 : 0); return; }
+    if(!strcmp(cmd, "save")) {
+        // Commit the live voice (incl. name) into its bank slot, then persist the
+        // whole bank to flash — survives power-off.
+        int vi = g_active_voice; if(vi < 0 || vi >= NUM_VOICES) vi = 0;
+        bank_set(vi, g_live_voice, g_live_name);
+        persist_save_bank();
+        hw.PrintLine("ok saved %d %s", vi, g_bank[vi].name);
+        return;
+    }
+    if(!strcmp(cmd, "factory")) {
+        // `factory`     → revert the active voice to its source default
+        // `factory all` → revert the whole bank
+        char *a = strtok(NULL, " \t");
+        if(a && !strcmp(a, "all")) {
+            bank_revert_all();
+        } else {
+            int vi = g_active_voice; if(vi < 0 || vi >= NUM_VOICES) vi = 0;
+            bank_revert_voice(vi);
+        }
+        persist_save_bank();
+        if(g_live_tune) snapshot_active();   // reload the live copy from the reverted bank
+        hw.PrintLine("ok factory %s", (a && !strcmp(a, "all")) ? "all" : g_bank[g_active_voice].name);
+        return;
+    }
     if(!strcmp(cmd, "help")) {
-        hw.PrintLine("cmds: tune 0|1 | set <field> <val> | select <n> | dump | mon 0|1");
+        hw.PrintLine("cmds: tune 0|1 | set <field> <val> | set name <text> | select <n>");
+        hw.PrintLine("      dump | save | factory [all] | mon 0|1");
         for(int i = 0; i < NFIELDS; i++) hw.PrintLine("  %s", FIELDS[i].name);
-        hw.PrintLine("  scale(chromatic|major|minor) reverb_decay reverb_level delay_time_ms delay_feedback delay_level");
+        hw.PrintLine("  name scale(chromatic|major|minor) reverb_decay reverb_level delay_time_ms delay_feedback delay_level");
         return;
     }
     hw.PrintLine("err unknown cmd '%s'", cmd);

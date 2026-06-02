@@ -120,10 +120,13 @@ class FieldRow:
 
 
 class Tuner(QtWidgets.QMainWindow):
-    def __init__(self, link):
+    def __init__(self, port_pref=None):
         super().__init__()
-        self.link = link
-        self.setWindowTitle(f"GaletSynth Voice Tuner — {link.port}")
+        self.port_pref = port_pref      # explicit --port, or None to auto-detect
+        self.link = None
+        self.bridge = Bridge()
+        self.bridge.line.connect(self.append_log)
+        self.setWindowTitle("GaletSynth Voice Tuner — connecting…")
         self.rows = {}
         self._block = None   # accumulates the current mon status frame (or None)
 
@@ -131,14 +134,22 @@ class Tuner(QtWidgets.QMainWindow):
         self.setCentralWidget(central)
         root = QtWidgets.QVBoxLayout(central)
 
-        # ── Top bar: voice picker + actions ──
+        # ── Top bar: voice picker + name + actions ──
         top = QtWidgets.QHBoxLayout()
         top.addWidget(QtWidgets.QLabel("Voice:"))
         self.voice = QtWidgets.QComboBox()
         self.voice.addItems([f"{i}: {n}" for i, n in enumerate(schema.VOICE_NAMES)])
         self.voice.activated.connect(self._select_voice)
         top.addWidget(self.voice)
-        for label, slot in (("Refresh", self.refresh), ("Export…", self.export)):
+        top.addWidget(QtWidgets.QLabel("Name:"))
+        self.name = QtWidgets.QLineEdit()
+        self.name.setMaxLength(23)
+        self.name.setFixedWidth(140)
+        self.name.editingFinished.connect(self._rename)
+        top.addWidget(self.name)
+        for label, slot in (("Refresh", self.refresh), ("Save to flash", self._save),
+                            ("Revert", self._revert), ("Revert all", self._revert_all),
+                            ("Export…", self.export)):
             b = QtWidgets.QPushButton(label)
             b.clicked.connect(slot)
             top.addWidget(b)
@@ -168,7 +179,7 @@ class Tuner(QtWidgets.QMainWindow):
             gform.setVerticalSpacing(4)
             for field in fields:
                 typ, lo, hi = meta[field]
-                row = FieldRow(field, typ, lo, hi, self.link.send)
+                row = FieldRow(field, typ, lo, hi, self._send)
                 self.rows[field] = row
                 gform.addRow(field, row.widget)
             c = load.index(min(load))           # drop into the shortest column
@@ -203,15 +214,66 @@ class Tuner(QtWidgets.QMainWindow):
 
         self.resize(1080, 760)
         self.splitter.setSizes([640, 120])
-        # On connect, sync to whatever voice the synth has loaded (restored from
-        # flash) — retry until the device answers so the GUI is never left showing
-        # the default voice.
-        QtCore.QTimer.singleShot(300, self._initial_sync)
+        # Connection watchdog: connect now, and reconnect if the synth drops (e.g.
+        # power-cycled while saving/testing) so the GUI re-syncs to the loaded
+        # voice instead of crashing on a dead port.
+        self._watch = QtCore.QTimer(self)
+        self._watch.timeout.connect(self._watchdog)
+        self._watch.start(1000)
+        QtCore.QTimer.singleShot(150, self._watchdog)
 
-    def _initial_sync(self, tries=8):
-        if self.refresh() or tries <= 0:
+    # ── Connection ──
+    def _watchdog(self):
+        if not (self.link and self.link.alive):
+            self._connect()
+
+    def _connect(self):
+        port = self.port_pref or find_port()
+        if not port:
+            self.setWindowTitle("GaletSynth Voice Tuner — no device")
             return
-        QtCore.QTimer.singleShot(400, lambda: self._initial_sync(tries - 1))
+        try:
+            self.link = Link(port, on_line=self.bridge.line.emit)
+        except serial.SerialException:
+            self.link = None
+            return
+        self.setWindowTitle(f"GaletSynth Voice Tuner — {port}")
+        self.append_log(f"connected {port}")
+        self.link.send("tune 1")                       # tune mode: edits take effect
+        # Sync to the loaded voice, retrying until the device answers (the first
+        # dump right after connect/enumeration often races) — otherwise the GUI is
+        # left on the default voice with an empty name.
+        QtCore.QTimer.singleShot(250, lambda: self._sync_retry(8))
+
+    def _sync_retry(self, tries):
+        if not (self.link and self.link.alive):
+            return
+        if self.refresh():
+            self._load_names()      # label the whole picker from flash, not factory
+            return
+        if tries > 0:
+            QtCore.QTimer.singleShot(400, lambda: self._sync_retry(tries - 1))
+
+    def _load_names(self):
+        """Label every picker entry with the device's (possibly edited) bank names
+        so switching voices shows the saved names, not just the factory defaults."""
+        if not (self.link and self.link.alive):
+            return
+        for i, n in self.link.names().items():
+            if 0 <= i < self.voice.count():
+                self.voice.setItemText(i, f"{i}: {n}")
+
+    def _require_link(self):
+        if self.link and self.link.alive:
+            return True
+        self.append_log("! not connected")
+        return False
+
+    def _send(self, s):
+        """Stable sender for the field rows — safe before connect / after a drop
+        (the link is created/replaced by the watchdog, not at row-build time)."""
+        if self.link and self.link.alive:
+            self.link.send(s)
 
     def _log_lines_height(self, lines):
         """Pixel height that shows exactly `lines` rows of the log font."""
@@ -228,7 +290,8 @@ class Tuner(QtWidgets.QMainWindow):
         self.splitter.setSizes([max(total - h, 120), h])
 
     def _toggle_mon(self, on):
-        self.link.send(f"mon {1 if on else 0}")
+        if self.link and self.link.alive:
+            self.link.send(f"mon {1 if on else 0}")
         self._block = None
         if on:
             self.log.clear()
@@ -237,8 +300,65 @@ class Tuner(QtWidgets.QMainWindow):
         self._fit_log(24 if on else 6)
 
     def _select_voice(self, idx):
+        if not self._require_link():
+            return
         self.link.send(f"select {idx}")
         QtCore.QTimer.singleShot(120, self.refresh)
+
+    def _rename(self):
+        if not self._require_link():
+            return
+        nm = self.name.text().strip()
+        self.link.send(f"set name {nm}")
+        i = self.voice.currentIndex()
+        self.voice.setItemText(i, f"{i}: {nm}")        # reflect the new name in the picker
+
+    def _save(self):
+        if not self._require_link():
+            return
+        # Push the current name first — don't rely on the line-edit's
+        # editingFinished having fired (clicking a button doesn't reliably emit
+        # it before the click handler on macOS), or `save` commits the stale
+        # live name. The two lines are parsed FIFO, so `set name` lands first.
+        nm = self.name.text().strip()
+        self.link.send(f"set name {nm}")
+        self.link.send("save")
+        i = self.voice.currentIndex()
+        self.voice.setItemText(i, f"{i}: {nm}")
+        self.append_log(f"saved → flash ({nm})")
+
+    def _revert(self):
+        if not self._require_link():
+            return
+        if QtWidgets.QMessageBox.question(
+                self, "Revert to factory",
+                f"Reset '{self.name.text().strip()}' to its source default and "
+                f"overwrite the saved version in flash?") != QtWidgets.QMessageBox.Yes:
+            return
+        self.link.send("factory")
+        # Repaint the name immediately from the known factory name (the device is
+        # busy writing flash, so a refresh can race); then reload params.
+        i = self.voice.currentIndex()
+        if 0 <= i < len(schema.VOICE_NAMES):
+            self.name.setText(schema.VOICE_NAMES[i])
+            self.voice.setItemText(i, f"{i}: {schema.VOICE_NAMES[i]}")
+        QtCore.QTimer.singleShot(300, self.refresh)
+
+    def _revert_all(self):
+        if not self._require_link():
+            return
+        if QtWidgets.QMessageBox.question(
+                self, "Revert ALL to factory",
+                "Reset every voice in the bank to its source default and wipe all "
+                "saved edits in flash?") != QtWidgets.QMessageBox.Yes:
+            return
+        self.link.send("factory all")
+        for i, n in enumerate(schema.VOICE_NAMES):   # repaint every label to factory
+            self.voice.setItemText(i, f"{i}: {n}")
+        i = self.voice.currentIndex()
+        if 0 <= i < len(schema.VOICE_NAMES):
+            self.name.setText(schema.VOICE_NAMES[i])
+        QtCore.QTimer.singleShot(300, self.refresh)
 
     def _on_hw_voice(self, idx):
         """A voice change made on the hardware (FSR gesture) — sync the picker and
@@ -258,6 +378,8 @@ class Tuner(QtWidgets.QMainWindow):
         # any live edits to that voice's stored preset); then pull the values into
         # the controls. Without the re-snapshot, dump would just echo back the
         # edits already shown — which is why Refresh looked like a no-op.
+        if not self._require_link():
+            return False
         self.link.send("tune 1")
         time.sleep(0.06)            # let the snapshot apply + the reply drain
         kv = self.link.dump()
@@ -267,15 +389,25 @@ class Tuner(QtWidgets.QMainWindow):
         for row in self.rows.values():
             row.load(kv)
         name = kv.get("name", "")
-        # keep the voice picker in sync with what the device reports
-        if name in schema.VOICE_NAMES:
+        self.name.setText(name)        # load the editable name (no signal on setText)
+        # Sync the picker to the device's reported slot. Prefer the index (works
+        # even for renamed voices); fall back to matching the factory name.
+        idx = self.voice.currentIndex()
+        if kv.get("idx", "").lstrip("-").isdigit():
+            idx = int(kv["idx"])
+        elif name in schema.VOICE_NAMES:
+            idx = schema.VOICE_NAMES.index(name)
+        if 0 <= idx < self.voice.count():
             self.voice.blockSignals(True)
-            self.voice.setCurrentIndex(schema.VOICE_NAMES.index(name))
+            self.voice.setCurrentIndex(idx)
             self.voice.blockSignals(False)
+            self.voice.setItemText(idx, f"{idx}: {name}")   # reflect (possibly renamed) name
         self.append_log(f"reloaded {name}" if name else "reloaded")
         return True
 
     def export(self):
+        if not self._require_link():
+            return
         kv = self.link.dump()
         if not kv:
             self.append_log("! no dump to export")
@@ -312,27 +444,13 @@ class Tuner(QtWidgets.QMainWindow):
 
 def main():
     port = (sys.argv[sys.argv.index("--port") + 1]
-            if "--port" in sys.argv else find_port())
-    if not port:
-        sys.exit("No serial port found. Plug in the Daisy, or pass --port.")
-
+            if "--port" in sys.argv else None)   # None → auto-detect + reconnect
     app = QtWidgets.QApplication(sys.argv)
-    bridge = Bridge()
-    try:
-        link = Link(port, on_line=bridge.line.emit)
-    except serial.SerialException as e:
-        msg = (f"Port {port} is busy — close any serial monitor (screen: Ctrl-A K y)."
-               if "busy" in str(e).lower() or "resource" in str(e).lower()
-               else f"Could not open {port}: {e}")
-        QtWidgets.QMessageBox.critical(None, "GaletSynth Voice Tuner", msg)
-        sys.exit(msg)
-
-    link.send("tune 1")  # enter tune mode so edits take effect + channel is quiet
-    win = Tuner(link)
-    bridge.line.connect(win.append_log)
+    win = Tuner(port)        # owns the link; connects + reconnects via watchdog
     win.show()
     code = app.exec()
-    link.close()
+    if win.link:
+        win.link.close()
     sys.exit(code)
 
 

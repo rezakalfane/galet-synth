@@ -22,7 +22,6 @@
  */
 
 #include "daisy_seed.h"
-#include "util/PersistentStorage.h"
 #include <math.h>
 #include <string.h>
 
@@ -36,13 +35,7 @@ using namespace daisy::seed;
 #include "touch.h"    // finger detection / tracking
 #include "engine.h"   // audio engine: synth state, drum voices, AudioCallback
 #include "serialtune.h" // live voice tuning over USB serial
-
-// Persisted settings (saved to QSPI flash, survives power-off).
-struct PersistSettings {
-    int32_t voice_idx;
-    bool operator!=(const PersistSettings& o) const { return o.voice_idx != voice_idx; }
-};
-
+#include "persist.h"  // editable, persistent voice bank (g_bank)
 
 // Selected voice index — set by the FSR-hold gesture, shown in the header.
 // Change the initial value to pick the boot voice.
@@ -115,16 +108,10 @@ int main()
     hw.Init();
     hw.SetAudioBlockSize(4);
 
-    // ── Persisted voice (QSPI flash) ──────────────────────────────────────────
-    // Restore the last selected voice across power cycles. First boot writes the
-    // current g_voice_idx as the factory default.
-    PersistentStorage<PersistSettings> storage(hw.qspi);
-    storage.Init(PersistSettings{ g_voice_idx });
-    {
-        int32_t v = storage.GetSettings().voice_idx;
-        if(v >= 0 && v < NUM_VOICES) g_voice_idx = v;
-    }
-    g_active_voice = (g_voice_idx == MULTI_IDX) ? MULTI_ZONES[0] : g_voice_idx;
+    // ── Persisted voice bank (QSPI flash) ─────────────────────────────────────
+    // Build the factory bank, load any saved per-voice edits over it, and restore
+    // the last selected voice. g_bank is what the engine plays from here on.
+    persist_init();
 
     // Power-on grace period so the lid can be closed before baseline capture.
     System::Delay(5000);
@@ -261,7 +248,7 @@ int main()
     // Boot-voice snapshot for the startup banner / initial targets. The main
     // loop rebinds its own `VOICE` each frame so it always reflects the current
     // voice index (which the FSR gesture can change live).
-    const Voice& VOICE = VOICES[g_voice_idx];
+    const Voice& VOICE = g_bank[g_voice_idx];
 
     // ── Start audio ───────────────────────────────────────────────────────────
     // Set initial targets before callback fires (voice-relative starting pitch)
@@ -389,7 +376,7 @@ int main()
         float p    = clampf((float)pos / 1000.0f, 0.0f, 1.0f);
         int   zone = (int)(p * 4.0f); if(zone > 3) zone = 3;
         int   vidx = MULTI_ZONES[zone];
-        const Voice& V = VOICES[vidx];
+        const Voice& V = g_bank[vidx];
         float subp = p * 4.0f - (float)zone;
         int   step = (int)(subp * (float)MULTI_NINTERVALS);
         if(step >= MULTI_NINTERVALS) step = MULTI_NINTERVALS - 1;
@@ -411,7 +398,7 @@ int main()
     // Fire one drum (bank index `bankidx`) on hit-pool slot `slot` at full
     // velocity, at its natural low pitch. Used by the kit preview below.
     auto preview_drum = [&](int slot, int bankidx){
-        const Voice& V = VOICES[bankidx];
+        const Voice& V = g_bank[bankidx];
         float freq   = V.freq_low;
         // Bright enough that the noisy drums (snare/hat) crack through; the
         // tonal drums stay dark via their own low cutoff_mult.
@@ -488,7 +475,7 @@ int main()
                         sel_mode     = 1;
                         g_amp_target = 0.0f;                 // silence any held note
                         hw.PrintLine("[voice select] %s (%d/%d) - tap/slide glass; release FSR to keep",
-                                     VOICES[g_voice_idx].name, cycle_pos(g_voice_idx), cycle_total());
+                                     g_bank[g_voice_idx].name, cycle_pos(g_voice_idx), cycle_total());
                         blink_start(cycle_pos(g_voice_idx), now);  // blink the current voice number
                     }
                 } else {
@@ -501,10 +488,9 @@ int main()
                     // FSR released → keep the shown voice (persist) and exit. The
                     // saved-position blink is NON-blocking (driven from the LED
                     // section) so playing isn't stalled.
-                    storage.GetSettings().voice_idx = g_voice_idx;
-                    storage.Save();                          // writes QSPI only if changed
+                    persist_save_bank();                     // persists g_voice_idx (+ bank), QSPI write only if changed
                     hw.PrintLine("[voice kept %d/%d] %s",
-                                 cycle_pos(g_voice_idx), cycle_total(), VOICES[g_voice_idx].name);
+                                 cycle_pos(g_voice_idx), cycle_total(), g_bank[g_voice_idx].name);
                     // Machine event so a connected host tuner follows the change.
                     hw.PrintLine("voice %d", g_voice_idx);
                     drum2_at = 0;
@@ -518,7 +504,7 @@ int main()
                         last_tap_ms = now;
                         g_voice_idx = cycle_next(g_voice_idx);
                         hw.PrintLine("[voice %d/%d] %s",
-                                     cycle_pos(g_voice_idx), cycle_total(), VOICES[g_voice_idx].name);
+                                     cycle_pos(g_voice_idx), cycle_total(), g_bank[g_voice_idx].name);
                         blink_start(1, now);                 // single blink per advance
                     }
                     if(!VOICE_PREVIEW_ENABLED){
@@ -604,7 +590,7 @@ int main()
                 int z = (int)(clampf((float)tracked[i].pos/1000.0f,0.0f,1.0f) * 4.0f);
                 if(z > 3) z = 3; vidx = MULTI_ZONES[z];
             } else vidx = g_active_voice;
-            float rms = VOICES[vidx].retrig_ms;
+            float rms = g_bank[vidx].retrig_ms;
             float prs = (float)tracked[i].pressure;
 
             if(!hit_was_alive[i]){
@@ -637,7 +623,7 @@ int main()
         for(int i = 0; i < MAX_FINGERS; i++) hit_was_alive[i] = deb_alive[i];
 
         // Bind the active voice (last-hit drum in MultiVoice mode) for finger-2 / header.
-        const Voice& VOICE = g_live_tune ? g_live_voice : VOICES[g_active_voice];
+        const Voice& VOICE = g_live_tune ? g_live_voice : g_bank[g_active_voice];
 
         if(f1_on && !multi)
         {

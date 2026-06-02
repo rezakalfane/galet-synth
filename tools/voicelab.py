@@ -41,7 +41,7 @@ def setup_readline():
     if not readline:
         return
     words = (["tune", "set", "select", "dump", "mon", "help", "export", "save",
-              "load", "quit", "exit"]
+              "load", "factory", "name", "quit", "exit"]
              + schema.SETTABLE + list(schema.WAVES) + list(schema.SCALES))
 
     def completer(text, state):
@@ -102,7 +102,8 @@ def main():
 
             if cmd == "save":
                 if not rest:
-                    print("! save <file>")
+                    link.send("save")      # no arg → persist the bank to flash (firmware)
+                    time.sleep(0.05)
                     continue
                 kv = link.dump()
                 with open(rest[0], "w") as f:
