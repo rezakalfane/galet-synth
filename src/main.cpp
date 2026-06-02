@@ -669,6 +669,11 @@ int main()
                 if(VOICE.chords){
                     int third, fifth;
                     diatonic_triad((int)f1_midi_base, VOICE.scale, VOICE.scale_len, third, fifth);
+                    // TEST: spread/open voicing — lift the 3rd an octave so the three
+                    // notes span root–5th–10th instead of a tight root–3rd–5th cluster.
+                    // Wider gaps read clearer over the root's sub-osc. Drop the +12 to
+                    // go back to the close triad.
+                    third += 12;
                     g_chord_ratio2 = exp2f((float)third / 12.0f);
                     g_chord_ratio3 = exp2f((float)fifth / 12.0f);
                 }
