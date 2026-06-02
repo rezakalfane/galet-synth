@@ -276,6 +276,22 @@ static void handle_command(char *line) {
         hw.PrintLine("ok saved %d %s", vi, g_bank[vi].name);
         return;
     }
+    if(!strcmp(cmd, "copy")) {
+        // `copy <n> [name]` — duplicate the current live voice into another slot
+        // and persist, without changing the active voice / interrupting audio.
+        // An optional name (rest of the line, spaces ok) names the copy; omitted
+        // → keep the live voice's name.
+        char *a = strtok(NULL, " \t");
+        int n = a ? to_i(a) : -1;
+        if(n >= 0 && n < NUM_VOICES) {
+            char *nm = strtok(NULL, "");                 // rest of line = optional name
+            while(nm && (*nm == ' ' || *nm == '\t')) nm++;
+            bank_set(n, g_live_voice, (nm && *nm) ? nm : g_live_name);
+            persist_save_bank();
+            hw.PrintLine("ok copy=%d %s", n, g_bank[n].name);
+        } else hw.PrintLine("err copy 0..%d", NUM_VOICES - 1);
+        return;
+    }
     if(!strcmp(cmd, "factory")) {
         // `factory`     → revert the active voice to its source default
         // `factory all` → revert the whole bank
@@ -293,7 +309,7 @@ static void handle_command(char *line) {
     }
     if(!strcmp(cmd, "help")) {
         hw.PrintLine("cmds: tune 0|1 | set <field> <val> | set name <text> | select <n>");
-        hw.PrintLine("      dump | save | factory [all] | mon 0|1 | bye");
+        hw.PrintLine("      dump | save | copy <n> [name] | factory [all] | mon 0|1 | bye");
         for(int i = 0; i < NFIELDS; i++) hw.PrintLine("  %s", FIELDS[i].name);
         hw.PrintLine("  name scale(chromatic|major|minor) reverb_decay reverb_level delay_time_ms delay_feedback delay_level");
         return;
