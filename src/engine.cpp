@@ -15,6 +15,8 @@ volatile float g_amp_target     = 0.0f;
 volatile bool  g_retrig         = false;    // mono: re-articulate the note (re-attack)
 volatile float g_led3_duty      = 0.0f;     // 0–1, sigma-delta'd to LED3 in audio cb
 volatile float g_master_vol     = 1.0f;     // 0–1, master volume from FSR on A1
+volatile float g_chord_ratio2   = 1.0f;     // chord 3rd  ratio vs root (1 = unison)
+volatile float g_chord_ratio3   = 1.0f;     // chord 5th  ratio vs root (1 = unison)
 
 // ── Audio DSP state (audio callback only) ─────────────────────────────────────
 static float s_freq      = 65.41f;
@@ -33,6 +35,14 @@ static float s_phase_sub = 0.0f;
 static float s_phase_oct = 0.0f; // octave-up oscillator (2x freq)
 static float s_phase_rm  = 0.0f; // ring mod carrier phase
 static float s_lfo_phase = 0.0f;
+// Chord voices (Voice::chords): osc1+osc2 phases for the upper two triad notes.
+static float s_phase1b   = 0.0f, s_phase2b = 0.0f; // 3rd
+static float s_phase1c   = 0.0f, s_phase2c = 0.0f; // 5th
+// Level of each upper chord note relative to the root's osc levels. <1 keeps the
+// root a touch dominant and leaves the drive/filter some headroom (the chord can
+// pile up 3× the saw+pulse energy otherwise). 1.0 = equal weight (fatter, more
+// saturated through the drive/tanh).
+static constexpr float CHORD_UPPER_LEVEL = 0.9f;
 
 // Moog ladder filter state
 static float s_flt[4]    = {0,0,0,0};
@@ -145,6 +155,8 @@ void AudioCallback(AudioHandle::InputBuffer,
     float trm    = g_ringmod;
     float tamp   = g_amp_target;
     float tmvol  = g_master_vol;
+    float tcr2   = g_chord_ratio2;   // chord 3rd ratio (used only when VOICE.chords)
+    float tcr3   = g_chord_ratio3;   // chord 5th ratio
     float sr     = hw.AudioSampleRate();
 
     // Snapshot the active voice once per block, so a mid-block switch from the
@@ -307,6 +319,26 @@ void AudioCallback(AudioHandle::InputBuffer,
 
         // Mix oscillator stack + noise
         float mix = osc1 + osc2 + sub + osc_oct + noise;
+
+        // Diatonic chord (Voice::chords): add the snapped triad's 3rd and 5th as
+        // extra saw+pulse voices above the root. They ride freq_vib (so they
+        // glide/vibrato with the root) scaled by the per-note ratios. Sub and
+        // noise stay on the root only — keeps the low end tight and the chord
+        // clear — and the upper notes are a touch quieter (CHORD_UPPER_LEVEL) for
+        // headroom. VOICE is a runtime ref (selection is live), so this is a cheap
+        // well-predicted branch — skipped each sample for single-note voices.
+        if(VOICE.chords){
+            float f3 = freq_vib * tcr2;   // 3rd
+            float f5 = freq_vib * tcr3;   // 5th
+            mix += (osc(s_phase1b, VOICE.osc1_wave) * VOICE.osc1_level
+                  + osc(s_phase2b, VOICE.osc2_wave) * VOICE.osc2_level) * CHORD_UPPER_LEVEL;
+            mix += (osc(s_phase1c, VOICE.osc1_wave) * VOICE.osc1_level
+                  + osc(s_phase2c, VOICE.osc2_wave) * VOICE.osc2_level) * CHORD_UPPER_LEVEL;
+            s_phase1b += f3*VOICE.osc1_ratio/sr; if(s_phase1b>=1.0f)s_phase1b-=1.0f;
+            s_phase2b += f3*VOICE.osc2_ratio/sr; if(s_phase2b>=1.0f)s_phase2b-=1.0f;
+            s_phase1c += f5*VOICE.osc1_ratio/sr; if(s_phase1c>=1.0f)s_phase1c-=1.0f;
+            s_phase2c += f5*VOICE.osc2_ratio/sr; if(s_phase2c>=1.0f)s_phase2c-=1.0f;
+        }
 
         // Ring modulation (finger 2 pressure → metallic/bell edge)
         float rm_carrier = tri(s_phase_rm);
