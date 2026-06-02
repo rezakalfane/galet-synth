@@ -203,7 +203,15 @@ class Tuner(QtWidgets.QMainWindow):
 
         self.resize(1080, 760)
         self.splitter.setSizes([640, 120])
-        QtCore.QTimer.singleShot(300, self.refresh)  # populate once connected
+        # On connect, sync to whatever voice the synth has loaded (restored from
+        # flash) — retry until the device answers so the GUI is never left showing
+        # the default voice.
+        QtCore.QTimer.singleShot(300, self._initial_sync)
+
+    def _initial_sync(self, tries=8):
+        if self.refresh() or tries <= 0:
+            return
+        QtCore.QTimer.singleShot(400, lambda: self._initial_sync(tries - 1))
 
     def _log_lines_height(self, lines):
         """Pixel height that shows exactly `lines` rows of the log font."""
@@ -232,6 +240,18 @@ class Tuner(QtWidgets.QMainWindow):
         self.link.send(f"select {idx}")
         QtCore.QTimer.singleShot(120, self.refresh)
 
+    def _on_hw_voice(self, idx):
+        """A voice change made on the hardware (FSR gesture) — sync the picker and
+        reload that voice's parameters."""
+        if not (0 <= idx < self.voice.count()):
+            return
+        if idx != self.voice.currentIndex():
+            self.voice.blockSignals(True)
+            self.voice.setCurrentIndex(idx)
+            self.voice.blockSignals(False)
+        self.append_log(f"hardware → voice {idx}")
+        self.refresh()
+
     def refresh(self):
         # Reload the *current* voice's parameters from the device. `tune 1`
         # re-snapshots the active bank voice into the live working copy (reverting
@@ -243,7 +263,7 @@ class Tuner(QtWidgets.QMainWindow):
         kv = self.link.dump()
         if not kv:
             self.append_log("! no dump (is the synth connected?)")
-            return
+            return False
         for row in self.rows.values():
             row.load(kv)
         name = kv.get("name", "")
@@ -253,6 +273,7 @@ class Tuner(QtWidgets.QMainWindow):
             self.voice.setCurrentIndex(schema.VOICE_NAMES.index(name))
             self.voice.blockSignals(False)
         self.append_log(f"reloaded {name}" if name else "reloaded")
+        return True
 
     def export(self):
         kv = self.link.dump()
@@ -269,6 +290,11 @@ class Tuner(QtWidgets.QMainWindow):
         self.append_log(f"exported → {fn}")
 
     def append_log(self, s):
+        # Hardware voice-change event ("voice <n>") from the FSR gesture on the
+        # Galet — follow it: switch the picker and reload that voice's params.
+        if s.startswith("voice ") and s[6:].strip().isdigit():
+            self._on_hw_voice(int(s[6:].strip()))
+            return
         # mon status frames start with a "VOICE " header and repeat ~8 Hz. Render
         # each completed frame in place (replace) so it reads as a smooth, stable
         # dashboard instead of an endless scroll; other lines (ok/err, app

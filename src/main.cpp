@@ -505,6 +505,8 @@ int main()
                     storage.Save();                          // writes QSPI only if changed
                     hw.PrintLine("[voice kept %d/%d] %s",
                                  cycle_pos(g_voice_idx), cycle_total(), VOICES[g_voice_idx].name);
+                    // Machine event so a connected host tuner follows the change.
+                    hw.PrintLine("voice %d", g_voice_idx);
                     drum2_at = 0;
                     sel_mode = 0; full_since = 0;
                     blink_start(cycle_pos(g_voice_idx), now); // confirm saved voice (non-blocking)
