@@ -205,6 +205,38 @@ class RestorePicker(QtWidgets.QDialog):
         return self.globals_cb.isChecked()
 
 
+class CopyDialog(QtWidgets.QDialog):
+    """Choose a target slot and a name for a voice copy."""
+    def __init__(self, src_name, targets, parent=None):
+        super().__init__(parent)               # targets: list of (idx, label)
+        self.setWindowTitle("Copy voice")
+        self.setModal(True)
+        form = QtWidgets.QFormLayout(self)
+        self.combo = QtWidgets.QComboBox()
+        self._idx = []
+        for idx, label in targets:
+            self.combo.addItem(label)
+            self._idx.append(idx)
+        form.addRow("Copy into:", self.combo)
+        self.name = QtWidgets.QLineEdit(src_name)
+        self.name.setMaxLength(23)
+        self.name.selectAll()                  # easy to type a fresh name
+        form.addRow("Name:", self.name)
+        bb = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+        bb.button(QtWidgets.QDialogButtonBox.Ok).setText("Copy")
+        bb.accepted.connect(self.accept)
+        bb.rejected.connect(self.reject)
+        form.addRow(bb)
+        self.resize(340, 120)
+
+    def target(self):
+        return self._idx[self.combo.currentIndex()]
+
+    def chosen_name(self):
+        return self.name.text().strip()
+
+
 class Tuner(QtWidgets.QMainWindow):
     def __init__(self, port_pref=None):
         super().__init__()
@@ -256,6 +288,9 @@ class Tuner(QtWidgets.QMainWindow):
             ("Revert all",    self._revert_all,
              "Reset every voice in the bank to factory defaults and wipe all saved "
              "edits in flash."),
+            ("Copy to…",      self._copy_to,
+             "Duplicate this voice (current edits + name) into another bank slot "
+             "and save it to flash — the active voice is left untouched."),
             ("Backup…",       self._backup,
              "Read the whole bank off the synth and save it to a JSON file "
              "(you confirm the filename at the end)."),
@@ -486,6 +521,28 @@ class Tuner(QtWidgets.QMainWindow):
         if 0 <= i < len(schema.VOICE_NAMES):
             self.name.setText(schema.VOICE_NAMES[i])
         QtCore.QTimer.singleShot(300, self.refresh)
+
+    def _copy_to(self):
+        if not self._require_link():
+            return
+        src = self.voice.currentIndex()
+        src_name = self.name.text().strip() or schema.VOICE_NAMES[src]
+        # Targets: every slot except this one and the Drums meta-voice.
+        targets = [(i, self.voice.itemText(i)) for i in range(self.voice.count())
+                   if i != src and i != schema.MULTI_IDX]
+        if not targets:
+            return
+        dlg = CopyDialog(src_name, targets, self)
+        if dlg.exec() != QtWidgets.QDialog.Accepted:
+            return
+        dst = dlg.target()
+        name = dlg.chosen_name() or src_name
+        # The firmware duplicates the live voice (current edits) into the slot under
+        # this name + persists, leaving the active voice / source name untouched —
+        # so we just relabel the target here.
+        self.link.send(f"copy {dst} {name}")
+        self.voice.setItemText(dst, f"{dst}: {name}")
+        self.append_log(f"copied “{src_name}” → {dst}: {name} (saved to flash)")
 
     def _on_hw_voice(self, idx):
         """A voice change made on the hardware (FSR gesture) — sync the picker and

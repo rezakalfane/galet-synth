@@ -11,6 +11,7 @@ and codegen live in exactly one place.
 
 REPL — firmware commands pass straight through:
     tune 1|0 | set <field> <val> | select <n> | dump | mon 1|0 | help
+    save | copy <n>  (copy the live voice into slot n + save to flash)
 client-side commands (handled here):
     export [NAME] [file.h]   dump the live voice → C++ Voice{...} block
     save <file.txt>          save as replayable set-commands
@@ -54,7 +55,8 @@ def setup_readline():
     if not readline:
         return
     words = (["tune", "set", "select", "dump", "mon", "help", "export", "save",
-              "load", "backup", "restore", "factory", "name", "bye", "quit", "exit"]
+              "copy", "load", "backup", "restore", "factory", "name", "bye",
+              "quit", "exit"]
              + schema.SETTABLE + list(schema.WAVES) + list(schema.SCALES))
 
     def completer(text, state):

@@ -4,6 +4,17 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: copy a voice to another slot (rename + save to flash)`
+- **Firmware** (`serialtune.cpp`): new `copy <n> [name]` command — duplicates the
+  current live voice into bank slot `n` and persists it, **without** changing the
+  active voice or interrupting audio (no select-away dance). The optional trailing
+  name (spaces allowed) names the copy; omitted keeps the live voice's name. The
+  source voice's own name is never touched.
+- **GUI**: a **Copy to…** button opens one dialog with a target-slot dropdown and a
+  Name field (prefilled + pre-selected with the source name) so the copy can be
+  renamed on the way out. The voice being edited stays put.
+- **CLI**: `copy <n>` passes through (added to tab-completion + help).
+
 ### Added — `feat: whole-bank backup / restore to a local JSON file`
 - New shared **`tools/galetsynth/bank.py`**: `backup_bank()` reads every editable
   slot off the device (`select` + `dump`) into a portable JSON document;
