@@ -32,6 +32,22 @@ All notable changes to GaletSynth are documented here.
   (`HELP` / `GROUP_HELP`) so it stays next to the field model and is HTML-escaped
   (several descriptions contain `<`/`>`).
 
+### Fixed — `fix: status dashboard alignment + clean tuner disconnect`
+- **Dashboard alignment**: the host link reader (`link.py`) was stripping leading
+  spaces off every line, collapsing the firmware's right-aligned status columns.
+  It now keeps leading spaces (trims only the line terminator + trailing padding) —
+  fixes the alignment with no reflash. Firmware polish too: channels are
+  zero-padded (`00`–`11`) and the touched-channel / finger rows are labelled
+  `F1`/`F2`.
+- **Clean disconnect**: quitting the tuner used to freeze the synth (needing a
+  reboot). libDaisy's USB logger switches to *blocking* transmit once a host has
+  drained it, so any autonomous `PrintLine` to a port whose host has gone away
+  spins forever. New firmware flag `g_serial_quiet` + a `bye` command: the CLI/GUI
+  send `bye` on exit, which leaves tune mode (the synth resumes normal play + the
+  idle LED chase) and silences all autonomous serial (dashboard, rebaseline/recal,
+  voice-gesture events) so nothing blocks on the closed port. `tune 1` clears it on
+  reconnect.
+
 ### Fixed — `fix: serial stays responsive while the synth is idle`
 - The idle LED-chase loop (`idle_chase_and_calibrate`) spun until a glass touch /
   FSR press without servicing USB serial, so a connected tuner's commands sat
