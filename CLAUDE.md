@@ -249,6 +249,8 @@ Out-of-range stored values are ignored, falling back to the default.
 | `no_cycle` | `true` = skip this voice in the FSR-gesture cycle (still reachable as boot voice or via the Drums MultiVoice). The 4 raw drums set this. Default `false` = in cycle |
 | `vel_sens` | 0..1 velocity sensitivity: onset hit strength (peak pressure, latched at the tap) scales loudness; loudness floor = `1 - vel_sens`. Drums = 0.85; default 0 = fixed loudness (the sustained instruments) |
 | `retrig_ms` | Held re-attack rate cap (ms): min interval between pressure-bounce repeats while a finger stays down. 0 = no held re-attack (melodic default). Genuine taps ignore this — only the held-bounce path is capped. Drums ~400 |
+| `decay_ms` | Amp decay-to-sustain time. **0 = off** (note holds at full while gated — the default for every voice). >0 = after the attack the level falls to `sustain` over this time (plucked feel; Guitar ~1200) |
+| `sustain` | Level the amp decays to when `decay_ms > 0` (0..1 fraction of full). 0 = decays to silence (a clean pluck); ignored when `decay_ms == 0` |
 
 Envelope/glide are in **milliseconds**, converted to per-sample slew
 coefficients (`ms_to_coeff`) in the audio callback, recomputed on voice change.
@@ -276,7 +278,7 @@ silence). All three fields default to 0 (off) for voices that omit them.
 | `BASS_RICH` | Mixed waveforms (saw/square/sine), dark base, huge 13-oct acid sweep |
 | `ORGAN` | Clean all-sine organ/flute, melodic register, 1.005× chorus, breath noise |
 | `SCREAM` | Aggressive detuned saws, high register, heavy drive, near-self-osc res, inharmonic (2.5×) metallic ring-mod |
-| `BASS_CLOSED` | Deep muffled sub — filter near the fundamental, tiny sweep, reduced keytrack, long tail |
+| `GUITAR` | Electric guitar power chord — driven saw stack (root + fixed 5th + octave body/jangle), **quantized to major** (chords land in key), fast pluck attack + amp **decay-to-silence** (~1.2 s) so it plucks and rings out, pressure-swept filter with a touch of quack |
 | `PAD` | Warm ensemble pad — detuned saws + tri sub + sine top, dark filter, very slow ~2.2 s swell, long tail |
 | `TOM` | Noise-driven percussion — **tap to play**. Dark/round tom: noise + low sine body, pitch env (1 oct/80 ms), short tail; position tunes 40–400 Hz |
 | `KICK` | **Tap** — deep punchy thud, low sine + sub, 2-oct/45 ms pitch "boom", very closed filter; tunes 30–80 Hz |

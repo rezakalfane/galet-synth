@@ -35,7 +35,7 @@ static constexpr float    LED3_RELEASE_SMOOTH = 0.10f;
 
 // ── Musical mapping ───────────────────────────────────────────────────────────
 // Master quantize switch. Per-voice quantize (and its scale) live on the Voice
-// (Voice::quantize / Voice::scale — only the Organ enables it); this gate must
+// (Voice::quantize / Voice::scale — the Organ + Guitar enable it); this gate must
 // ALSO be true for any snapping to happen. False = continuous pitch everywhere.
 static constexpr bool QUANTIZE_ENABLED = true;
 
