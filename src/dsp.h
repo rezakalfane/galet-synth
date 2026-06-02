@@ -100,3 +100,72 @@ static inline float wavefold(float in, float amount)
     // Blend dry/wet so at low amounts it stays subtle
     return in*(1.0f-amount) + x*amount;
 }
+
+// ── Reverb (compact mono Freeverb: 8 damped combs + 4 allpass) ─────────────────
+// Schroeder–Moorer: 8 parallel comb filters (each with a one-pole lowpass in its
+// feedback for HF damping) summed, then 4 series allpass diffusers. Mono (the
+// synth output is mono). Delay lengths are the classic Freeverb 44.1k tunings
+// scaled to 48k. One shared instance lives in the engine; voices feed it via
+// Voice::reverb_send and the global g_reverb_* params drive `feedback` (tail
+// length) and `damp` (HF rolloff) per call, so the room is global + tweakable.
+// All state is zero (silent) at startup — it has static storage in the engine.
+struct Reverb {
+    static constexpr int NCOMB = 8;
+    static constexpr int NAP   = 4;
+    static constexpr int COMB_MAX = 1760;   // largest comb delay
+    static constexpr int AP_MAX   = 605;    // largest allpass delay
+    float comb_buf[NCOMB][COMB_MAX] = {};
+    float ap_buf[NAP][AP_MAX]       = {};
+    int   ci[NCOMB] = {};                   // comb write indices
+    int   ai[NAP]   = {};                   // allpass indices
+    float clp[NCOMB] = {};                  // comb damping-lowpass state
+
+    // feedback ≈ room size / tail length (0..~0.96); damp = HF damping (0..1).
+    inline float process(float in, float feedback, float damp){
+        static constexpr int CL[NCOMB] = {1215,1293,1390,1476,1548,1623,1695,1760};
+        static constexpr int AL[NAP]   = {605,480,371,245};
+        float inp = in * 0.015f;            // fixed input gain (keeps the combs tame)
+        float out = 0.0f;
+        for(int c = 0; c < NCOMB; c++){
+            float y = comb_buf[c][ci[c]];
+            clp[c] = y*(1.0f - damp) + clp[c]*damp;       // lowpass in the feedback path
+            comb_buf[c][ci[c]] = inp + clp[c]*feedback;
+            if(++ci[c] >= CL[c]) ci[c] = 0;
+            out += y;
+        }
+        for(int a = 0; a < NAP; a++){
+            float bufout = ap_buf[a][ai[a]];
+            float y = -out + bufout;
+            ap_buf[a][ai[a]] = out + bufout*0.5f;
+            if(++ai[a] >= AL[a]) ai[a] = 0;
+            out = y;
+        }
+        return out;
+    }
+};
+
+// ── Delay (mono, feedback + HF damping) ───────────────────────────────────────
+// A single delay line with a feedback path that runs through a one-pole lowpass,
+// so each repeat is a little darker than the last — the warm, analog-ish echo
+// instead of a sterile digital copy. One shared instance lives in the engine;
+// voices feed it via Voice::delay_send, and the global g_delay_* params set the
+// time / feedback / level. State is zero (silent) at startup (static storage).
+struct Delay {
+    static constexpr int MAX = 36000;       // 750 ms at 48 kHz
+    float buf[MAX] = {};
+    int   w = 0;                            // write index
+    float damp_state = 0.0f;                // feedback lowpass state
+
+    // delay_samps: echo time in samples (clamped to the buffer); feedback 0..~0.95
+    // (number of repeats); damp 0..1 (HF rolloff per repeat). Returns the wet tap.
+    inline float process(float in, int delay_samps, float feedback, float damp){
+        if(delay_samps < 1)        delay_samps = 1;
+        if(delay_samps >= MAX)     delay_samps = MAX - 1;
+        int r = w - delay_samps; if(r < 0) r += MAX;
+        float out = buf[r];
+        damp_state = out*(1.0f - damp) + damp_state*damp;   // darken each repeat
+        buf[w] = in + damp_state*feedback;
+        if(++w >= MAX) w = 0;
+        return out;
+    }
+};

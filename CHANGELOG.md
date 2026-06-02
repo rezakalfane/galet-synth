@@ -4,6 +4,26 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: shared reverb + delay with per-voice sends (Organ)`
+- New **`Reverb`** (compact mono Freeverb — 8 damped comb filters + 4 allpass
+  diffusers) and **`Delay`** (mono feedback line with HF damping so repeats
+  darken) DSP structs in `dsp.h`. One shared instance of each lives in the engine
+  (`s_reverb`, `s_delay`), with ~66 KB / ~144 KB of delay-line buffers in static
+  SRAM (total SRAM use ~45%).
+- New per-voice **`reverb_send`** / **`delay_send`** (0..1 aux sends) on the
+  `Voice` struct. Reverb and delay run as **parallel sends** off the clean
+  instrument signal (they don't cascade), each skipped when a voice's send is 0
+  (so dry voices cost nothing and the tail decays naturally on voice change).
+- The effect **character is global** (one shared room/echo), via new engine
+  params meant to be made playable later: `g_reverb_decay` / `g_reverb_level`
+  and `g_delay_time_ms` / `g_delay_feedback` / `g_delay_level`. HF damping is a
+  fixed constant for each for now.
+- **`VOICE_ORGAN`** is the first/test voice to use them (`reverb_send = 0.6`,
+  `delay_send = 0.45`); every other voice zero-inits to dry, unchanged. Both
+  send fields appended last in `Voice` so positional initializers stay stable.
+- Host tests assert the sends are valid 0..1 fractions and at least one voice
+  feeds each effect.
+
 ### Changed — `feat: chord settings are per-voice (level + voicing)`
 - Moved the two hardcoded chord settings onto the `Voice` struct so each chord
   voice owns its sound: **`chord_level`** (was the `CHORD_UPPER_LEVEL` engine

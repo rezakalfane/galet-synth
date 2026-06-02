@@ -6,7 +6,7 @@ Glass touch bass synth for Daisy Seed + MPR121 capacitive sensor.
 - Firmware (`src/`), split into modules:
   - `main.cpp` — app: init, persistence, the control loop, the audio callback
   - `config.h` — tuning constants (touch, LEDs, musical mapping)
-  - `dsp.h` — pure DSP/math: oscillators, filters (`moog_st`), `fast_tanh`, `ms_to_coeff`, `Waveform`
+  - `dsp.h` — pure DSP/math: oscillators, filters (`moog_st`), `fast_tanh`, `ms_to_coeff`, `Waveform`, the `Reverb` + `Delay` effect structs
   - `voice.h` — `Voice` struct, all presets, `VOICES[]` bank, `MULTI_*`, cycle helpers
   - `mpr121.{h,cpp}` — bit-bang I2C + MPR121 driver (`mpr_init`, `read_electrodes`, `capture_baseline`)
   - `touch.{h,cpp}` — finger detection/tracking (`detect_raw`, `update_tracked`, `tracked[]`)
@@ -253,6 +253,8 @@ Out-of-range stored values are ignored, falling back to the default.
 | `chords` | `true` = play a **3-note diatonic triad** instead of a single note: the engine adds the `scale`'s 3rd and 5th above the quantized root (stacking scale-thirds via `diatonic_triad`), so chords stay in key and change quality with position. Needs a musical `scale` (major/minor) — over a chromatic scale stacking thirds is a whole-tone cluster, not a triad. The upper two notes are osc1+osc2 only (sub + noise stay on the root); they ride the root's glide/vibrato via per-note ratios (`g_chord_ratio2/3`, set in the control loop, snapshotted by the callback). Default `false` = single note. The two SH-101 twins set it |
 | `chord_level` | Level of the two added chord notes vs the root's osc levels (only when `chords`). `<1` keeps the root dominant + leaves drive/filter headroom; `1.0` = equal (fatter/more saturated). A chord voice **must** set it `>0` or the upper notes are silent. SH-101 = 0.9 |
 | `chord_spread` | Octaves to lift the 3rd → voicing width (only when `chords`). `0` = close (root–3rd–5th cluster); `1` = open (root–5th–10th, clearer over the sub-osc); `2`+ wider. SH-101 = 1. Applied in the control loop's ratio computation |
+| `reverb_send` | Per-voice aux send (0..1) into the **shared reverb** (`Reverb` in `dsp.h`, one `s_reverb` instance in the engine). `0` = dry; ~0.3 a hint of space; ~0.7 a wash. The reverb's tail/level are **global** (`g_reverb_decay`, `g_reverb_level`). Organ = 0.6; all others 0 |
+| `delay_send` | Per-voice aux send (0..1) into the **shared delay/echo** (`Delay` in `dsp.h`, `s_delay`). Feedback path is HF-damped so repeats darken. Time/feedback/level are **global** (`g_delay_time_ms`, `g_delay_feedback`, `g_delay_level`). Reverb + delay are **parallel sends** off the clean signal (they don't cascade). Organ = 0.45; all others 0 |
 
 Envelope/glide are in **milliseconds**, converted to per-sample slew
 coefficients (`ms_to_coeff`) in the audio callback, recomputed on voice change.
@@ -278,7 +280,7 @@ silence). All three fields default to 0 (off) for voices that omit them.
 | `BASS` | Round & dark power chord (osc2 = fixed 5th → root+5th+oct+sub) |
 | `BASS_OPEN` | Same chord stack, brighter base + wider pressure sweep |
 | `BASS_RICH` | Mixed waveforms (saw/square/sine), dark base, huge 13-oct acid sweep |
-| `ORGAN` | Clean all-sine organ/flute, melodic register, 1.005× chorus, breath noise |
+| `ORGAN` | Clean all-sine organ/flute, melodic register, 1.005× chorus, breath noise. The **test voice for the shared reverb + delay** (`reverb_send` 0.6, `delay_send` 0.45) — roomy wash + warm echoes |
 | `SCREAM` | Aggressive detuned saws, high register, heavy drive, near-self-osc res, inharmonic (2.5×) metallic ring-mod |
 | `GUITAR` | Electric guitar power chord — driven saw stack (root + fixed 5th + octave body/jangle), **quantized to major** (chords land in key), fast pluck attack + amp **decay-to-silence** (~1.2 s) so it plucks and rings out, pressure-swept filter with a touch of quack |
 | `PAD` | Warm ensemble pad — detuned saws + tri sub + sine top, dark filter, very slow ~2.2 s swell, long tail |

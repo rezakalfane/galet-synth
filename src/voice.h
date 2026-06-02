@@ -114,6 +114,16 @@ struct Voice {
   // (root–3rd–5th cluster); 1 = open (root–5th–10th — clearer over the sub-osc);
   // 2+ wider still. Only meaningful when chords is true.
   int chord_spread;
+
+  // reverb_send: how much of this voice's signal feeds the shared reverb (0 =
+  // dry, no reverb; ~0.3 a hint of space; ~0.7 a wet wash). The reverb itself
+  // (tail length / damping / return level) is global — see g_reverb_* in the
+  // engine — so this is just the per-voice aux send.
+  float reverb_send;
+  // delay_send: per-voice aux send into the shared echo/delay (0 = dry). The
+  // delay's time / feedback / level are global (g_delay_* in the engine). Same
+  // idea as reverb_send. Appended last; every voice but the Organ zero-inits to 0.
+  float delay_send;
 };
 
 // ── Diatonic triad ──────────────────────────────────────────────────────────
@@ -404,7 +414,12 @@ static constexpr Voice VOICE_ORGAN = {
     // PITCH QUANTIZE
     true,                // quantize — snap on touch-down (organ/keyboard feel)
     SCALE_MINOR,         // scale
-    (int)(sizeof(SCALE_MINOR) / sizeof(SCALE_MINOR[0])) // scale_len — minor
+    (int)(sizeof(SCALE_MINOR) / sizeof(SCALE_MINOR[0])), // scale_len — minor
+    // (decay_ms, sustain, chords, chord_level, chord_spread) — defaults
+    0.0f, 0.0f, false, 0.0f, 0,
+    // SENDS — Organ is the test voice for the shared reverb + delay
+    0.6f,                // reverb_send (a roomy wash)
+    0.45f                // delay_send  (warm repeats)
 };
 
 // ── Voice 5: screaming aggressive lead ────────────────────────────────────────
