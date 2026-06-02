@@ -4,6 +4,33 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: editable + persistent voice bank (rename/save/revert)`
+- **Firmware** (`src/persist.{h,cpp}`): the read-only `constexpr VOICES[]` is now
+  copied at boot into a mutable RAM bank **`g_bank[]`** — what the engine, control
+  loop and tuner all read. `persist_init()` builds the factory bank then overlays
+  any saved edits from QSPI flash; `persist_save_bank()` serializes the whole bank
+  (+ `g_voice_idx`) back, writing only when it changed (wear). The `Voice`'s
+  `name`/`scale` pointers can't persist verbatim, so the stored form keeps a
+  portable name string + a scale id and fixes the pointers up on load (each bank
+  voice's name lives in a RAM buffer, so it's editable). A `BANK_MAGIC` guards
+  against old/foreign blobs (falls back to factory). Replaces the old voice-index-
+  only `PersistentStorage` in `main.cpp`.
+- **Serial protocol** (`serialtune.cpp`): `save` (commit the live voice incl. name
+  into its bank slot, then flash), `factory [all]` (revert a slot or the whole
+  bank to source defaults), `names` (list every slot's current name), and
+  `set name <text>` (rename; spaces allowed, e.g. "SH-101 min"). `dump` now also
+  emits `idx=` so the host syncs by slot rather than by name (rename-proof).
+- **GUI** (`voicelab_gui.py`): a Name field + **Save to flash** / **Revert** /
+  **Revert all** buttons; the voice picker labels follow the device's *saved*
+  names (via `names`), not just the factory defaults. A connection watchdog
+  reconnects and re-syncs if the synth is power-cycled mid-session instead of
+  dying on a stale port. `_save()` pushes the current name explicitly right before
+  `save` — clicking a button doesn't reliably fire the line-edit's
+  `editingFinished` first on macOS, which had been committing the stale factory
+  name to flash. **CLI** (`voicelab.py`): bare `save` persists the bank to flash;
+  `factory`/`name` tab-completions. `link.py` gains a generic `_capture()` helper
+  + `names()`, and `send()` now survives a disconnect.
+
 ### Added — `feat: live voice tuner (USB serial) + CLI & PySide6 GUI`
 - **Firmware** (`src/serialtune.{h,cpp}`): a USB CDC *receive* path + a small
   line protocol (`tune`/`set`/`select`/`dump`/`mon`/`help`) so a laptop can
