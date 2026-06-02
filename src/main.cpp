@@ -62,18 +62,21 @@ GPIO      led3;  // software-PWM LED on A0 (ADC0 / D15 / pin 22)
 
 
 // ── Note quantizer ────────────────────────────────────────────────────────────
-// Returns the nearest MIDI note in SCALE[] for a raw float MIDI pitch.
-float quantize_midi(float midi)
+// Returns the nearest MIDI note in the given scale for a raw float MIDI pitch.
+// The scale is the voice's (Voice::scale / scale_len); a null/empty scale leaves
+// the pitch continuous.
+float quantize_midi(float midi, const int8_t* scale, int scale_len)
 {
+    if(!scale || scale_len <= 0) return midi;
     int root = (int)midi;
     int pc   = root % 12;
     int oct  = root / 12;
     // find nearest scale degree
     int best_deg=0, best_dist=127;
-    for(int i=0;i<SCALE_LEN;i++){
-        int d=SCALE[i]-pc; if(d<0)d=-d;
+    for(int i=0;i<scale_len;i++){
+        int d=scale[i]-pc; if(d<0)d=-d;
         int d2=12-d; if(d2<d)d=d2;
-        if(d<best_dist){best_dist=d;best_deg=SCALE[i];}
+        if(d<best_dist){best_dist=d;best_deg=scale[i];}
     }
     float q=(float)(oct*12+best_deg);
     // fractional semitone from the quantized note (for slide expression)
@@ -220,9 +223,13 @@ int main()
             hw.dac.WriteValue(DacHandle::Channel::TWO, (uint16_t)(led2 * LED2_MAX));
             g_led3_duty = led3;
 
-            // FSR calibration window: first 2 s only.
+            // FSR: drive calibration, and also break out if it's pressed to the
+            // floor — so the voice-select gesture (hold FSR) works straight from
+            // idle, without having to touch the glass first to exit the chase.
+            uint16_t fsr_now = hw.adc.Get(0);
+            if(fsr_now <= FSR_MIN) break;
             if(!calibrated) {
-                acc += hw.adc.Get(0);
+                acc += fsr_now;
                 n++;
                 if(elapsed >= 2000) {
                     commit_fsr_avg(acc, n);
@@ -281,7 +288,7 @@ int main()
         hw.PrintLine("F2 pos=detune F2 prs=wavefold+ringmod");
     else
         hw.PrintLine("F2 prs=wavefold+ringmod (osc2=fixed)");
-    hw.PrintLine("Hold FSR pressed 3s to change voice (then every 2s)");
+    hw.PrintLine("Press FSR fully (no touch) 2s -> select; tap to cycle; release to keep");
     hw.PrintLine("MPR121 OK — baseline captured");
     hw.PrintLine("Ready.\n");
 
@@ -316,22 +323,44 @@ int main()
     // LED1 = DAC1 (pos 0 end), LED2 = DAC2 (middle), LED3 = PWM A0 (pos 1000 end).
     float s_led1 = 0.0f, s_led2 = 0.0f, s_led3 = 0.0f;
 
-    // FSR voice-switch gesture state.
-    uint32_t fsr_hold_start  = 0;   // when the current press began (0 = released)
-    uint32_t fsr_next_switch = 0;   // timestamp of the next allowed switch
+    // ── FSR voice-select gesture state (tap-to-cycle) ─────────────────────────
+    int      sel_mode      = 0;      // 0 = normal play, 1 = voice-select mode
+    bool     full_state    = false;  // schmitt-latched "FSR pressed to the floor"
+    uint32_t full_since    = 0;      // when full_state went true (enter timer; 0 = not full)
+    bool     prev_held     = false;  // bridged glass-touch state last loop (tap edge detect)
+    uint32_t touch_last_ms = 0;      // last loop the glass read as touched (lift bridge)
+    uint32_t last_tap_ms   = 0;      // last glass-tap advance (debounce)
+    uint32_t drum2_at      = 0;      // scheduled 2nd drum hit (snare) for the kit preview
+    // Non-blocking LED blinker: blink_start(n) queues n flashes, blink_tick()
+    // advances them between loops so glass taps still register (the old blocking
+    // flash stalled the loop up to ~2 s). Voice-select blinks the position on
+    // enter and on save (which voice), and a single blink per tap-advance (the
+    // audio preview IDs it). Startup uses the blocking flasher for the boot voice.
+    int      blink_left    = 0;
+    bool     blink_on      = false;
+    uint32_t blink_t       = 0;
+    auto leds_write = [&](bool on){
+        hw.dac.WriteValue(DacHandle::Channel::ONE, on ? (uint16_t)LED1_MAX : 0);
+        hw.dac.WriteValue(DacHandle::Channel::TWO, on ? (uint16_t)LED2_MAX : 0);
+        g_led3_duty = on ? LED3_INTENSITY : 0.0f;
+    };
+    auto blink_start = [&](int n, uint32_t now){
+        blink_left = n;
+        if(n > 0){ leds_write(true); blink_on = true; blink_t = now + 110; }
+        else     { leds_write(false); blink_on = false; }
+    };
+    auto blink_tick = [&](uint32_t now){
+        if(blink_left == 0 && !blink_on) return;
+        if((int32_t)(now - blink_t) < 0)  return;
+        if(blink_on){ leds_write(false); blink_on = false; blink_left--; blink_t = now + 140; }
+        else if(blink_left > 0){ leds_write(true); blink_on = true; blink_t = now + 110; }
+    };
 
-    // Flash all three LEDs `count` times to confirm a voice change (count = voice
-    // number). Blocks the touch loop briefly — fine, we're mid-gesture and silent.
+    // Blocking flash used only at startup to announce the boot/restored voice.
     auto flash_voice_leds = [&](int count){
         for(int f = 0; f < count; f++){
-            hw.dac.WriteValue(DacHandle::Channel::ONE, (uint16_t)LED1_MAX);
-            hw.dac.WriteValue(DacHandle::Channel::TWO, (uint16_t)LED2_MAX);
-            g_led3_duty = LED3_INTENSITY;
-            System::Delay(110);
-            hw.dac.WriteValue(DacHandle::Channel::ONE, 0);
-            hw.dac.WriteValue(DacHandle::Channel::TWO, 0);
-            g_led3_duty = 0.0f;
-            System::Delay(140);
+            leds_write(true);  System::Delay(110);
+            leds_write(false); System::Delay(140);
         }
     };
 
@@ -377,6 +406,24 @@ int main()
         g_active_voice = vidx;   // header shows the last-hit drum
     };
 
+    // Fire one drum (bank index `bankidx`) on hit-pool slot `slot` at full
+    // velocity, at its natural low pitch. Used by the kit preview below.
+    auto preview_drum = [&](int slot, int bankidx){
+        const Voice& V = VOICES[bankidx];
+        float freq   = V.freq_low;
+        // Bright enough that the noisy drums (snare/hat) crack through; the
+        // tonal drums stay dark via their own low cutoff_mult.
+        float cutoff = clampf(freq * V.cutoff_mult * 3.0f, 60.0f, 16000.0f);
+        float drive  = 1.0f + 0.6f * V.drive_max;
+        drum_trigger(g_hits[slot], bankidx, freq, 0.85f, cutoff, drive, hw.AudioSampleRate());
+        // ONE-SHOT: jump to full amp and immediately ungate so the hit decays on
+        // its own. A preview has no finger-lift to clear the gate, so leaving it
+        // gated would sustain the drum's noise forever (the "100% noise when Drums
+        // selected" bug). attack_ms (~1 ms) makes skipping the ramp inaudible.
+        g_hits[slot].amp  = g_hits[slot].amp_tgt;
+        g_hits[slot].gate = false;
+    };
+
     while(true)
     {
         // ── FSR → master volume ──────────────────────────────────────────────
@@ -389,35 +436,14 @@ int main()
         else                        vol = (float)(fsr_raw - FSR_MIN) * fsr_active_inv;
         g_master_vol = vol;
 
-        // ── FSR-hold voice-switch gesture ───────────────────────────────────
-        // Pressing the FSR to (near) silence and holding cycles the voice: first
-        // advance after 3 s, then every 2 s while still held. LEDs flash the new
-        // voice number. Releasing re-arms the 3 s wait.
-        bool fsr_pressed = (fsr_raw <= FSR_MIN);   // "low value" = at the mute floor
-        if(!fsr_pressed){
-            fsr_hold_start = 0;                    // released → disarm
-        } else {
-            uint32_t now = System::GetNow();
-            if(fsr_hold_start == 0){
-                fsr_hold_start  = now;
-                fsr_next_switch = now + VOICE_SWITCH_FIRST_MS;
-            }
-            // Holding the FSR means no glass touch — freeze the idle/rebaseline
-            // timers so they don't fire mid-gesture.
-            idle_since    = now;
-            last_touch_ms = now;
-            if((int32_t)(now - fsr_next_switch) >= 0){
-                g_voice_idx = cycle_next(g_voice_idx);         // skip no_cycle voices
-                int pos = cycle_pos(g_voice_idx);
-                hw.PrintLine("[voice %d/%d] %s",
-                             pos, cycle_total(), VOICES[g_voice_idx].name);
-                // Persist the new selection (only erases/writes QSPI if changed).
-                storage.GetSettings().voice_idx = g_voice_idx;
-                storage.Save();
-                flash_voice_leds(pos);                         // count = position in the cycle
-                fsr_next_switch = System::GetNow() + VOICE_SWITCH_REPEAT_MS; // re-time after flash
-            }
-        }
+        // Schmitt-latch "FSR pressed to the floor" (hysteresis so a steady hard
+        // press doesn't chatter the tap edge). Note the FSR reads INVERSELY: a
+        // hard press drives fsr_raw down to/below FSR_MIN (vol -> 0), while easing
+        // off raises it (vol -> 1). The voice-select gesture is handled below,
+        // after touch detection, so it can require no glass touch.
+        if(fsr_raw <= FSR_MIN) full_state = true;    // pressed to the floor = "full"
+        else if(vol >= 0.4f)   full_state = false;   // clearly eased off
+        // else: hold previous state in the dead band
 
         read_electrodes(data);
 
@@ -430,6 +456,89 @@ int main()
 
         int n_raw=detect_raw(delta,raw,MAX_FINGERS);
         bool touching=(n_raw>0);
+
+        // ── FSR voice-select gesture (hold FSR + tap/play the glass) ─────────
+        // ENTER: press the FSR fully (to the mute floor) with NO glass touch for
+        //   ENTER_MS. LEDs blink the current voice's position.
+        // PLAY/ADVANCE: with the FSR held, each GLASS TAP advances to the next
+        //   voice (wrapping, single blink); the voice then plays through the REAL
+        //   note path driven by your actual glass pressure/position, so every
+        //   filter/effect matches — press for the Moog cutoff sweep, slide for
+        //   pitch, lift to release. The Drums kit plays a canned kick + snare
+        //   "one-two" instead.
+        // KEEP: release the FSR → persist + exit; the saved position blinks
+        //   NON-blocking, so you can start playing immediately.
+        {
+            uint32_t now = System::GetNow();
+            // Bridge brief touch dropouts so a flicker mid-slide isn't read as a
+            // lift + new tap (advancing unintentionally).
+            if(touching) touch_last_ms = now;
+            bool held = touching || (int32_t)(now - touch_last_ms) < 60;
+
+            if(sel_mode == 0){
+                if(full_state && !touching){
+                    if(full_since == 0) full_since = now;
+                    idle_since = now; last_touch_ms = now;   // freeze idle/rebaseline
+                    if(now - full_since >= VOICE_SELECT_ENTER_MS){
+                        sel_mode     = 1;
+                        g_amp_target = 0.0f;                 // silence any held note
+                        hw.PrintLine("[voice select] %s (%d/%d) - tap/slide glass; release FSR to keep",
+                                     VOICES[g_voice_idx].name, cycle_pos(g_voice_idx), cycle_total());
+                        blink_start(cycle_pos(g_voice_idx), now);  // blink the current voice number
+                    }
+                } else {
+                    full_since = 0;                          // touched or not full → disarm
+                }
+            } else {
+                idle_since = now; last_touch_ms = now;       // freeze idle while selecting
+                g_master_vol = 0.85f;                        // monitor level (the FSR mutes)
+                if(!full_state){
+                    // FSR released → keep the shown voice (persist) and exit. The
+                    // saved-position blink is NON-blocking (driven from the LED
+                    // section) so playing isn't stalled.
+                    storage.GetSettings().voice_idx = g_voice_idx;
+                    storage.Save();                          // writes QSPI only if changed
+                    hw.PrintLine("[voice kept %d/%d] %s",
+                                 cycle_pos(g_voice_idx), cycle_total(), VOICES[g_voice_idx].name);
+                    drum2_at = 0;
+                    sel_mode = 0; full_since = 0;
+                    blink_start(cycle_pos(g_voice_idx), now); // confirm saved voice (non-blocking)
+                } else {
+                    bool tap = held && !prev_held &&
+                               (int32_t)(now - last_tap_ms) >= (int32_t)VOICE_SELECT_TAP_GAP_MS;
+                    if(tap){
+                        // glass tap (debounced rising edge) → advance one voice (wraps)
+                        last_tap_ms = now;
+                        g_voice_idx = cycle_next(g_voice_idx);
+                        hw.PrintLine("[voice %d/%d] %s",
+                                     cycle_pos(g_voice_idx), cycle_total(), VOICES[g_voice_idx].name);
+                        blink_start(1, now);                 // single blink per advance
+                    }
+                    if(!VOICE_PREVIEW_ENABLED){
+                        g_finger_on = false; g_amp_target = 0.0f;   // silent cycling
+                        prev_held = held;
+                        blink_tick(now); System::Delay(CONTROL_DELAY_MS); continue;
+                    }
+                    if(g_voice_idx == MULTI_IDX){
+                        // Drums kit: a tap fires a kick + snare "one-two" (one-shots).
+                        if(tap){
+                            g_finger_on = false; g_amp_target = 0.0f;   // hush mono
+                            preview_drum(0, MULTI_ZONES[0]);
+                            drum2_at = now + 150;
+                        }
+                        if(drum2_at && (int32_t)(now - drum2_at) >= 0){
+                            preview_drum(1, MULTI_ZONES[1]);            // delayed snare
+                            drum2_at = 0;
+                        }
+                        prev_held = held;
+                        blink_tick(now); System::Delay(CONTROL_DELAY_MS); continue;
+                    }
+                    // Mono voice: fall through to the REAL note path below (pressure
+                    // pinned to 100%) — the preview is the actual voice, all effects.
+                }
+            }
+            prev_held = held;   // for next loop's tap edge detection
+        }
 
         // ── Auto-rebaseline ───────────────────────────────────────────────────
         if(touching){
@@ -548,7 +657,7 @@ int main()
             if(QUANTIZE_ENABLED && VOICE.quantize && f1_fresh)
             {
                 // Touch-down: snap to nearest chromatic note
-                f1_midi_base = quantize_midi(midi_raw);
+                f1_midi_base = quantize_midi(midi_raw, VOICE.scale, VOICE.scale_len);
                 // Convert quantized MIDI back to Hz
                 float qe = (f1_midi_base - 69.0f) * 0.05776f;
                 freq = clampf(440.0f*(1.0f+qe*(1.0f+qe*(0.5f+qe*0.1667f))), VOICE.freq_low, VOICE.freq_high);
@@ -642,33 +751,41 @@ int main()
         // Fourth-root curve (gamma=0.25) keeps each LED above its forward-voltage
         // floor at the handoff points (50% raw → ~84% drive). Pressure adds a
         // subtle ~75%→100% intensity scale.
-        float led1_target = 0.0f, led2_target = 0.0f, led3_target = 0.0f;
-        if(f1_on) {
-            float p01      = clampf((float)tracked[0].pos / 1000.0f, 0.0f, 1.0f);
-            float pr01     = clampf((float)tracked[0].pressure / 100.0f, 0.0f, 1.0f);
-            float prs_mult = 0.75f + 0.25f * pr01;
-            float l1_raw   = 1.0f - 2.0f * p01;                 if(l1_raw < 0) l1_raw = 0;
-            float l3_raw   = 2.0f * p01 - 1.0f;                 if(l3_raw < 0) l3_raw = 0;
-            float l2_raw   = 1.0f - 2.0f * fabsf(p01 - 0.5f);   if(l2_raw < 0) l2_raw = 0;
-            led1_target    = sqrtf(sqrtf(l2_raw)) * prs_mult;  // middle tent
-            led2_target    = sqrtf(sqrtf(l1_raw)) * prs_mult;  // pos 0 ramp
-            led3_target    = sqrtf(sqrtf(l3_raw)) * prs_mult * LED3_INTENSITY;
-        }
-        // Snap on touch onset so the LEDs respond instantly to the initial touch;
-        // smooth during sustained touch and on lift-off.
-        if(f1_on && !f1_was_on) {
-            s_led1 = led1_target;
-            s_led2 = led2_target;
-            s_led3 = led3_target;
+        // The voice-select blink overlays the position display only while a blink
+        // is actually animating (entry count, per-advance tick, saved-voice
+        // confirm). Otherwise the normal position display runs — so the LEDs follow
+        // the finger during the live preview too, and resume after the save blink.
+        if(blink_left > 0 || blink_on){
+            blink_tick(System::GetNow());
         } else {
-            float smooth3 = f1_on ? LED_SMOOTH : LED3_RELEASE_SMOOTH;
-            s_led1 = s_led1 * LED_SMOOTH + led1_target * (1.0f - LED_SMOOTH);
-            s_led2 = s_led2 * LED_SMOOTH + led2_target * (1.0f - LED_SMOOTH);
-            s_led3 = s_led3 * smooth3   + led3_target * (1.0f - smooth3);
+            float led1_target = 0.0f, led2_target = 0.0f, led3_target = 0.0f;
+            if(f1_on) {
+                float p01      = clampf((float)tracked[0].pos / 1000.0f, 0.0f, 1.0f);
+                float pr01     = clampf((float)tracked[0].pressure / 100.0f, 0.0f, 1.0f);
+                float prs_mult = 0.75f + 0.25f * pr01;
+                float l1_raw   = 1.0f - 2.0f * p01;                 if(l1_raw < 0) l1_raw = 0;
+                float l3_raw   = 2.0f * p01 - 1.0f;                 if(l3_raw < 0) l3_raw = 0;
+                float l2_raw   = 1.0f - 2.0f * fabsf(p01 - 0.5f);   if(l2_raw < 0) l2_raw = 0;
+                led1_target    = sqrtf(sqrtf(l2_raw)) * prs_mult;  // middle tent
+                led2_target    = sqrtf(sqrtf(l1_raw)) * prs_mult;  // pos 0 ramp
+                led3_target    = sqrtf(sqrtf(l3_raw)) * prs_mult * LED3_INTENSITY;
+            }
+            // Snap on touch onset so the LEDs respond instantly to the initial touch;
+            // smooth during sustained touch and on lift-off.
+            if(f1_on && !f1_was_on) {
+                s_led1 = led1_target;
+                s_led2 = led2_target;
+                s_led3 = led3_target;
+            } else {
+                float smooth3 = f1_on ? LED_SMOOTH : LED3_RELEASE_SMOOTH;
+                s_led1 = s_led1 * LED_SMOOTH + led1_target * (1.0f - LED_SMOOTH);
+                s_led2 = s_led2 * LED_SMOOTH + led2_target * (1.0f - LED_SMOOTH);
+                s_led3 = s_led3 * smooth3   + led3_target * (1.0f - smooth3);
+            }
+            hw.dac.WriteValue(DacHandle::Channel::ONE, (uint16_t)(s_led1 * LED1_MAX));
+            hw.dac.WriteValue(DacHandle::Channel::TWO, (uint16_t)(s_led2 * LED2_MAX));
+            g_led3_duty = s_led3;  // audio callback sigma-delta's this onto A0
         }
-        hw.dac.WriteValue(DacHandle::Channel::ONE, (uint16_t)(s_led1 * LED1_MAX));
-        hw.dac.WriteValue(DacHandle::Channel::TWO, (uint16_t)(s_led2 * LED2_MAX));
-        g_led3_duty = s_led3;  // audio callback sigma-delta's this onto A0
 
         f1_was_on = f1_on;
 
