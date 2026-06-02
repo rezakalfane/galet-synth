@@ -481,7 +481,8 @@ int main()
                     if(now - full_since >= VOICE_SELECT_ENTER_MS){
                         sel_mode     = 1;
                         g_amp_target = 0.0f;                 // silence any held note
-                        hw.PrintLine("[voice select] %s (%d/%d) - tap/slide glass; release FSR to keep",
+                        if(!g_serial_quiet)
+                          hw.PrintLine("[voice select] %s (%d/%d) - tap/slide glass; release FSR to keep",
                                      g_bank[g_voice_idx].name, cycle_pos(g_voice_idx), cycle_total());
                         blink_start(cycle_pos(g_voice_idx), now);  // blink the current voice number
                     }
@@ -496,10 +497,12 @@ int main()
                     // saved-position blink is NON-blocking (driven from the LED
                     // section) so playing isn't stalled.
                     persist_save_bank();                     // persists g_voice_idx (+ bank), QSPI write only if changed
-                    hw.PrintLine("[voice kept %d/%d] %s",
-                                 cycle_pos(g_voice_idx), cycle_total(), g_bank[g_voice_idx].name);
-                    // Machine event so a connected host tuner follows the change.
-                    hw.PrintLine("voice %d", g_voice_idx);
+                    if(!g_serial_quiet){
+                        hw.PrintLine("[voice kept %d/%d] %s",
+                                     cycle_pos(g_voice_idx), cycle_total(), g_bank[g_voice_idx].name);
+                        // Machine event so a connected host tuner follows the change.
+                        hw.PrintLine("voice %d", g_voice_idx);
+                    }
                     drum2_at = 0;
                     sel_mode = 0; full_since = 0;
                     blink_start(cycle_pos(g_voice_idx), now); // confirm saved voice (non-blocking)
@@ -510,7 +513,8 @@ int main()
                         // glass tap (debounced rising edge) → advance one voice (wraps)
                         last_tap_ms = now;
                         g_voice_idx = cycle_next(g_voice_idx);
-                        hw.PrintLine("[voice %d/%d] %s",
+                        if(!g_serial_quiet)
+                          hw.PrintLine("[voice %d/%d] %s",
                                      cycle_pos(g_voice_idx), cycle_total(), g_bank[g_voice_idx].name);
                         blink_start(1, now);                 // single blink per advance
                     }
@@ -868,13 +872,13 @@ int main()
                 cycle_pos(g_voice_idx), cycle_total(), VOICE.name,
                 (int)VOICE.freq_low, (int)VOICE.freq_high);
         hw.PrintLine(" CH | DELTA | BAR");
-        hw.PrintLine("----+-------+--------------------");
+        hw.PrintLine("----+-------+----------------------");
         for(int i=0;i<N_CH;i++){
             make_bar(bar,delta[i],max_delta,20);
-            char mk=' ';
+            const char* mk="";     // finger marker on the channel each finger peaks at
             for(int s=0;s<2;s++)
-                if(tracked[s].alive&&i==tracked[s].peak_ch)mk=(char)('1'+s);
-            hw.PrintLine(" %2d | %5d | %s %c",i,(int)delta[i],bar,mk);
+                if(tracked[s].alive&&i==tracked[s].peak_ch)mk=(s==0)?"F1":"F2";
+            hw.PrintLine(" %02d | %5d | %s  %s",i,(int)delta[i],bar,mk);
         }
 
         make_pos_bar(pos_bar,40);
@@ -884,10 +888,10 @@ int main()
         for(int slot=0;slot<2;slot++){
             if(tracked[slot].alive){
                 make_bar(bar,tracked[slot].pressure,100,16);
-                hw.PrintLine("  %d  pos:%4d  prs:%3d%%  %s",
+                hw.PrintLine(" F%d  pos:%4d  prs:%3d%%  %s",
                     slot+1,(int)tracked[slot].pos,(int)tracked[slot].pressure,bar);
             } else {
-                hw.PrintLine("  %d  pos: ---  prs: --%%  [                ]",slot+1);
+                hw.PrintLine(" F%d  pos: ---  prs: --%%  [                ]",slot+1);
             }
         }
 

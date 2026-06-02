@@ -54,7 +54,7 @@ def setup_readline():
     if not readline:
         return
     words = (["tune", "set", "select", "dump", "mon", "help", "export", "save",
-              "load", "backup", "restore", "factory", "name", "quit", "exit"]
+              "load", "backup", "restore", "factory", "name", "bye", "quit", "exit"]
              + schema.SETTABLE + list(schema.WAVES) + list(schema.SCALES))
 
     def completer(text, state):
@@ -167,8 +167,8 @@ def main():
             link.send(line)  # pass through to firmware
             time.sleep(0.05)
     finally:
-        link.send("tune 0")   # resume normal idle behavior (LED chase / FSR recal)
-        time.sleep(0.05)
+        link.send("bye")      # leave tune mode + silence the synth on the now-closed
+        time.sleep(0.05)      # port, so it resumes normal play without hanging
         link.close()
         print("\nbye")
 

@@ -32,4 +32,12 @@ void serial_tune_poll();
 // periodic status print on this so the protocol channel stays clean (`mon 1`
 // re-enables it). Defined in serialtune.cpp.
 extern volatile bool g_mon;
+
+// Set by `bye` (host disconnecting), cleared by `tune 1` (host present). While
+// set, the control loop emits NO autonomous serial (status dashboard, rebaseline/
+// recal, voice-gesture events). libDaisy's USB logger switches to *blocking*
+// transmit once a host has drained it, so printing to a port whose host has gone
+// away spins forever and hangs the synth — going quiet on disconnect avoids that.
+extern volatile bool g_serial_quiet;
+
 bool serial_display_muted();

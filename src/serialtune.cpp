@@ -40,8 +40,12 @@ Voice             g_live_voice = VOICE_LEAD;   // snapshotted from the active vo
 volatile bool     g_live_tune  = false;
 volatile uint32_t g_live_rev   = 0;
 volatile bool     g_mon        = false;
+volatile bool     g_serial_quiet = false;
 
-bool serial_display_muted() { return g_live_tune && !g_mon; }
+// Suppress autonomous serial when a host has gone away (g_serial_quiet) or while
+// tuning with the dashboard off. See g_serial_quiet in serialtune.h for why
+// printing to a dead port hangs the synth.
+bool serial_display_muted() { return g_serial_quiet || (g_live_tune && !g_mon); }
 
 // ── USB CDC receive ring buffer ───────────────────────────────────────────────
 // The receive callback runs in USB interrupt context, so it only copies bytes
@@ -208,9 +212,19 @@ static void handle_command(char *line) {
 
     if(!strcmp(cmd, "tune")) {
         char *a = strtok(NULL, " \t");
-        if(a && to_i(a)) { snapshot_active(); g_live_tune = true;
+        if(a && to_i(a)) { g_serial_quiet = false;   // a host is here
+                           snapshot_active(); g_live_tune = true;
                            hw.PrintLine("ok tune=1 voice=%s", g_live_voice.name); }
         else             { g_live_tune = false; hw.PrintLine("ok tune=0"); }
+        return;
+    }
+    if(!strcmp(cmd, "bye")) {
+        // Host disconnecting: leave tune mode (so the synth plays the bank + the
+        // idle chase resumes) and go silent so no autonomous print blocks on the
+        // now-dead USB port. Cleared again by the next `tune 1`.
+        g_live_tune = false;
+        hw.PrintLine("ok bye");      // last line out while the host is still here
+        g_serial_quiet = true;
         return;
     }
     if(!strcmp(cmd, "set")) {
@@ -279,7 +293,7 @@ static void handle_command(char *line) {
     }
     if(!strcmp(cmd, "help")) {
         hw.PrintLine("cmds: tune 0|1 | set <field> <val> | set name <text> | select <n>");
-        hw.PrintLine("      dump | save | factory [all] | mon 0|1");
+        hw.PrintLine("      dump | save | factory [all] | mon 0|1 | bye");
         for(int i = 0; i < NFIELDS; i++) hw.PrintLine("  %s", FIELDS[i].name);
         hw.PrintLine("  name scale(chromatic|major|minor) reverb_decay reverb_level delay_time_ms delay_feedback delay_level");
         return;

@@ -42,7 +42,10 @@ class Link:
                 break
             while b"\n" in buf:
                 raw, buf = buf.split(b"\n", 1)
-                line = raw.decode("utf-8", "replace").strip("\r ")
+                # Drop the line terminator + trailing padding only — KEEP leading
+                # spaces: the status dashboard right-aligns its columns with them,
+                # and stripping both ends collapsed the alignment.
+                line = raw.decode("utf-8", "replace").rstrip("\r\n ")
                 if not line:
                     continue
                 if self._cap is not None:

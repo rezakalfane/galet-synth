@@ -684,8 +684,8 @@ def main():
     win.show()
     code = app.exec()
     if win.link:
-        win.link.send("tune 0")   # leave tune mode so the synth resumes normal
-        time.sleep(0.05)          # idle behavior (LED chase / FSR recal)
+        win.link.send("bye")      # leave tune mode + go silent so the synth resumes
+        time.sleep(0.05)          # normal play and doesn't block on the closed port
         win.link.close()
     sys.exit(code)
 
