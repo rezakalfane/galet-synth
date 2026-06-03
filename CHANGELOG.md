@@ -4,6 +4,17 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: package the voice tuner as a macOS .app`
+- **`tools/build_macapp.sh`**: one-command PyInstaller build of the PySide6 tuner
+  into a self-contained `VoiceLab.app` (bundles its own Python + PySide6 + pyserial
+  + the `galetsynth` package, so it runs independently of the repo/.venv).
+  `--install` also copies it to `/Applications`. PyInstaller work files go to
+  `build-macapp/` (git-ignored), kept out of the firmware `build/` dir.
+- **`tools/make_icon.py`** + **`tools/voicelab.icns`**: a synth-voice app icon — a
+  glowing oscillator waveform on a violet→indigo squircle — drawn with PySide6's
+  painter (no extra deps) and packed via `iconutil`. The build wires it in with
+  `--icon` and regenerates it if missing.
+
 ### Changed — `feat: voice-tuner GUI polish`
 - **Toolbar**: the top actions are now compact, flat icon+text `QToolButton`s
   grouped by feature (sync · save/copy/revert · backup/restore · export) with
