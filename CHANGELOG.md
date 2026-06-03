@@ -4,6 +4,17 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Changed — `feat: voice-tuner GUI polish`
+- **Toolbar**: the top actions are now compact, flat icon+text `QToolButton`s
+  grouped by feature (sync · save/copy/revert · backup/restore · export) with
+  vertical separators; `mon` sits on the far right. Icons come from the Qt style
+  (`QStyle.standardIcon`, `fromTheme` first) — no bundled assets.
+- **Group sections**: each parameter group's title gets a monochrome glyph (e.g.
+  `▽ Filter`, distinct per oscillator: `∿`/`≈`/`↓`/`↑`) and a clear gap above it.
+- **Export works offline**: it now builds the C++ `Voice{…}` straight from the
+  on-screen controls (deriving `log_freq_ratio` from the freq range) instead of
+  dumping the device — so Export no longer needs the Galet connected.
+
 ### Added — `feat: copy a voice to another slot (rename + save to flash)`
 - **Firmware** (`serialtune.cpp`): new `copy <n> [name]` command — duplicates the
   current live voice into bank slot `n` and persists it, **without** changing the

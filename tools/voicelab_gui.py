@@ -10,6 +10,7 @@ glass to hear them. Export writes a paste-ready C++ Voice{...} block.
     python3 tools/voicelab_gui.py            # auto-detect /dev/tty.usbmodem*
 """
 import html
+import math
 import sys
 import threading
 import time
@@ -20,7 +21,7 @@ from galetsynth import schema, bank                      # noqa: E402
 
 try:
     import serial
-    from PySide6 import QtCore, QtWidgets
+    from PySide6 import QtCore, QtGui, QtWidgets
 except ImportError as e:
     sys.exit(f"Missing dependency ({e}). Run:  pip install pyserial PySide6")
 
@@ -34,6 +35,27 @@ def info_tip(title, body):
             f"<b>{html.escape(title)}</b>"
             f"<hr style='margin:3px 0'>"
             f"{html.escape(body)}</div>")
+
+
+# A small monochrome glyph per parameter group, shown in its section title (no
+# bundled assets; renders in the theme colour like the toolbar icons). Distinct
+# per oscillator. Keyed by schema.GROUPS titles.
+GROUP_ICONS = {
+    "Range":             "↔",
+    "Osc 1":             "∿",
+    "Osc 2":             "≈",
+    "Sub":               "↓",
+    "Octave":            "↑",
+    "Filter":            "▽",
+    "Drive / Noise":     "▒",
+    "Ring / Fold":       "◎",
+    "Envelope":          "◢",
+    "Pitch Env":         "↗",
+    "Dynamics":          "⇅",
+    "Quantize / Chords": "♫",
+    "Sends":             "↪",
+    "Global FX":         "✦",
+}
 
 
 class Bridge(QtCore.QObject):
@@ -115,6 +137,16 @@ class FieldRow:
 
     def _send(self, v):
         self.send(f"set {self.field} {v}")
+
+    def value(self):
+        """Current control value as a string, in the same shape `dump` produces —
+        so the C++ export can be built from the GUI alone, no device needed."""
+        if self.typ in ("f", "i"):
+            v = self.spin.value()
+            return str(int(v)) if self.typ == "i" else f"{v:.4f}"
+        if self.typ == "b":
+            return "1" if self.check.isChecked() else "0"
+        return self.combo.currentText()   # w / s
 
     def load(self, kv):
         """Set the control from a dump dict, without emitting a `set`."""
@@ -256,8 +288,31 @@ class Tuner(QtWidgets.QMainWindow):
         self.setCentralWidget(central)
         root = QtWidgets.QVBoxLayout(central)
 
-        # ── Top bar: voice picker + name + actions ──
+        # ── Top bar: voice picker + name + action toolbar ──
+        SP = QtWidgets.QStyle.StandardPixmap
+
+        def icon(theme, sp):
+            # Prefer a native theme icon (Linux); fall back to the Qt style's
+            # built-in pixmaps (macOS/Windows) so no image assets are bundled.
+            ic = QtGui.QIcon.fromTheme(theme)
+            return ic if not ic.isNull() else self.style().standardIcon(sp)
+
+        def vsep():
+            # 3px of space on each side of the divider line. The margins go on a
+            # wrapper — putting a stylesheet on the QFrame itself would suppress
+            # the VLine rendering.
+            w = QtWidgets.QWidget()
+            lay = QtWidgets.QHBoxLayout(w)
+            lay.setContentsMargins(3, 0, 3, 0)
+            lay.setSpacing(0)
+            line = QtWidgets.QFrame()
+            line.setFrameShape(QtWidgets.QFrame.VLine)
+            line.setFrameShadow(QtWidgets.QFrame.Sunken)
+            lay.addWidget(line)
+            return w
+
         top = QtWidgets.QHBoxLayout()
+        top.setSpacing(4)
         top.addWidget(QtWidgets.QLabel("Voice:"))
         self.voice = QtWidgets.QComboBox()
         self.voice.addItems([f"{i}: {n}" for i, n in enumerate(schema.VOICE_NAMES)])
@@ -275,43 +330,58 @@ class Tuner(QtWidgets.QMainWindow):
             "Name", "Rename the current voice (spaces allowed). "
             "Click “Save to flash” to persist it."))
         top.addWidget(self.name)
-        buttons = (
-            ("Refresh",       self.refresh,
-             "Reload this voice's parameters from the synth — re-snapshots the saved "
-             "preset, discarding unsaved live edits."),
-            ("Save to flash", self._save,
-             "Commit this voice (parameters + name) to its bank slot in QSPI flash. "
-             "Survives power-off."),
-            ("Revert",        self._revert,
-             "Reset this voice to its factory default and overwrite the saved version "
-             "in flash."),
-            ("Revert all",    self._revert_all,
-             "Reset every voice in the bank to factory defaults and wipe all saved "
-             "edits in flash."),
-            ("Copy to…",      self._copy_to,
-             "Duplicate this voice (current edits + name) into another bank slot "
-             "and save it to flash — the active voice is left untouched."),
-            ("Backup…",       self._backup,
-             "Read the whole bank off the synth and save it to a JSON file "
-             "(you confirm the filename at the end)."),
-            ("Restore…",      self._restore,
-             "Load a JSON bank backup and write it back to the synth, persisting each "
-             "voice to flash."),
-            ("Export…",       self.export,
-             "Export this voice as a paste-ready C++ Voice{…} block for src/voice.h."),
-        )
-        for label, slot, tip in buttons:
-            b = QtWidgets.QPushButton(label)
-            b.clicked.connect(slot)
-            b.setToolTip(info_tip(label.rstrip("…"), tip))
-            top.addWidget(b)
-        self.mon = QtWidgets.QCheckBox("mon")
+        top.addWidget(vsep())
+
+        # Action toolbar — compact icon+text buttons, grouped by feature with a
+        # vertical separator between groups: (label, slot, theme icon, style icon, tip).
+        groups = [
+            [("Refresh", self.refresh, "view-refresh", SP.SP_BrowserReload,
+              "Reload this voice's parameters from the synth — re-snapshots the saved "
+              "preset, discarding unsaved live edits.")],
+            [("Save to flash", self._save, "document-save", SP.SP_DriveHDIcon,
+              "Commit this voice (parameters + name) to its bank slot in QSPI flash. "
+              "Survives power-off."),
+             ("Copy to…", self._copy_to, "edit-copy", SP.SP_FileDialogNewFolder,
+              "Duplicate this voice (current edits + name) into another bank slot and "
+              "save it to flash — the active voice is left untouched."),
+             ("Revert", self._revert, "edit-undo", SP.SP_DialogResetButton,
+              "Reset this voice to its factory default and overwrite the saved version "
+              "in flash."),
+             ("Revert all", self._revert_all, "edit-clear", SP.SP_RestoreDefaultsButton,
+              "Reset every voice in the bank to factory defaults and wipe all saved "
+              "edits in flash.")],
+            [("Backup…", self._backup, "document-save-as", SP.SP_DialogSaveButton,
+              "Read the whole bank off the synth and save it to a JSON file "
+              "(you confirm the filename at the end)."),
+             ("Restore…", self._restore, "document-open", SP.SP_DialogOpenButton,
+              "Load a JSON bank backup and write it back to the synth, persisting each "
+              "voice to flash.")],
+            [("Export…", self.export, "text-x-generic", SP.SP_FileIcon,
+              "Export this voice as a paste-ready C++ Voice{…} block for src/voice.h.")],
+        ]
+        for gi, group in enumerate(groups):
+            if gi:
+                top.addWidget(vsep())
+            for label, slot, theme, sp, tip in group:
+                b = QtWidgets.QToolButton()
+                b.setText(label)
+                b.setIcon(icon(theme, sp))
+                b.setIconSize(QtCore.QSize(16, 16))
+                b.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+                b.setAutoRaise(True)
+                b.clicked.connect(slot)
+                b.setToolTip(info_tip(label.rstrip("…"), tip))
+                top.addWidget(b)
+
+        top.addSpacing(12)        # extra gap after the Export group …
+        top.addStretch(1)
+        top.addSpacing(12)        # … and before the mon toggle (holds even when
+        self.mon = QtWidgets.QCheckBox("mon")   # the window is narrow and the stretch collapses)
         self.mon.toggled.connect(self._toggle_mon)
         self.mon.setToolTip(info_tip(
             "mon", "Stream the synth's live status dashboard (touch position, "
             "pressure, audio params) into the log below."))
         top.addWidget(self.mon)
-        top.addStretch(1)
         root.addLayout(top)
 
         # ── Grouped field columns (see everything at once) ──
@@ -325,11 +395,14 @@ class Tuner(QtWidgets.QMainWindow):
         inner = QtWidgets.QWidget()
         NCOL = 3
         cols = [QtWidgets.QVBoxLayout() for _ in range(NCOL)]
+        for col in cols:
+            col.setContentsMargins(0, 0, 0, 0)
+            col.setSpacing(14)              # clear gap above each group title
         load = [0] * NCOL   # rough row count per column, for balancing
         for title, fields in schema.GROUPS:
-            # "ⓘ" in the title marks the section as documented; hovering it (or the
-            # box title) shows what the group is for.
-            box = QtWidgets.QGroupBox(f"{title}  ⓘ")
+            # A per-group icon + the title; the "ⓘ" marks the section as documented
+            # (hovering it, or the box title, shows what the group is for).
+            box = QtWidgets.QGroupBox(f"{GROUP_ICONS.get(title, '')}  {title}  ⓘ")
             box.setToolTip(info_tip(title, schema.GROUP_HELP.get(title, "")))
             gform = QtWidgets.QFormLayout(box)
             gform.setLabelAlignment(QtCore.Qt.AlignRight)
@@ -590,15 +663,20 @@ class Tuner(QtWidgets.QMainWindow):
         return True
 
     def export(self):
-        if not self._require_link():
-            return
-        kv = self.link.dump()
-        if not kv:
-            self.append_log("! no dump to export")
-            return
-        name = kv.get("name", "tuned").replace("-", "_").replace(" ", "_")
+        # Built straight from the on-screen controls — no device needed (the
+        # widgets already hold everything shown). log_freq_ratio is the one Voice
+        # field with no control (it's precomputed); derive it from the freq range.
+        kv = {f: row.value() for f, row in self.rows.items()}
+        try:
+            lo, hi = float(kv.get("freq_low", 0)), float(kv.get("freq_high", 0))
+            if lo > 0 and hi > 0:
+                kv["log_freq_ratio"] = f"{math.log(hi / lo):.6f}"
+        except ValueError:
+            pass
+        name = self.name.text().strip() or "tuned"
+        safe = name.replace("-", "_").replace(" ", "_")
         fn, _ = QtWidgets.QFileDialog.getSaveFileName(
-            self, "Export Voice", f"VOICE_{name.upper()}.h", "C++ header (*.h)")
+            self, "Export Voice", f"VOICE_{safe.upper()}.h", "C++ header (*.h)")
         if not fn:
             return
         with open(fn, "w") as f:
