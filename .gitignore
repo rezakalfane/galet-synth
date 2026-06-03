@@ -1,3 +1,6 @@
 .venv/
 __pycache__/
 *.pyc
+
+# PyInstaller macOS app build (tools/build_macapp.sh)
+/build-macapp/
