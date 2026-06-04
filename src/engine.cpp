@@ -1,6 +1,8 @@
 #include "engine.h"
 #include "persist.h"   // g_bank — the live, editable voice bank the engine plays
 #include "dev/sdram.h" // DSY_SDRAM_BSS — place the big effect buffers in SDRAM
+#include "usb_audio.h" // usb_audio_push — tap the output into the UAC2 capture ring
+#include "usb_glue.h"  // usb_task — pump the USB device stack at audio rate (see below)
 #include <string.h>    // memset — zero the NOLOAD SDRAM buffers at init
 
 using namespace daisy;
@@ -444,6 +446,14 @@ void AudioCallback(AudioHandle::InputBuffer,
         out[0][i] = sample;
         out[1][i] = sample;
 
+        // USB audio capture tap: float[-1,1] → int16, pushed to the UAC2 IN ring
+        // (no-op unless a host is streaming). Same signal you hear on the jack.
+        {
+            float s = sample; if(s > 1.0f) s = 1.0f; else if(s < -1.0f) s = -1.0f;
+            int16_t s16 = (int16_t)(s * 32767.0f);
+            usb_audio_push(s16, s16);
+        }
+
         // Advance phases
         s_phase1   += freq_vib*VOICE.osc1_ratio/sr;  if(s_phase1  >=1.0f)s_phase1  -=1.0f;
         s_phase2   += freq2   /sr;  if(s_phase2  >=1.0f)s_phase2  -=1.0f;
@@ -458,5 +468,15 @@ void AudioCallback(AudioHandle::InputBuffer,
         if(++pwm_counter >= PWM_LEVELS) pwm_counter = 0;
         bool desired = (pwm_counter < threshold);
         if(desired != led3_state){ led3.Write(desired); led3_state = desired; }
+    }
+
+    // Service the USB device stack from the audio callback (~12 kHz) at ~2 kHz, so
+    // the isochronous audio-IN endpoint is fed every USB frame — the control loop
+    // (~150 Hz) is far too slow and starves it (ring overruns → decimated audio).
+    // Bonus: this runs the capture ring's consumer (pre_load) in the SAME context
+    // as its producer (usb_audio_push above), so the ring is race-free.
+    {
+        static uint32_t usb_div = 0;
+        if(++usb_div >= 6) { usb_div = 0; usb_task(); }
     }
 }

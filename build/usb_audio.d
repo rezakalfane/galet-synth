@@ -1,4 +1,4 @@
-build/usb_glue.o: src/usb_glue.cpp \
+build/usb_audio.o: src/usb_audio.c \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h \
@@ -104,7 +104,7 @@ build/usb_glue.o: src/usb_glue.cpp \
  lib/tinyusb/src/common/tusb_fifo.h lib/tinyusb/src/device/usbd.h \
  lib/tinyusb/src/class/cdc/cdc_device.h lib/tinyusb/src/class/cdc/cdc.h \
  lib/tinyusb/src/class/audio/audio_device.h \
- lib/tinyusb/src/class/audio/audio.h src/usb_glue.h src/usb_audio.h
+ lib/tinyusb/src/class/audio/audio.h src/usb_audio.h
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h:
@@ -220,5 +220,4 @@ lib/tinyusb/src/class/cdc/cdc_device.h:
 lib/tinyusb/src/class/cdc/cdc.h:
 lib/tinyusb/src/class/audio/audio_device.h:
 lib/tinyusb/src/class/audio/audio.h:
-src/usb_glue.h:
 src/usb_audio.h:

@@ -1,4 +1,4 @@
-ARM GAS  /tmp/claude-502/cc3njuRc.s 			page 1
+ARM GAS  /tmp/claude-502/cc40nytP.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -26,47 +26,46 @@ ARM GAS  /tmp/claude-502/cc3njuRc.s 			page 1
   23              		.thumb
   24              		.thumb_func
   26              	tud_descriptor_device_cb:
-  27              	.LFB402:
+  27              	.LFB406:
   28              		.file 1 "src/usb_descriptors.c"
-   1:src/usb_descriptors.c **** // USB descriptors for GaletSynth — Phase 1: a single CDC ACM interface (the
-   2:src/usb_descriptors.c **** // VoiceLab serial link). Phase 2 makes this a composite CDC + UAC device.
-   3:src/usb_descriptors.c **** #include "tusb.h"
-   4:src/usb_descriptors.c **** #include <string.h>
-   5:src/usb_descriptors.c **** 
-   6:src/usb_descriptors.c **** #define USB_VID 0x0483          // STMicroelectronics (matches the old CDC enumeration)
-   7:src/usb_descriptors.c **** #define USB_PID 0x5740          // ST virtual COM port → macOS/Linux/iOS class driver
-   8:src/usb_descriptors.c **** #define USB_BCD 0x0200
-   9:src/usb_descriptors.c **** 
-  10:src/usb_descriptors.c **** // ── Device descriptor ───────────────────────�
-  11:src/usb_descriptors.c **** // IAD/misc class so a composite device (Phase 2) enumerates cleanly; fine for a
-  12:src/usb_descriptors.c **** // lone CDC too.
-  13:src/usb_descriptors.c **** static tusb_desc_device_t const desc_device = {
-  14:src/usb_descriptors.c ****     .bLength            = sizeof(tusb_desc_device_t),
-  15:src/usb_descriptors.c ****     .bDescriptorType    = TUSB_DESC_DEVICE,
-  16:src/usb_descriptors.c ****     .bcdUSB             = USB_BCD,
-  17:src/usb_descriptors.c ****     .bDeviceClass       = TUSB_CLASS_MISC,
-  18:src/usb_descriptors.c ****     .bDeviceSubClass    = MISC_SUBCLASS_COMMON,
-  19:src/usb_descriptors.c ****     .bDeviceProtocol    = MISC_PROTOCOL_IAD,
-  20:src/usb_descriptors.c ****     .bMaxPacketSize0    = CFG_TUD_ENDPOINT0_SIZE,
-  21:src/usb_descriptors.c ****     .idVendor           = USB_VID,
-  22:src/usb_descriptors.c ****     .idProduct          = USB_PID,
-  23:src/usb_descriptors.c ****     .bcdDevice          = 0x0100,
-  24:src/usb_descriptors.c ****     .iManufacturer      = 0x01,
-  25:src/usb_descriptors.c ****     .iProduct           = 0x02,
-  26:src/usb_descriptors.c ****     .iSerialNumber      = 0x03,
-  27:src/usb_descriptors.c ****     .bNumConfigurations = 0x01,
-  28:src/usb_descriptors.c **** };
-  29:src/usb_descriptors.c **** uint8_t const *tud_descriptor_device_cb(void) { return (uint8_t const *)&desc_device; }
-  29              		.loc 1 29 47 view -0
-ARM GAS  /tmp/claude-502/cc3njuRc.s 			page 2
-
-
+   1:src/usb_descriptors.c **** // USB descriptors for GaletSynth — Phase 2: a composite device with a CDC ACM
+   2:src/usb_descriptors.c **** // interface (the VoiceLab serial link) + a UAC2 stereo capture interface (the
+   3:src/usb_descriptors.c **** // soundcard input). Interfaces: CDC = 0,1 ; Audio Control = 2 ; Audio Streaming = 3.
+   4:src/usb_descriptors.c **** #include "tusb.h"
+   5:src/usb_descriptors.c **** #include <string.h>
+   6:src/usb_descriptors.c **** 
+   7:src/usb_descriptors.c **** #define USB_VID 0x0483          // STMicroelectronics
+   8:src/usb_descriptors.c **** #define USB_PID 0x5741          // bumped from the CDC-only 0x5740 (new descriptor set)
+   9:src/usb_descriptors.c **** #define USB_BCD 0x0200
+  10:src/usb_descriptors.c **** 
+  11:src/usb_descriptors.c **** // ── Device descriptor (IAD/misc so the composite enumerates cleanly) ────────
+  12:src/usb_descriptors.c **** static tusb_desc_device_t const desc_device = {
+  13:src/usb_descriptors.c ****     .bLength            = sizeof(tusb_desc_device_t),
+  14:src/usb_descriptors.c ****     .bDescriptorType    = TUSB_DESC_DEVICE,
+  15:src/usb_descriptors.c ****     .bcdUSB             = USB_BCD,
+  16:src/usb_descriptors.c ****     .bDeviceClass       = TUSB_CLASS_MISC,
+  17:src/usb_descriptors.c ****     .bDeviceSubClass    = MISC_SUBCLASS_COMMON,
+  18:src/usb_descriptors.c ****     .bDeviceProtocol    = MISC_PROTOCOL_IAD,
+  19:src/usb_descriptors.c ****     .bMaxPacketSize0    = CFG_TUD_ENDPOINT0_SIZE,
+  20:src/usb_descriptors.c ****     .idVendor           = USB_VID,
+  21:src/usb_descriptors.c ****     .idProduct          = USB_PID,
+  22:src/usb_descriptors.c ****     .bcdDevice          = 0x0100,
+  23:src/usb_descriptors.c ****     .iManufacturer      = 0x01,
+  24:src/usb_descriptors.c ****     .iProduct           = 0x02,
+  25:src/usb_descriptors.c ****     .iSerialNumber      = 0x03,
+  26:src/usb_descriptors.c ****     .bNumConfigurations = 0x01,
+  27:src/usb_descriptors.c **** };
+  28:src/usb_descriptors.c **** uint8_t const *tud_descriptor_device_cb(void) { return (uint8_t const *)&desc_device; }
+  29              		.loc 1 28 47 view -0
   30              		.cfi_startproc
+ARM GAS  /tmp/claude-502/cc40nytP.s 			page 2
+
+
   31              		@ args = 0, pretend = 0, frame = 0
   32              		@ frame_needed = 0, uses_anonymous_args = 0
   33              		@ link register save eliminated.
-  34              		.loc 1 29 49 view .LVU1
-  35              		.loc 1 29 87 is_stmt 0 view .LVU2
+  34              		.loc 1 28 49 view .LVU1
+  35              		.loc 1 28 87 is_stmt 0 view .LVU2
   36 0000 0048     		ldr	r0, .L3
   37 0002 7047     		bx	lr
   38              	.L4:
@@ -74,7 +73,7 @@ ARM GAS  /tmp/claude-502/cc3njuRc.s 			page 1
   40              	.L3:
   41 0004 00000000 		.word	.LANCHOR0
   42              		.cfi_endproc
-  43              	.LFE402:
+  43              	.LFE406:
   45              		.section	.text.tud_descriptor_configuration_cb,"ax",%progbits
   46              		.align	1
   47              		.p2align 2,,3
@@ -84,47 +83,73 @@ ARM GAS  /tmp/claude-502/cc3njuRc.s 			page 1
   51              		.thumb_func
   53              	tud_descriptor_configuration_cb:
   54              	.LVL0:
-  55              	.LFB403:
-  30:src/usb_descriptors.c **** 
-  31:src/usb_descriptors.c **** // ── Configuration descriptor ─────────────────────�
-  32:src/usb_descriptors.c **** enum { ITF_NUM_CDC = 0, ITF_NUM_CDC_DATA, ITF_NUM_TOTAL };
-  33:src/usb_descriptors.c **** 
-  34:src/usb_descriptors.c **** #define EPNUM_CDC_NOTIF 0x81
-  35:src/usb_descriptors.c **** #define EPNUM_CDC_OUT   0x02
-  36:src/usb_descriptors.c **** #define EPNUM_CDC_IN    0x82
-  37:src/usb_descriptors.c **** 
-  38:src/usb_descriptors.c **** #define CONFIG_TOTAL_LEN (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN)
-  39:src/usb_descriptors.c **** 
-  40:src/usb_descriptors.c **** static uint8_t const desc_fs_configuration[] = {
-  41:src/usb_descriptors.c ****     TUD_CONFIG_DESCRIPTOR(1, ITF_NUM_TOTAL, 0, CONFIG_TOTAL_LEN, 0x00, 100),
-  42:src/usb_descriptors.c ****     // CDC: interface, string idx 4, notify EP, notify size, data OUT/IN, EP size.
-  43:src/usb_descriptors.c ****     TUD_CDC_DESCRIPTOR(ITF_NUM_CDC, 4, EPNUM_CDC_NOTIF, 8, EPNUM_CDC_OUT, EPNUM_CDC_IN, 64),
-  44:src/usb_descriptors.c **** };
-  45:src/usb_descriptors.c **** uint8_t const *tud_descriptor_configuration_cb(uint8_t index) {
-  56              		.loc 1 45 63 is_stmt 1 view -0
+  55              	.LFB407:
+  29:src/usb_descriptors.c **** 
+  30:src/usb_descriptors.c **** // ── Stereo (two-channel) UAC2 mic descriptor — adapted from the 1-ch macro with
+  31:src/usb_descriptors.c **** //    a two-channel feature unit + 2 physical/logical channels. Entity IDs: input
+  32:src/usb_descriptors.c **** //    terminal 1, feature unit 2, output terminal 3, clock source 4. ──────────
+  33:src/usb_descriptors.c **** #define TUD_AUDIO_MIC_TWO_CH_DESCRIPTOR(_itfnum, _stridx, _nBytesPerSample, _nBitsUsedPerSample, _e
+  34:src/usb_descriptors.c ****     TUD_AUDIO_DESC_IAD(_itfnum, 0x02, 0x00), \
+  35:src/usb_descriptors.c ****     TUD_AUDIO_DESC_STD_AC(_itfnum, 0x00, _stridx), \
+  36:src/usb_descriptors.c ****     TUD_AUDIO_DESC_CS_AC(0x0200, AUDIO_FUNC_MICROPHONE, TUD_AUDIO_DESC_CLK_SRC_LEN+TUD_AUDIO_DESC_I
+  37:src/usb_descriptors.c ****     TUD_AUDIO_DESC_CLK_SRC(0x04, AUDIO_CLOCK_SOURCE_ATT_INT_FIX_CLK, (AUDIO_CTRL_R << AUDIO_CLOCK_S
+  38:src/usb_descriptors.c ****     TUD_AUDIO_DESC_INPUT_TERM(0x01, AUDIO_TERM_TYPE_IN_GENERIC_MIC, 0x03, 0x04, /*_nchannelslogical
+  39:src/usb_descriptors.c ****     TUD_AUDIO_DESC_OUTPUT_TERM(0x03, AUDIO_TERM_TYPE_USB_STREAMING, 0x01, 0x02, 0x04, 0x0000, 0x00)
+  40:src/usb_descriptors.c ****     TUD_AUDIO_DESC_FEATURE_UNIT_TWO_CHANNEL(0x02, 0x01, \
+  41:src/usb_descriptors.c ****         /*master*/ (AUDIO_CTRL_RW << AUDIO_FEATURE_UNIT_CTRL_MUTE_POS | AUDIO_CTRL_RW << AUDIO_FEAT
+  42:src/usb_descriptors.c ****         /*ch1*/    (AUDIO_CTRL_RW << AUDIO_FEATURE_UNIT_CTRL_MUTE_POS | AUDIO_CTRL_RW << AUDIO_FEAT
+  43:src/usb_descriptors.c ****         /*ch2*/    (AUDIO_CTRL_RW << AUDIO_FEATURE_UNIT_CTRL_MUTE_POS | AUDIO_CTRL_RW << AUDIO_FEAT
+  44:src/usb_descriptors.c ****     TUD_AUDIO_DESC_STD_AS_INT((uint8_t)((_itfnum)+1), 0x00, 0x00, 0x00), \
+  45:src/usb_descriptors.c ****     TUD_AUDIO_DESC_STD_AS_INT((uint8_t)((_itfnum)+1), 0x01, 0x01, 0x00), \
+  46:src/usb_descriptors.c ****     TUD_AUDIO_DESC_CS_AS_INT(0x03, AUDIO_CTRL_NONE, AUDIO_FORMAT_TYPE_I, AUDIO_DATA_FORMAT_TYPE_I_P
+  47:src/usb_descriptors.c ****     TUD_AUDIO_DESC_TYPE_I_FORMAT(_nBytesPerSample, _nBitsUsedPerSample), \
+  48:src/usb_descriptors.c ****     TUD_AUDIO_DESC_STD_AS_ISO_EP(_epin, (uint8_t)((uint8_t)TUSB_XFER_ISOCHRONOUS | (uint8_t)TUSB_IS
+  49:src/usb_descriptors.c ****     TUD_AUDIO_DESC_CS_AS_ISO_EP(AUDIO_CS_AS_ISO_DATA_EP_ATT_NON_MAX_PACKETS_OK, AUDIO_CTRL_NONE, AU
+  50:src/usb_descriptors.c **** 
+  51:src/usb_descriptors.c **** // ── Configuration descriptor (composite) ─────────────────�
+  52:src/usb_descriptors.c **** enum { ITF_NUM_CDC = 0, ITF_NUM_CDC_DATA, ITF_NUM_AUDIO_CONTROL, ITF_NUM_AUDIO_STREAMING, ITF_NUM_T
+  53:src/usb_descriptors.c **** 
+  54:src/usb_descriptors.c **** #define EPNUM_CDC_NOTIF 0x81
+  55:src/usb_descriptors.c **** #define EPNUM_CDC_OUT   0x02
+  56:src/usb_descriptors.c **** #define EPNUM_CDC_IN    0x82
+  57:src/usb_descriptors.c **** #define EPNUM_AUDIO_IN  0x83
+  58:src/usb_descriptors.c **** 
+  59:src/usb_descriptors.c **** #define CONFIG_TOTAL_LEN (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN + CFG_TUD_AUDIO_FUNC_1_DESC_LEN)
+  60:src/usb_descriptors.c **** 
+  61:src/usb_descriptors.c **** static uint8_t const desc_fs_configuration[] = {
+  62:src/usb_descriptors.c ****     TUD_CONFIG_DESCRIPTOR(1, ITF_NUM_TOTAL, 0, CONFIG_TOTAL_LEN, 0x00, 100),
+ARM GAS  /tmp/claude-502/cc40nytP.s 			page 3
+
+
+  63:src/usb_descriptors.c ****     // CDC: comm interface, string idx 4, notify EP, notify size, data OUT/IN, EP size.
+  64:src/usb_descriptors.c ****     TUD_CDC_DESCRIPTOR(ITF_NUM_CDC, 4, EPNUM_CDC_NOTIF, 8, EPNUM_CDC_OUT, EPNUM_CDC_IN, 64),
+  65:src/usb_descriptors.c ****     // UAC2 stereo capture: control interface, string idx 5, 16-bit/16-bit, IN EP.
+  66:src/usb_descriptors.c ****     TUD_AUDIO_MIC_TWO_CH_DESCRIPTOR(ITF_NUM_AUDIO_CONTROL, 5,
+  67:src/usb_descriptors.c ****         CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_TX, CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_TX * 8,
+  68:src/usb_descriptors.c ****         EPNUM_AUDIO_IN, CFG_TUD_AUDIO_EP_SZ_IN),
+  69:src/usb_descriptors.c **** };
+  70:src/usb_descriptors.c **** uint8_t const *tud_descriptor_configuration_cb(uint8_t index) {
+  56              		.loc 1 70 63 is_stmt 1 view -0
   57              		.cfi_startproc
   58              		@ args = 0, pretend = 0, frame = 0
   59              		@ frame_needed = 0, uses_anonymous_args = 0
   60              		@ link register save eliminated.
-  46:src/usb_descriptors.c ****     (void)index;
-  61              		.loc 1 46 5 view .LVU4
-  47:src/usb_descriptors.c ****     return desc_fs_configuration;
-  62              		.loc 1 47 5 view .LVU5
-  48:src/usb_descriptors.c **** }
-  63              		.loc 1 48 1 is_stmt 0 view .LVU6
+  71:src/usb_descriptors.c ****     (void)index;
+  61              		.loc 1 71 5 view .LVU4
+  72:src/usb_descriptors.c ****     return desc_fs_configuration;
+  62              		.loc 1 72 5 view .LVU5
+  73:src/usb_descriptors.c **** }
+  63              		.loc 1 73 1 is_stmt 0 view .LVU6
   64 0000 0048     		ldr	r0, .L6
   65              	.LVL1:
-  66              		.loc 1 48 1 view .LVU7
+  66              		.loc 1 73 1 view .LVU7
   67 0002 7047     		bx	lr
   68              	.L7:
   69              		.align	2
-ARM GAS  /tmp/claude-502/cc3njuRc.s 			page 3
-
-
   70              	.L6:
   71 0004 00000000 		.word	.LANCHOR1
   72              		.cfi_endproc
-  73              	.LFE403:
+  73              	.LFE407:
   75              		.section	.text.tud_descriptor_string_cb,"ax",%progbits
   76              		.align	1
   77              		.p2align 2,,3
@@ -134,194 +159,195 @@ ARM GAS  /tmp/claude-502/cc3njuRc.s 			page 1
   81              		.thumb_func
   83              	tud_descriptor_string_cb:
   84              	.LVL2:
-  85              	.LFB404:
-  49:src/usb_descriptors.c **** 
-  50:src/usb_descriptors.c **** // ── String descriptors ───────────────────────�
-  51:src/usb_descriptors.c **** static char const *string_desc_arr[] = {
-  52:src/usb_descriptors.c ****     (const char[]){0x09, 0x04},   // 0: supported language = English (0x0409)
-  53:src/usb_descriptors.c ****     "GaletSynth",                 // 1: Manufacturer
-  54:src/usb_descriptors.c ****     "GaletSynth Voice Tuner",     // 2: Product
-  55:src/usb_descriptors.c ****     "GS-0001",                    // 3: Serial number
-  56:src/usb_descriptors.c ****     "GaletSynth CDC",             // 4: CDC interface
-  57:src/usb_descriptors.c **** };
-  58:src/usb_descriptors.c **** static uint16_t _desc_str[32];
-  59:src/usb_descriptors.c **** 
-  60:src/usb_descriptors.c **** uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid) {
-  86              		.loc 1 60 74 is_stmt 1 view -0
+  85              	.LFB408:
+  74:src/usb_descriptors.c **** 
+  75:src/usb_descriptors.c **** // ── String descriptors ───────────────────────�
+  76:src/usb_descriptors.c **** static char const *string_desc_arr[] = {
+  77:src/usb_descriptors.c ****     (const char[]){0x09, 0x04},   // 0: language = English (0x0409)
+  78:src/usb_descriptors.c ****     "GaletSynth",                 // 1: Manufacturer
+  79:src/usb_descriptors.c ****     "GaletSynth Voice Tuner",     // 2: Product
+  80:src/usb_descriptors.c ****     "GS-0001",                    // 3: Serial number
+  81:src/usb_descriptors.c ****     "GaletSynth CDC",             // 4: CDC interface
+  82:src/usb_descriptors.c ****     "GaletSynth Audio",           // 5: Audio interface
+  83:src/usb_descriptors.c **** };
+  84:src/usb_descriptors.c **** static uint16_t _desc_str[32];
+  85:src/usb_descriptors.c **** 
+  86:src/usb_descriptors.c **** uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid) {
+  86              		.loc 1 86 74 is_stmt 1 view -0
   87              		.cfi_startproc
   88              		@ args = 0, pretend = 0, frame = 0
   89              		@ frame_needed = 0, uses_anonymous_args = 0
-  61:src/usb_descriptors.c ****     (void)langid;
-  90              		.loc 1 61 5 view .LVU9
-  62:src/usb_descriptors.c ****     uint8_t chr_count;
-  91              		.loc 1 62 5 view .LVU10
-  63:src/usb_descriptors.c ****     if(index == 0) {
-  92              		.loc 1 63 5 view .LVU11
-  60:src/usb_descriptors.c ****     (void)langid;
-  93              		.loc 1 60 74 is_stmt 0 view .LVU12
+  87:src/usb_descriptors.c ****     (void)langid;
+ARM GAS  /tmp/claude-502/cc40nytP.s 			page 4
+
+
+  90              		.loc 1 87 5 view .LVU9
+  88:src/usb_descriptors.c ****     uint8_t chr_count;
+  91              		.loc 1 88 5 view .LVU10
+  89:src/usb_descriptors.c ****     if(index == 0) {
+  92              		.loc 1 89 5 view .LVU11
+  86:src/usb_descriptors.c ****     (void)langid;
+  93              		.loc 1 86 74 is_stmt 0 view .LVU12
   94 0000 38B5     		push	{r3, r4, r5, lr}
   95              		.cfi_def_cfa_offset 16
   96              		.cfi_offset 3, -16
   97              		.cfi_offset 4, -12
   98              		.cfi_offset 5, -8
   99              		.cfi_offset 14, -4
- 100              		.loc 1 63 7 view .LVU13
+ 100              		.loc 1 89 7 view .LVU13
  101 0002 40B9     		cbnz	r0, .L9
-  64:src/usb_descriptors.c ****         memcpy(&_desc_str[1], string_desc_arr[0], 2);
- 102              		.loc 1 64 9 is_stmt 1 view .LVU14
+  90:src/usb_descriptors.c ****         memcpy(&_desc_str[1], string_desc_arr[0], 2);
+ 102              		.loc 1 90 9 is_stmt 1 view .LVU14
  103 0004 184D     		ldr	r5, .L17
  104 0006 40F20942 		movw	r2, #1033
  105 000a 4FF44173 		mov	r3, #772
  106 000e 6A80     		strh	r2, [r5, #2]	@ movhi
-  65:src/usb_descriptors.c ****         chr_count = 1;
- 107              		.loc 1 65 9 view .LVU15
+  91:src/usb_descriptors.c ****         chr_count = 1;
+ 107              		.loc 1 91 9 view .LVU15
  108              	.LVL3:
  109              	.L10:
-  66:src/usb_descriptors.c ****     } else {
-ARM GAS  /tmp/claude-502/cc3njuRc.s 			page 4
-
-
-  67:src/usb_descriptors.c ****         if(index >= sizeof(string_desc_arr) / sizeof(string_desc_arr[0])) return NULL;
-  68:src/usb_descriptors.c ****         const char *str = string_desc_arr[index];
-  69:src/usb_descriptors.c ****         chr_count = (uint8_t)strlen(str);
-  70:src/usb_descriptors.c ****         if(chr_count > 31) chr_count = 31;
-  71:src/usb_descriptors.c ****         for(uint8_t i = 0; i < chr_count; i++) _desc_str[1 + i] = str[i];
-  72:src/usb_descriptors.c ****     }
-  73:src/usb_descriptors.c ****     _desc_str[0] = (uint16_t)((TUSB_DESC_STRING << 8) | (2 * chr_count + 2));
- 110              		.loc 1 73 5 view .LVU16
-  74:src/usb_descriptors.c ****     return _desc_str;
- 111              		.loc 1 74 12 is_stmt 0 view .LVU17
+  92:src/usb_descriptors.c ****     } else {
+  93:src/usb_descriptors.c ****         if(index >= sizeof(string_desc_arr) / sizeof(string_desc_arr[0])) return NULL;
+  94:src/usb_descriptors.c ****         const char *str = string_desc_arr[index];
+  95:src/usb_descriptors.c ****         chr_count = (uint8_t)strlen(str);
+  96:src/usb_descriptors.c ****         if(chr_count > 31) chr_count = 31;
+  97:src/usb_descriptors.c ****         for(uint8_t i = 0; i < chr_count; i++) _desc_str[1 + i] = str[i];
+  98:src/usb_descriptors.c ****     }
+  99:src/usb_descriptors.c ****     _desc_str[0] = (uint16_t)((TUSB_DESC_STRING << 8) | (2 * chr_count + 2));
+ 110              		.loc 1 99 5 view .LVU16
+ 100:src/usb_descriptors.c ****     return _desc_str;
+ 111              		.loc 1 100 12 is_stmt 0 view .LVU17
  112 0010 1548     		ldr	r0, .L17
-  73:src/usb_descriptors.c ****     return _desc_str;
- 113              		.loc 1 73 18 view .LVU18
+  99:src/usb_descriptors.c ****     return _desc_str;
+ 113              		.loc 1 99 18 view .LVU18
  114 0012 2B80     		strh	r3, [r5]	@ movhi
- 115              		.loc 1 74 5 is_stmt 1 view .LVU19
+ 115              		.loc 1 100 5 is_stmt 1 view .LVU19
  116              	.L8:
-  75:src/usb_descriptors.c **** }
- 117              		.loc 1 75 1 is_stmt 0 view .LVU20
+ 101:src/usb_descriptors.c **** }
+ 117              		.loc 1 101 1 is_stmt 0 view .LVU20
  118 0014 38BD     		pop	{r3, r4, r5, pc}
  119              	.LVL4:
  120              	.L9:
  121              	.LBB2:
-  67:src/usb_descriptors.c ****         const char *str = string_desc_arr[index];
- 122              		.loc 1 67 9 is_stmt 1 view .LVU21
-  67:src/usb_descriptors.c ****         const char *str = string_desc_arr[index];
- 123              		.loc 1 67 11 is_stmt 0 view .LVU22
- 124 0016 0428     		cmp	r0, #4
+  93:src/usb_descriptors.c ****         const char *str = string_desc_arr[index];
+ 122              		.loc 1 93 9 is_stmt 1 view .LVU21
+  93:src/usb_descriptors.c ****         const char *str = string_desc_arr[index];
+ 123              		.loc 1 93 11 is_stmt 0 view .LVU22
+ 124 0016 0528     		cmp	r0, #5
  125 0018 1FD8     		bhi	.L13
-  68:src/usb_descriptors.c ****         chr_count = (uint8_t)strlen(str);
- 126              		.loc 1 68 9 is_stmt 1 view .LVU23
-  68:src/usb_descriptors.c ****         chr_count = (uint8_t)strlen(str);
- 127              		.loc 1 68 21 is_stmt 0 view .LVU24
+  94:src/usb_descriptors.c ****         chr_count = (uint8_t)strlen(str);
+ 126              		.loc 1 94 9 is_stmt 1 view .LVU23
+  94:src/usb_descriptors.c ****         chr_count = (uint8_t)strlen(str);
+ARM GAS  /tmp/claude-502/cc40nytP.s 			page 5
+
+
+ 127              		.loc 1 94 21 is_stmt 0 view .LVU24
  128 001a 144B     		ldr	r3, .L17+4
  129 001c 53F82040 		ldr	r4, [r3, r0, lsl #2]
  130              	.LVL5:
-  69:src/usb_descriptors.c ****         if(chr_count > 31) chr_count = 31;
- 131              		.loc 1 69 9 is_stmt 1 view .LVU25
-  69:src/usb_descriptors.c ****         if(chr_count > 31) chr_count = 31;
- 132              		.loc 1 69 30 is_stmt 0 view .LVU26
+  95:src/usb_descriptors.c ****         if(chr_count > 31) chr_count = 31;
+ 131              		.loc 1 95 9 is_stmt 1 view .LVU25
+  95:src/usb_descriptors.c ****         if(chr_count > 31) chr_count = 31;
+ 132              		.loc 1 95 30 is_stmt 0 view .LVU26
  133 0020 2046     		mov	r0, r4
  134              	.LVL6:
-  69:src/usb_descriptors.c ****         if(chr_count > 31) chr_count = 31;
- 135              		.loc 1 69 30 view .LVU27
+  95:src/usb_descriptors.c ****         if(chr_count > 31) chr_count = 31;
+ 135              		.loc 1 95 30 view .LVU27
  136 0022 FFF7FEFF 		bl	strlen
  137              	.LVL7:
-  69:src/usb_descriptors.c ****         if(chr_count > 31) chr_count = 31;
- 138              		.loc 1 69 19 view .LVU28
+  95:src/usb_descriptors.c ****         if(chr_count > 31) chr_count = 31;
+ 138              		.loc 1 95 19 view .LVU28
  139 0026 C0B2     		uxtb	r0, r0
  140              	.LVL8:
-  70:src/usb_descriptors.c ****         for(uint8_t i = 0; i < chr_count; i++) _desc_str[1 + i] = str[i];
- 141              		.loc 1 70 9 is_stmt 1 view .LVU29
+  96:src/usb_descriptors.c ****         for(uint8_t i = 0; i < chr_count; i++) _desc_str[1 + i] = str[i];
+ 141              		.loc 1 96 9 is_stmt 1 view .LVU29
  142 0028 1F28     		cmp	r0, #31
  143 002a 0246     		mov	r2, r0
  144 002c 28BF     		it	cs
  145 002e 1F22     		movcs	r2, #31
  146              	.LVL9:
-  71:src/usb_descriptors.c ****     }
-ARM GAS  /tmp/claude-502/cc3njuRc.s 			page 5
-
-
- 147              		.loc 1 71 9 view .LVU30
+  97:src/usb_descriptors.c ****     }
+ 147              		.loc 1 97 9 view .LVU30
  148              	.LBB3:
-  71:src/usb_descriptors.c ****     }
- 149              		.loc 1 71 13 view .LVU31
-  71:src/usb_descriptors.c ****     }
- 150              		.loc 1 71 28 view .LVU32
-  71:src/usb_descriptors.c ****     }
- 151              		.loc 1 71 9 is_stmt 0 view .LVU33
+  97:src/usb_descriptors.c ****     }
+ 149              		.loc 1 97 13 view .LVU31
+  97:src/usb_descriptors.c ****     }
+ 150              		.loc 1 97 28 view .LVU32
+  97:src/usb_descriptors.c ****     }
+ 151              		.loc 1 97 9 is_stmt 0 view .LVU33
  152 0030 A8B1     		cbz	r0, .L14
  153 0032 0D4D     		ldr	r5, .L17
  154 0034 601E     		subs	r0, r4, #1
-  71:src/usb_descriptors.c ****     }
- 155              		.loc 1 71 21 view .LVU34
+  97:src/usb_descriptors.c ****     }
+ 155              		.loc 1 97 21 view .LVU34
  156 0036 0023     		movs	r3, #0
  157 0038 2946     		mov	r1, r5
  158              	.LVL10:
  159              	.L12:
-  71:src/usb_descriptors.c ****     }
- 160              		.loc 1 71 48 is_stmt 1 discriminator 3 view .LVU35
+  97:src/usb_descriptors.c ****     }
+ 160              		.loc 1 97 48 is_stmt 1 discriminator 3 view .LVU35
  161 003a 0133     		adds	r3, r3, #1
  162              	.LVL11:
-  71:src/usb_descriptors.c ****     }
- 163              		.loc 1 71 70 is_stmt 0 discriminator 3 view .LVU36
+  97:src/usb_descriptors.c ****     }
+ 163              		.loc 1 97 70 is_stmt 0 discriminator 3 view .LVU36
  164 003c 10F8014F 		ldrb	r4, [r0, #1]!	@ zero_extendqisi2
  165 0040 DBB2     		uxtb	r3, r3
  166 0042 21F8024F 		strh	r4, [r1, #2]!	@ movhi
-  71:src/usb_descriptors.c ****     }
- 167              		.loc 1 71 43 is_stmt 1 discriminator 3 view .LVU37
+  97:src/usb_descriptors.c ****     }
+ 167              		.loc 1 97 43 is_stmt 1 discriminator 3 view .LVU37
  168              	.LVL12:
-  71:src/usb_descriptors.c ****     }
- 169              		.loc 1 71 28 discriminator 3 view .LVU38
-  71:src/usb_descriptors.c ****     }
- 170              		.loc 1 71 9 is_stmt 0 discriminator 3 view .LVU39
+  97:src/usb_descriptors.c ****     }
+ 169              		.loc 1 97 28 discriminator 3 view .LVU38
+ARM GAS  /tmp/claude-502/cc40nytP.s 			page 6
+
+
+  97:src/usb_descriptors.c ****     }
+ 170              		.loc 1 97 9 is_stmt 0 discriminator 3 view .LVU39
  171 0046 9A42     		cmp	r2, r3
  172 0048 F7D8     		bhi	.L12
  173              	.LBE3:
  174              	.LBE2:
-  73:src/usb_descriptors.c ****     return _desc_str;
- 175              		.loc 1 73 72 view .LVU40
+  99:src/usb_descriptors.c ****     return _desc_str;
+ 175              		.loc 1 99 72 view .LVU40
  176 004a 531C     		adds	r3, r2, #1
  177              	.LVL13:
-  74:src/usb_descriptors.c **** }
- 178              		.loc 1 74 12 view .LVU41
+ 100:src/usb_descriptors.c **** }
+ 178              		.loc 1 100 12 view .LVU41
  179 004c 0648     		ldr	r0, .L17
-  73:src/usb_descriptors.c ****     return _desc_str;
- 180              		.loc 1 73 72 view .LVU42
+  99:src/usb_descriptors.c ****     return _desc_str;
+ 180              		.loc 1 99 72 view .LVU42
  181 004e DBB2     		uxtb	r3, r3
  182 0050 5B00     		lsls	r3, r3, #1
-  73:src/usb_descriptors.c ****     return _desc_str;
- 183              		.loc 1 73 20 view .LVU43
+  99:src/usb_descriptors.c ****     return _desc_str;
+ 183              		.loc 1 99 20 view .LVU43
  184 0052 43F44073 		orr	r3, r3, #768
  185              	.LVL14:
-  73:src/usb_descriptors.c ****     return _desc_str;
- 186              		.loc 1 73 5 is_stmt 1 view .LVU44
-  73:src/usb_descriptors.c ****     return _desc_str;
- 187              		.loc 1 73 18 is_stmt 0 view .LVU45
+  99:src/usb_descriptors.c ****     return _desc_str;
+ 186              		.loc 1 99 5 is_stmt 1 view .LVU44
+  99:src/usb_descriptors.c ****     return _desc_str;
+ 187              		.loc 1 99 18 is_stmt 0 view .LVU45
  188 0056 2B80     		strh	r3, [r5]	@ movhi
-ARM GAS  /tmp/claude-502/cc3njuRc.s 			page 6
-
-
-  74:src/usb_descriptors.c **** }
- 189              		.loc 1 74 5 is_stmt 1 view .LVU46
+ 100:src/usb_descriptors.c **** }
+ 189              		.loc 1 100 5 is_stmt 1 view .LVU46
  190 0058 DCE7     		b	.L8
  191              	.LVL15:
  192              	.L13:
  193              	.LBB5:
-  67:src/usb_descriptors.c ****         const char *str = string_desc_arr[index];
- 194              		.loc 1 67 82 is_stmt 0 view .LVU47
+  93:src/usb_descriptors.c ****         const char *str = string_desc_arr[index];
+ 194              		.loc 1 93 82 is_stmt 0 view .LVU47
  195 005a 0020     		movs	r0, #0
  196              	.LVL16:
-  67:src/usb_descriptors.c ****         const char *str = string_desc_arr[index];
- 197              		.loc 1 67 82 view .LVU48
+  93:src/usb_descriptors.c ****         const char *str = string_desc_arr[index];
+ 197              		.loc 1 93 82 view .LVU48
  198              	.LBE5:
- 199              		.loc 1 75 1 view .LVU49
+ 199              		.loc 1 101 1 view .LVU49
  200 005c 38BD     		pop	{r3, r4, r5, pc}
  201              	.LVL17:
  202              	.L14:
  203              	.LBB6:
  204              	.LBB4:
-  71:src/usb_descriptors.c ****     }
- 205              		.loc 1 71 9 view .LVU50
+  97:src/usb_descriptors.c ****     }
+ 205              		.loc 1 97 9 view .LVU50
  206 005e 40F20233 		movw	r3, #770
  207 0062 014D     		ldr	r5, .L17
  208 0064 D4E7     		b	.L10
@@ -332,8 +358,11 @@ ARM GAS  /tmp/claude-502/cc3njuRc.s 			page 1
  213 006c 00000000 		.word	.LANCHOR3
  214              	.LBE4:
  215              	.LBE6:
+ARM GAS  /tmp/claude-502/cc40nytP.s 			page 7
+
+
  216              		.cfi_endproc
- 217              	.LFE404:
+ 217              	.LFE408:
  219              		.section	.rodata.str1.4,"aMS",%progbits,1
  220              		.align	2
  221              	.LC0:
@@ -357,110 +386,158 @@ ARM GAS  /tmp/claude-502/cc3njuRc.s 			page 1
  231      7453796E 
  231      74682043 
  231      444300
- 232              		.section	.bss._desc_str,"aw",%nobits
-ARM GAS  /tmp/claude-502/cc3njuRc.s 			page 7
+ 232 003b 00       		.align	2
+ 233              	.LC4:
+ 234 003c 47616C65 		.ascii	"GaletSynth Audio\000"
+ 234      7453796E 
+ 234      74682041 
+ 234      7564696F 
+ 234      00
+ 235              		.section	.bss._desc_str,"aw",%nobits
+ 236              		.align	2
+ 237              		.set	.LANCHOR2,. + 0
+ 240              	_desc_str:
+ 241 0000 00000000 		.space	64
+ 241      00000000 
+ 241      00000000 
+ 241      00000000 
+ 241      00000000 
+ 242              		.section	.rodata.__compound_literal.0,"a"
+ 243              		.align	2
+ 246              	__compound_literal.0:
+ 247 0000 09       		.byte	9
+ 248 0001 04       		.byte	4
+ 249              		.section	.rodata.desc_device,"a"
+ 250              		.align	2
+ 251              		.set	.LANCHOR0,. + 0
+ 254              	desc_device:
+ 255 0000 12       		.byte	18
+ 256 0001 01       		.byte	1
+ 257 0002 0002     		.short	512
+ 258 0004 EF       		.byte	-17
+ 259 0005 02       		.byte	2
+ 260 0006 01       		.byte	1
+ 261 0007 40       		.byte	64
+ARM GAS  /tmp/claude-502/cc40nytP.s 			page 8
 
 
- 233              		.align	2
- 234              		.set	.LANCHOR2,. + 0
- 237              	_desc_str:
- 238 0000 00000000 		.space	64
- 238      00000000 
- 238      00000000 
- 238      00000000 
- 238      00000000 
- 239              		.section	.rodata.__compound_literal.0,"a"
- 240              		.align	2
- 243              	__compound_literal.0:
- 244 0000 09       		.byte	9
- 245 0001 04       		.byte	4
- 246              		.section	.rodata.desc_device,"a"
- 247              		.align	2
- 248              		.set	.LANCHOR0,. + 0
- 251              	desc_device:
- 252 0000 12       		.byte	18
- 253 0001 01       		.byte	1
- 254 0002 0002     		.short	512
- 255 0004 EF       		.byte	-17
- 256 0005 02       		.byte	2
- 257 0006 01       		.byte	1
- 258 0007 40       		.byte	64
- 259 0008 8304     		.short	1155
- 260 000a 4057     		.short	22336
- 261 000c 0001     		.short	256
- 262 000e 01       		.byte	1
- 263 000f 02       		.byte	2
- 264 0010 03       		.byte	3
- 265 0011 01       		.byte	1
- 266              		.section	.rodata.desc_fs_configuration,"a"
- 267              		.align	2
- 268              		.set	.LANCHOR1,. + 0
- 271              	desc_fs_configuration:
- 272 0000 09024B00 		.ascii	"\011\002K\000\002\001\000\2002\010\013\000\002\002\002"
- 272      02010080 
- 272      32080B00 
- 272      020202
- 273 000f 00000904 		.ascii	"\000\000\011\004\000\000\001\002\002\000\004\005$\000"
- 273      00000102 
- 273      02000405 
- 273      2400
- 274 001d 20010524 		.ascii	" \001\005$\001\000\001\004$\002\006\005$\006\000\001"
- 274      01000104 
- 274      24020605 
- 274      24060001 
- 275 002d 07058103 		.ascii	"\007\005\201\003\010\000\020\011\004\001\000\002\012"
- 275      08001009 
- 275      04010002 
- 275      0A
- 276 003a 00000007 		.ascii	"\000\000\000\007\005\002\002@\000\000\007\005\202\002"
- 276      05020240 
- 276      00000705 
- 276      8202
- 277 0048 400000   		.ascii	"@\000\000"
- 278              		.section	.rodata.string_desc_arr,"a"
-ARM GAS  /tmp/claude-502/cc3njuRc.s 			page 8
+ 262 0008 8304     		.short	1155
+ 263 000a 4157     		.short	22337
+ 264 000c 0001     		.short	256
+ 265 000e 01       		.byte	1
+ 266 000f 02       		.byte	2
+ 267 0010 03       		.byte	3
+ 268 0011 01       		.byte	1
+ 269              		.section	.rodata.desc_fs_configuration,"a"
+ 270              		.align	2
+ 271              		.set	.LANCHOR1,. + 0
+ 274              	desc_fs_configuration:
+ 275 0000 0902D300 		.ascii	"\011\002\323\000\004\001\000\2002\010\013\000\002\002"
+ 275      04010080 
+ 275      32080B00 
+ 275      0202
+ 276 000e 02000009 		.ascii	"\002\000\000\011\004\000\000\001\002\002\000\004\005"
+ 276      04000001 
+ 276      02020004 
+ 276      05
+ 277 001b 24002001 		.ascii	"$\000 \001\005$\001\000\001\004$\002\006\005$\006\000"
+ 277      05240100 
+ 277      01042402 
+ 277      06052406 
+ 277      00
+ 278 002c 01070581 		.ascii	"\001\007\005\201\003\010\000\020\011\004\001\000\002"
+ 278      03080010 
+ 278      09040100 
+ 278      02
+ 279 0039 0A000000 		.ascii	"\012\000\000\000\007\005\002\002@\000\000\007\005\202"
+ 279      07050202 
+ 279      40000007 
+ 279      0582
+ 280 0047 02400000 		.ascii	"\002@\000\000\010\013\002\002\001\000 \000\011\004\002"
+ 280      080B0202 
+ 280      01002000 
+ 280      090402
+ 281 0056 00000101 		.ascii	"\000\000\001\001 \005\011$\001\000\002\003@\000\000"
+ 281      20050924 
+ 281      01000203 
+ 281      400000
+ 282 0065 08240A04 		.ascii	"\010$\012\004\001\001\001\000\021$\002\001\001\002\003"
+ 282      01010100 
+ 282      11240201 
+ 282      010203
+ 283 0074 04020000 		.ascii	"\004\002\000\000\000\000\000\004\000\000\014$\003\003"
+ 283      00000004 
+ 283      00000C24 
+ 283      0303
+ 284 0082 01010102 		.ascii	"\001\001\001\002\004\000\000\000\022$\006\002\001\017"
+ 284      04000000 
+ 284      12240602 
+ 284      010F
+ 285 0090 0000000F 		.ascii	"\000\000\000\017\000\000\000\017\000\000\000\000\011"
+ 285      0000000F 
+ 285      00000000 
+ 285      09
+ 286 009d 04030000 		.ascii	"\004\003\000\000\001\002 \000\011\004\003\001\001\001"
+ARM GAS  /tmp/claude-502/cc40nytP.s 			page 9
 
 
- 279              		.align	2
- 280              		.set	.LANCHOR3,. + 0
- 283              	string_desc_arr:
- 284 0000 00000000 		.word	__compound_literal.0
- 285 0004 00000000 		.word	.LC0
- 286 0008 0C000000 		.word	.LC1
- 287 000c 24000000 		.word	.LC2
- 288 0010 2C000000 		.word	.LC3
- 289              		.text
- 290              	.Letext0:
- 291              		.file 2 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/machine/_default_types.h"
- 292              		.file 3 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/_stdint.h"
- 293              		.file 4 "lib/tinyusb/src/common/tusb_types.h"
- 294              		.file 5 "lib/tinyusb/src/class/cdc/cdc.h"
- 295              		.file 6 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/string.h"
-ARM GAS  /tmp/claude-502/cc3njuRc.s 			page 9
+ 286      01022000 
+ 286      09040301 
+ 286      0101
+ 287 00ab 02200010 		.ascii	"\002 \000\020$\001\003\000\001\001\000\000\000\002\000"
+ 287      24010300 
+ 287      01010000 
+ 287      000200
+ 288 00ba 00000000 		.ascii	"\000\000\000\000\006$\002\001\002\020\007\005\203\005"
+ 288      06240201 
+ 288      02100705 
+ 288      8305
+ 289 00c8 C4000108 		.ascii	"\304\000\001\010%\001\000\000\000\000\000"
+ 289      25010000 
+ 289      000000
+ 290              		.section	.rodata.string_desc_arr,"a"
+ 291              		.align	2
+ 292              		.set	.LANCHOR3,. + 0
+ 295              	string_desc_arr:
+ 296 0000 00000000 		.word	__compound_literal.0
+ 297 0004 00000000 		.word	.LC0
+ 298 0008 0C000000 		.word	.LC1
+ 299 000c 24000000 		.word	.LC2
+ 300 0010 2C000000 		.word	.LC3
+ 301 0014 3C000000 		.word	.LC4
+ 302              		.text
+ 303              	.Letext0:
+ 304              		.file 2 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/machine/_default_types.h"
+ 305              		.file 3 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/_stdint.h"
+ 306              		.file 4 "lib/tinyusb/src/common/tusb_types.h"
+ 307              		.file 5 "lib/tinyusb/src/class/cdc/cdc.h"
+ 308              		.file 6 "lib/tinyusb/src/class/audio/audio.h"
+ 309              		.file 7 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/string.h"
+ARM GAS  /tmp/claude-502/cc40nytP.s 			page 10
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 usb_descriptors.c
-/tmp/claude-502/cc3njuRc.s:19     .text.tud_descriptor_device_cb:0000000000000000 $t
-/tmp/claude-502/cc3njuRc.s:26     .text.tud_descriptor_device_cb:0000000000000000 tud_descriptor_device_cb
-/tmp/claude-502/cc3njuRc.s:41     .text.tud_descriptor_device_cb:0000000000000004 $d
-/tmp/claude-502/cc3njuRc.s:46     .text.tud_descriptor_configuration_cb:0000000000000000 $t
-/tmp/claude-502/cc3njuRc.s:53     .text.tud_descriptor_configuration_cb:0000000000000000 tud_descriptor_configuration_cb
-/tmp/claude-502/cc3njuRc.s:71     .text.tud_descriptor_configuration_cb:0000000000000004 $d
-/tmp/claude-502/cc3njuRc.s:76     .text.tud_descriptor_string_cb:0000000000000000 $t
-/tmp/claude-502/cc3njuRc.s:83     .text.tud_descriptor_string_cb:0000000000000000 tud_descriptor_string_cb
-/tmp/claude-502/cc3njuRc.s:212    .text.tud_descriptor_string_cb:0000000000000068 $d
-/tmp/claude-502/cc3njuRc.s:220    .rodata.str1.4:0000000000000000 $d
-/tmp/claude-502/cc3njuRc.s:233    .bss._desc_str:0000000000000000 $d
-/tmp/claude-502/cc3njuRc.s:237    .bss._desc_str:0000000000000000 _desc_str
-/tmp/claude-502/cc3njuRc.s:240    .rodata.__compound_literal.0:0000000000000000 $d
-/tmp/claude-502/cc3njuRc.s:243    .rodata.__compound_literal.0:0000000000000000 __compound_literal.0
-/tmp/claude-502/cc3njuRc.s:247    .rodata.desc_device:0000000000000000 $d
-/tmp/claude-502/cc3njuRc.s:251    .rodata.desc_device:0000000000000000 desc_device
-/tmp/claude-502/cc3njuRc.s:267    .rodata.desc_fs_configuration:0000000000000000 $d
-/tmp/claude-502/cc3njuRc.s:271    .rodata.desc_fs_configuration:0000000000000000 desc_fs_configuration
-/tmp/claude-502/cc3njuRc.s:279    .rodata.string_desc_arr:0000000000000000 $d
-/tmp/claude-502/cc3njuRc.s:283    .rodata.string_desc_arr:0000000000000000 string_desc_arr
+/tmp/claude-502/cc40nytP.s:19     .text.tud_descriptor_device_cb:0000000000000000 $t
+/tmp/claude-502/cc40nytP.s:26     .text.tud_descriptor_device_cb:0000000000000000 tud_descriptor_device_cb
+/tmp/claude-502/cc40nytP.s:41     .text.tud_descriptor_device_cb:0000000000000004 $d
+/tmp/claude-502/cc40nytP.s:46     .text.tud_descriptor_configuration_cb:0000000000000000 $t
+/tmp/claude-502/cc40nytP.s:53     .text.tud_descriptor_configuration_cb:0000000000000000 tud_descriptor_configuration_cb
+/tmp/claude-502/cc40nytP.s:71     .text.tud_descriptor_configuration_cb:0000000000000004 $d
+/tmp/claude-502/cc40nytP.s:76     .text.tud_descriptor_string_cb:0000000000000000 $t
+/tmp/claude-502/cc40nytP.s:83     .text.tud_descriptor_string_cb:0000000000000000 tud_descriptor_string_cb
+/tmp/claude-502/cc40nytP.s:212    .text.tud_descriptor_string_cb:0000000000000068 $d
+/tmp/claude-502/cc40nytP.s:220    .rodata.str1.4:0000000000000000 $d
+/tmp/claude-502/cc40nytP.s:236    .bss._desc_str:0000000000000000 $d
+/tmp/claude-502/cc40nytP.s:240    .bss._desc_str:0000000000000000 _desc_str
+/tmp/claude-502/cc40nytP.s:243    .rodata.__compound_literal.0:0000000000000000 $d
+/tmp/claude-502/cc40nytP.s:246    .rodata.__compound_literal.0:0000000000000000 __compound_literal.0
+/tmp/claude-502/cc40nytP.s:250    .rodata.desc_device:0000000000000000 $d
+/tmp/claude-502/cc40nytP.s:254    .rodata.desc_device:0000000000000000 desc_device
+/tmp/claude-502/cc40nytP.s:270    .rodata.desc_fs_configuration:0000000000000000 $d
+/tmp/claude-502/cc40nytP.s:274    .rodata.desc_fs_configuration:0000000000000000 desc_fs_configuration
+/tmp/claude-502/cc40nytP.s:291    .rodata.string_desc_arr:0000000000000000 $d
+/tmp/claude-502/cc40nytP.s:295    .rodata.string_desc_arr:0000000000000000 string_desc_arr
 
 UNDEFINED SYMBOLS
 strlen

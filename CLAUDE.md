@@ -113,8 +113,26 @@ screen /dev/tty.usbmodem* 115200
 > `src/usb_glue.cpp`) instead of `hw.PrintLine`, and serialtune reads commands via
 > `usb_cdc_read_avail()`. **Do not call `hw.StartLog()` / `hw.usb_handle`** — that
 > relinks libDaisy's USB stack, which clashes with TinyUSB's `OTG_FS_IRQHandler`.
-> `usb_task()` is pumped from `serial_tune_poll()`. TinyUSB config: `src/tusb_config.h`;
-> descriptors: `src/usb_descriptors.c`; vendored subset: `lib/tinyusb/`.
+> TinyUSB config: `src/tusb_config.h`; descriptors: `src/usb_descriptors.c`; vendored
+> subset: `lib/tinyusb/`.
+
+> **USB audio (Phase 2): composite CDC + UAC2 stereo capture.** The device is also a
+> class-compliant **2-ch / 48 kHz / 16-bit input** ("GaletSynth Audio") — record it
+> live in a DAW while VoiceLab tunes over the same cable. `engine.cpp`'s
+> `AudioCallback` taps its output (`usb_audio_push`, float→int16) into a lock-free
+> ring in `src/usb_audio.c`; the UAC2 IN endpoint drains it in
+> `tud_audio_tx_done_pre_load_cb`, sending 47/48/49 samples/frame to hold the ring
+> near a ~256-frame cushion (async clock tracking — no feedback EP needed).
+>
+> **CRITICAL gotcha — pump `tud_task()` from the audio callback, NOT the control loop.**
+> The isochronous audio IN endpoint must be serviced every USB frame (~1 kHz). The
+> control loop runs at only ~150 Hz (sensor-bound), which starves the endpoint →
+> the ring overruns → badly decimated "2-bit metallic" capture. So `usb_task()` is
+> pumped from `AudioCallback` (~12 kHz, divided to ~2 kHz). This also puts the ring
+> consumer (`pre_load`) in the same context as its producer (`usb_audio_push`) →
+> race-free. Do **not** move the pump back to `serial_tune_poll()`, and don't call
+> `tud_task()` from two contexts (re-entrancy). The `astat` serial command reports
+> ring fill / call-rate / over-/under-run counts for diagnosing this.
 
 The main synth prints a live status display (voice, electrode bars, finger
 pos/pressure, FSR, audio params) — but **throttled to ~8 Hz** so it can't slow

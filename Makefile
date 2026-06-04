@@ -34,10 +34,11 @@ CPP_SOURCES += src/usb_glue.cpp
 # replaces libDaisy's USB logger (Phase 1 of the USB-audio work). CFG_TUSB_MCU is
 # set in src/tusb_config.h, found via -Isrc.
 TINYUSB = lib/tinyusb/src
-C_SOURCES   += src/usb_descriptors.c \
+C_SOURCES   += src/usb_descriptors.c src/usb_audio.c \
   $(TINYUSB)/tusb.c $(TINYUSB)/common/tusb_fifo.c \
   $(TINYUSB)/device/usbd.c $(TINYUSB)/device/usbd_control.c \
   $(TINYUSB)/class/cdc/cdc_device.c \
+  $(TINYUSB)/class/audio/audio_device.c \
   $(TINYUSB)/portable/synopsys/dwc2/dcd_dwc2.c
 C_INCLUDES  += -I$(TINYUSB) -Isrc
 # Run from SRAM via the Daisy bootloader: big enough for the USB-audio work AND
