@@ -4,6 +4,16 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-06-04
+
+First complete release — the full instrument. A glass touch bass/lead synth for
+Daisy Seed + MPR121 with a 15-voice bank, a 4-voice polyphonic Drums kit, per-voice
+LFO (vibrato / auto-wah / tremolo), tap-the-glass voice select with live preview,
+SH-101 diatonic chords, shared reverb + delay, and an editable + persistent voice
+bank. Companion **VoiceLab** tuner: USB-serial protocol, PySide6 GUI, whole-bank
+JSON backup/restore, and a standalone macOS `.app`. Firmware runs from the
+STM32H750 internal flash.
+
 ### Added / Fixed — `feat: VoiceLab save confirmation + robustness`
 - **Save confirmation** (`voicelab_gui.py`): the **Save to flash** button now asks
   for confirmation (same pattern as Revert / Revert all) before overwriting the
