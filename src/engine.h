@@ -62,6 +62,9 @@ struct DrumHit {
 };
 
 extern DrumHit g_hits[POLY];
+// Zero the SDRAM-resident reverb/delay buffers (.sdram_bss is NOLOAD). Call once
+// after hw.Init() and before StartAudio.
+void engine_init();
 // Start a drum hit on slot h (called from the control loop's tap router).
 void drum_trigger(DrumHit& h, int vidx, float freq, float amp_tgt,
                   float cutoff, float drive, float sr);

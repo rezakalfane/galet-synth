@@ -29,6 +29,10 @@ CPP_SOURCES = $(TARGET).cpp
 # The synth (src/main) is split across modules; the tools stay standalone.
 ifeq ($(TARGET),src/main)
 CPP_SOURCES += src/mpr121.cpp src/touch.cpp src/engine.cpp src/serialtune.cpp src/persist.cpp
+# Run from SRAM via the Daisy bootloader: big enough for the USB-audio work AND
+# keeps QSPI writable so voice persistence (storage.Save) works. Big audio buffers
+# live in SDRAM (DSY_SDRAM_BSS) so data fits the 128 KB DTCM. Override on the CLI.
+APP_TYPE ?= BOOT_SRAM
 endif
 
 libdaisy_dir = ../libDaisy

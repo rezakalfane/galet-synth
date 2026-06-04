@@ -176,6 +176,7 @@ static bool set_param(const char *f, const char *v) {
 static void dump_voice() {
     hw.PrintLine("dump name=%s", g_live_voice.name);
     hw.PrintLine("idx=%d", g_voice_idx);   // bank slot, so the host syncs by index (rename-proof)
+    hw.PrintLine("boot=%d", g_boot_voice); // persisted power-on voice → GUI marks the default
     const char *base = (const char *)&g_live_voice;
     for(int i = 0; i < NFIELDS; i++) {
         const void *p = base + FIELDS[i].off;
@@ -294,6 +295,15 @@ static void handle_command(char *line) {
         } else hw.PrintLine("err copy 0..%d", NUM_VOICES - 1);
         return;
     }
+    if(!strcmp(cmd, "bootvoice")) {
+        // Persist the CURRENT selection as the power-on voice, without committing
+        // any live edits to the bank (unlike `save`). Just writes g_voice_idx (+ the
+        // already-committed bank) to flash. The GUI's "Set as default" button.
+        persist_save_bank();
+        int vi = (g_voice_idx < 0 || g_voice_idx >= NUM_VOICES) ? 0 : g_voice_idx;
+        hw.PrintLine("ok bootvoice=%d %s", g_voice_idx, g_bank[vi].name);
+        return;
+    }
     if(!strcmp(cmd, "factory")) {
         // `factory`     → revert the active voice to its source default
         // `factory all` → revert the whole bank
@@ -311,7 +321,7 @@ static void handle_command(char *line) {
     }
     if(!strcmp(cmd, "help")) {
         hw.PrintLine("cmds: tune 0|1 | set <field> <val> | set name <text> | select <n>");
-        hw.PrintLine("      dump | save | copy <n> [name] | factory [all] | mon 0|1 | bye");
+        hw.PrintLine("      dump | save | copy <n> [name] | bootvoice | factory [all] | mon 0|1 | bye");
         for(int i = 0; i < NFIELDS; i++) hw.PrintLine("  %s", FIELDS[i].name);
         hw.PrintLine("  name scale(chromatic|major|minor) reverb_decay reverb_level delay_time_ms delay_feedback delay_level");
         return;

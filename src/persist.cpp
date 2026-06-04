@@ -7,6 +7,7 @@ using namespace daisy;
 
 // The live bank + RAM backing for the editable names.
 Voice       g_bank[NUM_VOICES];
+int         g_boot_voice = 2;            // persisted power-on voice (mirrors flash)
 static char g_names[NUM_VOICES][VOICE_NAME_MAX];
 
 // ── Flash format ──────────────────────────────────────────────────────────────
@@ -101,12 +102,14 @@ void persist_init() {
         store.Save();
     }
     g_active_voice = (g_voice_idx == MULTI_IDX) ? MULTI_ZONES[0] : g_voice_idx;
+    g_boot_voice   = g_voice_idx;    // what we just restored is the persisted default
 }
 
 void persist_save_bank() {
     if(!g_store) return;
     serialize(g_store->GetSettings());
     g_store->Save();                 // erases/writes QSPI only if the blob changed
+    g_boot_voice = g_voice_idx;      // a save commits g_voice_idx → the new default
 }
 
 void bank_set(int idx, const Voice &src, const char *name) {
