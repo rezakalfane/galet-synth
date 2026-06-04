@@ -2,6 +2,7 @@
 #include "engine.h"   // hw, NUM_VOICES, MULTI_*, g_* control + tuning seam
 #include "persist.h"  // g_bank, bank_set, bank_revert_*, persist_save_bank, VOICE_NAME_MAX
 #include "usb_glue.h" // usb_log (CDC TX) + usb_cdc_read_avail (CDC RX) — replaces hw.PrintLine
+#include "usb_audio.h" // usb_audio_is_streaming — for the `astat` diagnostic command
 #include <stddef.h>   // offsetof
 #include <string.h>   // strcmp / strtok
 #include <math.h>     // logf
@@ -283,6 +284,15 @@ static void handle_command(char *line) {
         } else usb_log("err copy 0..%d", NUM_VOICES - 1);
         return;
     }
+    if(!strcmp(cmd, "astat")) {
+        // USB-audio capture diagnostics: ring fill (frames), starved/overrun counts,
+        // pre-load calls, streaming flag.
+        extern volatile uint32_t g_aud_over, g_aud_under, g_aud_calls, g_aud_fill;
+        usb_log("astat streaming=%d fill=%lu calls=%lu under=%lu over=%lu",
+                usb_audio_is_streaming(), (unsigned long)g_aud_fill,
+                (unsigned long)g_aud_calls, (unsigned long)g_aud_under, (unsigned long)g_aud_over);
+        return;
+    }
     if(!strcmp(cmd, "bootvoice")) {
         // Persist the CURRENT selection as the power-on voice, without committing
         // any live edits to the bank (unlike `save`). Just writes g_voice_idx (+ the
@@ -323,7 +333,9 @@ void serial_tune_init() {
 }
 
 void serial_tune_poll() {
-    usb_task();              // service the USB device stack every poll (enum + IN/OUT)
+    // NOTE: tud_task() is pumped from the audio callback (~2 kHz), not here — the
+    // control loop is too slow for the isochronous audio endpoint. We only drain
+    // already-received CDC bytes here.
     static char line[160];
     static int  li = 0;
     char chunk[64];

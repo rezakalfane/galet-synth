@@ -1,4 +1,4 @@
-build/usb_glue.o: src/usb_glue.cpp \
+build/audio_device.o: lib/tinyusb/src/class/audio/audio_device.c \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h \
@@ -93,18 +93,16 @@ build/usb_glue.o: src/usb_glue.cpp \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_hcd.h \
- lib/tinyusb/src/tusb.h lib/tinyusb/src/common/tusb_common.h \
  lib/tinyusb/src/tusb_option.h lib/tinyusb/src/common/tusb_compiler.h \
  src/tusb_config.h lib/tinyusb/src/common/tusb_mcu.h \
+ lib/tinyusb/src/device/usbd.h lib/tinyusb/src/common/tusb_common.h \
  lib/tinyusb/src/common/tusb_compiler.h \
  lib/tinyusb/src/common/tusb_verify.h lib/tinyusb/src/common/tusb_types.h \
- lib/tinyusb/src/common/tusb_debug.h lib/tinyusb/src/osal/osal.h \
- lib/tinyusb/src/common/tusb_common.h lib/tinyusb/src/osal/osal_none.h \
- lib/tinyusb/src/common/tusb_fifo.h lib/tinyusb/src/osal/osal.h \
- lib/tinyusb/src/common/tusb_fifo.h lib/tinyusb/src/device/usbd.h \
- lib/tinyusb/src/class/cdc/cdc_device.h lib/tinyusb/src/class/cdc/cdc.h \
+ lib/tinyusb/src/common/tusb_debug.h lib/tinyusb/src/device/usbd_pvt.h \
+ lib/tinyusb/src/osal/osal.h lib/tinyusb/src/osal/osal_none.h \
+ lib/tinyusb/src/common/tusb_fifo.h lib/tinyusb/src/common/tusb_private.h \
  lib/tinyusb/src/class/audio/audio_device.h \
- lib/tinyusb/src/class/audio/audio.h src/usb_glue.h src/usb_audio.h
+ lib/tinyusb/src/class/audio/audio.h
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h:
@@ -199,26 +197,20 @@ build/usb_glue.o: src/usb_glue.cpp \
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_hcd.h:
-lib/tinyusb/src/tusb.h:
-lib/tinyusb/src/common/tusb_common.h:
 lib/tinyusb/src/tusb_option.h:
 lib/tinyusb/src/common/tusb_compiler.h:
 src/tusb_config.h:
 lib/tinyusb/src/common/tusb_mcu.h:
+lib/tinyusb/src/device/usbd.h:
+lib/tinyusb/src/common/tusb_common.h:
 lib/tinyusb/src/common/tusb_compiler.h:
 lib/tinyusb/src/common/tusb_verify.h:
 lib/tinyusb/src/common/tusb_types.h:
 lib/tinyusb/src/common/tusb_debug.h:
+lib/tinyusb/src/device/usbd_pvt.h:
 lib/tinyusb/src/osal/osal.h:
-lib/tinyusb/src/common/tusb_common.h:
 lib/tinyusb/src/osal/osal_none.h:
 lib/tinyusb/src/common/tusb_fifo.h:
-lib/tinyusb/src/osal/osal.h:
-lib/tinyusb/src/common/tusb_fifo.h:
-lib/tinyusb/src/device/usbd.h:
-lib/tinyusb/src/class/cdc/cdc_device.h:
-lib/tinyusb/src/class/cdc/cdc.h:
+lib/tinyusb/src/common/tusb_private.h:
 lib/tinyusb/src/class/audio/audio_device.h:
 lib/tinyusb/src/class/audio/audio.h:
-src/usb_glue.h:
-src/usb_audio.h:

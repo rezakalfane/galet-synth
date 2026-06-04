@@ -103,8 +103,11 @@ build/usbd.o: lib/tinyusb/src/device/usbd.c \
  lib/tinyusb/src/tusb.h lib/tinyusb/src/common/tusb_common.h \
  lib/tinyusb/src/osal/osal.h lib/tinyusb/src/common/tusb_fifo.h \
  lib/tinyusb/src/device/usbd.h lib/tinyusb/src/class/cdc/cdc_device.h \
- lib/tinyusb/src/class/cdc/cdc.h lib/tinyusb/src/common/tusb_private.h \
- lib/tinyusb/src/device/usbd.h lib/tinyusb/src/device/usbd_pvt.h
+ lib/tinyusb/src/class/cdc/cdc.h \
+ lib/tinyusb/src/class/audio/audio_device.h \
+ lib/tinyusb/src/class/audio/audio.h \
+ lib/tinyusb/src/common/tusb_private.h lib/tinyusb/src/device/usbd.h \
+ lib/tinyusb/src/device/usbd_pvt.h
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h:
@@ -219,6 +222,8 @@ lib/tinyusb/src/common/tusb_fifo.h:
 lib/tinyusb/src/device/usbd.h:
 lib/tinyusb/src/class/cdc/cdc_device.h:
 lib/tinyusb/src/class/cdc/cdc.h:
+lib/tinyusb/src/class/audio/audio_device.h:
+lib/tinyusb/src/class/audio/audio.h:
 lib/tinyusb/src/common/tusb_private.h:
 lib/tinyusb/src/device/usbd.h:
 lib/tinyusb/src/device/usbd_pvt.h:

@@ -1,0 +1,2127 @@
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"usb_audio.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.usb_audio_push,"ax",%progbits
+  19              		.align	1
+  20              		.p2align 2,,3
+  21              		.global	usb_audio_push
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	usb_audio_push:
+  27              	.LVL0:
+  28              	.LFB406:
+  29              		.file 1 "src/usb_audio.c"
+   1:src/usb_audio.c **** // UAC2 stereo capture for GaletSynth — see usb_audio.h. Entity IDs (match the
+   2:src/usb_audio.c **** // descriptor in usb_descriptors.c): input terminal 1, feature unit 2, output
+   3:src/usb_audio.c **** // terminal 3, clock source 4. Async IN endpoint: the device owns the clock and
+   4:src/usb_audio.c **** // varies samples/frame (47/48/49) to track it.
+   5:src/usb_audio.c **** #include "tusb.h"
+   6:src/usb_audio.c **** #include "usb_audio.h"
+   7:src/usb_audio.c **** 
+   8:src/usb_audio.c **** #define N_CH CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_TX   // 2
+   9:src/usb_audio.c **** 
+  10:src/usb_audio.c **** // ── Control state ─────────────────────────
+  11:src/usb_audio.c **** static uint32_t s_samp_freq = CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE;
+  12:src/usb_audio.c **** static uint8_t  s_clk_valid = 1;
+  13:src/usb_audio.c **** static int8_t   s_mute[N_CH + 1];                 // [0]=master, [1..N]=channels
+  14:src/usb_audio.c **** static int16_t  s_volume[N_CH + 1];
+  15:src/usb_audio.c **** static audio_control_range_4_n_t(1) s_freq_rng;
+  16:src/usb_audio.c **** 
+  17:src/usb_audio.c **** static volatile uint8_t s_streaming = 0;
+  18:src/usb_audio.c **** static volatile uint8_t s_primed    = 0;   // ring cushion built before draining
+  19:src/usb_audio.c **** 
+  20:src/usb_audio.c **** // ── Capture ring — stereo int16 interleaved, free-running indices (int16 units).
+  21:src/usb_audio.c **** //    Producer: audio ISR (usb_audio_push). Consumer: USB (tx pre-load). ────────�
+  22:src/usb_audio.c **** #define RING_SZ 4096                              // int16 elems = 2048 frames ≈ 42 ms
+  23:src/usb_audio.c **** static int16_t           s_ring[RING_SZ];
+  24:src/usb_audio.c **** static volatile uint32_t s_wr = 0, s_rd = 0;
+  25:src/usb_audio.c **** 
+  26:src/usb_audio.c **** // Diagnostic counters (read via the `astat` serial command).
+  27:src/usb_audio.c **** volatile uint32_t g_aud_over = 0, g_aud_under = 0, g_aud_calls = 0, g_aud_fill = 0;
+  28:src/usb_audio.c **** 
+  29:src/usb_audio.c **** void usb_audio_push(int16_t l, int16_t r)
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 2
+
+
+  30:src/usb_audio.c **** {
+  30              		.loc 1 30 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  31:src/usb_audio.c ****     if(!s_streaming) return;
+  35              		.loc 1 31 5 view .LVU1
+  36              		.loc 1 31 8 is_stmt 0 view .LVU2
+  37 0000 134B     		ldr	r3, .L13
+  38 0002 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  39              		.loc 1 31 7 view .LVU3
+  40 0004 13B3     		cbz	r3, .L8
+  32:src/usb_audio.c ****     if((uint32_t)(s_wr - s_rd) >= (RING_SZ - 2)) { g_aud_over++; return; }  // full → drop
+  41              		.loc 1 32 5 is_stmt 1 view .LVU4
+  42              		.loc 1 32 8 is_stmt 0 view .LVU5
+  43 0006 134B     		ldr	r3, .L13+4
+  44              		.loc 1 32 7 view .LVU6
+  45 0008 40F6FD7C 		movw	ip, #4093
+  30:src/usb_audio.c ****     if(!s_streaming) return;
+  46              		.loc 1 30 1 view .LVU7
+  47 000c 10B4     		push	{r4}
+  48              		.cfi_def_cfa_offset 4
+  49              		.cfi_offset 4, -4
+  50              		.loc 1 32 8 view .LVU8
+  51 000e 124C     		ldr	r4, .L13+8
+  52 0010 1A68     		ldr	r2, [r3]
+  53 0012 2468     		ldr	r4, [r4]
+  54 0014 121B     		subs	r2, r2, r4
+  55              		.loc 1 32 7 view .LVU9
+  56 0016 6245     		cmp	r2, ip
+  57 0018 11D8     		bhi	.L12
+  33:src/usb_audio.c ****     s_ring[s_wr & (RING_SZ - 1)]       = l;
+  58              		.loc 1 33 5 is_stmt 1 view .LVU10
+  59              		.loc 1 33 17 is_stmt 0 view .LVU11
+  60 001a 1A68     		ldr	r2, [r3]
+  61              		.loc 1 33 40 view .LVU12
+  62 001c 0F4C     		ldr	r4, .L13+12
+  63              		.loc 1 33 17 view .LVU13
+  64 001e C2F30B02 		ubfx	r2, r2, #0, #12
+  65              		.loc 1 33 40 view .LVU14
+  66 0022 24F81200 		strh	r0, [r4, r2, lsl #1]	@ movhi
+  34:src/usb_audio.c ****     s_ring[(s_wr + 1) & (RING_SZ - 1)] = r;
+  67              		.loc 1 34 5 is_stmt 1 view .LVU15
+  68              		.loc 1 34 18 is_stmt 0 view .LVU16
+  69 0026 1A68     		ldr	r2, [r3]
+  35:src/usb_audio.c ****     s_wr += 2;
+  70              		.loc 1 35 10 view .LVU17
+  71 0028 1868     		ldr	r0, [r3]
+  72              	.LVL1:
+  34:src/usb_audio.c ****     s_ring[(s_wr + 1) & (RING_SZ - 1)] = r;
+  73              		.loc 1 34 18 view .LVU18
+  74 002a 0132     		adds	r2, r2, #1
+  75              		.loc 1 35 10 view .LVU19
+  76 002c 0230     		adds	r0, r0, #2
+  34:src/usb_audio.c ****     s_ring[(s_wr + 1) & (RING_SZ - 1)] = r;
+  77              		.loc 1 34 23 view .LVU20
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 3
+
+
+  78 002e C2F30B02 		ubfx	r2, r2, #0, #12
+  79              		.loc 1 35 10 view .LVU21
+  80 0032 1860     		str	r0, [r3]
+  34:src/usb_audio.c ****     s_ring[(s_wr + 1) & (RING_SZ - 1)] = r;
+  81              		.loc 1 34 40 view .LVU22
+  82 0034 24F81210 		strh	r1, [r4, r2, lsl #1]	@ movhi
+  83              		.loc 1 35 5 is_stmt 1 view .LVU23
+  36:src/usb_audio.c **** }
+  84              		.loc 1 36 1 is_stmt 0 view .LVU24
+  85 0038 5DF8044B 		ldr	r4, [sp], #4
+  86              		.cfi_remember_state
+  87              		.cfi_restore 4
+  88              		.cfi_def_cfa_offset 0
+  89 003c 7047     		bx	lr
+  90              	.LVL2:
+  91              	.L12:
+  92              		.cfi_restore_state
+  32:src/usb_audio.c ****     s_ring[s_wr & (RING_SZ - 1)]       = l;
+  93              		.loc 1 32 52 is_stmt 1 discriminator 1 view .LVU25
+  32:src/usb_audio.c ****     s_ring[s_wr & (RING_SZ - 1)]       = l;
+  94              		.loc 1 32 62 is_stmt 0 discriminator 1 view .LVU26
+  95 003e 084A     		ldr	r2, .L13+16
+  96              		.loc 1 36 1 discriminator 1 view .LVU27
+  97 0040 5DF8044B 		ldr	r4, [sp], #4
+  98              		.cfi_restore 4
+  99              		.cfi_def_cfa_offset 0
+  32:src/usb_audio.c ****     s_ring[s_wr & (RING_SZ - 1)]       = l;
+ 100              		.loc 1 32 62 discriminator 1 view .LVU28
+ 101 0044 1368     		ldr	r3, [r2]
+ 102 0046 0133     		adds	r3, r3, #1
+ 103 0048 1360     		str	r3, [r2]
+  32:src/usb_audio.c ****     s_ring[s_wr & (RING_SZ - 1)]       = l;
+ 104              		.loc 1 32 66 is_stmt 1 discriminator 1 view .LVU29
+ 105              		.loc 1 36 1 is_stmt 0 discriminator 1 view .LVU30
+ 106 004a 7047     		bx	lr
+ 107              	.L8:
+ 108 004c 7047     		bx	lr
+ 109              	.L14:
+ 110 004e 00BF     		.align	2
+ 111              	.L13:
+ 112 0050 00000000 		.word	.LANCHOR0
+ 113 0054 00000000 		.word	.LANCHOR1
+ 114 0058 00000000 		.word	.LANCHOR2
+ 115 005c 00000000 		.word	s_ring
+ 116 0060 00000000 		.word	.LANCHOR3
+ 117              		.cfi_endproc
+ 118              	.LFE406:
+ 120              		.section	.text.usb_audio_is_streaming,"ax",%progbits
+ 121              		.align	1
+ 122              		.p2align 2,,3
+ 123              		.global	usb_audio_is_streaming
+ 124              		.syntax unified
+ 125              		.thumb
+ 126              		.thumb_func
+ 128              	usb_audio_is_streaming:
+ 129              	.LFB407:
+  37:src/usb_audio.c **** int usb_audio_is_streaming(void) { return s_streaming; }
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 4
+
+
+ 130              		.loc 1 37 34 is_stmt 1 view -0
+ 131              		.cfi_startproc
+ 132              		@ args = 0, pretend = 0, frame = 0
+ 133              		@ frame_needed = 0, uses_anonymous_args = 0
+ 134              		@ link register save eliminated.
+ 135              		.loc 1 37 36 view .LVU32
+ 136              		.loc 1 37 43 is_stmt 0 view .LVU33
+ 137 0000 014B     		ldr	r3, .L16
+ 138 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 139              		.loc 1 37 56 view .LVU34
+ 140 0004 7047     		bx	lr
+ 141              	.L17:
+ 142 0006 00BF     		.align	2
+ 143              	.L16:
+ 144 0008 00000000 		.word	.LANCHOR0
+ 145              		.cfi_endproc
+ 146              	.LFE407:
+ 148              		.section	.text.tud_audio_set_itf_cb,"ax",%progbits
+ 149              		.align	1
+ 150              		.p2align 2,,3
+ 151              		.global	tud_audio_set_itf_cb
+ 152              		.syntax unified
+ 153              		.thumb
+ 154              		.thumb_func
+ 156              	tud_audio_set_itf_cb:
+ 157              	.LVL3:
+ 158              	.LFB408:
+  38:src/usb_audio.c **** 
+  39:src/usb_audio.c **** // ── Streaming start/stop (alt setting of the AS interface) ───────────�
+  40:src/usb_audio.c **** bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const *p_request)
+  41:src/usb_audio.c **** {
+ 159              		.loc 1 41 1 is_stmt 1 view -0
+ 160              		.cfi_startproc
+ 161              		@ args = 0, pretend = 0, frame = 0
+ 162              		@ frame_needed = 0, uses_anonymous_args = 0
+ 163              		@ link register save eliminated.
+  42:src/usb_audio.c ****     (void)rhport;
+ 164              		.loc 1 42 5 view .LVU36
+  43:src/usb_audio.c ****     uint8_t alt = TU_U16_LOW(p_request->wValue);
+ 165              		.loc 1 43 5 view .LVU37
+  44:src/usb_audio.c ****     if(alt != 0) { s_wr = s_rd = 0; s_primed = 0; s_streaming = 1; }   // start fresh, re-prime
+ 166              		.loc 1 44 5 view .LVU38
+  43:src/usb_audio.c ****     uint8_t alt = TU_U16_LOW(p_request->wValue);
+ 167              		.loc 1 43 19 is_stmt 0 view .LVU39
+ 168 0000 4B88     		ldrh	r3, [r1, #2]	@ unaligned
+ 169              		.loc 1 44 7 view .LVU40
+ 170 0002 DBB2     		uxtb	r3, r3
+ 171 0004 73B1     		cbz	r3, .L19
+ 172              		.loc 1 44 20 is_stmt 1 discriminator 1 view .LVU41
+ 173              		.loc 1 44 32 is_stmt 0 discriminator 1 view .LVU42
+ 174 0006 0023     		movs	r3, #0
+ 175              		.loc 1 44 25 discriminator 1 view .LVU43
+ 176 0008 0849     		ldr	r1, .L25
+ 177              	.LVL4:
+ 178              		.loc 1 44 46 discriminator 1 view .LVU44
+ 179 000a 0948     		ldr	r0, .L25+4
+ 180              	.LVL5:
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 5
+
+
+ 181              		.loc 1 44 63 discriminator 1 view .LVU45
+ 182 000c 094A     		ldr	r2, .L25+8
+  41:src/usb_audio.c ****     (void)rhport;
+ 183              		.loc 1 41 1 discriminator 1 view .LVU46
+ 184 000e 10B4     		push	{r4}
+ 185              		.cfi_def_cfa_offset 4
+ 186              		.cfi_offset 4, -4
+ 187              		.loc 1 44 32 discriminator 1 view .LVU47
+ 188 0010 094C     		ldr	r4, .L25+12
+ 189 0012 2360     		str	r3, [r4]
+ 190              		.loc 1 44 25 discriminator 1 view .LVU48
+ 191 0014 0B60     		str	r3, [r1]
+ 192              		.loc 1 44 37 is_stmt 1 discriminator 1 view .LVU49
+ 193              		.loc 1 44 63 is_stmt 0 discriminator 1 view .LVU50
+ 194 0016 0121     		movs	r1, #1
+ 195              		.loc 1 44 46 discriminator 1 view .LVU51
+ 196 0018 0370     		strb	r3, [r0]
+ 197              		.loc 1 44 51 is_stmt 1 discriminator 1 view .LVU52
+  45:src/usb_audio.c ****     else         { s_streaming = 0; }
+  46:src/usb_audio.c ****     return true;
+  47:src/usb_audio.c **** }
+ 198              		.loc 1 47 1 is_stmt 0 discriminator 1 view .LVU53
+ 199 001a 0120     		movs	r0, #1
+  44:src/usb_audio.c ****     else         { s_streaming = 0; }
+ 200              		.loc 1 44 63 discriminator 1 view .LVU54
+ 201 001c 1170     		strb	r1, [r2]
+  46:src/usb_audio.c **** }
+ 202              		.loc 1 46 5 is_stmt 1 discriminator 1 view .LVU55
+ 203              		.loc 1 47 1 is_stmt 0 discriminator 1 view .LVU56
+ 204 001e 5DF8044B 		ldr	r4, [sp], #4
+ 205              		.cfi_restore 4
+ 206              		.cfi_def_cfa_offset 0
+ 207 0022 7047     		bx	lr
+ 208              	.LVL6:
+ 209              	.L19:
+  45:src/usb_audio.c ****     else         { s_streaming = 0; }
+ 210              		.loc 1 45 20 is_stmt 1 view .LVU57
+  45:src/usb_audio.c ****     else         { s_streaming = 0; }
+ 211              		.loc 1 45 32 is_stmt 0 view .LVU58
+ 212 0024 034A     		ldr	r2, .L25+8
+ 213              		.loc 1 47 1 view .LVU59
+ 214 0026 0120     		movs	r0, #1
+ 215              	.LVL7:
+  45:src/usb_audio.c ****     else         { s_streaming = 0; }
+ 216              		.loc 1 45 32 view .LVU60
+ 217 0028 1370     		strb	r3, [r2]
+  46:src/usb_audio.c **** }
+ 218              		.loc 1 46 5 is_stmt 1 view .LVU61
+ 219              		.loc 1 47 1 is_stmt 0 view .LVU62
+ 220 002a 7047     		bx	lr
+ 221              	.L26:
+ 222              		.align	2
+ 223              	.L25:
+ 224 002c 00000000 		.word	.LANCHOR1
+ 225 0030 00000000 		.word	.LANCHOR4
+ 226 0034 00000000 		.word	.LANCHOR0
+ 227 0038 00000000 		.word	.LANCHOR2
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 6
+
+
+ 228              		.cfi_endproc
+ 229              	.LFE408:
+ 231              		.section	.text.tud_audio_set_itf_close_EP_cb,"ax",%progbits
+ 232              		.align	1
+ 233              		.p2align 2,,3
+ 234              		.global	tud_audio_set_itf_close_EP_cb
+ 235              		.syntax unified
+ 236              		.thumb
+ 237              		.thumb_func
+ 239              	tud_audio_set_itf_close_EP_cb:
+ 240              	.LVL8:
+ 241              	.LFB409:
+  48:src/usb_audio.c **** bool tud_audio_set_itf_close_EP_cb(uint8_t rhport, tusb_control_request_t const *p_request)
+  49:src/usb_audio.c **** {
+ 242              		.loc 1 49 1 is_stmt 1 view -0
+ 243              		.cfi_startproc
+ 244              		@ args = 0, pretend = 0, frame = 0
+ 245              		@ frame_needed = 0, uses_anonymous_args = 0
+ 246              		@ link register save eliminated.
+  50:src/usb_audio.c ****     (void)rhport; (void)p_request;
+ 247              		.loc 1 50 5 view .LVU64
+ 248              		.loc 1 50 19 view .LVU65
+  51:src/usb_audio.c ****     s_streaming = 0;
+ 249              		.loc 1 51 5 view .LVU66
+ 250              		.loc 1 51 17 is_stmt 0 view .LVU67
+ 251 0000 024B     		ldr	r3, .L28
+ 252 0002 0022     		movs	r2, #0
+  52:src/usb_audio.c ****     return true;
+  53:src/usb_audio.c **** }
+ 253              		.loc 1 53 1 view .LVU68
+ 254 0004 0120     		movs	r0, #1
+ 255              	.LVL9:
+  51:src/usb_audio.c ****     s_streaming = 0;
+ 256              		.loc 1 51 17 view .LVU69
+ 257 0006 1A70     		strb	r2, [r3]
+  52:src/usb_audio.c ****     return true;
+ 258              		.loc 1 52 5 is_stmt 1 view .LVU70
+ 259              		.loc 1 53 1 is_stmt 0 view .LVU71
+ 260 0008 7047     		bx	lr
+ 261              	.L29:
+ 262 000a 00BF     		.align	2
+ 263              	.L28:
+ 264 000c 00000000 		.word	.LANCHOR0
+ 265              		.cfi_endproc
+ 266              	.LFE409:
+ 268              		.section	.text.tud_audio_tx_done_pre_load_cb,"ax",%progbits
+ 269              		.align	1
+ 270              		.p2align 2,,3
+ 271              		.global	tud_audio_tx_done_pre_load_cb
+ 272              		.syntax unified
+ 273              		.thumb
+ 274              		.thumb_func
+ 276              	tud_audio_tx_done_pre_load_cb:
+ 277              	.LVL10:
+ 278              	.LFB410:
+  54:src/usb_audio.c **** 
+  55:src/usb_audio.c **** // ── TX feed: called per IN request (~1 ms). Send ~48 stereo frames, nudged to
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 7
+
+
+  56:src/usb_audio.c **** //    47/49 to keep the ring near half-full (async clock tracking). ──────────�
+  57:src/usb_audio.c **** // Async IN clock tracking: hold the ring near TARGET frames of latency by sending
+  58:src/usb_audio.c **** // 48±1 frames/packet. The packet-size variation conveys the device's true rate to
+  59:src/usb_audio.c **** // the host, which locks its resampler to it — no feedback endpoint needed.
+  60:src/usb_audio.c **** #define AUD_TARGET_FRAMES 256       // ~5.3 ms latency cushion
+  61:src/usb_audio.c **** #define AUD_HYST          24
+  62:src/usb_audio.c **** 
+  63:src/usb_audio.c **** bool tud_audio_tx_done_pre_load_cb(uint8_t rhport, uint8_t itf, uint8_t ep_in, uint8_t cur_alt_sett
+  64:src/usb_audio.c **** {
+ 279              		.loc 1 64 1 is_stmt 1 view -0
+ 280              		.cfi_startproc
+ 281              		@ args = 0, pretend = 0, frame = 0
+ 282              		@ frame_needed = 0, uses_anonymous_args = 0
+  65:src/usb_audio.c ****     (void)rhport; (void)itf; (void)ep_in; (void)cur_alt_setting;
+ 283              		.loc 1 65 5 view .LVU73
+ 284              		.loc 1 65 19 view .LVU74
+ 285              		.loc 1 65 30 view .LVU75
+ 286              		.loc 1 65 43 view .LVU76
+  66:src/usb_audio.c ****     static int16_t tmp[49 * N_CH];
+ 287              		.loc 1 66 5 view .LVU77
+  67:src/usb_audio.c ****     uint32_t frames = (uint32_t)(s_wr - s_rd) / 2;         // available stereo frames
+ 288              		.loc 1 67 5 view .LVU78
+ 289              		.loc 1 67 23 is_stmt 0 view .LVU79
+ 290 0000 374B     		ldr	r3, .L46
+ 291              	.LVL11:
+ 292              		.loc 1 67 23 view .LVU80
+ 293 0002 3848     		ldr	r0, .L46+4
+ 294              	.LVL12:
+ 295              		.loc 1 67 23 view .LVU81
+ 296 0004 1B68     		ldr	r3, [r3]
+ 297 0006 0268     		ldr	r2, [r0]
+ 298              	.LVL13:
+  64:src/usb_audio.c ****     (void)rhport; (void)itf; (void)ep_in; (void)cur_alt_setting;
+ 299              		.loc 1 64 1 view .LVU82
+ 300 0008 70B5     		push	{r4, r5, r6, lr}
+ 301              		.cfi_def_cfa_offset 16
+ 302              		.cfi_offset 4, -16
+ 303              		.cfi_offset 5, -12
+ 304              		.cfi_offset 6, -8
+ 305              		.cfi_offset 14, -4
+  68:src/usb_audio.c ****     g_aud_calls++; g_aud_fill = frames;
+ 306              		.loc 1 68 16 view .LVU83
+ 307 000a 374C     		ldr	r4, .L46+8
+  67:src/usb_audio.c ****     uint32_t frames = (uint32_t)(s_wr - s_rd) / 2;         // available stereo frames
+ 308              		.loc 1 67 23 view .LVU84
+ 309 000c 9B1A     		subs	r3, r3, r2
+ 310              		.loc 1 68 31 view .LVU85
+ 311 000e 374D     		ldr	r5, .L46+12
+ 312              		.loc 1 68 16 view .LVU86
+ 313 0010 2268     		ldr	r2, [r4]
+  67:src/usb_audio.c ****     uint32_t frames = (uint32_t)(s_wr - s_rd) / 2;         // available stereo frames
+ 314              		.loc 1 67 14 view .LVU87
+ 315 0012 5908     		lsrs	r1, r3, #1
+ 316              	.LVL14:
+ 317              		.loc 1 68 5 is_stmt 1 view .LVU88
+ 318              		.loc 1 68 16 is_stmt 0 view .LVU89
+ 319 0014 0132     		adds	r2, r2, #1
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 8
+
+
+ 320 0016 2260     		str	r2, [r4]
+ 321              		.loc 1 68 20 is_stmt 1 view .LVU90
+  69:src/usb_audio.c **** 
+  70:src/usb_audio.c ****     // Warm-up: don't drain until the cushion has built, so we never start starved.
+  71:src/usb_audio.c ****     if(!s_primed) {
+ 322              		.loc 1 71 8 is_stmt 0 view .LVU91
+ 323 0018 354A     		ldr	r2, .L46+16
+  68:src/usb_audio.c ****     g_aud_calls++; g_aud_fill = frames;
+ 324              		.loc 1 68 31 view .LVU92
+ 325 001a 2960     		str	r1, [r5]
+ 326              		.loc 1 71 5 is_stmt 1 view .LVU93
+ 327              		.loc 1 71 8 is_stmt 0 view .LVU94
+ 328 001c 1478     		ldrb	r4, [r2]	@ zero_extendqisi2
+ 329              		.loc 1 71 7 view .LVU95
+ 330 001e 002C     		cmp	r4, #0
+ 331 0020 49D0     		beq	.L45
+  72:src/usb_audio.c ****         if(frames >= AUD_TARGET_FRAMES) s_primed = 1;
+  73:src/usb_audio.c ****         for(uint32_t i = 0; i < 48 * N_CH; i++) tmp[i] = 0; // send silence meanwhile
+  74:src/usb_audio.c ****         tud_audio_write((uint8_t *)tmp, (uint16_t)(48 * N_CH * 2));
+  75:src/usb_audio.c ****         return true;
+  76:src/usb_audio.c ****     }
+  77:src/usb_audio.c **** 
+  78:src/usb_audio.c ****     uint32_t send = 48;
+ 332              		.loc 1 78 5 is_stmt 1 view .LVU96
+ 333              	.LVL15:
+  79:src/usb_audio.c ****     if(frames > AUD_TARGET_FRAMES + AUD_HYST)      send = 49;   // too full → drain faster
+ 334              		.loc 1 79 5 view .LVU97
+ 335              		.loc 1 79 7 is_stmt 0 view .LVU98
+ 336 0022 40F23122 		movw	r2, #561
+ 337 0026 9342     		cmp	r3, r2
+ 338 0028 40D8     		bhi	.L40
+  80:src/usb_audio.c ****     else if(frames < AUD_TARGET_FRAMES - AUD_HYST) send = 47;   // too empty → ease off
+ 339              		.loc 1 80 10 is_stmt 1 view .LVU99
+ 340              		.loc 1 80 12 is_stmt 0 view .LVU100
+ 341 002a B3F5E87F 		cmp	r3, #464
+ 342 002e 2BBF     		itete	cs
+ 343 0030 4FF0600E 		movcs	lr, #96
+ 344 0034 4FF05E0E 		movcc	lr, #94
+ 345 0038 C024     		movcs	r4, #192
+ 346 003a BC24     		movcc	r4, #188
+ 347 003c 2CBF     		ite	cs
+ 348 003e 3023     		movcs	r3, #48
+ 349 0040 2F23     		movcc	r3, #47
+ 350              	.L34:
+ 351              	.LVL16:
+  81:src/usb_audio.c **** 
+  82:src/usb_audio.c ****     if(frames < send) g_aud_under++;                           // count starved packets
+ 352              		.loc 1 82 5 is_stmt 1 view .LVU101
+ 353              		.loc 1 82 7 is_stmt 0 view .LVU102
+ 354 0042 8B42     		cmp	r3, r1
+ 355 0044 03D9     		bls	.L35
+ 356              		.loc 1 82 23 is_stmt 1 discriminator 1 view .LVU103
+ 357              		.loc 1 82 34 is_stmt 0 discriminator 1 view .LVU104
+ 358 0046 2B4D     		ldr	r5, .L46+20
+ 359 0048 2A68     		ldr	r2, [r5]
+ 360 004a 0132     		adds	r2, r2, #1
+ 361 004c 2A60     		str	r2, [r5]
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 9
+
+
+ 362              	.L35:
+  83:src/usb_audio.c ****     uint32_t real = (frames < send) ? frames : send;           // underrun guard
+ 363              		.loc 1 83 5 is_stmt 1 view .LVU105
+ 364              	.LVL17:
+  84:src/usb_audio.c ****     uint32_t i = 0;
+ 365              		.loc 1 84 5 view .LVU106
+  85:src/usb_audio.c ****     for(; i < real * N_CH; i++) tmp[i] = s_ring[(s_rd + i) & (RING_SZ - 1)];
+ 366              		.loc 1 85 5 view .LVU107
+ 367              		.loc 1 85 11 view .LVU108
+  83:src/usb_audio.c ****     uint32_t real = (frames < send) ? frames : send;           // underrun guard
+ 368              		.loc 1 83 14 is_stmt 0 view .LVU109
+ 369 004e 8B42     		cmp	r3, r1
+ 370 0050 28BF     		it	cs
+ 371 0052 0B46     		movcs	r3, r1
+ 372              		.loc 1 85 5 view .LVU110
+ 373 0054 4FEA430C 		lsl	ip, r3, #1
+ 374 0058 002B     		cmp	r3, #0
+ 375 005a 3DD0     		beq	.L36
+ 376 005c 264E     		ldr	r6, .L46+24
+  84:src/usb_audio.c ****     uint32_t i = 0;
+ 377              		.loc 1 84 14 view .LVU111
+ 378 005e 0022     		movs	r2, #0
+ 379 0060 264D     		ldr	r5, .L46+28
+ 380 0062 3146     		mov	r1, r6
+ 381              	.LVL18:
+ 382              	.L37:
+ 383              		.loc 1 85 33 is_stmt 1 discriminator 2 view .LVU112
+ 384              		.loc 1 85 55 is_stmt 0 discriminator 2 view .LVU113
+ 385 0064 0368     		ldr	r3, [r0]
+ 386 0066 1344     		add	r3, r3, r2
+ 387              		.loc 1 85 29 discriminator 2 view .LVU114
+ 388 0068 0132     		adds	r2, r2, #1
+ 389              	.LVL19:
+ 390              		.loc 1 85 60 discriminator 2 view .LVU115
+ 391 006a C3F30B03 		ubfx	r3, r3, #0, #12
+ 392              		.loc 1 85 5 discriminator 2 view .LVU116
+ 393 006e 6245     		cmp	r2, ip
+ 394              		.loc 1 85 40 discriminator 2 view .LVU117
+ 395 0070 35F81330 		ldrh	r3, [r5, r3, lsl #1]
+ 396 0074 21F8023B 		strh	r3, [r1], #2	@ movhi
+ 397              		.loc 1 85 28 is_stmt 1 discriminator 2 view .LVU118
+ 398              	.LVL20:
+ 399              		.loc 1 85 11 discriminator 2 view .LVU119
+ 400              		.loc 1 85 5 is_stmt 0 discriminator 2 view .LVU120
+ 401 0078 F4D1     		bne	.L37
+  86:src/usb_audio.c ****     s_rd += real * N_CH;
+ 402              		.loc 1 86 5 is_stmt 1 view .LVU121
+ 403              		.loc 1 86 10 is_stmt 0 view .LVU122
+ 404 007a 0368     		ldr	r3, [r0]
+  87:src/usb_audio.c ****     for(; i < send * N_CH; i++) tmp[i] = 0;                     // pad with silence if short
+ 405              		.loc 1 87 5 view .LVU123
+ 406 007c E645     		cmp	lr, ip
+  86:src/usb_audio.c ****     s_rd += real * N_CH;
+ 407              		.loc 1 86 10 view .LVU124
+ 408 007e 6344     		add	r3, r3, ip
+ 409 0080 0360     		str	r3, [r0]
+ 410              		.loc 1 87 5 is_stmt 1 view .LVU125
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 10
+
+
+ 411              	.LVL21:
+ 412              		.loc 1 87 11 view .LVU126
+ 413              		.loc 1 87 5 is_stmt 0 view .LVU127
+ 414 0082 0CD9     		bls	.L39
+ 415              	.LVL22:
+ 416              	.L38:
+ 417              		.loc 1 87 40 discriminator 2 view .LVU128
+ 418 0084 AEEB0C02 		sub	r2, lr, ip
+ 419 0088 06EB4C00 		add	r0, r6, ip, lsl #1
+ 420 008c 0CF1010C 		add	ip, ip, #1
+ 421 0090 0021     		movs	r1, #0
+ 422 0092 5200     		lsls	r2, r2, #1
+ 423 0094 E645     		cmp	lr, ip
+ 424 0096 38BF     		it	cc
+ 425 0098 0222     		movcc	r2, #2
+ 426 009a FFF7FEFF 		bl	memset
+ 427              	.LVL23:
+ 428              	.L39:
+  88:src/usb_audio.c ****     tud_audio_write((uint8_t *)tmp, (uint16_t)(send * N_CH * 2));
+ 429              		.loc 1 88 5 is_stmt 1 view .LVU129
+ 430              	.LBB7:
+ 431              	.LBI7:
+ 432              		.file 2 "lib/tinyusb/src/class/audio/audio_device.h"
+   1:lib/tinyusb/src/class/audio/audio_device.h **** /*
+   2:lib/tinyusb/src/class/audio/audio_device.h ****  * The MIT License (MIT)
+   3:lib/tinyusb/src/class/audio/audio_device.h ****  *
+   4:lib/tinyusb/src/class/audio/audio_device.h ****  * Copyright (c) 2020 Ha Thach (tinyusb.org)
+   5:lib/tinyusb/src/class/audio/audio_device.h ****  * Copyright (c) 2020 Reinhard Panhuber
+   6:lib/tinyusb/src/class/audio/audio_device.h ****  * Copyright (c) 2023 HiFiPhile
+   7:lib/tinyusb/src/class/audio/audio_device.h ****  *
+   8:lib/tinyusb/src/class/audio/audio_device.h ****  * Permission is hereby granted, free of charge, to any person obtaining a copy
+   9:lib/tinyusb/src/class/audio/audio_device.h ****  * of this software and associated documentation files (the "Software"), to deal
+  10:lib/tinyusb/src/class/audio/audio_device.h ****  * in the Software without restriction, including without limitation the rights
+  11:lib/tinyusb/src/class/audio/audio_device.h ****  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  12:lib/tinyusb/src/class/audio/audio_device.h ****  * copies of the Software, and to permit persons to whom the Software is
+  13:lib/tinyusb/src/class/audio/audio_device.h ****  * furnished to do so, subject to the following conditions:
+  14:lib/tinyusb/src/class/audio/audio_device.h ****  *
+  15:lib/tinyusb/src/class/audio/audio_device.h ****  * The above copyright notice and this permission notice shall be included in
+  16:lib/tinyusb/src/class/audio/audio_device.h ****  * all copies or substantial portions of the Software.
+  17:lib/tinyusb/src/class/audio/audio_device.h ****  *
+  18:lib/tinyusb/src/class/audio/audio_device.h ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  19:lib/tinyusb/src/class/audio/audio_device.h ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  20:lib/tinyusb/src/class/audio/audio_device.h ****  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  21:lib/tinyusb/src/class/audio/audio_device.h ****  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  22:lib/tinyusb/src/class/audio/audio_device.h ****  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  23:lib/tinyusb/src/class/audio/audio_device.h ****  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  24:lib/tinyusb/src/class/audio/audio_device.h ****  * THE SOFTWARE.
+  25:lib/tinyusb/src/class/audio/audio_device.h ****  *
+  26:lib/tinyusb/src/class/audio/audio_device.h ****  * This file is part of the TinyUSB stack.
+  27:lib/tinyusb/src/class/audio/audio_device.h ****  */
+  28:lib/tinyusb/src/class/audio/audio_device.h **** 
+  29:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef _TUSB_AUDIO_DEVICE_H_
+  30:lib/tinyusb/src/class/audio/audio_device.h **** #define _TUSB_AUDIO_DEVICE_H_
+  31:lib/tinyusb/src/class/audio/audio_device.h **** 
+  32:lib/tinyusb/src/class/audio/audio_device.h **** #include "audio.h"
+  33:lib/tinyusb/src/class/audio/audio_device.h **** 
+  34:lib/tinyusb/src/class/audio/audio_device.h **** //--------------------------------------------------------------------+
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 11
+
+
+  35:lib/tinyusb/src/class/audio/audio_device.h **** // Class Driver Configuration
+  36:lib/tinyusb/src/class/audio/audio_device.h **** //--------------------------------------------------------------------+
+  37:lib/tinyusb/src/class/audio/audio_device.h **** 
+  38:lib/tinyusb/src/class/audio/audio_device.h **** // All sizes are in bytes!
+  39:lib/tinyusb/src/class/audio/audio_device.h **** 
+  40:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_1_DESC_LEN
+  41:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the length of the audio function descriptor including IAD descripto
+  42:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  43:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 1
+  44:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_2_DESC_LEN
+  45:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the length of the audio function descriptor including IAD descripto
+  46:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  47:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  48:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 2
+  49:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_3_DESC_LEN
+  50:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the length of the audio function descriptor including IAD descripto
+  51:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  52:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  53:lib/tinyusb/src/class/audio/audio_device.h **** 
+  54:lib/tinyusb/src/class/audio/audio_device.h **** // Number of Standard AS Interface Descriptors (4.9.1) defined per audio function - this is require
+  55:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_1_N_AS_INT
+  56:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the number of Standard AS Interface Descriptors you have defined in
+  57:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  58:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 1
+  59:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_2_N_AS_INT
+  60:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the number of Standard AS Interface Descriptors you have defined in
+  61:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  62:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  63:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 2
+  64:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_3_N_AS_INT
+  65:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the number of Standard AS Interface Descriptors you have defined in
+  66:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  67:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  68:lib/tinyusb/src/class/audio/audio_device.h **** 
+  69:lib/tinyusb/src/class/audio/audio_device.h **** // Size of control buffer used to receive and send control messages via EP0 - has to be big enough 
+  70:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_1_CTRL_BUF_SZ
+  71:lib/tinyusb/src/class/audio/audio_device.h **** #error You must define an audio class control request buffer size!
+  72:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  73:lib/tinyusb/src/class/audio/audio_device.h **** 
+  74:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 1
+  75:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_2_CTRL_BUF_SZ
+  76:lib/tinyusb/src/class/audio/audio_device.h **** #error You must define an audio class control request buffer size!
+  77:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  78:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  79:lib/tinyusb/src/class/audio/audio_device.h **** 
+  80:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 2
+  81:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_3_CTRL_BUF_SZ
+  82:lib/tinyusb/src/class/audio/audio_device.h **** #error You must define an audio class control request buffer size!
+  83:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  84:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  85:lib/tinyusb/src/class/audio/audio_device.h **** 
+  86:lib/tinyusb/src/class/audio/audio_device.h **** // End point sizes IN BYTES - Limits: Full Speed <= 1023, High Speed <= 1024
+  87:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_ENABLE_EP_IN
+  88:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_ENABLE_EP_IN 0   // TX
+  89:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  90:lib/tinyusb/src/class/audio/audio_device.h **** 
+  91:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_ENABLE_EP_OUT
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 12
+
+
+  92:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_ENABLE_EP_OUT 0  // RX
+  93:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+  94:lib/tinyusb/src/class/audio/audio_device.h **** 
+  95:lib/tinyusb/src/class/audio/audio_device.h **** // Maximum EP sizes for all alternate AS interface settings - used for checks and buffer allocation
+  96:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_IN
+  97:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_1_EP_IN_SZ_MAX
+  98:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the biggest EP IN size!
+  99:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 100:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 1
+ 101:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_2_EP_IN_SZ_MAX
+ 102:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the biggest EP IN size!
+ 103:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 104:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 105:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 2
+ 106:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_3_EP_IN_SZ_MAX
+ 107:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the biggest EP IN size!
+ 108:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 109:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 110:lib/tinyusb/src/class/audio/audio_device.h **** #endif // CFG_TUD_AUDIO_ENABLE_EP_IN
+ 111:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 112:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_OUT
+ 113:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX
+ 114:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the biggest EP OUT size!
+ 115:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 116:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 1
+ 117:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_2_EP_OUT_SZ_MAX
+ 118:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the biggest EP OUT size!
+ 119:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 120:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 121:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 2
+ 122:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_3_EP_OUT_SZ_MAX
+ 123:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the biggest EP OUT size!
+ 124:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 125:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 126:lib/tinyusb/src/class/audio/audio_device.h **** #endif // CFG_TUD_AUDIO_ENABLE_EP_OUT
+ 127:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 128:lib/tinyusb/src/class/audio/audio_device.h **** // Software EP FIFO buffer sizes - must be >= max EP SIZEs!
+ 129:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ
+ 130:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ                0
+ 131:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 132:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_2_EP_IN_SW_BUF_SZ
+ 133:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_2_EP_IN_SW_BUF_SZ                0
+ 134:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 135:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_3_EP_IN_SW_BUF_SZ
+ 136:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_3_EP_IN_SW_BUF_SZ                0
+ 137:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 138:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 139:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ
+ 140:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ               0
+ 141:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 142:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_2_EP_OUT_SW_BUF_SZ
+ 143:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_2_EP_OUT_SW_BUF_SZ               0
+ 144:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 145:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_3_EP_OUT_SW_BUF_SZ
+ 146:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_3_EP_OUT_SW_BUF_SZ               0
+ 147:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 148:lib/tinyusb/src/class/audio/audio_device.h **** 
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 13
+
+
+ 149:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_IN
+ 150:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ < CFG_TUD_AUDIO_FUNC_1_EP_IN_SZ_MAX
+ 151:lib/tinyusb/src/class/audio/audio_device.h **** #error EP software buffer size MUST BE at least as big as maximum EP size
+ 152:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 153:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 154:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 1
+ 155:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_FUNC_2_EP_IN_SW_BUF_SZ < CFG_TUD_AUDIO_FUNC_2_EP_IN_SZ_MAX
+ 156:lib/tinyusb/src/class/audio/audio_device.h **** #error EP software buffer size MUST BE at least as big as maximum EP size
+ 157:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 158:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 159:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 160:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 2
+ 161:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_FUNC_3_EP_IN_SW_BUF_SZ < CFG_TUD_AUDIO_FUNC_3_EP_IN_SZ_MAX
+ 162:lib/tinyusb/src/class/audio/audio_device.h **** #error EP software buffer size MUST BE at least as big as maximum EP size
+ 163:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 164:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 165:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 166:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 167:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_OUT
+ 168:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ < CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX
+ 169:lib/tinyusb/src/class/audio/audio_device.h **** #error EP software buffer size MUST BE at least as big as maximum EP size
+ 170:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 171:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 172:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 1
+ 173:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_FUNC_2_EP_OUT_SW_BUF_SZ < CFG_TUD_AUDIO_FUNC_2_EP_OUT_SZ_MAX
+ 174:lib/tinyusb/src/class/audio/audio_device.h **** #error EP software buffer size MUST BE at least as big as maximum EP size
+ 175:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 176:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 177:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 178:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 2
+ 179:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_FUNC_3_EP_OUT_SW_BUF_SZ < CFG_TUD_AUDIO_FUNC_3_EP_OUT_SZ_MAX
+ 180:lib/tinyusb/src/class/audio/audio_device.h **** #error EP software buffer size MUST BE at least as big as maximum EP size
+ 181:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 182:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 183:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 184:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 185:lib/tinyusb/src/class/audio/audio_device.h **** // (For TYPE-I format only) Flow control is necessary to allow IN ep send correct amount of data, u
+ 186:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_EP_IN_FLOW_CONTROL
+ 187:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_EP_IN_FLOW_CONTROL  1
+ 188:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 189:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 190:lib/tinyusb/src/class/audio/audio_device.h **** // Enable/disable feedback EP (required for asynchronous RX applications)
+ 191:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_ENABLE_FEEDBACK_EP
+ 192:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_ENABLE_FEEDBACK_EP                    0                             // Feedba
+ 193:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 194:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 195:lib/tinyusb/src/class/audio/audio_device.h **** // Enable/disable conversion from 16.16 to 10.14 format on full-speed devices. See tud_audio_n_fb_s
+ 196:lib/tinyusb/src/class/audio/audio_device.h **** // Can be override by tud_audio_feedback_format_correction_cb()
+ 197:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_ENABLE_FEEDBACK_FORMAT_CORRECTION
+ 198:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_ENABLE_FEEDBACK_FORMAT_CORRECTION     0                             // 0 or 1
+ 199:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 200:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 201:lib/tinyusb/src/class/audio/audio_device.h **** // Enable/disable interrupt EP (required for notifying host of control changes)
+ 202:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_ENABLE_INTERRUPT_EP
+ 203:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_ENABLE_INTERRUPT_EP                   0                             // Feedba
+ 204:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 205:lib/tinyusb/src/class/audio/audio_device.h **** 
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 14
+
+
+ 206:lib/tinyusb/src/class/audio/audio_device.h **** // Use software encoding/decoding
+ 207:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 208:lib/tinyusb/src/class/audio/audio_device.h **** // The software coding feature of the driver is not mandatory. It is useful if, for instance, you h
+ 209:lib/tinyusb/src/class/audio/audio_device.h **** // into a single PCM stream as SAMPLE_1 | SAMPLE_2 | SAMPLE_3 | SAMPLE_4.
+ 210:lib/tinyusb/src/class/audio/audio_device.h **** //
+ 211:lib/tinyusb/src/class/audio/audio_device.h **** // Currently, only PCM type I encoding/decoding is supported!
+ 212:lib/tinyusb/src/class/audio/audio_device.h **** //
+ 213:lib/tinyusb/src/class/audio/audio_device.h **** // If the coding feature is to be used, support FIFOs need to be configured. Their sizes and number
+ 214:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 215:lib/tinyusb/src/class/audio/audio_device.h **** // Encoding/decoding is done in software and thus time consuming. If you can encode/decode your str
+ 216:lib/tinyusb/src/class/audio/audio_device.h **** // support FIFOs but write/read directly into/from the EP_X_SW_BUFFER_FIFOs using
+ 217:lib/tinyusb/src/class/audio/audio_device.h **** // - tud_audio_n_write() or
+ 218:lib/tinyusb/src/class/audio/audio_device.h **** // - tud_audio_n_read().
+ 219:lib/tinyusb/src/class/audio/audio_device.h **** // To write/read to/from the support FIFOs use
+ 220:lib/tinyusb/src/class/audio/audio_device.h **** // - tud_audio_n_write_support_ff() or
+ 221:lib/tinyusb/src/class/audio/audio_device.h **** // - tud_audio_n_read_support_ff().
+ 222:lib/tinyusb/src/class/audio/audio_device.h **** //
+ 223:lib/tinyusb/src/class/audio/audio_device.h **** // The encoding/decoding format type done is defined below.
+ 224:lib/tinyusb/src/class/audio/audio_device.h **** //
+ 225:lib/tinyusb/src/class/audio/audio_device.h **** // The encoding/decoding starts when the private callback functions
+ 226:lib/tinyusb/src/class/audio/audio_device.h **** // - audio_tx_done_cb()
+ 227:lib/tinyusb/src/class/audio/audio_device.h **** // - audio_rx_done_cb()
+ 228:lib/tinyusb/src/class/audio/audio_device.h **** // are invoked. If support FIFOs are used, the corresponding encoding/decoding functions are called
+ 229:lib/tinyusb/src/class/audio/audio_device.h **** // Once encoding/decoding is done the result is put directly into the EP_X_SW_BUFFER_FIFOs. You can
+ 230:lib/tinyusb/src/class/audio/audio_device.h **** // - tud_audio_tx_done_pre_load_cb() or tud_audio_tx_done_post_load_cb()
+ 231:lib/tinyusb/src/class/audio/audio_device.h **** // - tud_audio_rx_done_pre_read_cb() or tud_audio_rx_done_post_read_cb()
+ 232:lib/tinyusb/src/class/audio/audio_device.h **** // if you want to get informed what happened.
+ 233:lib/tinyusb/src/class/audio/audio_device.h **** //
+ 234:lib/tinyusb/src/class/audio/audio_device.h **** // If you don't use the support FIFOs you may use the public callback functions
+ 235:lib/tinyusb/src/class/audio/audio_device.h **** // - tud_audio_tx_done_pre_load_cb() or tud_audio_tx_done_post_load_cb()
+ 236:lib/tinyusb/src/class/audio/audio_device.h **** // - tud_audio_rx_done_pre_read_cb() or tud_audio_rx_done_post_read_cb()
+ 237:lib/tinyusb/src/class/audio/audio_device.h **** // to write/read from/into the EP_X_SW_BUFFER_FIFOs at the right time.
+ 238:lib/tinyusb/src/class/audio/audio_device.h **** //
+ 239:lib/tinyusb/src/class/audio/audio_device.h **** // If you need a different encoding which is not support so far implement it in the
+ 240:lib/tinyusb/src/class/audio/audio_device.h **** // - audio_tx_done_cb()
+ 241:lib/tinyusb/src/class/audio/audio_device.h **** // - audio_rx_done_cb()
+ 242:lib/tinyusb/src/class/audio/audio_device.h **** // functions.
+ 243:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 244:lib/tinyusb/src/class/audio/audio_device.h **** // Enable encoding/decodings - for these to work, support FIFOs need to be setup in appropriate num
+ 245:lib/tinyusb/src/class/audio/audio_device.h **** // The actual coding parameters of active AS alternate interface is parsed from the descriptors
+ 246:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 247:lib/tinyusb/src/class/audio/audio_device.h **** // The item size of the FIFO is always fixed to one i.e. bytes! Furthermore, the actively used FIFO
+ 248:lib/tinyusb/src/class/audio/audio_device.h **** // of the current sample size in order to avoid samples to get split up in case of a wrap in the FI
+ 249:lib/tinyusb/src/class/audio/audio_device.h **** // This is important to remind in case you use DMAs! If the sample sizes changes, the DMA MUST BE R
+ 250:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 251:lib/tinyusb/src/class/audio/audio_device.h **** // For PCM encoding/decoding
+ 252:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 253:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_ENABLE_ENCODING
+ 254:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_ENABLE_ENCODING                       0
+ 255:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 256:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 257:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_ENABLE_DECODING
+ 258:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_ENABLE_DECODING                       0
+ 259:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 260:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 261:lib/tinyusb/src/class/audio/audio_device.h **** // This enabling allows to save the current coding parameters e.g. # of bytes per sample etc. - TYP
+ 262:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_ENABLE_TYPE_I_ENCODING
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 15
+
+
+ 263:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_ENABLE_TYPE_I_ENCODING                0
+ 264:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 265:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 266:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_ENABLE_TYPE_I_DECODING
+ 267:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_ENABLE_TYPE_I_DECODING                0
+ 268:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 269:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 270:lib/tinyusb/src/class/audio/audio_device.h **** // Type I Coding parameters not given within UAC2 descriptors
+ 271:lib/tinyusb/src/class/audio/audio_device.h **** // It would be possible to allow for a more flexible setting and not fix this parameter as done bel
+ 272:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_IN && CFG_TUD_AUDIO_ENABLE_ENCODING && CFG_TUD_AUDIO_ENABLE_TYPE_I_ENCO
+ 273:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_1_CHANNEL_PER_FIFO_TX
+ 274:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the number of channels per FIFO for the interleaved encoding! E.g. 
+ 275:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 276:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 1
+ 277:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_2_CHANNEL_PER_FIFO_TX
+ 278:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the number of channels per FIFO for the interleaved encoding! E.g. 
+ 279:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 280:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 281:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 2
+ 282:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_3_CHANNEL_PER_FIFO_TX
+ 283:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the number of channels per FIFO for the interleaved encoding! E.g. 
+ 284:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 285:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 286:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 287:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 288:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_OUT && CFG_TUD_AUDIO_ENABLE_DECODING && CFG_TUD_AUDIO_ENABLE_TYPE_I_DEC
+ 289:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_1_CHANNEL_PER_FIFO_RX
+ 290:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the number of channels per FIFO for the interleaved encoding! E.g. 
+ 291:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 292:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 1
+ 293:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_2_CHANNEL_PER_FIFO_RX
+ 294:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the number of channels per FIFO for the interleaved encoding! E.g. 
+ 295:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 296:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 297:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO > 2
+ 298:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_3_CHANNEL_PER_FIFO_RX
+ 299:lib/tinyusb/src/class/audio/audio_device.h **** #error You must tell the driver the number of channels per FIFO for the interleaved encoding! E.g. 
+ 300:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 301:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 302:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 303:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 304:lib/tinyusb/src/class/audio/audio_device.h **** // Remaining types not support so far
+ 305:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 306:lib/tinyusb/src/class/audio/audio_device.h **** // Number of support FIFOs to set up - multiple channels can be handled by one FIFO - very common i
+ 307:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_1_N_TX_SUPP_SW_FIFO
+ 308:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_1_N_TX_SUPP_SW_FIFO              0
+ 309:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 310:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_2_N_TX_SUPP_SW_FIFO
+ 311:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_2_N_TX_SUPP_SW_FIFO              0
+ 312:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 313:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_3_N_TX_SUPP_SW_FIFO
+ 314:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_3_N_TX_SUPP_SW_FIFO              0
+ 315:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 316:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 317:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_1_N_RX_SUPP_SW_FIFO
+ 318:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_1_N_RX_SUPP_SW_FIFO              0
+ 319:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 16
+
+
+ 320:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_2_N_RX_SUPP_SW_FIFO
+ 321:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_2_N_RX_SUPP_SW_FIFO              0
+ 322:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 323:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_3_N_RX_SUPP_SW_FIFO
+ 324:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_3_N_RX_SUPP_SW_FIFO              0
+ 325:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 326:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 327:lib/tinyusb/src/class/audio/audio_device.h **** // Size of support FIFOs IN BYTES - if size > 0 there are as many FIFOs set up as CFG_TUD_AUDIO_FUN
+ 328:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_1_TX_SUPP_SW_FIFO_SZ
+ 329:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_1_TX_SUPP_SW_FIFO_SZ             0         // FIFO size - minimum size: 
+ 330:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 331:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_2_TX_SUPP_SW_FIFO_SZ
+ 332:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_2_TX_SUPP_SW_FIFO_SZ             0
+ 333:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 334:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_3_TX_SUPP_SW_FIFO_SZ
+ 335:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_3_TX_SUPP_SW_FIFO_SZ             0
+ 336:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 337:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 338:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_1_RX_SUPP_SW_FIFO_SZ
+ 339:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_1_RX_SUPP_SW_FIFO_SZ             0         // FIFO size - minimum size: 
+ 340:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 341:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_2_RX_SUPP_SW_FIFO_SZ
+ 342:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_2_RX_SUPP_SW_FIFO_SZ             0
+ 343:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 344:lib/tinyusb/src/class/audio/audio_device.h **** #ifndef CFG_TUD_AUDIO_FUNC_3_RX_SUPP_SW_FIFO_SZ
+ 345:lib/tinyusb/src/class/audio/audio_device.h **** #define CFG_TUD_AUDIO_FUNC_3_RX_SUPP_SW_FIFO_SZ             0
+ 346:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 347:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 348:lib/tinyusb/src/class/audio/audio_device.h **** //static_assert(sizeof(tud_audio_desc_lengths) != CFG_TUD_AUDIO, "Supply audio function descriptor 
+ 349:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 350:lib/tinyusb/src/class/audio/audio_device.h **** // Supported types of this driver:
+ 351:lib/tinyusb/src/class/audio/audio_device.h **** // AUDIO_DATA_FORMAT_TYPE_I_PCM     -   Required definitions: CFG_TUD_AUDIO_N_CHANNELS and CFG_TUD_
+ 352:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 353:lib/tinyusb/src/class/audio/audio_device.h **** #ifdef __cplusplus
+ 354:lib/tinyusb/src/class/audio/audio_device.h **** extern "C" {
+ 355:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 356:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 357:lib/tinyusb/src/class/audio/audio_device.h **** /** \addtogroup AUDIO_Serial Serial
+ 358:lib/tinyusb/src/class/audio/audio_device.h ****  *  @{
+ 359:lib/tinyusb/src/class/audio/audio_device.h ****  *  \defgroup   AUDIO_Serial_Device Device
+ 360:lib/tinyusb/src/class/audio/audio_device.h ****  *  @{ */
+ 361:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 362:lib/tinyusb/src/class/audio/audio_device.h **** //--------------------------------------------------------------------+
+ 363:lib/tinyusb/src/class/audio/audio_device.h **** // Application API (Multiple Interfaces)
+ 364:lib/tinyusb/src/class/audio/audio_device.h **** // CFG_TUD_AUDIO > 1
+ 365:lib/tinyusb/src/class/audio/audio_device.h **** //--------------------------------------------------------------------+
+ 366:lib/tinyusb/src/class/audio/audio_device.h **** bool     tud_audio_n_mounted    (uint8_t func_id);
+ 367:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 368:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_OUT && !CFG_TUD_AUDIO_ENABLE_DECODING
+ 369:lib/tinyusb/src/class/audio/audio_device.h **** uint16_t tud_audio_n_available                    (uint8_t func_id);
+ 370:lib/tinyusb/src/class/audio/audio_device.h **** uint16_t tud_audio_n_read                         (uint8_t func_id, void* buffer, uint16_t bufsize)
+ 371:lib/tinyusb/src/class/audio/audio_device.h **** bool     tud_audio_n_clear_ep_out_ff              (uint8_t func_id);                          // De
+ 372:lib/tinyusb/src/class/audio/audio_device.h **** tu_fifo_t*   tud_audio_n_get_ep_out_ff            (uint8_t func_id);
+ 373:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 374:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 375:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_OUT && CFG_TUD_AUDIO_ENABLE_DECODING
+ 376:lib/tinyusb/src/class/audio/audio_device.h **** bool     tud_audio_n_clear_rx_support_ff          (uint8_t func_id, uint8_t ff_idx);       // Delet
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 17
+
+
+ 377:lib/tinyusb/src/class/audio/audio_device.h **** uint16_t tud_audio_n_available_support_ff         (uint8_t func_id, uint8_t ff_idx);
+ 378:lib/tinyusb/src/class/audio/audio_device.h **** uint16_t tud_audio_n_read_support_ff              (uint8_t func_id, uint8_t ff_idx, void* buffer, u
+ 379:lib/tinyusb/src/class/audio/audio_device.h **** tu_fifo_t* tud_audio_n_get_rx_support_ff          (uint8_t func_id, uint8_t ff_idx);
+ 380:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 381:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 382:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_IN && !CFG_TUD_AUDIO_ENABLE_ENCODING
+ 383:lib/tinyusb/src/class/audio/audio_device.h **** uint16_t tud_audio_n_write                        (uint8_t func_id, const void * data, uint16_t len
+ 384:lib/tinyusb/src/class/audio/audio_device.h **** bool     tud_audio_n_clear_ep_in_ff               (uint8_t func_id);                          // De
+ 385:lib/tinyusb/src/class/audio/audio_device.h **** tu_fifo_t*   tud_audio_n_get_ep_in_ff             (uint8_t func_id);
+ 386:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 387:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 388:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_IN && CFG_TUD_AUDIO_ENABLE_ENCODING
+ 389:lib/tinyusb/src/class/audio/audio_device.h **** uint16_t tud_audio_n_flush_tx_support_ff          (uint8_t func_id);      // Force all content in t
+ 390:lib/tinyusb/src/class/audio/audio_device.h **** bool     tud_audio_n_clear_tx_support_ff          (uint8_t func_id, uint8_t ff_idx);
+ 391:lib/tinyusb/src/class/audio/audio_device.h **** uint16_t tud_audio_n_write_support_ff             (uint8_t func_id, uint8_t ff_idx, const void * da
+ 392:lib/tinyusb/src/class/audio/audio_device.h **** tu_fifo_t* tud_audio_n_get_tx_support_ff          (uint8_t func_id, uint8_t ff_idx);
+ 393:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 394:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 395:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_INTERRUPT_EP
+ 396:lib/tinyusb/src/class/audio/audio_device.h **** bool    tud_audio_int_n_write                     (uint8_t func_id, const audio_interrupt_data_t * 
+ 397:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 398:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 399:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 400:lib/tinyusb/src/class/audio/audio_device.h **** //--------------------------------------------------------------------+
+ 401:lib/tinyusb/src/class/audio/audio_device.h **** // Application API (Interface0)
+ 402:lib/tinyusb/src/class/audio/audio_device.h **** //--------------------------------------------------------------------+
+ 403:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 404:lib/tinyusb/src/class/audio/audio_device.h **** static inline bool         tud_audio_mounted                (void);
+ 405:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 406:lib/tinyusb/src/class/audio/audio_device.h **** // RX API
+ 407:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 408:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_OUT && !CFG_TUD_AUDIO_ENABLE_DECODING
+ 409:lib/tinyusb/src/class/audio/audio_device.h **** static inline uint16_t     tud_audio_available              (void);
+ 410:lib/tinyusb/src/class/audio/audio_device.h **** static inline bool         tud_audio_clear_ep_out_ff        (void);                       // Delete
+ 411:lib/tinyusb/src/class/audio/audio_device.h **** static inline uint16_t     tud_audio_read                   (void* buffer, uint16_t bufsize);
+ 412:lib/tinyusb/src/class/audio/audio_device.h **** static inline tu_fifo_t*   tud_audio_get_ep_out_ff          (void);
+ 413:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 414:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 415:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_OUT && CFG_TUD_AUDIO_ENABLE_DECODING
+ 416:lib/tinyusb/src/class/audio/audio_device.h **** static inline bool     tud_audio_clear_rx_support_ff        (uint8_t ff_idx);
+ 417:lib/tinyusb/src/class/audio/audio_device.h **** static inline uint16_t tud_audio_available_support_ff       (uint8_t ff_idx);
+ 418:lib/tinyusb/src/class/audio/audio_device.h **** static inline uint16_t tud_audio_read_support_ff            (uint8_t ff_idx, void* buffer, uint16_t
+ 419:lib/tinyusb/src/class/audio/audio_device.h **** static inline tu_fifo_t* tud_audio_get_rx_support_ff        (uint8_t ff_idx);
+ 420:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 421:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 422:lib/tinyusb/src/class/audio/audio_device.h **** // TX API
+ 423:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 424:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_IN && !CFG_TUD_AUDIO_ENABLE_ENCODING
+ 425:lib/tinyusb/src/class/audio/audio_device.h **** static inline uint16_t tud_audio_write                      (const void * data, uint16_t len);
+ 426:lib/tinyusb/src/class/audio/audio_device.h **** static inline bool 	   tud_audio_clear_ep_in_ff             (void);
+ 427:lib/tinyusb/src/class/audio/audio_device.h **** static inline tu_fifo_t* tud_audio_get_ep_in_ff             (void);
+ 428:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 429:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 430:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_IN && CFG_TUD_AUDIO_ENABLE_ENCODING
+ 431:lib/tinyusb/src/class/audio/audio_device.h **** static inline uint16_t tud_audio_flush_tx_support_ff        (void);
+ 432:lib/tinyusb/src/class/audio/audio_device.h **** static inline uint16_t tud_audio_clear_tx_support_ff        (uint8_t ff_idx);
+ 433:lib/tinyusb/src/class/audio/audio_device.h **** static inline uint16_t tud_audio_write_support_ff           (uint8_t ff_idx, const void * data, uin
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 18
+
+
+ 434:lib/tinyusb/src/class/audio/audio_device.h **** static inline tu_fifo_t* tud_audio_get_tx_support_ff        (uint8_t ff_idx);
+ 435:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 436:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 437:lib/tinyusb/src/class/audio/audio_device.h **** // INT CTR API
+ 438:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 439:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_INTERRUPT_EP
+ 440:lib/tinyusb/src/class/audio/audio_device.h **** static inline bool tud_audio_int_write                      (const audio_interrupt_data_t * data);
+ 441:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 442:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 443:lib/tinyusb/src/class/audio/audio_device.h **** // Buffer control EP data and schedule a transmit
+ 444:lib/tinyusb/src/class/audio/audio_device.h **** // This function is intended to be used if you do not have a persistent buffer or memory location a
+ 445:lib/tinyusb/src/class/audio/audio_device.h **** // get request. This function buffers your answer request frame into the control buffer of the corr
+ 446:lib/tinyusb/src/class/audio/audio_device.h **** // Since transmission is triggered via interrupts, a persistent memory location is required onto wh
+ 447:lib/tinyusb/src/class/audio/audio_device.h **** // available you may directly use 'tud_control_xfer(...)'. In this case data does not need to be co
+ 448:lib/tinyusb/src/class/audio/audio_device.h **** // If the request's wLength is zero, a status packet is sent instead.
+ 449:lib/tinyusb/src/class/audio/audio_device.h **** bool tud_audio_buffer_and_schedule_control_xfer(uint8_t rhport, tusb_control_request_t const * p_re
+ 450:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 451:lib/tinyusb/src/class/audio/audio_device.h **** //--------------------------------------------------------------------+
+ 452:lib/tinyusb/src/class/audio/audio_device.h **** // Application Callback API
+ 453:lib/tinyusb/src/class/audio/audio_device.h **** //--------------------------------------------------------------------+
+ 454:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 455:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_IN
+ 456:lib/tinyusb/src/class/audio/audio_device.h **** bool tud_audio_tx_done_pre_load_cb(uint8_t rhport, uint8_t func_id, uint8_t ep_in, uint8_t cur_alt_
+ 457:lib/tinyusb/src/class/audio/audio_device.h **** bool tud_audio_tx_done_post_load_cb(uint8_t rhport, uint16_t n_bytes_copied, uint8_t func_id, uint8
+ 458:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 459:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 460:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_OUT
+ 461:lib/tinyusb/src/class/audio/audio_device.h **** bool tud_audio_rx_done_pre_read_cb(uint8_t rhport, uint16_t n_bytes_received, uint8_t func_id, uint
+ 462:lib/tinyusb/src/class/audio/audio_device.h **** bool tud_audio_rx_done_post_read_cb(uint8_t rhport, uint16_t n_bytes_received, uint8_t func_id, uin
+ 463:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 464:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 465:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_OUT && CFG_TUD_AUDIO_ENABLE_FEEDBACK_EP
+ 466:lib/tinyusb/src/class/audio/audio_device.h **** void tud_audio_fb_done_cb(uint8_t func_id);
+ 467:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 468:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 469:lib/tinyusb/src/class/audio/audio_device.h **** // Note about feedback calculation
+ 470:lib/tinyusb/src/class/audio/audio_device.h **** //
+ 471:lib/tinyusb/src/class/audio/audio_device.h **** // Option 1 - AUDIO_FEEDBACK_METHOD_FIFO_COUNT
+ 472:lib/tinyusb/src/class/audio/audio_device.h **** // Feedback value is calculated within the audio driver by regulating the FIFO level to half fill.
+ 473:lib/tinyusb/src/class/audio/audio_device.h **** // Advantage: No ISR interrupt is enabled, hence the CPU need not to handle an ISR every 1ms or 125
+ 474:lib/tinyusb/src/class/audio/audio_device.h **** // (Windows, Linux, OSX) with a reliable result so far.
+ 475:lib/tinyusb/src/class/audio/audio_device.h **** // Disadvantage: A FIFO of minimal 4 frames is needed to compensate for jitter, an average delay of
+ 476:lib/tinyusb/src/class/audio/audio_device.h **** //
+ 477:lib/tinyusb/src/class/audio/audio_device.h **** // Option 2 - AUDIO_FEEDBACK_METHOD_FREQUENCY_FIXED / AUDIO_FEEDBACK_METHOD_FREQUENCY_FLOAT
+ 478:lib/tinyusb/src/class/audio/audio_device.h **** // Feedback value is calculated within the audio driver by use of SOF interrupt. The driver needs i
+ 479:lib/tinyusb/src/class/audio/audio_device.h **** // which the audio sample frequency f_s is derived, f_s itself, and the cycle count of f_m at time 
+ 480:lib/tinyusb/src/class/audio/audio_device.h **** // See tud_audio_set_fb_params() and tud_audio_feedback_update()
+ 481:lib/tinyusb/src/class/audio/audio_device.h **** // Advantage: Reduced jitter in the feedback value computation, hence, the receive FIFO can be smal
+ 482:lib/tinyusb/src/class/audio/audio_device.h **** // Disadvantage: higher CPU load due to SOF ISR handling every frame i.e. 1ms or 125us. (The most c
+ 483:lib/tinyusb/src/class/audio/audio_device.h **** // It is read from within the SOF ISR - see: audiod_sof() -, hence, the ISR must has a high priorit
+ 484:lib/tinyusb/src/class/audio/audio_device.h **** // Long-term drift could occur since error is accumulated.
+ 485:lib/tinyusb/src/class/audio/audio_device.h **** //
+ 486:lib/tinyusb/src/class/audio/audio_device.h **** // Option 3 - manual
+ 487:lib/tinyusb/src/class/audio/audio_device.h **** // Determined by the user itself and set by use of tud_audio_n_fb_set(). The feedback value may be 
+ 488:lib/tinyusb/src/class/audio/audio_device.h **** // Advantage: No ISR interrupt is enabled, hence the CPU need not to handle an ISR every 1ms or 125
+ 489:lib/tinyusb/src/class/audio/audio_device.h **** // Disadvantage: typically a larger FIFO is needed to compensate for jitter (e.g. 6 frames), i.e. a
+ 490:lib/tinyusb/src/class/audio/audio_device.h **** 
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 19
+
+
+ 491:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 492:lib/tinyusb/src/class/audio/audio_device.h **** // This function is used to provide data rate feedback from an asynchronous sink. Feedback value wi
+ 493:lib/tinyusb/src/class/audio/audio_device.h **** //
+ 494:lib/tinyusb/src/class/audio/audio_device.h **** // The feedback format is specified to be 16.16 for HS and 10.14 for FS devices (see Universal Seri
+ 495:lib/tinyusb/src/class/audio/audio_device.h **** // the choice of format is left to the caller and feedback argument is sent as-is. If CFG_TUD_AUDIO
+ 496:lib/tinyusb/src/class/audio/audio_device.h **** // return true, then tinyusb expects 16.16 format and handles the conversion to 10.14 on FS.
+ 497:lib/tinyusb/src/class/audio/audio_device.h **** //
+ 498:lib/tinyusb/src/class/audio/audio_device.h **** // Note that due to a bug in its USB Audio 2.0 driver, Windows currently requires 16.16 format for 
+ 499:lib/tinyusb/src/class/audio/audio_device.h **** // driver can work with either format.
+ 500:lib/tinyusb/src/class/audio/audio_device.h **** //
+ 501:lib/tinyusb/src/class/audio/audio_device.h **** // Feedback value can be determined from within the SOF ISR of the audio driver. This should reduce
+ 502:lib/tinyusb/src/class/audio/audio_device.h **** //
+ 503:lib/tinyusb/src/class/audio/audio_device.h **** // Determine feedback value - The feedback method is described in 5.12.4.2 of the USB 2.0 spec
+ 504:lib/tinyusb/src/class/audio/audio_device.h **** // Boiled down, the feedback value Ff = n_samples / (micro)frame.
+ 505:lib/tinyusb/src/class/audio/audio_device.h **** // Since an accuracy of less than 1 Sample / second is desired, at least n_frames = ceil(2^K * f_s 
+ 506:lib/tinyusb/src/class/audio/audio_device.h **** // for high speed, f_s is the sampling frequency e.g. 48 kHz and f_m is the cpu clock frequency e.g
+ 507:lib/tinyusb/src/class/audio/audio_device.h **** // The update interval in the (4.10.2.1) Feedback Endpoint Descriptor must be less or equal to 2^(K
+ 508:lib/tinyusb/src/class/audio/audio_device.h **** // feedback = n_cycles / n_frames * f_s / f_m in 16.16 format, where n_cycles are the number of mai
+ 509:lib/tinyusb/src/class/audio/audio_device.h **** bool tud_audio_n_fb_set(uint8_t func_id, uint32_t feedback);
+ 510:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 511:lib/tinyusb/src/class/audio/audio_device.h **** // Update feedback value with passed MCLK cycles since last time this update function is called.
+ 512:lib/tinyusb/src/class/audio/audio_device.h **** // Typically called within tud_audio_sof_isr(). Required tud_audio_feedback_params_cb() is implemen
+ 513:lib/tinyusb/src/class/audio/audio_device.h **** // This function will also call tud_audio_feedback_set()
+ 514:lib/tinyusb/src/class/audio/audio_device.h **** // return feedback value in 16.16 for reference (0 for error)
+ 515:lib/tinyusb/src/class/audio/audio_device.h **** // Example :
+ 516:lib/tinyusb/src/class/audio/audio_device.h **** //   binterval=3 (4ms); FS = 48kHz; MCLK = 12.288MHz
+ 517:lib/tinyusb/src/class/audio/audio_device.h **** //   In 4 SOF MCLK counted 49152 cycles
+ 518:lib/tinyusb/src/class/audio/audio_device.h **** uint32_t tud_audio_feedback_update(uint8_t func_id, uint32_t cycles);
+ 519:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 520:lib/tinyusb/src/class/audio/audio_device.h **** enum {
+ 521:lib/tinyusb/src/class/audio/audio_device.h ****   AUDIO_FEEDBACK_METHOD_DISABLED,
+ 522:lib/tinyusb/src/class/audio/audio_device.h ****   AUDIO_FEEDBACK_METHOD_FREQUENCY_FIXED,
+ 523:lib/tinyusb/src/class/audio/audio_device.h ****   AUDIO_FEEDBACK_METHOD_FREQUENCY_FLOAT,
+ 524:lib/tinyusb/src/class/audio/audio_device.h ****   AUDIO_FEEDBACK_METHOD_FREQUENCY_POWER_OF_2, // For driver internal use only
+ 525:lib/tinyusb/src/class/audio/audio_device.h ****   AUDIO_FEEDBACK_METHOD_FIFO_COUNT
+ 526:lib/tinyusb/src/class/audio/audio_device.h **** };
+ 527:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 528:lib/tinyusb/src/class/audio/audio_device.h **** typedef struct {
+ 529:lib/tinyusb/src/class/audio/audio_device.h ****   uint8_t method;
+ 530:lib/tinyusb/src/class/audio/audio_device.h ****   uint32_t sample_freq;   //  sample frequency in Hz
+ 531:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 532:lib/tinyusb/src/class/audio/audio_device.h ****   union {
+ 533:lib/tinyusb/src/class/audio/audio_device.h ****     struct {
+ 534:lib/tinyusb/src/class/audio/audio_device.h ****       uint32_t mclk_freq; // Main clock frequency in Hz i.e. master clock to which sample clock is 
+ 535:lib/tinyusb/src/class/audio/audio_device.h ****     }frequency;
+ 536:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 537:lib/tinyusb/src/class/audio/audio_device.h ****   };
+ 538:lib/tinyusb/src/class/audio/audio_device.h **** }audio_feedback_params_t;
+ 539:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 540:lib/tinyusb/src/class/audio/audio_device.h **** // Invoked when needed to set feedback parameters
+ 541:lib/tinyusb/src/class/audio/audio_device.h **** void tud_audio_feedback_params_cb(uint8_t func_id, uint8_t alt_itf, audio_feedback_params_t* feedba
+ 542:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 543:lib/tinyusb/src/class/audio/audio_device.h **** // Callback in ISR context, invoked periodically according to feedback endpoint bInterval.
+ 544:lib/tinyusb/src/class/audio/audio_device.h **** // Could be used to compute and update feedback value, should be placed in RAM if possible
+ 545:lib/tinyusb/src/class/audio/audio_device.h **** // frame_number  : current SOF count
+ 546:lib/tinyusb/src/class/audio/audio_device.h **** // interval_shift: number of bit shift i.e log2(interval) from Feedback endpoint descriptor
+ 547:lib/tinyusb/src/class/audio/audio_device.h **** TU_ATTR_FAST_FUNC void tud_audio_feedback_interval_isr(uint8_t func_id, uint32_t frame_number, uint
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 20
+
+
+ 548:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 549:lib/tinyusb/src/class/audio/audio_device.h **** // (Full-Speed only) Callback to set feedback format correction is applied or not,
+ 550:lib/tinyusb/src/class/audio/audio_device.h **** // default to CFG_TUD_AUDIO_ENABLE_FEEDBACK_FORMAT_CORRECTION if not implemented.
+ 551:lib/tinyusb/src/class/audio/audio_device.h **** bool tud_audio_feedback_format_correction_cb(uint8_t func_id);
+ 552:lib/tinyusb/src/class/audio/audio_device.h **** #endif // CFG_TUD_AUDIO_ENABLE_EP_OUT && CFG_TUD_AUDIO_ENABLE_FEEDBACK_EP
+ 553:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 554:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_INTERRUPT_EP
+ 555:lib/tinyusb/src/class/audio/audio_device.h **** void tud_audio_int_done_cb(uint8_t rhport);
+ 556:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 557:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 558:lib/tinyusb/src/class/audio/audio_device.h **** // Invoked when audio set interface request received
+ 559:lib/tinyusb/src/class/audio/audio_device.h **** bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const * p_request);
+ 560:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 561:lib/tinyusb/src/class/audio/audio_device.h **** // Invoked when audio set interface request received which closes an EP
+ 562:lib/tinyusb/src/class/audio/audio_device.h **** bool tud_audio_set_itf_close_EP_cb(uint8_t rhport, tusb_control_request_t const * p_request);
+ 563:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 564:lib/tinyusb/src/class/audio/audio_device.h **** // Invoked when audio class specific set request received for an EP
+ 565:lib/tinyusb/src/class/audio/audio_device.h **** bool tud_audio_set_req_ep_cb(uint8_t rhport, tusb_control_request_t const * p_request, uint8_t *pBu
+ 566:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 567:lib/tinyusb/src/class/audio/audio_device.h **** // Invoked when audio class specific set request received for an interface
+ 568:lib/tinyusb/src/class/audio/audio_device.h **** bool tud_audio_set_req_itf_cb(uint8_t rhport, tusb_control_request_t const * p_request, uint8_t *pB
+ 569:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 570:lib/tinyusb/src/class/audio/audio_device.h **** // Invoked when audio class specific set request received for an entity
+ 571:lib/tinyusb/src/class/audio/audio_device.h **** bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const * p_request, uint8_t 
+ 572:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 573:lib/tinyusb/src/class/audio/audio_device.h **** // Invoked when audio class specific get request received for an EP
+ 574:lib/tinyusb/src/class/audio/audio_device.h **** bool tud_audio_get_req_ep_cb(uint8_t rhport, tusb_control_request_t const * p_request);
+ 575:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 576:lib/tinyusb/src/class/audio/audio_device.h **** // Invoked when audio class specific get request received for an interface
+ 577:lib/tinyusb/src/class/audio/audio_device.h **** bool tud_audio_get_req_itf_cb(uint8_t rhport, tusb_control_request_t const * p_request);
+ 578:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 579:lib/tinyusb/src/class/audio/audio_device.h **** // Invoked when audio class specific get request received for an entity
+ 580:lib/tinyusb/src/class/audio/audio_device.h **** bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const * p_request);
+ 581:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 582:lib/tinyusb/src/class/audio/audio_device.h **** //--------------------------------------------------------------------+
+ 583:lib/tinyusb/src/class/audio/audio_device.h **** // Inline Functions
+ 584:lib/tinyusb/src/class/audio/audio_device.h **** //--------------------------------------------------------------------+
+ 585:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 586:lib/tinyusb/src/class/audio/audio_device.h **** static inline bool tud_audio_mounted(void)
+ 587:lib/tinyusb/src/class/audio/audio_device.h **** {
+ 588:lib/tinyusb/src/class/audio/audio_device.h ****   return tud_audio_n_mounted(0);
+ 589:lib/tinyusb/src/class/audio/audio_device.h **** }
+ 590:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 591:lib/tinyusb/src/class/audio/audio_device.h **** // RX API
+ 592:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 593:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_OUT && !CFG_TUD_AUDIO_ENABLE_DECODING
+ 594:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 595:lib/tinyusb/src/class/audio/audio_device.h **** static inline uint16_t tud_audio_available(void)
+ 596:lib/tinyusb/src/class/audio/audio_device.h **** {
+ 597:lib/tinyusb/src/class/audio/audio_device.h ****   return tud_audio_n_available(0);
+ 598:lib/tinyusb/src/class/audio/audio_device.h **** }
+ 599:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 600:lib/tinyusb/src/class/audio/audio_device.h **** static inline uint16_t tud_audio_read(void* buffer, uint16_t bufsize)
+ 601:lib/tinyusb/src/class/audio/audio_device.h **** {
+ 602:lib/tinyusb/src/class/audio/audio_device.h ****   return tud_audio_n_read(0, buffer, bufsize);
+ 603:lib/tinyusb/src/class/audio/audio_device.h **** }
+ 604:lib/tinyusb/src/class/audio/audio_device.h **** 
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 21
+
+
+ 605:lib/tinyusb/src/class/audio/audio_device.h **** static inline bool tud_audio_clear_ep_out_ff(void)
+ 606:lib/tinyusb/src/class/audio/audio_device.h **** {
+ 607:lib/tinyusb/src/class/audio/audio_device.h ****   return tud_audio_n_clear_ep_out_ff(0);
+ 608:lib/tinyusb/src/class/audio/audio_device.h **** }
+ 609:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 610:lib/tinyusb/src/class/audio/audio_device.h **** static inline tu_fifo_t* tud_audio_get_ep_out_ff(void)
+ 611:lib/tinyusb/src/class/audio/audio_device.h **** {
+ 612:lib/tinyusb/src/class/audio/audio_device.h ****   return tud_audio_n_get_ep_out_ff(0);
+ 613:lib/tinyusb/src/class/audio/audio_device.h **** }
+ 614:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 615:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 616:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 617:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_OUT && CFG_TUD_AUDIO_ENABLE_DECODING
+ 618:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 619:lib/tinyusb/src/class/audio/audio_device.h **** static inline bool tud_audio_clear_rx_support_ff(uint8_t ff_idx)
+ 620:lib/tinyusb/src/class/audio/audio_device.h **** {
+ 621:lib/tinyusb/src/class/audio/audio_device.h ****   return tud_audio_n_clear_rx_support_ff(0, ff_idx);
+ 622:lib/tinyusb/src/class/audio/audio_device.h **** }
+ 623:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 624:lib/tinyusb/src/class/audio/audio_device.h **** static inline uint16_t tud_audio_available_support_ff(uint8_t ff_idx)
+ 625:lib/tinyusb/src/class/audio/audio_device.h **** {
+ 626:lib/tinyusb/src/class/audio/audio_device.h ****   return tud_audio_n_available_support_ff(0, ff_idx);
+ 627:lib/tinyusb/src/class/audio/audio_device.h **** }
+ 628:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 629:lib/tinyusb/src/class/audio/audio_device.h **** static inline uint16_t tud_audio_read_support_ff(uint8_t ff_idx, void* buffer, uint16_t bufsize)
+ 630:lib/tinyusb/src/class/audio/audio_device.h **** {
+ 631:lib/tinyusb/src/class/audio/audio_device.h ****   return tud_audio_n_read_support_ff(0, ff_idx, buffer, bufsize);
+ 632:lib/tinyusb/src/class/audio/audio_device.h **** }
+ 633:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 634:lib/tinyusb/src/class/audio/audio_device.h **** static inline tu_fifo_t* tud_audio_get_rx_support_ff(uint8_t ff_idx)
+ 635:lib/tinyusb/src/class/audio/audio_device.h **** {
+ 636:lib/tinyusb/src/class/audio/audio_device.h ****   return tud_audio_n_get_rx_support_ff(0, ff_idx);
+ 637:lib/tinyusb/src/class/audio/audio_device.h **** }
+ 638:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 639:lib/tinyusb/src/class/audio/audio_device.h **** #endif
+ 640:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 641:lib/tinyusb/src/class/audio/audio_device.h **** // TX API
+ 642:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 643:lib/tinyusb/src/class/audio/audio_device.h **** #if CFG_TUD_AUDIO_ENABLE_EP_IN && !CFG_TUD_AUDIO_ENABLE_ENCODING
+ 644:lib/tinyusb/src/class/audio/audio_device.h **** 
+ 645:lib/tinyusb/src/class/audio/audio_device.h **** static inline uint16_t tud_audio_write(const void * data, uint16_t len)
+ 433              		.loc 2 645 24 view .LVU130
+ 434              	.LBB8:
+ 646:lib/tinyusb/src/class/audio/audio_device.h **** {
+ 647:lib/tinyusb/src/class/audio/audio_device.h ****   return tud_audio_n_write(0, data, len);
+ 435              		.loc 2 647 3 view .LVU131
+ 436              		.loc 2 647 10 is_stmt 0 view .LVU132
+ 437 009e 2246     		mov	r2, r4
+ 438 00a0 1549     		ldr	r1, .L46+24
+ 439 00a2 0020     		movs	r0, #0
+ 440 00a4 FFF7FEFF 		bl	tud_audio_n_write
+ 441              	.LVL24:
+ 442              		.loc 2 647 10 view .LVU133
+ 443              	.LBE8:
+ 444              	.LBE7:
+  89:src/usb_audio.c ****     return true;
+ 445              		.loc 1 89 5 is_stmt 1 view .LVU134
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 22
+
+
+  90:src/usb_audio.c **** }
+ 446              		.loc 1 90 1 is_stmt 0 view .LVU135
+ 447 00a8 0120     		movs	r0, #1
+ 448 00aa 70BD     		pop	{r4, r5, r6, pc}
+ 449              	.LVL25:
+ 450              	.L40:
+ 451              		.loc 1 90 1 view .LVU136
+ 452 00ac 4FF0620E 		mov	lr, #98
+ 453 00b0 C424     		movs	r4, #196
+  79:src/usb_audio.c ****     else if(frames < AUD_TARGET_FRAMES - AUD_HYST) send = 47;   // too empty → ease off
+ 454              		.loc 1 79 57 view .LVU137
+ 455 00b2 3123     		movs	r3, #49
+ 456 00b4 C5E7     		b	.L34
+ 457              	.LVL26:
+ 458              	.L45:
+  72:src/usb_audio.c ****         for(uint32_t i = 0; i < 48 * N_CH; i++) tmp[i] = 0; // send silence meanwhile
+ 459              		.loc 1 72 9 is_stmt 1 view .LVU138
+  72:src/usb_audio.c ****         for(uint32_t i = 0; i < 48 * N_CH; i++) tmp[i] = 0; // send silence meanwhile
+ 460              		.loc 1 72 11 is_stmt 0 view .LVU139
+ 461 00b6 B3F5007F 		cmp	r3, #512
+ 462 00ba 01D3     		bcc	.L32
+  72:src/usb_audio.c ****         for(uint32_t i = 0; i < 48 * N_CH; i++) tmp[i] = 0; // send silence meanwhile
+ 463              		.loc 1 72 41 is_stmt 1 discriminator 1 view .LVU140
+  72:src/usb_audio.c ****         for(uint32_t i = 0; i < 48 * N_CH; i++) tmp[i] = 0; // send silence meanwhile
+ 464              		.loc 1 72 50 is_stmt 0 discriminator 1 view .LVU141
+ 465 00bc 0123     		movs	r3, #1
+ 466 00be 1370     		strb	r3, [r2]
+ 467              	.L32:
+ 468              	.LBB9:
+  73:src/usb_audio.c ****         tud_audio_write((uint8_t *)tmp, (uint16_t)(48 * N_CH * 2));
+ 469              		.loc 1 73 56 discriminator 3 view .LVU142
+ 470 00c0 C022     		movs	r2, #192
+ 471 00c2 0021     		movs	r1, #0
+ 472              	.LVL27:
+  73:src/usb_audio.c ****         tud_audio_write((uint8_t *)tmp, (uint16_t)(48 * N_CH * 2));
+ 473              		.loc 1 73 56 discriminator 3 view .LVU143
+ 474 00c4 0C48     		ldr	r0, .L46+24
+ 475 00c6 FFF7FEFF 		bl	memset
+ 476              	.LVL28:
+ 477              	.LBE9:
+  74:src/usb_audio.c ****         return true;
+ 478              		.loc 1 74 9 is_stmt 1 discriminator 3 view .LVU144
+ 479              	.LBB10:
+ 480              	.LBI10:
+ 645:lib/tinyusb/src/class/audio/audio_device.h **** {
+ 481              		.loc 2 645 24 discriminator 3 view .LVU145
+ 482              	.LBB11:
+ 483              		.loc 2 647 3 discriminator 3 view .LVU146
+ 484              		.loc 2 647 10 is_stmt 0 discriminator 3 view .LVU147
+ 485 00ca C022     		movs	r2, #192
+ 486 00cc 0A49     		ldr	r1, .L46+24
+ 487 00ce 0020     		movs	r0, #0
+ 488 00d0 FFF7FEFF 		bl	tud_audio_n_write
+ 489              	.LVL29:
+ 490              		.loc 2 647 10 discriminator 3 view .LVU148
+ 491              	.LBE11:
+ 492              	.LBE10:
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 23
+
+
+  75:src/usb_audio.c ****     }
+ 493              		.loc 1 75 9 is_stmt 1 discriminator 3 view .LVU149
+ 494              		.loc 1 90 1 is_stmt 0 discriminator 3 view .LVU150
+ 495 00d4 0120     		movs	r0, #1
+ 496 00d6 70BD     		pop	{r4, r5, r6, pc}
+ 497              	.LVL30:
+ 498              	.L36:
+  86:src/usb_audio.c ****     for(; i < send * N_CH; i++) tmp[i] = 0;                     // pad with silence if short
+ 499              		.loc 1 86 5 is_stmt 1 view .LVU151
+  86:src/usb_audio.c ****     for(; i < send * N_CH; i++) tmp[i] = 0;                     // pad with silence if short
+ 500              		.loc 1 86 10 is_stmt 0 view .LVU152
+ 501 00d8 0368     		ldr	r3, [r0]
+ 502 00da 074E     		ldr	r6, .L46+24
+ 503 00dc 0360     		str	r3, [r0]
+  87:src/usb_audio.c ****     tud_audio_write((uint8_t *)tmp, (uint16_t)(send * N_CH * 2));
+ 504              		.loc 1 87 5 is_stmt 1 view .LVU153
+  87:src/usb_audio.c ****     tud_audio_write((uint8_t *)tmp, (uint16_t)(send * N_CH * 2));
+ 505              		.loc 1 87 11 view .LVU154
+ 506 00de D1E7     		b	.L38
+ 507              	.L47:
+ 508              		.align	2
+ 509              	.L46:
+ 510 00e0 00000000 		.word	.LANCHOR1
+ 511 00e4 00000000 		.word	.LANCHOR2
+ 512 00e8 00000000 		.word	.LANCHOR5
+ 513 00ec 00000000 		.word	.LANCHOR6
+ 514 00f0 00000000 		.word	.LANCHOR4
+ 515 00f4 00000000 		.word	.LANCHOR8
+ 516 00f8 00000000 		.word	.LANCHOR7
+ 517 00fc 00000000 		.word	s_ring
+ 518              		.cfi_endproc
+ 519              	.LFE410:
+ 521              		.section	.text.tud_audio_set_req_entity_cb,"ax",%progbits
+ 522              		.align	1
+ 523              		.p2align 2,,3
+ 524              		.global	tud_audio_set_req_entity_cb
+ 525              		.syntax unified
+ 526              		.thumb
+ 527              		.thumb_func
+ 529              	tud_audio_set_req_entity_cb:
+ 530              	.LVL31:
+ 531              	.LFB411:
+  91:src/usb_audio.c **** 
+  92:src/usb_audio.c **** // ── Entity control: SET (feature unit mute/volume) ──────────────
+  93:src/usb_audio.c **** bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p_request, uint8_t *
+  94:src/usb_audio.c **** {
+ 532              		.loc 1 94 1 view -0
+ 533              		.cfi_startproc
+ 534              		@ args = 0, pretend = 0, frame = 0
+ 535              		@ frame_needed = 0, uses_anonymous_args = 0
+ 536              		@ link register save eliminated.
+  95:src/usb_audio.c ****     (void)rhport;
+ 537              		.loc 1 95 5 view .LVU156
+  96:src/usb_audio.c ****     uint8_t ch       = TU_U16_LOW(p_request->wValue);
+ 538              		.loc 1 96 5 view .LVU157
+  97:src/usb_audio.c ****     uint8_t ctrlSel  = TU_U16_HIGH(p_request->wValue);
+ 539              		.loc 1 97 5 view .LVU158
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 24
+
+
+  98:src/usb_audio.c ****     uint8_t entityID = TU_U16_HIGH(p_request->wIndex);
+ 540              		.loc 1 98 5 view .LVU159
+  99:src/usb_audio.c ****     TU_VERIFY(p_request->bRequest == AUDIO_CS_REQ_CUR);
+ 541              		.loc 1 99 5 view .LVU160
+ 542              		.loc 1 99 5 view .LVU161
+ 543 0000 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+ 544 0002 012B     		cmp	r3, #1
+ 545 0004 0FD1     		bne	.L52
+  98:src/usb_audio.c ****     uint8_t entityID = TU_U16_HIGH(p_request->wIndex);
+ 546              		.loc 1 98 24 is_stmt 0 discriminator 2 view .LVU162
+ 547 0006 8888     		ldrh	r0, [r1, #4]	@ unaligned
+ 548              	.LVL32:
+  96:src/usb_audio.c ****     uint8_t ctrlSel  = TU_U16_HIGH(p_request->wValue);
+ 549              		.loc 1 96 24 discriminator 2 view .LVU163
+ 550 0008 4B88     		ldrh	r3, [r1, #2]	@ unaligned
+ 100:src/usb_audio.c ****     if(entityID == 2 && ch <= N_CH) {
+ 551              		.loc 1 100 17 discriminator 2 view .LVU164
+ 552 000a 000A     		lsrs	r0, r0, #8
+  96:src/usb_audio.c ****     uint8_t ctrlSel  = TU_U16_HIGH(p_request->wValue);
+ 553              		.loc 1 96 13 discriminator 2 view .LVU165
+ 554 000c D9B2     		uxtb	r1, r3
+ 555              	.LVL33:
+  99:src/usb_audio.c ****     TU_VERIFY(p_request->bRequest == AUDIO_CS_REQ_CUR);
+ 556              		.loc 1 99 5 is_stmt 1 discriminator 2 view .LVU166
+ 557              		.loc 1 100 5 discriminator 2 view .LVU167
+ 558              		.loc 1 100 7 is_stmt 0 discriminator 2 view .LVU168
+ 559 000e 0229     		cmp	r1, #2
+ 560 0010 98BF     		it	ls
+ 561 0012 0228     		cmpls	r0, #2
+ 562 0014 0CBF     		ite	eq
+ 563 0016 0120     		moveq	r0, #1
+ 564 0018 0020     		movne	r0, #0
+ 565 001a 05D1     		bne	.L49
+  97:src/usb_audio.c ****     uint8_t entityID = TU_U16_HIGH(p_request->wIndex);
+ 566              		.loc 1 97 24 view .LVU169
+ 567 001c 1B0A     		lsrs	r3, r3, #8
+ 101:src/usb_audio.c ****         if(ctrlSel == AUDIO_FU_CTRL_MUTE)   { s_mute[ch]   = ((audio_control_cur_1_t *)pBuff)->bCur
+ 568              		.loc 1 101 9 is_stmt 1 view .LVU170
+ 569              		.loc 1 101 11 is_stmt 0 view .LVU171
+ 570 001e 012B     		cmp	r3, #1
+ 571 0020 03D0     		beq	.L56
+ 102:src/usb_audio.c ****         if(ctrlSel == AUDIO_FU_CTRL_VOLUME) { s_volume[ch] = (int16_t)((audio_control_cur_2_t *)pBu
+ 572              		.loc 1 102 9 is_stmt 1 view .LVU172
+ 573              		.loc 1 102 11 is_stmt 0 view .LVU173
+ 574 0022 022B     		cmp	r3, #2
+ 575 0024 06D0     		beq	.L57
+ 576              	.L52:
+  99:src/usb_audio.c ****     if(entityID == 2 && ch <= N_CH) {
+ 577              		.loc 1 99 5 view .LVU174
+ 578 0026 0020     		movs	r0, #0
+ 579              	.L49:
+ 103:src/usb_audio.c ****     }
+ 104:src/usb_audio.c ****     return false;
+ 105:src/usb_audio.c **** }
+ 580              		.loc 1 105 1 view .LVU175
+ 581 0028 7047     		bx	lr
+ 582              	.L56:
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 25
+
+
+ 101:src/usb_audio.c ****         if(ctrlSel == AUDIO_FU_CTRL_VOLUME) { s_volume[ch] = (int16_t)((audio_control_cur_2_t *)pBu
+ 583              		.loc 1 101 47 is_stmt 1 discriminator 1 view .LVU176
+ 101:src/usb_audio.c ****         if(ctrlSel == AUDIO_FU_CTRL_VOLUME) { s_volume[ch] = (int16_t)((audio_control_cur_2_t *)pBu
+ 584              		.loc 1 101 94 is_stmt 0 discriminator 1 view .LVU177
+ 585 002a 92F90020 		ldrsb	r2, [r2]
+ 586              	.LVL34:
+ 101:src/usb_audio.c ****         if(ctrlSel == AUDIO_FU_CTRL_VOLUME) { s_volume[ch] = (int16_t)((audio_control_cur_2_t *)pBu
+ 587              		.loc 1 101 60 discriminator 1 view .LVU178
+ 588 002e 044B     		ldr	r3, .L58
+ 589 0030 5A54     		strb	r2, [r3, r1]
+ 590              	.LVL35:
+ 101:src/usb_audio.c ****         if(ctrlSel == AUDIO_FU_CTRL_VOLUME) { s_volume[ch] = (int16_t)((audio_control_cur_2_t *)pBu
+ 591              		.loc 1 101 102 is_stmt 1 discriminator 1 view .LVU179
+ 101:src/usb_audio.c ****         if(ctrlSel == AUDIO_FU_CTRL_VOLUME) { s_volume[ch] = (int16_t)((audio_control_cur_2_t *)pBu
+ 592              		.loc 1 101 109 is_stmt 0 discriminator 1 view .LVU180
+ 593 0032 7047     		bx	lr
+ 594              	.LVL36:
+ 595              	.L57:
+ 102:src/usb_audio.c ****     }
+ 596              		.loc 1 102 47 is_stmt 1 discriminator 1 view .LVU181
+ 102:src/usb_audio.c ****     }
+ 597              		.loc 1 102 103 is_stmt 0 discriminator 1 view .LVU182
+ 598 0034 B2F90020 		ldrsh	r2, [r2]	@ unaligned
+ 599              	.LVL37:
+ 102:src/usb_audio.c ****     }
+ 600              		.loc 1 102 60 discriminator 1 view .LVU183
+ 601 0038 024B     		ldr	r3, .L58+4
+ 602 003a 23F81120 		strh	r2, [r3, r1, lsl #1]	@ movhi
+ 102:src/usb_audio.c ****     }
+ 603              		.loc 1 102 111 is_stmt 1 discriminator 1 view .LVU184
+ 102:src/usb_audio.c ****     }
+ 604              		.loc 1 102 118 is_stmt 0 discriminator 1 view .LVU185
+ 605 003e 7047     		bx	lr
+ 606              	.L59:
+ 607              		.align	2
+ 608              	.L58:
+ 609 0040 00000000 		.word	.LANCHOR9
+ 610 0044 00000000 		.word	.LANCHOR10
+ 611              		.cfi_endproc
+ 612              	.LFE411:
+ 614              		.section	.text.tud_audio_get_req_entity_cb,"ax",%progbits
+ 615              		.align	1
+ 616              		.p2align 2,,3
+ 617              		.global	tud_audio_get_req_entity_cb
+ 618              		.syntax unified
+ 619              		.thumb
+ 620              		.thumb_func
+ 622              	tud_audio_get_req_entity_cb:
+ 623              	.LVL38:
+ 624              	.LFB412:
+ 106:src/usb_audio.c **** 
+ 107:src/usb_audio.c **** // ── Entity control: GET (input-terminal connector, FU mute/volume, clock) ─────
+ 108:src/usb_audio.c **** bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p_request)
+ 109:src/usb_audio.c **** {
+ 625              		.loc 1 109 1 is_stmt 1 view -0
+ 626              		.cfi_startproc
+ 627              		@ args = 0, pretend = 0, frame = 8
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 26
+
+
+ 628              		@ frame_needed = 0, uses_anonymous_args = 0
+ 110:src/usb_audio.c ****     uint8_t ch       = TU_U16_LOW(p_request->wValue);
+ 629              		.loc 1 110 5 view .LVU187
+ 111:src/usb_audio.c ****     uint8_t ctrlSel  = TU_U16_HIGH(p_request->wValue);
+ 112:src/usb_audio.c ****     uint8_t entityID = TU_U16_HIGH(p_request->wIndex);
+ 630              		.loc 1 112 24 is_stmt 0 view .LVU188
+ 631 0000 8A88     		ldrh	r2, [r1, #4]	@ unaligned
+ 632 0002 120A     		lsrs	r2, r2, #8
+ 109:src/usb_audio.c ****     uint8_t ch       = TU_U16_LOW(p_request->wValue);
+ 633              		.loc 1 109 1 view .LVU189
+ 634 0004 10B5     		push	{r4, lr}
+ 635              		.cfi_def_cfa_offset 8
+ 636              		.cfi_offset 4, -8
+ 637              		.cfi_offset 14, -4
+ 113:src/usb_audio.c **** 
+ 114:src/usb_audio.c ****     if(entityID == 1) {                                    // input terminal
+ 638              		.loc 1 114 7 view .LVU190
+ 639 0006 012A     		cmp	r2, #1
+ 110:src/usb_audio.c ****     uint8_t ctrlSel  = TU_U16_HIGH(p_request->wValue);
+ 640              		.loc 1 110 24 view .LVU191
+ 641 0008 B1F802E0 		ldrh	lr, [r1, #2]	@ unaligned
+ 642              	.LVL39:
+ 111:src/usb_audio.c ****     uint8_t entityID = TU_U16_HIGH(p_request->wIndex);
+ 643              		.loc 1 111 5 is_stmt 1 view .LVU192
+ 109:src/usb_audio.c ****     uint8_t ch       = TU_U16_LOW(p_request->wValue);
+ 644              		.loc 1 109 1 is_stmt 0 view .LVU193
+ 645 000c 82B0     		sub	sp, sp, #8
+ 646              		.cfi_def_cfa_offset 16
+ 111:src/usb_audio.c ****     uint8_t entityID = TU_U16_HIGH(p_request->wIndex);
+ 647              		.loc 1 111 24 view .LVU194
+ 648 000e 4FEA1E24 		lsr	r4, lr, #8
+ 649              	.LVL40:
+ 112:src/usb_audio.c **** 
+ 650              		.loc 1 112 5 is_stmt 1 view .LVU195
+ 651              		.loc 1 114 5 view .LVU196
+ 652              		.loc 1 114 7 is_stmt 0 view .LVU197
+ 653 0012 25D0     		beq	.L76
+ 115:src/usb_audio.c ****         if(ctrlSel == AUDIO_TE_CTRL_CONNECTOR) {
+ 116:src/usb_audio.c ****             audio_desc_channel_cluster_t ret = { 0 };
+ 117:src/usb_audio.c ****             ret.bNrChannels    = N_CH;
+ 118:src/usb_audio.c ****             ret.bmChannelConfig = (audio_channel_config_t)0;
+ 119:src/usb_audio.c ****             ret.iChannelNames  = 0;
+ 120:src/usb_audio.c ****             return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &ret, sizeof(ret))
+ 121:src/usb_audio.c ****         }
+ 122:src/usb_audio.c ****         return false;
+ 123:src/usb_audio.c ****     }
+ 124:src/usb_audio.c ****     if(entityID == 2) {                                    // feature unit
+ 654              		.loc 1 124 7 view .LVU198
+ 655 0014 022A     		cmp	r2, #2
+ 112:src/usb_audio.c **** 
+ 656              		.loc 1 112 13 view .LVU199
+ 657 0016 D3B2     		uxtb	r3, r2
+ 658              		.loc 1 124 5 is_stmt 1 view .LVU200
+ 659              		.loc 1 124 7 is_stmt 0 view .LVU201
+ 660 0018 04D0     		beq	.L77
+ 125:src/usb_audio.c ****         if(ctrlSel == AUDIO_FU_CTRL_MUTE)
+ 126:src/usb_audio.c ****             return tud_control_xfer(rhport, p_request, &s_mute[ch], 1);
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 27
+
+
+ 127:src/usb_audio.c ****         if(ctrlSel == AUDIO_FU_CTRL_VOLUME) {
+ 128:src/usb_audio.c ****             if(p_request->bRequest == AUDIO_CS_REQ_CUR)
+ 129:src/usb_audio.c ****                 return tud_control_xfer(rhport, p_request, &s_volume[ch], sizeof(s_volume[ch]));
+ 130:src/usb_audio.c ****             if(p_request->bRequest == AUDIO_CS_REQ_RANGE) {
+ 131:src/usb_audio.c ****                 audio_control_range_2_n_t(1) ret;
+ 132:src/usb_audio.c ****                 ret.wNumSubRanges = 1;
+ 133:src/usb_audio.c ****                 ret.subrange[0].bMin = -90 * 256; ret.subrange[0].bMax = 0; ret.subrange[0].bRes = 
+ 134:src/usb_audio.c ****                 return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &ret, sizeof(r
+ 135:src/usb_audio.c ****             }
+ 136:src/usb_audio.c ****         }
+ 137:src/usb_audio.c ****         return false;
+ 138:src/usb_audio.c ****     }
+ 139:src/usb_audio.c ****     if(entityID == 4) {                                    // clock source
+ 661              		.loc 1 139 5 is_stmt 1 view .LVU202
+ 662              		.loc 1 139 7 is_stmt 0 view .LVU203
+ 663 001a 042B     		cmp	r3, #4
+ 664 001c 2ED0     		beq	.L78
+ 665              	.LVL41:
+ 666              	.L73:
+ 122:src/usb_audio.c ****     }
+ 667              		.loc 1 122 16 view .LVU204
+ 668 001e 0020     		movs	r0, #0
+ 669              	.LVL42:
+ 670              	.L62:
+ 140:src/usb_audio.c ****         if(ctrlSel == AUDIO_CS_CTRL_SAM_FREQ) {
+ 141:src/usb_audio.c ****             if(p_request->bRequest == AUDIO_CS_REQ_CUR)
+ 142:src/usb_audio.c ****                 return tud_control_xfer(rhport, p_request, &s_samp_freq, sizeof(s_samp_freq));
+ 143:src/usb_audio.c ****             if(p_request->bRequest == AUDIO_CS_REQ_RANGE)
+ 144:src/usb_audio.c ****                 return tud_control_xfer(rhport, p_request, &s_freq_rng, sizeof(s_freq_rng));
+ 145:src/usb_audio.c ****         }
+ 146:src/usb_audio.c ****         if(ctrlSel == AUDIO_CS_CTRL_CLK_VALID)
+ 147:src/usb_audio.c ****             return tud_control_xfer(rhport, p_request, &s_clk_valid, sizeof(s_clk_valid));
+ 148:src/usb_audio.c ****         return false;
+ 149:src/usb_audio.c ****     }
+ 150:src/usb_audio.c ****     return false;
+ 151:src/usb_audio.c **** }
+ 671              		.loc 1 151 1 discriminator 1 view .LVU205
+ 672 0020 02B0     		add	sp, sp, #8
+ 673              		.cfi_remember_state
+ 674              		.cfi_def_cfa_offset 8
+ 675              		@ sp needed
+ 676 0022 10BD     		pop	{r4, pc}
+ 677              	.LVL43:
+ 678              	.L77:
+ 679              		.cfi_restore_state
+ 125:src/usb_audio.c ****             return tud_control_xfer(rhport, p_request, &s_mute[ch], 1);
+ 680              		.loc 1 125 11 view .LVU206
+ 681 0024 012C     		cmp	r4, #1
+ 110:src/usb_audio.c ****     uint8_t ctrlSel  = TU_U16_HIGH(p_request->wValue);
+ 682              		.loc 1 110 13 view .LVU207
+ 683 0026 5FFA8EFE 		uxtb	lr, lr
+ 125:src/usb_audio.c ****             return tud_control_xfer(rhport, p_request, &s_mute[ch], 1);
+ 684              		.loc 1 125 9 is_stmt 1 view .LVU208
+ 125:src/usb_audio.c ****             return tud_control_xfer(rhport, p_request, &s_mute[ch], 1);
+ 685              		.loc 1 125 11 is_stmt 0 view .LVU209
+ 686 002a 3AD0     		beq	.L79
+ 127:src/usb_audio.c ****             if(p_request->bRequest == AUDIO_CS_REQ_CUR)
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 28
+
+
+ 687              		.loc 1 127 9 is_stmt 1 view .LVU210
+ 127:src/usb_audio.c ****             if(p_request->bRequest == AUDIO_CS_REQ_CUR)
+ 688              		.loc 1 127 11 is_stmt 0 view .LVU211
+ 689 002c 022C     		cmp	r4, #2
+ 690 002e F6D1     		bne	.L73
+ 128:src/usb_audio.c ****                 return tud_control_xfer(rhport, p_request, &s_volume[ch], sizeof(s_volume[ch]));
+ 691              		.loc 1 128 13 is_stmt 1 view .LVU212
+ 128:src/usb_audio.c ****                 return tud_control_xfer(rhport, p_request, &s_volume[ch], sizeof(s_volume[ch]));
+ 692              		.loc 1 128 25 is_stmt 0 view .LVU213
+ 693 0030 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+ 128:src/usb_audio.c ****                 return tud_control_xfer(rhport, p_request, &s_volume[ch], sizeof(s_volume[ch]));
+ 694              		.loc 1 128 15 view .LVU214
+ 695 0032 012B     		cmp	r3, #1
+ 696 0034 3BD0     		beq	.L80
+ 130:src/usb_audio.c ****                 audio_control_range_2_n_t(1) ret;
+ 697              		.loc 1 130 13 is_stmt 1 view .LVU215
+ 130:src/usb_audio.c ****                 audio_control_range_2_n_t(1) ret;
+ 698              		.loc 1 130 15 is_stmt 0 view .LVU216
+ 699 0036 022B     		cmp	r3, #2
+ 700 0038 F1D1     		bne	.L73
+ 701              	.LBB12:
+ 131:src/usb_audio.c ****                 ret.wNumSubRanges = 1;
+ 702              		.loc 1 131 17 is_stmt 1 view .LVU217
+ 132:src/usb_audio.c ****                 ret.subrange[0].bMin = -90 * 256; ret.subrange[0].bMax = 0; ret.subrange[0].bRes = 
+ 703              		.loc 1 132 17 view .LVU218
+ 132:src/usb_audio.c ****                 ret.subrange[0].bMin = -90 * 256; ret.subrange[0].bMax = 0; ret.subrange[0].bRes = 
+ 704              		.loc 1 132 35 is_stmt 0 view .LVU219
+ 705 003a 0122     		movs	r2, #1
+ 706              	.LVL44:
+ 133:src/usb_audio.c ****                 return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &ret, sizeof(r
+ 707              		.loc 1 133 38 view .LVU220
+ 708 003c 4FF42643 		mov	r3, #42496
+ 133:src/usb_audio.c ****                 return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &ret, sizeof(r
+ 709              		.loc 1 133 72 view .LVU221
+ 710 0040 0024     		movs	r4, #0
+ 711              	.LVL45:
+ 132:src/usb_audio.c ****                 ret.subrange[0].bMin = -90 * 256; ret.subrange[0].bMax = 0; ret.subrange[0].bRes = 
+ 712              		.loc 1 132 35 view .LVU222
+ 713 0042 ADF80020 		strh	r2, [sp]	@ movhi
+ 714              	.LVL46:
+ 133:src/usb_audio.c ****                 return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &ret, sizeof(r
+ 715              		.loc 1 133 17 is_stmt 1 view .LVU223
+ 133:src/usb_audio.c ****                 return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &ret, sizeof(r
+ 716              		.loc 1 133 98 is_stmt 0 view .LVU224
+ 717 0046 4FF48072 		mov	r2, #256
+ 133:src/usb_audio.c ****                 return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &ret, sizeof(r
+ 718              		.loc 1 133 38 view .LVU225
+ 719 004a ADF80230 		strh	r3, [sp, #2]	@ movhi
+ 133:src/usb_audio.c ****                 return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &ret, sizeof(r
+ 720              		.loc 1 133 51 is_stmt 1 view .LVU226
+ 134:src/usb_audio.c ****             }
+ 721              		.loc 1 134 24 is_stmt 0 view .LVU227
+ 722 004e 0823     		movs	r3, #8
+ 133:src/usb_audio.c ****                 return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &ret, sizeof(r
+ 723              		.loc 1 133 98 view .LVU228
+ 724 0050 ADF80620 		strh	r2, [sp, #6]	@ movhi
+ 134:src/usb_audio.c ****             }
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 29
+
+
+ 725              		.loc 1 134 24 view .LVU229
+ 726 0054 6A46     		mov	r2, sp
+ 133:src/usb_audio.c ****                 return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &ret, sizeof(r
+ 727              		.loc 1 133 72 view .LVU230
+ 728 0056 ADF80440 		strh	r4, [sp, #4]	@ movhi
+ 133:src/usb_audio.c ****                 return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &ret, sizeof(r
+ 729              		.loc 1 133 77 is_stmt 1 view .LVU231
+ 134:src/usb_audio.c ****             }
+ 730              		.loc 1 134 17 view .LVU232
+ 134:src/usb_audio.c ****             }
+ 731              		.loc 1 134 24 is_stmt 0 view .LVU233
+ 732 005a FFF7FEFF 		bl	tud_audio_buffer_and_schedule_control_xfer
+ 733              	.LVL47:
+ 134:src/usb_audio.c ****             }
+ 734              		.loc 1 134 24 view .LVU234
+ 735 005e DFE7     		b	.L62
+ 736              	.LVL48:
+ 737              	.L76:
+ 134:src/usb_audio.c ****             }
+ 738              		.loc 1 134 24 view .LVU235
+ 739              	.LBE12:
+ 115:src/usb_audio.c ****             audio_desc_channel_cluster_t ret = { 0 };
+ 740              		.loc 1 115 9 is_stmt 1 view .LVU236
+ 115:src/usb_audio.c ****             audio_desc_channel_cluster_t ret = { 0 };
+ 741              		.loc 1 115 11 is_stmt 0 view .LVU237
+ 742 0060 022C     		cmp	r4, #2
+ 743 0062 DCD1     		bne	.L73
+ 744              	.LBB13:
+ 116:src/usb_audio.c ****             ret.bNrChannels    = N_CH;
+ 745              		.loc 1 116 13 is_stmt 1 view .LVU238
+ 116:src/usb_audio.c ****             ret.bNrChannels    = N_CH;
+ 746              		.loc 1 116 42 is_stmt 0 view .LVU239
+ 747 0064 0022     		movs	r2, #0
+ 748              	.LVL49:
+ 120:src/usb_audio.c ****         }
+ 749              		.loc 1 120 20 view .LVU240
+ 750 0066 0623     		movs	r3, #6
+ 117:src/usb_audio.c ****             ret.bmChannelConfig = (audio_channel_config_t)0;
+ 751              		.loc 1 117 32 view .LVU241
+ 752 0068 8DF80040 		strb	r4, [sp]
+ 753              	.LVL50:
+ 116:src/usb_audio.c ****             ret.bNrChannels    = N_CH;
+ 754              		.loc 1 116 42 view .LVU242
+ 755 006c CDF80120 		str	r2, [sp, #1]	@ unaligned
+ 756 0070 8DF80520 		strb	r2, [sp, #5]
+ 117:src/usb_audio.c ****             ret.bmChannelConfig = (audio_channel_config_t)0;
+ 757              		.loc 1 117 13 is_stmt 1 view .LVU243
+ 118:src/usb_audio.c ****             ret.iChannelNames  = 0;
+ 758              		.loc 1 118 13 view .LVU244
+ 119:src/usb_audio.c ****             return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &ret, sizeof(ret))
+ 759              		.loc 1 119 13 view .LVU245
+ 120:src/usb_audio.c ****         }
+ 760              		.loc 1 120 13 view .LVU246
+ 120:src/usb_audio.c ****         }
+ 761              		.loc 1 120 20 is_stmt 0 view .LVU247
+ 762 0074 6A46     		mov	r2, sp
+ 763 0076 FFF7FEFF 		bl	tud_audio_buffer_and_schedule_control_xfer
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 30
+
+
+ 764              	.LVL51:
+ 120:src/usb_audio.c ****         }
+ 765              		.loc 1 120 20 view .LVU248
+ 766 007a D1E7     		b	.L62
+ 767              	.LVL52:
+ 768              	.L78:
+ 120:src/usb_audio.c ****         }
+ 769              		.loc 1 120 20 view .LVU249
+ 770              	.LBE13:
+ 140:src/usb_audio.c ****             if(p_request->bRequest == AUDIO_CS_REQ_CUR)
+ 771              		.loc 1 140 9 is_stmt 1 view .LVU250
+ 140:src/usb_audio.c ****             if(p_request->bRequest == AUDIO_CS_REQ_CUR)
+ 772              		.loc 1 140 11 is_stmt 0 view .LVU251
+ 773 007c 012C     		cmp	r4, #1
+ 774 007e 04D0     		beq	.L81
+ 146:src/usb_audio.c ****             return tud_control_xfer(rhport, p_request, &s_clk_valid, sizeof(s_clk_valid));
+ 775              		.loc 1 146 9 is_stmt 1 view .LVU252
+ 146:src/usb_audio.c ****             return tud_control_xfer(rhport, p_request, &s_clk_valid, sizeof(s_clk_valid));
+ 776              		.loc 1 146 11 is_stmt 0 view .LVU253
+ 777 0080 022C     		cmp	r4, #2
+ 778 0082 CCD1     		bne	.L73
+ 147:src/usb_audio.c ****         return false;
+ 779              		.loc 1 147 13 is_stmt 1 view .LVU254
+ 147:src/usb_audio.c ****         return false;
+ 780              		.loc 1 147 20 is_stmt 0 view .LVU255
+ 781 0084 0123     		movs	r3, #1
+ 782 0086 0C4A     		ldr	r2, .L83
+ 783              	.LVL53:
+ 147:src/usb_audio.c ****         return false;
+ 784              		.loc 1 147 20 view .LVU256
+ 785 0088 06E0     		b	.L75
+ 786              	.LVL54:
+ 787              	.L81:
+ 141:src/usb_audio.c ****                 return tud_control_xfer(rhport, p_request, &s_samp_freq, sizeof(s_samp_freq));
+ 788              		.loc 1 141 13 is_stmt 1 view .LVU257
+ 141:src/usb_audio.c ****                 return tud_control_xfer(rhport, p_request, &s_samp_freq, sizeof(s_samp_freq));
+ 789              		.loc 1 141 25 is_stmt 0 view .LVU258
+ 790 008a 4A78     		ldrb	r2, [r1, #1]	@ zero_extendqisi2
+ 791              	.LVL55:
+ 141:src/usb_audio.c ****                 return tud_control_xfer(rhport, p_request, &s_samp_freq, sizeof(s_samp_freq));
+ 792              		.loc 1 141 15 view .LVU259
+ 793 008c 012A     		cmp	r2, #1
+ 794 008e 0CD0     		beq	.L82
+ 143:src/usb_audio.c ****                 return tud_control_xfer(rhport, p_request, &s_freq_rng, sizeof(s_freq_rng));
+ 795              		.loc 1 143 13 is_stmt 1 view .LVU260
+ 143:src/usb_audio.c ****                 return tud_control_xfer(rhport, p_request, &s_freq_rng, sizeof(s_freq_rng));
+ 796              		.loc 1 143 15 is_stmt 0 view .LVU261
+ 797 0090 022A     		cmp	r2, #2
+ 798 0092 C4D1     		bne	.L73
+ 144:src/usb_audio.c ****         }
+ 799              		.loc 1 144 17 is_stmt 1 view .LVU262
+ 144:src/usb_audio.c ****         }
+ 800              		.loc 1 144 24 is_stmt 0 view .LVU263
+ 801 0094 0E23     		movs	r3, #14
+ 802              	.LVL56:
+ 144:src/usb_audio.c ****         }
+ 803              		.loc 1 144 24 view .LVU264
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 31
+
+
+ 804 0096 094A     		ldr	r2, .L83+4
+ 805              	.LVL57:
+ 806              	.L75:
+ 807              		.loc 1 151 1 view .LVU265
+ 808 0098 02B0     		add	sp, sp, #8
+ 809              		.cfi_remember_state
+ 810              		.cfi_def_cfa_offset 8
+ 811              		@ sp needed
+ 812 009a BDE81040 		pop	{r4, lr}
+ 813              		.cfi_restore 14
+ 814              		.cfi_restore 4
+ 815              		.cfi_def_cfa_offset 0
+ 816              	.LVL58:
+ 147:src/usb_audio.c ****         return false;
+ 817              		.loc 1 147 20 view .LVU266
+ 818 009e FFF7FEBF 		b	tud_control_xfer
+ 819              	.LVL59:
+ 820              	.L79:
+ 821              		.cfi_restore_state
+ 126:src/usb_audio.c ****         if(ctrlSel == AUDIO_FU_CTRL_VOLUME) {
+ 822              		.loc 1 126 13 is_stmt 1 view .LVU267
+ 126:src/usb_audio.c ****         if(ctrlSel == AUDIO_FU_CTRL_VOLUME) {
+ 823              		.loc 1 126 56 is_stmt 0 view .LVU268
+ 824 00a2 074A     		ldr	r2, .L83+8
+ 825              	.LVL60:
+ 126:src/usb_audio.c ****         if(ctrlSel == AUDIO_FU_CTRL_VOLUME) {
+ 826              		.loc 1 126 20 view .LVU269
+ 827 00a4 2346     		mov	r3, r4
+ 828              	.LVL61:
+ 126:src/usb_audio.c ****         if(ctrlSel == AUDIO_FU_CTRL_VOLUME) {
+ 829              		.loc 1 126 20 view .LVU270
+ 830 00a6 7244     		add	r2, r2, lr
+ 831 00a8 F6E7     		b	.L75
+ 832              	.LVL62:
+ 833              	.L82:
+ 142:src/usb_audio.c ****             if(p_request->bRequest == AUDIO_CS_REQ_RANGE)
+ 834              		.loc 1 142 17 is_stmt 1 view .LVU271
+ 142:src/usb_audio.c ****             if(p_request->bRequest == AUDIO_CS_REQ_RANGE)
+ 835              		.loc 1 142 24 is_stmt 0 view .LVU272
+ 836 00aa 064A     		ldr	r2, .L83+12
+ 837 00ac F4E7     		b	.L75
+ 838              	.LVL63:
+ 839              	.L80:
+ 129:src/usb_audio.c ****             if(p_request->bRequest == AUDIO_CS_REQ_RANGE) {
+ 840              		.loc 1 129 17 is_stmt 1 view .LVU273
+ 129:src/usb_audio.c ****             if(p_request->bRequest == AUDIO_CS_REQ_RANGE) {
+ 841              		.loc 1 129 60 is_stmt 0 view .LVU274
+ 842 00ae 064A     		ldr	r2, .L83+16
+ 843              	.LVL64:
+ 129:src/usb_audio.c ****             if(p_request->bRequest == AUDIO_CS_REQ_RANGE) {
+ 844              		.loc 1 129 24 view .LVU275
+ 845 00b0 2346     		mov	r3, r4
+ 846 00b2 02EB4E02 		add	r2, r2, lr, lsl #1
+ 847 00b6 EFE7     		b	.L75
+ 848              	.L84:
+ 849              		.align	2
+ 850              	.L83:
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 32
+
+
+ 851 00b8 00000000 		.word	.LANCHOR13
+ 852 00bc 00000000 		.word	.LANCHOR12
+ 853 00c0 00000000 		.word	.LANCHOR9
+ 854 00c4 00000000 		.word	.LANCHOR11
+ 855 00c8 00000000 		.word	.LANCHOR10
+ 856              		.cfi_endproc
+ 857              	.LFE412:
+ 859              		.section	.text.usb_audio_init,"ax",%progbits
+ 860              		.align	1
+ 861              		.p2align 2,,3
+ 862              		.global	usb_audio_init
+ 863              		.syntax unified
+ 864              		.thumb
+ 865              		.thumb_func
+ 867              	usb_audio_init:
+ 868              	.LFB413:
+ 152:src/usb_audio.c **** 
+ 153:src/usb_audio.c **** // One-time init of the control state. Called from usb_fs_init().
+ 154:src/usb_audio.c **** void usb_audio_init(void)
+ 155:src/usb_audio.c **** {
+ 869              		.loc 1 155 1 is_stmt 1 view -0
+ 870              		.cfi_startproc
+ 871              		@ args = 0, pretend = 0, frame = 0
+ 872              		@ frame_needed = 0, uses_anonymous_args = 0
+ 873              		@ link register save eliminated.
+ 156:src/usb_audio.c ****     s_samp_freq = CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE;
+ 874              		.loc 1 156 5 view .LVU277
+ 155:src/usb_audio.c ****     s_samp_freq = CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE;
+ 875              		.loc 1 155 1 is_stmt 0 view .LVU278
+ 876 0000 10B4     		push	{r4}
+ 877              		.cfi_def_cfa_offset 4
+ 878              		.cfi_offset 4, -4
+ 879              		.loc 1 156 17 view .LVU279
+ 880 0002 4BF68031 		movw	r1, #48000
+ 881 0006 084C     		ldr	r4, .L87
+ 157:src/usb_audio.c ****     s_clk_valid = 1;
+ 882              		.loc 1 157 17 view .LVU280
+ 883 0008 0120     		movs	r0, #1
+ 158:src/usb_audio.c ****     s_freq_rng.wNumSubRanges      = 1;
+ 884              		.loc 1 158 35 view .LVU281
+ 885 000a 084B     		ldr	r3, .L87+4
+ 156:src/usb_audio.c ****     s_clk_valid = 1;
+ 886              		.loc 1 156 17 view .LVU282
+ 887 000c 2160     		str	r1, [r4]
+ 157:src/usb_audio.c ****     s_clk_valid = 1;
+ 888              		.loc 1 157 5 is_stmt 1 view .LVU283
+ 159:src/usb_audio.c ****     s_freq_rng.subrange[0].bMin   = CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE;
+ 889              		.loc 1 159 35 is_stmt 0 view .LVU284
+ 890 000e 0022     		movs	r2, #0
+ 157:src/usb_audio.c ****     s_freq_rng.wNumSubRanges      = 1;
+ 891              		.loc 1 157 17 view .LVU285
+ 892 0010 074C     		ldr	r4, .L87+8
+ 893              		.loc 1 159 35 view .LVU286
+ 894 0012 9A80     		strh	r2, [r3, #4]	@ movhi
+ 157:src/usb_audio.c ****     s_freq_rng.wNumSubRanges      = 1;
+ 895              		.loc 1 157 17 view .LVU287
+ 896 0014 2070     		strb	r0, [r4]
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 33
+
+
+ 158:src/usb_audio.c ****     s_freq_rng.subrange[0].bMin   = CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE;
+ 897              		.loc 1 158 5 is_stmt 1 view .LVU288
+ 898              		.loc 1 159 5 view .LVU289
+ 160:src/usb_audio.c ****     s_freq_rng.subrange[0].bMax   = CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE;
+ 899              		.loc 1 160 5 view .LVU290
+ 161:src/usb_audio.c ****     s_freq_rng.subrange[0].bRes   = 0;
+ 900              		.loc 1 161 5 view .LVU291
+ 162:src/usb_audio.c **** }
+ 901              		.loc 1 162 1 is_stmt 0 view .LVU292
+ 902 0016 5DF8044B 		ldr	r4, [sp], #4
+ 903              		.cfi_restore 4
+ 904              		.cfi_def_cfa_offset 0
+ 158:src/usb_audio.c ****     s_freq_rng.subrange[0].bMin   = CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE;
+ 905              		.loc 1 158 35 view .LVU293
+ 906 001a 1880     		strh	r0, [r3]	@ movhi
+ 159:src/usb_audio.c ****     s_freq_rng.subrange[0].bMax   = CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE;
+ 907              		.loc 1 159 35 view .LVU294
+ 908 001c 5980     		strh	r1, [r3, #2]	@ movhi
+ 160:src/usb_audio.c ****     s_freq_rng.subrange[0].bRes   = 0;
+ 909              		.loc 1 160 35 view .LVU295
+ 910 001e D980     		strh	r1, [r3, #6]	@ movhi
+ 911 0020 1A81     		strh	r2, [r3, #8]	@ movhi
+ 161:src/usb_audio.c **** }
+ 912              		.loc 1 161 35 view .LVU296
+ 913 0022 5A81     		strh	r2, [r3, #10]	@ movhi
+ 914 0024 9A81     		strh	r2, [r3, #12]	@ movhi
+ 915              		.loc 1 162 1 view .LVU297
+ 916 0026 7047     		bx	lr
+ 917              	.L88:
+ 918              		.align	2
+ 919              	.L87:
+ 920 0028 00000000 		.word	.LANCHOR11
+ 921 002c 00000000 		.word	.LANCHOR12
+ 922 0030 00000000 		.word	.LANCHOR13
+ 923              		.cfi_endproc
+ 924              	.LFE413:
+ 926              		.global	g_aud_fill
+ 927              		.global	g_aud_calls
+ 928              		.global	g_aud_under
+ 929              		.global	g_aud_over
+ 930              		.section	.bss.g_aud_calls,"aw",%nobits
+ 931              		.align	2
+ 932              		.set	.LANCHOR5,. + 0
+ 935              	g_aud_calls:
+ 936 0000 00000000 		.space	4
+ 937              		.section	.bss.g_aud_fill,"aw",%nobits
+ 938              		.align	2
+ 939              		.set	.LANCHOR6,. + 0
+ 942              	g_aud_fill:
+ 943 0000 00000000 		.space	4
+ 944              		.section	.bss.g_aud_over,"aw",%nobits
+ 945              		.align	2
+ 946              		.set	.LANCHOR3,. + 0
+ 949              	g_aud_over:
+ 950 0000 00000000 		.space	4
+ 951              		.section	.bss.g_aud_under,"aw",%nobits
+ 952              		.align	2
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 34
+
+
+ 953              		.set	.LANCHOR8,. + 0
+ 956              	g_aud_under:
+ 957 0000 00000000 		.space	4
+ 958              		.section	.bss.s_freq_rng,"aw",%nobits
+ 959              		.align	2
+ 960              		.set	.LANCHOR12,. + 0
+ 963              	s_freq_rng:
+ 964 0000 00000000 		.space	14
+ 964      00000000 
+ 964      00000000 
+ 964      0000
+ 965              		.section	.bss.s_mute,"aw",%nobits
+ 966              		.align	2
+ 967              		.set	.LANCHOR9,. + 0
+ 970              	s_mute:
+ 971 0000 000000   		.space	3
+ 972              		.section	.bss.s_primed,"aw",%nobits
+ 973              		.set	.LANCHOR4,. + 0
+ 976              	s_primed:
+ 977 0000 00       		.space	1
+ 978              		.section	.bss.s_rd,"aw",%nobits
+ 979              		.align	2
+ 980              		.set	.LANCHOR2,. + 0
+ 983              	s_rd:
+ 984 0000 00000000 		.space	4
+ 985              		.section	.bss.s_ring,"aw",%nobits
+ 986              		.align	2
+ 989              	s_ring:
+ 990 0000 00000000 		.space	8192
+ 990      00000000 
+ 990      00000000 
+ 990      00000000 
+ 990      00000000 
+ 991              		.section	.bss.s_streaming,"aw",%nobits
+ 992              		.set	.LANCHOR0,. + 0
+ 995              	s_streaming:
+ 996 0000 00       		.space	1
+ 997              		.section	.bss.s_volume,"aw",%nobits
+ 998              		.align	2
+ 999              		.set	.LANCHOR10,. + 0
+ 1002              	s_volume:
+ 1003 0000 00000000 		.space	6
+ 1003      0000
+ 1004              		.section	.bss.s_wr,"aw",%nobits
+ 1005              		.align	2
+ 1006              		.set	.LANCHOR1,. + 0
+ 1009              	s_wr:
+ 1010 0000 00000000 		.space	4
+ 1011              		.section	.bss.tmp.0,"aw",%nobits
+ 1012              		.align	2
+ 1013              		.set	.LANCHOR7,. + 0
+ 1016              	tmp.0:
+ 1017 0000 00000000 		.space	196
+ 1017      00000000 
+ 1017      00000000 
+ 1017      00000000 
+ 1017      00000000 
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 35
+
+
+ 1018              		.section	.data.s_clk_valid,"aw"
+ 1019              		.set	.LANCHOR13,. + 0
+ 1022              	s_clk_valid:
+ 1023 0000 01       		.byte	1
+ 1024              		.section	.data.s_samp_freq,"aw"
+ 1025              		.align	2
+ 1026              		.set	.LANCHOR11,. + 0
+ 1029              	s_samp_freq:
+ 1030 0000 80BB0000 		.word	48000
+ 1031              		.text
+ 1032              	.Letext0:
+ 1033              		.file 3 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/machine/_default_types.h"
+ 1034              		.file 4 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/_stdint.h"
+ 1035              		.file 5 "lib/tinyusb/src/common/tusb_types.h"
+ 1036              		.file 6 "lib/tinyusb/src/class/audio/audio.h"
+ 1037              		.file 7 "lib/tinyusb/src/device/usbd.h"
+ 1038              		.file 8 "<built-in>"
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 36
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 usb_audio.c
+/tmp/claude-502/cclGu1aq.s:19     .text.usb_audio_push:0000000000000000 $t
+/tmp/claude-502/cclGu1aq.s:26     .text.usb_audio_push:0000000000000000 usb_audio_push
+/tmp/claude-502/cclGu1aq.s:112    .text.usb_audio_push:0000000000000050 $d
+/tmp/claude-502/cclGu1aq.s:989    .bss.s_ring:0000000000000000 s_ring
+/tmp/claude-502/cclGu1aq.s:121    .text.usb_audio_is_streaming:0000000000000000 $t
+/tmp/claude-502/cclGu1aq.s:128    .text.usb_audio_is_streaming:0000000000000000 usb_audio_is_streaming
+/tmp/claude-502/cclGu1aq.s:144    .text.usb_audio_is_streaming:0000000000000008 $d
+/tmp/claude-502/cclGu1aq.s:149    .text.tud_audio_set_itf_cb:0000000000000000 $t
+/tmp/claude-502/cclGu1aq.s:156    .text.tud_audio_set_itf_cb:0000000000000000 tud_audio_set_itf_cb
+/tmp/claude-502/cclGu1aq.s:224    .text.tud_audio_set_itf_cb:000000000000002c $d
+/tmp/claude-502/cclGu1aq.s:232    .text.tud_audio_set_itf_close_EP_cb:0000000000000000 $t
+/tmp/claude-502/cclGu1aq.s:239    .text.tud_audio_set_itf_close_EP_cb:0000000000000000 tud_audio_set_itf_close_EP_cb
+/tmp/claude-502/cclGu1aq.s:264    .text.tud_audio_set_itf_close_EP_cb:000000000000000c $d
+/tmp/claude-502/cclGu1aq.s:269    .text.tud_audio_tx_done_pre_load_cb:0000000000000000 $t
+/tmp/claude-502/cclGu1aq.s:276    .text.tud_audio_tx_done_pre_load_cb:0000000000000000 tud_audio_tx_done_pre_load_cb
+/tmp/claude-502/cclGu1aq.s:510    .text.tud_audio_tx_done_pre_load_cb:00000000000000e0 $d
+/tmp/claude-502/cclGu1aq.s:522    .text.tud_audio_set_req_entity_cb:0000000000000000 $t
+/tmp/claude-502/cclGu1aq.s:529    .text.tud_audio_set_req_entity_cb:0000000000000000 tud_audio_set_req_entity_cb
+/tmp/claude-502/cclGu1aq.s:609    .text.tud_audio_set_req_entity_cb:0000000000000040 $d
+/tmp/claude-502/cclGu1aq.s:615    .text.tud_audio_get_req_entity_cb:0000000000000000 $t
+/tmp/claude-502/cclGu1aq.s:622    .text.tud_audio_get_req_entity_cb:0000000000000000 tud_audio_get_req_entity_cb
+/tmp/claude-502/cclGu1aq.s:851    .text.tud_audio_get_req_entity_cb:00000000000000b8 $d
+/tmp/claude-502/cclGu1aq.s:860    .text.usb_audio_init:0000000000000000 $t
+/tmp/claude-502/cclGu1aq.s:867    .text.usb_audio_init:0000000000000000 usb_audio_init
+/tmp/claude-502/cclGu1aq.s:920    .text.usb_audio_init:0000000000000028 $d
+/tmp/claude-502/cclGu1aq.s:942    .bss.g_aud_fill:0000000000000000 g_aud_fill
+/tmp/claude-502/cclGu1aq.s:935    .bss.g_aud_calls:0000000000000000 g_aud_calls
+/tmp/claude-502/cclGu1aq.s:956    .bss.g_aud_under:0000000000000000 g_aud_under
+/tmp/claude-502/cclGu1aq.s:949    .bss.g_aud_over:0000000000000000 g_aud_over
+/tmp/claude-502/cclGu1aq.s:931    .bss.g_aud_calls:0000000000000000 $d
+/tmp/claude-502/cclGu1aq.s:938    .bss.g_aud_fill:0000000000000000 $d
+/tmp/claude-502/cclGu1aq.s:945    .bss.g_aud_over:0000000000000000 $d
+/tmp/claude-502/cclGu1aq.s:952    .bss.g_aud_under:0000000000000000 $d
+/tmp/claude-502/cclGu1aq.s:959    .bss.s_freq_rng:0000000000000000 $d
+/tmp/claude-502/cclGu1aq.s:963    .bss.s_freq_rng:0000000000000000 s_freq_rng
+/tmp/claude-502/cclGu1aq.s:966    .bss.s_mute:0000000000000000 $d
+/tmp/claude-502/cclGu1aq.s:970    .bss.s_mute:0000000000000000 s_mute
+/tmp/claude-502/cclGu1aq.s:976    .bss.s_primed:0000000000000000 s_primed
+/tmp/claude-502/cclGu1aq.s:977    .bss.s_primed:0000000000000000 $d
+/tmp/claude-502/cclGu1aq.s:979    .bss.s_rd:0000000000000000 $d
+/tmp/claude-502/cclGu1aq.s:983    .bss.s_rd:0000000000000000 s_rd
+/tmp/claude-502/cclGu1aq.s:986    .bss.s_ring:0000000000000000 $d
+/tmp/claude-502/cclGu1aq.s:995    .bss.s_streaming:0000000000000000 s_streaming
+/tmp/claude-502/cclGu1aq.s:996    .bss.s_streaming:0000000000000000 $d
+/tmp/claude-502/cclGu1aq.s:998    .bss.s_volume:0000000000000000 $d
+/tmp/claude-502/cclGu1aq.s:1002   .bss.s_volume:0000000000000000 s_volume
+/tmp/claude-502/cclGu1aq.s:1005   .bss.s_wr:0000000000000000 $d
+/tmp/claude-502/cclGu1aq.s:1009   .bss.s_wr:0000000000000000 s_wr
+/tmp/claude-502/cclGu1aq.s:1012   .bss.tmp.0:0000000000000000 $d
+/tmp/claude-502/cclGu1aq.s:1016   .bss.tmp.0:0000000000000000 tmp.0
+/tmp/claude-502/cclGu1aq.s:1022   .data.s_clk_valid:0000000000000000 s_clk_valid
+/tmp/claude-502/cclGu1aq.s:1025   .data.s_samp_freq:0000000000000000 $d
+/tmp/claude-502/cclGu1aq.s:1029   .data.s_samp_freq:0000000000000000 s_samp_freq
+
+UNDEFINED SYMBOLS
+ARM GAS  /tmp/claude-502/cclGu1aq.s 			page 37
+
+
+memset
+tud_audio_n_write
+tud_audio_buffer_and_schedule_control_xfer
+tud_control_xfer

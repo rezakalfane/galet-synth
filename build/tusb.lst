@@ -1,4 +1,4 @@
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -26,7 +26,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
   23              		.thumb
   24              		.thumb_func
   26              	tusb_init:
-  27              	.LFB410:
+  27              	.LFB414:
   28              		.file 1 "lib/tinyusb/src/tusb.c"
    1:lib/tinyusb/src/tusb.c **** /*
    2:lib/tinyusb/src/tusb.c ****  * The MIT License (MIT)
@@ -58,7 +58,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
   28:lib/tinyusb/src/tusb.c **** 
   29:lib/tinyusb/src/tusb.c **** #if CFG_TUH_ENABLED || CFG_TUD_ENABLED
   30:lib/tinyusb/src/tusb.c **** 
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 2
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 2
 
 
   31:lib/tinyusb/src/tusb.c **** #include "tusb.h"
@@ -118,7 +118,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
   51              		.loc 1 49 3 discriminator 1 view .LVU8
   49:lib/tinyusb/src/tusb.c ****   #endif
   52              		.loc 1 49 3 discriminator 1 view .LVU9
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 3
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 3
 
 
   53              	.LBB77:
@@ -144,7 +144,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
   70              		.loc 1 58 1 is_stmt 0 discriminator 3 view .LVU13
   71 001a 08BD     		pop	{r3, pc}
   72              		.cfi_endproc
-  73              	.LFE410:
+  73              	.LFE414:
   75              		.section	.text.tusb_inited,"ax",%progbits
   76              		.align	1
   77              		.p2align 2,,3
@@ -153,7 +153,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
   80              		.thumb
   81              		.thumb_func
   83              	tusb_inited:
-  84              	.LFB411:
+  84              	.LFB415:
   59:lib/tinyusb/src/tusb.c **** 
   60:lib/tinyusb/src/tusb.c **** bool tusb_inited(void) {
   85              		.loc 1 60 24 is_stmt 1 view -0
@@ -172,20 +172,20 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
   94 0000 FFF7FEBF 		b	tud_inited
   95              	.LVL3:
   96              		.cfi_endproc
-  97              	.LFE411:
+  97              	.LFE415:
   99              		.section	.text.tu_desc_find,"ax",%progbits
  100              		.align	1
  101              		.p2align 2,,3
  102              		.global	tu_desc_find
  103              		.syntax unified
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 4
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 4
 
 
  104              		.thumb
  105              		.thumb_func
  107              	tu_desc_find:
  108              	.LVL4:
- 109              	.LFB412:
+ 109              	.LFB416:
   65:lib/tinyusb/src/tusb.c ****   #endif
   66:lib/tinyusb/src/tusb.c **** 
   67:lib/tinyusb/src/tusb.c ****   #if CFG_TUH_ENABLED
@@ -238,7 +238,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  136              		.loc 1 83 10 view .LVU28
  137 0012 0020     		movs	r0, #0
  138              	.LVL6:
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 5
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 5
 
 
  139              	.L10:
@@ -246,7 +246,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  140              		.loc 1 84 1 view .LVU29
  141 0014 7047     		bx	lr
  142              		.cfi_endproc
- 143              	.LFE412:
+ 143              	.LFE416:
  145 0016 00BF     		.section	.text.tu_desc_find2,"ax",%progbits
  146              		.align	1
  147              		.p2align 2,,3
@@ -256,7 +256,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  151              		.thumb_func
  153              	tu_desc_find2:
  154              	.LVL7:
- 155              	.LFB413:
+ 155              	.LFB417:
   85:lib/tinyusb/src/tusb.c **** 
   86:lib/tinyusb/src/tusb.c **** uint8_t const* tu_desc_find2(uint8_t const* desc, uint8_t const* end, uint8_t byte1, uint8_t byte2)
  156              		.loc 1 86 101 is_stmt 1 view -0
@@ -298,7 +298,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  183 0018 90F802C0 		ldrb	ip, [r0, #2]	@ zero_extendqisi2
  184 001c 9C45     		cmp	ip, r3
  185 001e F0D1     		bne	.L19
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 6
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 6
 
 
   90:lib/tinyusb/src/tusb.c ****   }
@@ -314,7 +314,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  192              		.loc 1 92 1 view .LVU43
  193 0024 7047     		bx	lr
  194              		.cfi_endproc
- 195              	.LFE413:
+ 195              	.LFE417:
  197 0026 00BF     		.section	.text.tu_desc_find3,"ax",%progbits
  198              		.align	1
  199              		.p2align 2,,3
@@ -324,7 +324,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  203              		.thumb_func
  205              	tu_desc_find3:
  206              	.LVL10:
- 207              	.LFB414:
+ 207              	.LFB418:
   93:lib/tinyusb/src/tusb.c **** 
   94:lib/tinyusb/src/tusb.c **** uint8_t const* tu_desc_find3(uint8_t const* desc, uint8_t const* end, uint8_t byte1, uint8_t byte2,
  208              		.loc 1 94 116 is_stmt 1 view -0
@@ -358,7 +358,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  231 0014 6044     		add	r0, r0, ip
  232              	.LVL11:
   95:lib/tinyusb/src/tusb.c ****     if (desc[1] == byte1 && desc[2] == byte2 && desc[3] == byte3) return desc;
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 7
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 7
 
 
  233              		.loc 1 95 9 is_stmt 1 view .LVU54
@@ -403,7 +403,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  262 003c 5DF804FB 		ldr	pc, [sp], #4
  263              		.loc 1 100 1 view .LVU65
  264              		.cfi_endproc
- 265              	.LFE414:
+ 265              	.LFE418:
  267              		.section	.text.tu_edpt_claim,"ax",%progbits
  268              		.align	1
  269              		.p2align 2,,3
@@ -413,12 +413,12 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  273              		.thumb_func
  275              	tu_edpt_claim:
  276              	.LVL14:
- 277              	.LFB415:
+ 277              	.LFB419:
  101:lib/tinyusb/src/tusb.c **** 
  102:lib/tinyusb/src/tusb.c **** //--------------------------------------------------------------------+
  103:lib/tinyusb/src/tusb.c **** // Endpoint Helper for both Host and Device stack
  104:lib/tinyusb/src/tusb.c **** //--------------------------------------------------------------------+
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 8
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 8
 
 
  105:lib/tinyusb/src/tusb.c **** 
@@ -478,7 +478,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  319              	.LVL18:
  320              		.loc 1 116 23 view .LVU85
  321 0022 43F00403 		orr	r3, r3, #4
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 9
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 9
 
 
  322 0026 1370     		strb	r3, [r2]
@@ -498,7 +498,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  330              	.L40:
  331 002e 7047     		bx	lr
  332              		.cfi_endproc
- 333              	.LFE415:
+ 333              	.LFE419:
  335              		.section	.text.tu_edpt_release,"ax",%progbits
  336              		.align	1
  337              		.p2align 2,,3
@@ -508,7 +508,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  341              		.thumb_func
  343              	tu_edpt_release:
  344              	.LVL19:
- 345              	.LFB416:
+ 345              	.LFB420:
  122:lib/tinyusb/src/tusb.c **** 
  123:lib/tinyusb/src/tusb.c **** bool tu_edpt_release(tu_edpt_state_t* ep_state, osal_mutex_t mutex) {
  346              		.loc 1 123 69 is_stmt 1 view -0
@@ -538,7 +538,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  134:lib/tinyusb/src/tusb.c ****   return ret;
  135:lib/tinyusb/src/tusb.c **** }
  360              		.loc 1 135 1 view .LVU94
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 10
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 10
 
 
  361 000a 1046     		mov	r0, r2
@@ -588,7 +588,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  396              		.loc 1 135 1 view .LVU108
  397 0026 7047     		bx	lr
  398              		.cfi_endproc
- 399              	.LFE416:
+ 399              	.LFE420:
  401              		.section	.text.tu_edpt_validate,"ax",%progbits
  402              		.align	1
  403              		.p2align 2,,3
@@ -598,10 +598,10 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  407              		.thumb_func
  409              	tu_edpt_validate:
  410              	.LVL28:
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 11
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 11
 
 
- 411              	.LFB417:
+ 411              	.LFB421:
  136:lib/tinyusb/src/tusb.c **** 
  137:lib/tinyusb/src/tusb.c **** bool tu_edpt_validate(tusb_desc_endpoint_t const* desc_ep, tusb_speed_t speed) {
  412              		.loc 1 137 80 is_stmt 1 view -0
@@ -658,7 +658,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
   42:lib/tinyusb/src/common/tusb_types.h **** /// defined base on EHCI specs value for Endpoint Speed
   43:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
   44:lib/tinyusb/src/common/tusb_types.h ****   TUSB_SPEED_FULL = 0,
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 12
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 12
 
 
   45:lib/tinyusb/src/common/tusb_types.h ****   TUSB_SPEED_LOW  = 1,
@@ -718,7 +718,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
   99:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_DEVICE_CAPABILITY     = 0x10,
  100:lib/tinyusb/src/common/tusb_types.h **** 
  101:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_FUNCTIONAL            = 0x21,
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 13
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 13
 
 
  102:lib/tinyusb/src/common/tusb_types.h **** 
@@ -778,7 +778,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  156:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_RESERVED_4           = 4    ,
  157:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_PHYSICAL             = 5    ,
  158:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_IMAGE                = 6    ,
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 14
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 14
 
 
  159:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_PRINTER              = 7    ,
@@ -838,7 +838,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  213:lib/tinyusb/src/common/tusb_types.h **** };
  214:lib/tinyusb/src/common/tusb_types.h **** 
  215:lib/tinyusb/src/common/tusb_types.h **** #define TUSB_DESC_CONFIG_POWER_MA(x)  ((x)/2)
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 15
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 15
 
 
  216:lib/tinyusb/src/common/tusb_types.h **** 
@@ -898,7 +898,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  270:lib/tinyusb/src/common/tusb_types.h **** //--------------------------------------------------------------------+
  271:lib/tinyusb/src/common/tusb_types.h **** // USB Descriptors
  272:lib/tinyusb/src/common/tusb_types.h **** //--------------------------------------------------------------------+
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 16
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 16
 
 
  273:lib/tinyusb/src/common/tusb_types.h **** 
@@ -958,7 +958,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  327:lib/tinyusb/src/common/tusb_types.h **** typedef struct TU_ATTR_PACKED {
  328:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bLength            ; ///< Size of this descriptor in bytes
  329:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDescriptorType    ; ///< INTERFACE Descriptor Type
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 17
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 17
 
 
  330:lib/tinyusb/src/common/tusb_types.h **** 
@@ -1018,7 +1018,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  384:lib/tinyusb/src/common/tusb_types.h **** 
  385:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bMaxPacketSize0    ; ///< Maximum packet size for other speed
  386:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bNumConfigurations ; ///< Number of Other-speed Configurations
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 18
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 18
 
 
  387:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bReserved          ; ///< Reserved for future use, must be zero
@@ -1078,7 +1078,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  441:lib/tinyusb/src/common/tusb_types.h ****       uint8_t bitCanDnload             : 1;
  442:lib/tinyusb/src/common/tusb_types.h ****       uint8_t bitCanUpload             : 1;
  443:lib/tinyusb/src/common/tusb_types.h ****       uint8_t bitManifestationTolerant : 1;
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 19
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 19
 
 
  444:lib/tinyusb/src/common/tusb_types.h ****       uint8_t bitWillDetach            : 1;
@@ -1138,7 +1138,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  498:lib/tinyusb/src/common/tusb_types.h **** }
  499:lib/tinyusb/src/common/tusb_types.h **** 
  500:lib/tinyusb/src/common/tusb_types.h **** TU_ATTR_ALWAYS_INLINE static inline uint16_t tu_edpt_packet_size(tusb_desc_endpoint_t const* desc_e
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 20
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 20
 
 
  421              		.loc 2 500 46 view .LVU111
@@ -1198,7 +1198,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  152:lib/tinyusb/src/tusb.c ****       } else {
  153:lib/tinyusb/src/tusb.c ****         // TODO Bulk fullspeed can only be 8, 16, 32, 64
  154:lib/tinyusb/src/tusb.c ****         TU_ASSERT(max_packet_size <= 64);
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 21
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 21
 
 
  460              		.loc 1 154 9 is_stmt 1 discriminator 2 view .LVU122
@@ -1258,7 +1258,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  160:lib/tinyusb/src/tusb.c ****       break;
  491              		.loc 1 160 7 discriminator 1 view .LVU134
  492              	.LBB86:
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 22
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 22
 
 
  160:lib/tinyusb/src/tusb.c ****       break;
@@ -1313,12 +1313,12 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  532 0062 DFD0     		beq	.L63
  533 0064 E8E7     		b	.L69
  534              		.cfi_endproc
- 535              	.LFE417:
+ 535              	.LFE421:
  537 0066 00BF     		.section	.text.tu_edpt_bind_driver,"ax",%progbits
  538              		.align	1
  539              		.p2align 2,,3
  540              		.global	tu_edpt_bind_driver
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 23
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 23
 
 
  541              		.syntax unified
@@ -1326,7 +1326,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  543              		.thumb_func
  545              	tu_edpt_bind_driver:
  546              	.LVL36:
- 547              	.LFB418:
+ 547              	.LFB422:
  170:lib/tinyusb/src/tusb.c **** 
  171:lib/tinyusb/src/tusb.c **** void tu_edpt_bind_driver(uint8_t ep2drv[][2], tusb_desc_interface_t const* desc_itf, uint16_t desc_
  172:lib/tinyusb/src/tusb.c ****                          uint8_t driver_id) {
@@ -1378,7 +1378,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  572              	.LBE88:
  573              	.LBE87:
  574              		.loc 1 176 9 is_stmt 1 view .LVU154
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 24
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 24
 
 
  575 000e 8A42     		cmp	r2, r1
@@ -1438,7 +1438,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  179:lib/tinyusb/src/tusb.c ****       ep2drv[tu_edpt_number(ep_addr)][tu_edpt_dir(ep_addr)] = driver_id;
  611              		.loc 1 179 74 is_stmt 1 view .LVU167
  180:lib/tinyusb/src/tusb.c ****     }
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 25
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 25
 
 
  612              		.loc 1 180 7 view .LVU168
@@ -1498,7 +1498,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  652 003a 09D9     		bls	.L89
  653              	.L78:
  177:lib/tinyusb/src/tusb.c ****       uint8_t const ep_addr = ((tusb_desc_endpoint_t const*) p_desc)->bEndpointAddress;
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 26
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 26
 
 
  654              		.loc 1 177 5 view .LVU183
@@ -1558,12 +1558,12 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  697              	.LVL48:
  698              	.L87:
  699              		.loc 1 184 1 view .LVU198
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 27
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 27
 
 
  700 0056 7047     		bx	lr
  701              		.cfi_endproc
- 702              	.LFE418:
+ 702              	.LFE422:
  704              		.section	.text.tu_desc_get_interface_total_len,"ax",%progbits
  705              		.align	1
  706              		.p2align 2,,3
@@ -1573,7 +1573,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  710              		.thumb_func
  712              	tu_desc_get_interface_total_len:
  713              	.LVL49:
- 714              	.LFB419:
+ 714              	.LFB423:
  185:lib/tinyusb/src/tusb.c **** 
  186:lib/tinyusb/src/tusb.c **** uint16_t tu_desc_get_interface_total_len(tusb_desc_interface_t const* desc_itf, uint8_t itf_count, 
  715              		.loc 1 186 118 is_stmt 1 view -0
@@ -1618,7 +1618,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  188:lib/tinyusb/src/tusb.c **** 
  743              		.loc 1 188 12 view .LVU209
  744 000e 5FFA8EFE 		uxtb	lr, lr
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 28
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 28
 
 
  191:lib/tinyusb/src/tusb.c ****     // Next on interface desc
@@ -1678,7 +1678,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  787              	.L93:
  788              	.LBB115:
  789              	.LBB116:
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 29
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 29
 
 
  790              		.loc 2 528 33 is_stmt 0 view .LVU226
@@ -1738,7 +1738,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  825              	.LVL60:
  826              	.LBB122:
  827              	.LBI122:
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 30
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 30
 
 
  522:lib/tinyusb/src/common/tusb_types.h ****   return ((uint8_t const*) desc)[DESC_OFFSET_TYPE];
@@ -1798,7 +1798,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  868 0046 5FFA8EFE 		uxtb	lr, lr
  869              	.LVL64:
  190:lib/tinyusb/src/tusb.c ****     // Next on interface desc
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 31
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 31
 
 
  870              		.loc 1 190 9 view .LVU254
@@ -1834,7 +1834,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  892              		.loc 1 211 1 view .LVU259
  893 005a 7047     		bx	lr
  894              		.cfi_endproc
- 895              	.LFE419:
+ 895              	.LFE423:
  897              		.section	.text.tu_edpt_stream_init,"ax",%progbits
  898              		.align	1
  899              		.p2align 2,,3
@@ -1844,7 +1844,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  903              		.thumb_func
  905              	tu_edpt_stream_init:
  906              	.LVL67:
- 907              	.LFB420:
+ 907              	.LFB424:
  212:lib/tinyusb/src/tusb.c **** 
  213:lib/tinyusb/src/tusb.c **** //--------------------------------------------------------------------+
  214:lib/tinyusb/src/tusb.c **** // Endpoint Stream Helper for both Host and Device stack
@@ -1858,7 +1858,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  911              		@ frame_needed = 0, uses_anonymous_args = 0
  219:lib/tinyusb/src/tusb.c ****   (void) is_tx;
  912              		.loc 1 219 3 view .LVU261
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 32
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 32
 
 
  220:lib/tinyusb/src/tusb.c **** 
@@ -1918,7 +1918,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  232:lib/tinyusb/src/tusb.c ****   s->ep_bufsize = ep_bufsize;
  233:lib/tinyusb/src/tusb.c **** 
  234:lib/tinyusb/src/tusb.c ****   return true;
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 33
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 33
 
 
  235:lib/tinyusb/src/tusb.c **** }
@@ -1941,7 +1941,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  961 002c 30BD     		pop	{r4, r5, pc}
  962              		.loc 1 235 1 view .LVU281
  963              		.cfi_endproc
- 964              	.LFE420:
+ 964              	.LFE424:
  966 002e 00BF     		.section	.text.tu_edpt_stream_deinit,"ax",%progbits
  967              		.align	1
  968              		.p2align 2,,3
@@ -1951,7 +1951,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  972              		.thumb_func
  974              	tu_edpt_stream_deinit:
  975              	.LVL73:
- 976              	.LFB421:
+ 976              	.LFB425:
  236:lib/tinyusb/src/tusb.c **** 
  237:lib/tinyusb/src/tusb.c **** bool tu_edpt_stream_deinit(tu_edpt_stream_t* s) {
  977              		.loc 1 237 49 is_stmt 1 view -0
@@ -1974,11 +1974,11 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  987              		.loc 1 244 1 view .LVU286
  988 0002 7047     		bx	lr
  989              		.cfi_endproc
- 990              	.LFE421:
+ 990              	.LFE425:
  992              		.section	.text.tu_edpt_stream_write_zlp_if_needed,"ax",%progbits
  993              		.align	1
  994              		.p2align 2,,3
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 34
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 34
 
 
  995              		.global	tu_edpt_stream_write_zlp_if_needed
@@ -1987,7 +1987,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  998              		.thumb_func
  1000              	tu_edpt_stream_write_zlp_if_needed:
  1001              	.LVL75:
- 1002              	.LFB425:
+ 1002              	.LFB429:
  245:lib/tinyusb/src/tusb.c **** 
  246:lib/tinyusb/src/tusb.c **** TU_ATTR_ALWAYS_INLINE static inline bool stream_claim(uint8_t hwid, tu_edpt_stream_t* s) {
  247:lib/tinyusb/src/tusb.c ****   if (s->is_host) {
@@ -2038,7 +2038,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1006              		@ frame_needed = 0, uses_anonymous_args = 0
  289:lib/tinyusb/src/tusb.c ****   // ZLP condition: no pending data, last transferred bytes is multiple of packet size
  290:lib/tinyusb/src/tusb.c ****   const uint16_t mps = s->is_mps512 ? TUSB_EPSIZE_BULK_HS : TUSB_EPSIZE_BULK_FS;
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 35
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 35
 
 
  1007              		.loc 1 290 3 view .LVU288
@@ -2098,7 +2098,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1052              		.loc 1 291 3 discriminator 4 view .LVU300
  1053 0032 013F     		subs	r7, r7, #1
  1054              	.LVL81:
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 36
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 36
 
 
  291:lib/tinyusb/src/tusb.c ****   TU_VERIFY(stream_claim(hwid, s));
@@ -2158,7 +2158,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1092              		.loc 1 260 3 view .LVU317
  260:lib/tinyusb/src/tusb.c ****     #if CFG_TUH_ENABLED
  1093              		.loc 1 260 7 is_stmt 0 view .LVU318
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 37
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 37
 
 
  1094 004a 2B78     		ldrb	r3, [r5]	@ zero_extendqisi2
@@ -2218,7 +2218,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  266:lib/tinyusb/src/tusb.c ****     #endif
  1136              		.loc 1 266 12 view .LVU331
  1137              	.LBE132:
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 38
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 38
 
 
  1138              	.LBE134:
@@ -2230,7 +2230,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1143 0070 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
  1144              		.loc 1 295 1 view .LVU334
  1145              		.cfi_endproc
- 1146              	.LFE425:
+ 1146              	.LFE429:
  1148 0072 00BF     		.section	.text.tu_edpt_stream_write_xfer,"ax",%progbits
  1149              		.align	1
  1150              		.p2align 2,,3
@@ -2240,7 +2240,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1154              		.thumb_func
  1156              	tu_edpt_stream_write_xfer:
  1157              	.LVL88:
- 1158              	.LFB426:
+ 1158              	.LFB430:
  296:lib/tinyusb/src/tusb.c **** 
  297:lib/tinyusb/src/tusb.c **** uint32_t tu_edpt_stream_write_xfer(uint8_t hwid, tu_edpt_stream_t* s) {
  1159              		.loc 1 297 71 is_stmt 1 view -0
@@ -2278,7 +2278,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  301:lib/tinyusb/src/tusb.c ****   TU_VERIFY(stream_claim(hwid, s), 0);
  1186              		.loc 1 301 3 view .LVU345
  1187              		.loc 1 301 3 view .LVU346
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 39
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 39
 
 
  1188              	.LVL91:
@@ -2338,7 +2338,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1220              	.LBE138:
  301:lib/tinyusb/src/tusb.c **** 
  1221              		.loc 1 301 3 view .LVU357
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 40
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 40
 
 
  1222 0024 0028     		cmp	r0, #0
@@ -2398,7 +2398,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  307:lib/tinyusb/src/tusb.c ****     return count;
  1261              		.loc 1 307 5 view .LVU373
  1262              	.LBB144:
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 41
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 41
 
 
  307:lib/tinyusb/src/tusb.c ****     return count;
@@ -2458,7 +2458,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1305              		.loc 1 315 1 view .LVU386
  1306 005c 70BD     		pop	{r4, r5, r6, pc}
  1307              	.LVL102:
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 42
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 42
 
 
  1308              	.L134:
@@ -2490,7 +2490,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1328 006e 2846     		mov	r0, r5
  1329 0070 F4E7     		b	.L146
  1330              		.cfi_endproc
- 1331              	.LFE426:
+ 1331              	.LFE430:
  1333 0072 00BF     		.section	.text.tu_edpt_stream_write,"ax",%progbits
  1334              		.align	1
  1335              		.p2align 2,,3
@@ -2500,7 +2500,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1339              		.thumb_func
  1341              	tu_edpt_stream_write:
  1342              	.LVL105:
- 1343              	.LFB427:
+ 1343              	.LFB431:
  316:lib/tinyusb/src/tusb.c **** 
  317:lib/tinyusb/src/tusb.c **** uint32_t tu_edpt_stream_write(uint8_t hwid, tu_edpt_stream_t* s, void const* buffer, uint32_t bufsi
  1344              		.loc 1 317 104 is_stmt 1 view -0
@@ -2518,7 +2518,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1354              		.cfi_offset 5, -20
  1355              		.cfi_offset 6, -16
  1356              		.cfi_offset 7, -12
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 43
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 43
 
 
  1357              		.cfi_offset 8, -8
@@ -2578,7 +2578,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
   43:lib/tinyusb/src/common/tusb_fifo.h **** 
   44:lib/tinyusb/src/common/tusb_fifo.h **** #include "common/tusb_common.h"
   45:lib/tinyusb/src/common/tusb_fifo.h **** #include "osal/osal.h"
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 44
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 44
 
 
   46:lib/tinyusb/src/common/tusb_fifo.h **** 
@@ -2638,7 +2638,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  100:lib/tinyusb/src/common/tusb_fifo.h ****  *      perform write(2), result is still a full fifo.
  101:lib/tinyusb/src/common/tusb_fifo.h ****  *
  102:lib/tinyusb/src/common/tusb_fifo.h ****  *                  |
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 45
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 45
 
 
  103:lib/tinyusb/src/common/tusb_fifo.h ****  *      -------------------------
@@ -2698,7 +2698,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  157:lib/tinyusb/src/common/tusb_fifo.h **** bool     tu_fifo_write                  (tu_fifo_t* f, void const * data);
  158:lib/tinyusb/src/common/tusb_fifo.h **** uint16_t tu_fifo_write_n                (tu_fifo_t* f, void const * data, uint16_t n);
  159:lib/tinyusb/src/common/tusb_fifo.h **** #ifdef TUP_MEM_CONST_ADDR
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 46
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 46
 
 
  160:lib/tinyusb/src/common/tusb_fifo.h **** uint16_t tu_fifo_write_n_const_addr_full_words    (tu_fifo_t* f, const void * data, uint16_t n);
@@ -2758,7 +2758,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1393              		.loc 1 247 6 view .LVU410
  1394 0014 D107     		lsls	r1, r2, #31
  1395              	.LVL109:
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 47
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 47
 
 
  247:lib/tinyusb/src/tusb.c ****     #if CFG_TUH_ENABLED
@@ -2818,7 +2818,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  323:lib/tinyusb/src/tusb.c ****     memcpy(s->ep_buf, buffer, xact_len);
  1427              		.loc 1 323 5 discriminator 2 view .LVU420
  1428              	.LVL113:
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 48
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 48
 
 
  1429              	.LBB155:
@@ -2878,7 +2878,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
   52:lib/tinyusb/src/common/tusb_common.h **** 
   53:lib/tinyusb/src/common/tusb_common.h **** #define U32_TO_U8S_BE(_u32)   TU_U32_BYTE3(_u32), TU_U32_BYTE2(_u32), TU_U32_BYTE1(_u32), TU_U32_BY
   54:lib/tinyusb/src/common/tusb_common.h **** #define U32_TO_U8S_LE(_u32)   TU_U32_BYTE0(_u32), TU_U32_BYTE1(_u32), TU_U32_BYTE2(_u32), TU_U32_BY
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 49
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 49
 
 
   55:lib/tinyusb/src/common/tusb_common.h **** 
@@ -2938,7 +2938,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  109:lib/tinyusb/src/common/tusb_common.h ****   memset(dest, ch, count);
  110:lib/tinyusb/src/common/tusb_common.h ****   return 0;
  111:lib/tinyusb/src/common/tusb_common.h **** }
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 50
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 50
 
 
  112:lib/tinyusb/src/common/tusb_common.h **** 
@@ -2998,7 +2998,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1443              	.LBB158:
  1444              	.LBB157:
  1445              		.loc 4 152 101 discriminator 2 view .LVU425
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 51
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 51
 
 
  1446 0030 4645     		cmp	r6, r8
@@ -3058,7 +3058,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1485              		.loc 1 325 5 discriminator 3 view .LVU441
  1486              		.syntax unified
  1487              	@ 325 "lib/tinyusb/src/tusb.c" 1
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 52
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 52
 
 
  1488 004e 00BE     		BKPT #0
@@ -3118,7 +3118,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1529              		.loc 1 333 10 is_stmt 0 view .LVU454
  1530 0072 FFF7FEFF 		bl	tu_fifo_count
  1531              	.LVL125:
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 53
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 53
 
 
  333:lib/tinyusb/src/tusb.c ****       tu_edpt_stream_write_xfer(hwid, s);
@@ -3178,7 +3178,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1575              		.loc 1 266 12 view .LVU467
  1576              	.LBE161:
  1577              	.LBE164:
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 54
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 54
 
 
  325:lib/tinyusb/src/tusb.c ****     return xact_len;
@@ -3198,7 +3198,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1590              	.LBE165:
  1591              	.LBE170:
  1592              		.cfi_endproc
- 1593              	.LFE427:
+ 1593              	.LFE431:
  1595 00a2 00BF     		.section	.text.tu_edpt_stream_write_available,"ax",%progbits
  1596              		.align	1
  1597              		.p2align 2,,3
@@ -3208,7 +3208,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1601              		.thumb_func
  1603              	tu_edpt_stream_write_available:
  1604              	.LVL131:
- 1605              	.LFB428:
+ 1605              	.LFB432:
  339:lib/tinyusb/src/tusb.c **** 
  340:lib/tinyusb/src/tusb.c **** uint32_t tu_edpt_stream_write_available(uint8_t hwid, tu_edpt_stream_t* s) {
  1606              		.loc 1 340 76 is_stmt 1 view -0
@@ -3238,7 +3238,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1626              		.loc 3 181 3 is_stmt 0 view .LVU477
  1627              	.LBE172:
  1628              	.LBE171:
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 55
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 55
 
 
  1629              		.loc 1 341 6 view .LVU478
@@ -3298,7 +3298,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1662 001c 6088     		ldrh	r0, [r4, #2]
  1663              	.LVL138:
  354:lib/tinyusb/src/tusb.c ****   }
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 56
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 56
 
 
  1664              		.loc 1 354 24 discriminator 2 view .LVU491
@@ -3321,7 +3321,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1678 0028 10BD     		pop	{r4, pc}
  1679              		.loc 1 356 1 view .LVU497
  1680              		.cfi_endproc
- 1681              	.LFE428:
+ 1681              	.LFE432:
  1683 002a 00BF     		.section	.text.tu_edpt_stream_read_xfer,"ax",%progbits
  1684              		.align	1
  1685              		.p2align 2,,3
@@ -3331,7 +3331,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1689              		.thumb_func
  1691              	tu_edpt_stream_read_xfer:
  1692              	.LVL142:
- 1693              	.LFB429:
+ 1693              	.LFB433:
  357:lib/tinyusb/src/tusb.c **** 
  358:lib/tinyusb/src/tusb.c **** //--------------------------------------------------------------------+
  359:lib/tinyusb/src/tusb.c **** // Stream Read
@@ -3358,7 +3358,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  361:lib/tinyusb/src/tusb.c ****   if (0 == tu_fifo_depth(&s->ff)) {
  1710              		.loc 1 361 70 view .LVU502
  1711 0004 0C46     		mov	r4, r1
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 57
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 57
 
 
  1712              	.LVL143:
@@ -3418,7 +3418,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  377:lib/tinyusb/src/tusb.c ****     TU_VERIFY(stream_claim(hwid, s), 0);
  378:lib/tinyusb/src/tusb.c **** 
  379:lib/tinyusb/src/tusb.c ****     // get available again since fifo can be changed before endpoint is claimed
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 58
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 58
 
 
  380:lib/tinyusb/src/tusb.c ****     available = tu_fifo_remaining(&s->ff);
@@ -3478,7 +3478,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1775 002e EFD8     		bhi	.L201
  375:lib/tinyusb/src/tusb.c **** 
  1776              		.loc 1 375 5 view .LVU526
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 59
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 59
 
 
  377:lib/tinyusb/src/tusb.c **** 
@@ -3538,7 +3538,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1815              	.LBB183:
  260:lib/tinyusb/src/tusb.c ****     #if CFG_TUH_ENABLED
  1816              		.loc 1 260 7 discriminator 2 view .LVU543
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 60
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 60
 
 
  1817 004a 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
@@ -3598,7 +3598,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1857              		.loc 1 266 12 view .LVU557
  1858 0056 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
  1859              	.LBE185:
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 61
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 61
 
 
  1860              	.LBE194:
@@ -3658,7 +3658,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1900              		.loc 1 386 7 view .LVU571
  1901              	.LVL159:
  386:lib/tinyusb/src/tusb.c ****       return count;
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 62
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 62
 
 
  1902              		.loc 1 386 7 view .LVU572
@@ -3718,7 +3718,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  260:lib/tinyusb/src/tusb.c ****     #if CFG_TUH_ENABLED
  1945              		.loc 1 260 3 discriminator 2 view .LVU584
  260:lib/tinyusb/src/tusb.c ****     #if CFG_TUH_ENABLED
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 63
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 63
 
 
  1946              		.loc 1 260 7 is_stmt 0 discriminator 2 view .LVU585
@@ -3778,7 +3778,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  1987              		.loc 1 273 3 view .LVU599
  273:lib/tinyusb/src/tusb.c ****     #if CFG_TUH_ENABLED
  1988              		.loc 1 273 6 is_stmt 0 view .LVU600
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 64
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 64
 
 
  1989 00a8 13F00105 		ands	r5, r3, #1
@@ -3833,12 +3833,12 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  2030              	.LBE205:
  2031              	.LBE215:
  2032              		.cfi_endproc
- 2033              	.LFE429:
+ 2033              	.LFE433:
  2035 00c2 00BF     		.section	.text.tu_edpt_stream_read,"ax",%progbits
  2036              		.align	1
  2037              		.p2align 2,,3
  2038              		.global	tu_edpt_stream_read
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 65
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 65
 
 
  2039              		.syntax unified
@@ -3846,7 +3846,7 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  2041              		.thumb_func
  2043              	tu_edpt_stream_read:
  2044              	.LVL171:
- 2045              	.LFB430:
+ 2045              	.LFB434:
  395:lib/tinyusb/src/tusb.c **** 
  396:lib/tinyusb/src/tusb.c **** uint32_t tu_edpt_stream_read(uint8_t hwid, tu_edpt_stream_t* s, void* buffer, uint32_t bufsize) {
  2046              		.loc 1 396 97 is_stmt 1 view -0
@@ -3898,11 +3898,11 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  2085 001e 2046     		mov	r0, r4
  2086 0020 38BD     		pop	{r3, r4, r5, pc}
  2087              		.loc 1 400 1 view .LVU623
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 66
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 66
 
 
  2088              		.cfi_endproc
- 2089              	.LFE430:
+ 2089              	.LFE434:
  2091 0022 00BF     		.text
  2092              	.Letext0:
  2093              		.file 5 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/machine/_default_types.h"
@@ -3912,47 +3912,47 @@ ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 1
  2097              		.file 9 "lib/tinyusb/src/device/usbd_pvt.h"
  2098              		.file 10 "lib/tinyusb/src/device/usbd.h"
  2099              		.file 11 "<built-in>"
-ARM GAS  /tmp/claude-502/ccY3ow5l.s 			page 67
+ARM GAS  /tmp/claude-502/ccKaJKEx.s 			page 67
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 tusb.c
-/tmp/claude-502/ccY3ow5l.s:19     .text.tusb_init:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:26     .text.tusb_init:0000000000000000 tusb_init
-/tmp/claude-502/ccY3ow5l.s:76     .text.tusb_inited:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:83     .text.tusb_inited:0000000000000000 tusb_inited
-/tmp/claude-502/ccY3ow5l.s:100    .text.tu_desc_find:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:107    .text.tu_desc_find:0000000000000000 tu_desc_find
-/tmp/claude-502/ccY3ow5l.s:146    .text.tu_desc_find2:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:153    .text.tu_desc_find2:0000000000000000 tu_desc_find2
-/tmp/claude-502/ccY3ow5l.s:198    .text.tu_desc_find3:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:205    .text.tu_desc_find3:0000000000000000 tu_desc_find3
-/tmp/claude-502/ccY3ow5l.s:268    .text.tu_edpt_claim:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:275    .text.tu_edpt_claim:0000000000000000 tu_edpt_claim
-/tmp/claude-502/ccY3ow5l.s:336    .text.tu_edpt_release:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:343    .text.tu_edpt_release:0000000000000000 tu_edpt_release
-/tmp/claude-502/ccY3ow5l.s:402    .text.tu_edpt_validate:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:409    .text.tu_edpt_validate:0000000000000000 tu_edpt_validate
-/tmp/claude-502/ccY3ow5l.s:538    .text.tu_edpt_bind_driver:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:545    .text.tu_edpt_bind_driver:0000000000000000 tu_edpt_bind_driver
-/tmp/claude-502/ccY3ow5l.s:705    .text.tu_desc_get_interface_total_len:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:712    .text.tu_desc_get_interface_total_len:0000000000000000 tu_desc_get_interface_total_len
-/tmp/claude-502/ccY3ow5l.s:898    .text.tu_edpt_stream_init:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:905    .text.tu_edpt_stream_init:0000000000000000 tu_edpt_stream_init
-/tmp/claude-502/ccY3ow5l.s:967    .text.tu_edpt_stream_deinit:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:974    .text.tu_edpt_stream_deinit:0000000000000000 tu_edpt_stream_deinit
-/tmp/claude-502/ccY3ow5l.s:993    .text.tu_edpt_stream_write_zlp_if_needed:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:1000   .text.tu_edpt_stream_write_zlp_if_needed:0000000000000000 tu_edpt_stream_write_zlp_if_needed
-/tmp/claude-502/ccY3ow5l.s:1149   .text.tu_edpt_stream_write_xfer:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:1156   .text.tu_edpt_stream_write_xfer:0000000000000000 tu_edpt_stream_write_xfer
-/tmp/claude-502/ccY3ow5l.s:1334   .text.tu_edpt_stream_write:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:1341   .text.tu_edpt_stream_write:0000000000000000 tu_edpt_stream_write
-/tmp/claude-502/ccY3ow5l.s:1596   .text.tu_edpt_stream_write_available:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:1603   .text.tu_edpt_stream_write_available:0000000000000000 tu_edpt_stream_write_available
-/tmp/claude-502/ccY3ow5l.s:1684   .text.tu_edpt_stream_read_xfer:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:1691   .text.tu_edpt_stream_read_xfer:0000000000000000 tu_edpt_stream_read_xfer
-/tmp/claude-502/ccY3ow5l.s:2036   .text.tu_edpt_stream_read:0000000000000000 $t
-/tmp/claude-502/ccY3ow5l.s:2043   .text.tu_edpt_stream_read:0000000000000000 tu_edpt_stream_read
+/tmp/claude-502/ccKaJKEx.s:19     .text.tusb_init:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:26     .text.tusb_init:0000000000000000 tusb_init
+/tmp/claude-502/ccKaJKEx.s:76     .text.tusb_inited:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:83     .text.tusb_inited:0000000000000000 tusb_inited
+/tmp/claude-502/ccKaJKEx.s:100    .text.tu_desc_find:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:107    .text.tu_desc_find:0000000000000000 tu_desc_find
+/tmp/claude-502/ccKaJKEx.s:146    .text.tu_desc_find2:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:153    .text.tu_desc_find2:0000000000000000 tu_desc_find2
+/tmp/claude-502/ccKaJKEx.s:198    .text.tu_desc_find3:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:205    .text.tu_desc_find3:0000000000000000 tu_desc_find3
+/tmp/claude-502/ccKaJKEx.s:268    .text.tu_edpt_claim:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:275    .text.tu_edpt_claim:0000000000000000 tu_edpt_claim
+/tmp/claude-502/ccKaJKEx.s:336    .text.tu_edpt_release:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:343    .text.tu_edpt_release:0000000000000000 tu_edpt_release
+/tmp/claude-502/ccKaJKEx.s:402    .text.tu_edpt_validate:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:409    .text.tu_edpt_validate:0000000000000000 tu_edpt_validate
+/tmp/claude-502/ccKaJKEx.s:538    .text.tu_edpt_bind_driver:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:545    .text.tu_edpt_bind_driver:0000000000000000 tu_edpt_bind_driver
+/tmp/claude-502/ccKaJKEx.s:705    .text.tu_desc_get_interface_total_len:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:712    .text.tu_desc_get_interface_total_len:0000000000000000 tu_desc_get_interface_total_len
+/tmp/claude-502/ccKaJKEx.s:898    .text.tu_edpt_stream_init:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:905    .text.tu_edpt_stream_init:0000000000000000 tu_edpt_stream_init
+/tmp/claude-502/ccKaJKEx.s:967    .text.tu_edpt_stream_deinit:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:974    .text.tu_edpt_stream_deinit:0000000000000000 tu_edpt_stream_deinit
+/tmp/claude-502/ccKaJKEx.s:993    .text.tu_edpt_stream_write_zlp_if_needed:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:1000   .text.tu_edpt_stream_write_zlp_if_needed:0000000000000000 tu_edpt_stream_write_zlp_if_needed
+/tmp/claude-502/ccKaJKEx.s:1149   .text.tu_edpt_stream_write_xfer:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:1156   .text.tu_edpt_stream_write_xfer:0000000000000000 tu_edpt_stream_write_xfer
+/tmp/claude-502/ccKaJKEx.s:1334   .text.tu_edpt_stream_write:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:1341   .text.tu_edpt_stream_write:0000000000000000 tu_edpt_stream_write
+/tmp/claude-502/ccKaJKEx.s:1596   .text.tu_edpt_stream_write_available:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:1603   .text.tu_edpt_stream_write_available:0000000000000000 tu_edpt_stream_write_available
+/tmp/claude-502/ccKaJKEx.s:1684   .text.tu_edpt_stream_read_xfer:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:1691   .text.tu_edpt_stream_read_xfer:0000000000000000 tu_edpt_stream_read_xfer
+/tmp/claude-502/ccKaJKEx.s:2036   .text.tu_edpt_stream_read:0000000000000000 $t
+/tmp/claude-502/ccKaJKEx.s:2043   .text.tu_edpt_stream_read:0000000000000000 tu_edpt_stream_read
 
 UNDEFINED SYMBOLS
 tud_init

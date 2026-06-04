@@ -2,6 +2,7 @@
 // on PA11/PA12 = TinyUSB rhport 0).
 #include "tusb.h"
 #include "usb_glue.h"
+#include "usb_audio.h"
 #include <stdarg.h>
 #include <stdio.h>
 extern "C" {
@@ -26,6 +27,7 @@ extern "C" void usb_fs_init(void)
     // Below the audio DMA IRQ so streaming is never starved by USB servicing.
     HAL_NVIC_SetPriority(OTG_FS_IRQn, 6, 0);
 
+    usb_audio_init();                            // UAC2 control state (sample-rate range)
     tud_init(BOARD_TUD_RHPORT);                  // enables the NVIC IRQ internally
 }
 
@@ -48,8 +50,9 @@ static void cdc_write_all(const char *data, uint32_t len)
             off += tud_cdc_write(data + off, chunk);
         } else {
             tud_cdc_write_flush();
-            tud_task();                          // pump so the IN endpoint drains
-            if(++guard > 2000) break;            // host stalled → give up, don't hang
+            // tud_task() is pumped from the audio callback (not here, to avoid
+            // re-entrancy); it drains the CDC IN endpoint. Just wait briefly.
+            if(++guard > 200000) break;          // host stalled → give up, don't hang
         }
     }
     tud_cdc_write_flush();
