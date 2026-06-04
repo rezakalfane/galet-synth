@@ -1,4 +1,4 @@
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
   28:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****  */
   29:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
   30:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** #include "tusb_option.h"
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 2
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 2
 
 
   31:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
@@ -118,7 +118,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
   85:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   uint8_t* buffer;
   86:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   tu_fifo_t* ff;
   87:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   uint16_t total_len;
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 3
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 3
 
 
   88:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   uint16_t max_size;
@@ -178,7 +178,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
    3:lib/tinyusb/src/common/tusb_types.h ****  *
    4:lib/tinyusb/src/common/tusb_types.h ****  * Copyright (c) 2019 Ha Thach (tinyusb.org)
    5:lib/tinyusb/src/common/tusb_types.h ****  *
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 4
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 4
 
 
    6:lib/tinyusb/src/common/tusb_types.h ****  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -238,7 +238,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
   60:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DIR_IN  = 1,
   61:lib/tinyusb/src/common/tusb_types.h **** 
   62:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DIR_IN_MASK = 0x80
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 5
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 5
 
 
   63:lib/tinyusb/src/common/tusb_types.h **** } tusb_dir_t;
@@ -298,7 +298,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  117:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_RESERVED          = 2  ,
  118:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_SET_FEATURE       = 3  ,
  119:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_RESERVED2         = 4  ,
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 6
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 6
 
 
  120:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_SET_ADDRESS       = 5  ,
@@ -358,7 +358,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  174:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_VENDOR_SPECIFIC      = 0xFF
  175:lib/tinyusb/src/common/tusb_types.h **** } tusb_class_code_t;
  176:lib/tinyusb/src/common/tusb_types.h **** 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 7
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 7
 
 
  177:lib/tinyusb/src/common/tusb_types.h **** typedef enum
@@ -418,7 +418,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  231:lib/tinyusb/src/common/tusb_types.h ****   XFER_RESULT_FAILED,
  232:lib/tinyusb/src/common/tusb_types.h ****   XFER_RESULT_STALLED,
  233:lib/tinyusb/src/common/tusb_types.h ****   XFER_RESULT_TIMEOUT,
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 8
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 8
 
 
  234:lib/tinyusb/src/common/tusb_types.h ****   XFER_RESULT_INVALID
@@ -478,7 +478,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  288:lib/tinyusb/src/common/tusb_types.h **** 
  289:lib/tinyusb/src/common/tusb_types.h ****   uint16_t idVendor           ; ///< Vendor ID (assigned by the USB-IF).
  290:lib/tinyusb/src/common/tusb_types.h ****   uint16_t idProduct          ; ///< Product ID (assigned by the manufacturer).
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 9
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 9
 
 
  291:lib/tinyusb/src/common/tusb_types.h ****   uint16_t bcdDevice          ; ///< Device release number in binary-coded decimal.
@@ -538,7 +538,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  345:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDescriptorType  ; // ENDPOINT Descriptor Type
  346:lib/tinyusb/src/common/tusb_types.h **** 
  347:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bEndpointAddress ; // The address of the endpoint
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 10
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 10
 
 
  348:lib/tinyusb/src/common/tusb_types.h **** 
@@ -598,7 +598,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  402:lib/tinyusb/src/common/tusb_types.h ****   uint8_t bFunctionProtocol ; ///< Interface protocol ID.
  403:lib/tinyusb/src/common/tusb_types.h **** 
  404:lib/tinyusb/src/common/tusb_types.h ****   uint8_t iFunction         ; ///< Index of the string descriptor describing the interface associat
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 11
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 11
 
 
  405:lib/tinyusb/src/common/tusb_types.h **** } tusb_desc_interface_assoc_t;
@@ -658,7 +658,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  459:lib/tinyusb/src/common/tusb_types.h **** 
  460:lib/tinyusb/src/common/tusb_types.h **** typedef struct TU_ATTR_PACKED {
  461:lib/tinyusb/src/common/tusb_types.h ****   union {
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 12
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 12
 
 
  462:lib/tinyusb/src/common/tusb_types.h ****     struct TU_ATTR_PACKED {
@@ -718,7 +718,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
   60              	.LBI170:
  492:lib/tinyusb/src/common/tusb_types.h ****   return (uint8_t)(addr & (~TUSB_DIR_IN_MASK));
   61              		.loc 2 492 45 view .LVU9
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 13
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 13
 
 
   62              	.LBB172:
@@ -778,7 +778,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
   28:lib/tinyusb/src/common/tusb_common.h **** #define _TUSB_COMMON_H_
   29:lib/tinyusb/src/common/tusb_common.h **** 
   30:lib/tinyusb/src/common/tusb_common.h **** #ifdef __cplusplus
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 14
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 14
 
 
   31:lib/tinyusb/src/common/tusb_common.h ****  extern "C" {
@@ -838,7 +838,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
   85:lib/tinyusb/src/common/tusb_common.h **** // flush data cache
   86:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_WEAK extern void tusb_app_dcache_flush(uintptr_t addr, uint32_t data_size);
   87:lib/tinyusb/src/common/tusb_common.h **** 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 15
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 15
 
 
   88:lib/tinyusb/src/common/tusb_common.h **** // invalidate data cache
@@ -898,7 +898,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  142:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t tu_u16_low (uint16_t ui16) { return TU_U16_LOW(ui16); }
  143:lib/tinyusb/src/common/tusb_common.h **** 
  144:lib/tinyusb/src/common/tusb_common.h **** //------------- Bits -------------//
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 16
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 16
 
 
  145:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_bit_set  (uint32_t value, uint8_t pos) { return val
@@ -958,7 +958,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  150:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   // | OUT FIFO    |
  151:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   // | ( Shared )  |
  152:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   // --------------- 0
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 17
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 17
 
 
  153:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   //
@@ -1018,7 +1018,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  127              	.LBB183:
  112:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** }
  128              		.loc 1 112 37 view .LVU35
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 18
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 18
 
 
  129 0028 7344     		add	r3, r3, lr
@@ -1078,7 +1078,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  156 0044 6362     		str	r3, [r4, #36]
  157              	.LVL10:
  158              	.L3:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 19
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 19
 
 
  165:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     }
@@ -1138,7 +1138,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  199 0062 2B44     		add	r3, r3, r5
  200 0064 0E4E     		ldr	r6, .L19+4
  201 0066 606A     		ldr	r0, [r4, #36]
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 20
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 20
 
 
  202 0068 DD68     		ldr	r5, [r3, #12]
@@ -1198,7 +1198,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  242              		.loc 1 171 7 is_stmt 1 view .LVU75
  171:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     }
  243              		.loc 1 171 17 is_stmt 0 view .LVU76
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 21
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 21
 
 
  244 0096 5200     		lsls	r2, r2, #1
@@ -1258,7 +1258,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  492:lib/tinyusb/src/common/tusb_types.h ****   return (uint8_t)(addr & (~TUSB_DIR_IN_MASK));
  292              		.loc 2 492 45 view .LVU86
  293              	.LBB188:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 22
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 22
 
 
  294              		.loc 2 493 3 view .LVU87
@@ -1318,7 +1318,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  327              		.loc 1 201 114 view .LVU100
  328 0014 00F00304 		and	r4, r0, #3
  195:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   xfer->interval = p_endpoint_desc->bInterval;
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 23
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 23
 
 
  329              		.loc 1 195 18 view .LVU101
@@ -1378,7 +1378,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  371              		.loc 1 205 5 is_stmt 1 view .LVU118
  372              		.loc 1 205 32 is_stmt 0 view .LVU119
  373 0050 02F15801 		add	r1, r2, #88
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 24
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 24
 
 
  206:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     dwc2->daintmsk |= TU_BIT(DAINTMSK_OEPM_Pos + epnum);
@@ -1438,7 +1438,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  209:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   }
  412              		.loc 1 209 20 is_stmt 0 view .LVU136
  413 007e D5F81C38 		ldr	r3, [r5, #2076]
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 25
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 25
 
 
  414 0082 1A43     		orrs	r2, r2, r3
@@ -1498,7 +1498,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  461              	.LVL37:
  493:lib/tinyusb/src/common/tusb_types.h **** }
  462              		.loc 2 493 10 view .LVU149
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 26
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 26
 
 
  463              	.LBE198:
@@ -1558,7 +1558,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  487 0012 28B9     		cbnz	r0, .L72
  488              	.LVL40:
  489              	.L40:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 27
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 27
 
 
  245:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****       epout[epnum].doepctl |= stall ? DOEPCTL_STALL : 0;
@@ -1618,7 +1618,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  530 003e 2348     		ldr	r0, .L74+4
  531              		.loc 1 255 28 view .LVU178
  532 0040 0A68     		ldr	r2, [r1]
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 28
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 28
 
 
  533              	.LVL45:
@@ -1678,7 +1678,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  576 006a 90B9     		cbnz	r0, .L73
  577              	.LVL48:
  578              	.L31:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 29
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 29
 
 
  225:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     } else {
@@ -1738,7 +1738,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  617              	.LBE203:
  618              	.LBE205:
  262:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     }
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 30
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 30
 
 
  263:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   }
@@ -1798,7 +1798,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  232:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****       while ((epin[epnum].diepint & DIEPINT_EPDISD_Msk) == 0) {}
  658              		.loc 1 232 44 view .LVU226
  659 00b0 08BF     		it	eq
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 31
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 31
 
 
  660 00b2 4FF08044 		moveq	r4, #1073741824
@@ -1858,7 +1858,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  276:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   dwc2->dcfg &= ~DCFG_DAD_Msk;
  277:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
  278:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   // 1. NAK for all OUT endpoints
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 32
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 32
 
 
  279:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   for (uint8_t n = 0; n < ep_count; n++) {
@@ -1918,7 +1918,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  333:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   //   - 1 for global NAK (not required/used here).
  334:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   //   - Largest-EPsize / 4 + 1. ( FS: 64 bytes, HS: 512 bytes). Recommended is  "2 x (Largest-EPsi
  335:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   //   - 2 for each used OUT endpoint
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 33
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 33
 
 
  336:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   //
@@ -1978,7 +1978,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  714 0004 3D4D     		ldr	r5, .L92
  368:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   (void) rhport;
  715              		.loc 1 368 57 view .LVU241
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 34
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 34
 
 
  716 0006 BDF81040 		ldrh	r4, [sp, #16]
@@ -2038,7 +2038,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  758              	.L77:
  759              		.loc 1 378 22 view .LVU256
  760              	.LBE207:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 35
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 35
 
 
  379:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   }
@@ -2098,7 +2098,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  786              		.loc 1 406 27 view .LVU267
  787 004c 1C43     		orrs	r4, r4, r3
  788              	.LVL66:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 36
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 36
 
 
  789              		.loc 1 406 27 view .LVU268
@@ -2158,7 +2158,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  414:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     }
  827              		.loc 1 414 28 is_stmt 0 view .LVU282
  828 007e 50F80E30 		ldr	r3, [r0, lr]
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 37
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 37
 
 
  414:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     }
@@ -2218,7 +2218,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  868              		.loc 1 392 30 view .LVU298
  869 00b2 03F44023 		and	r3, r3, #786432
  392:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****       // Take odd/even bit from frame counter.
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 38
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 38
 
 
  870              		.loc 1 392 8 view .LVU299
@@ -2278,7 +2278,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  911 00e2 13F4807F 		tst	r3, #256
  395:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     }
  912              		.loc 1 395 27 view .LVU314
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 39
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 39
 
 
  913 00e6 1358     		ldr	r3, [r2, r0]
@@ -2338,7 +2338,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  434:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
  435:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** static void reset_core(dwc2_regs_t* dwc2) {
  436:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   // reset core
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 40
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 40
 
 
  437:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   dwc2->grstctl |= GRSTCTL_CSRST;
@@ -2398,7 +2398,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  491:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
  492:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   if (dwc2->ghwcfg2_bm.hs_phy_type == HS_PHY_TYPE_ULPI) {
  493:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     TU_LOG(DWC2_DEBUG, "Highspeed ULPI PHY init\r\n");
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 41
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 41
 
 
  494:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
@@ -2458,7 +2458,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  548:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** #if CFG_TUSB_DEBUG >= DWC2_DEBUG
  549:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   print_dwc2_info(dwc2);
  550:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** #endif
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 42
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 42
 
 
  551:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
@@ -2518,7 +2518,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  979 000a 186C     		ldr	r0, [r3, #64]
  980              	.LBE245:
  981              	.LBE248:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 43
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 43
 
 
  562:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   // Programming model begins in the last section of the chapter on the USB
@@ -2578,7 +2578,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  591:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   dwc2->gusbcfg |= (7ul << GUSBCFG_TOCAL_Pos);
  592:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
  593:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   // Force device mode
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 44
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 44
 
 
  594:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   dwc2->gusbcfg = (dwc2->gusbcfg & ~GUSBCFG_FHMOD) | GUSBCFG_FDMOD;
@@ -2638,7 +2638,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  648:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
  649:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** void dcd_remote_wakeup(uint8_t rhport) {
  650:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   (void) rhport;
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 45
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 45
 
 
  651:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
@@ -2698,7 +2698,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  1015 0022 D3F80428 		ldr	r2, [r3, #2052]
  1016              	.LBE251:
  1017              	.LBE250:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 46
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 46
 
 
  1018              	.LBB254:
@@ -2758,7 +2758,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
   50:lib/tinyusb/src/portable/synopsys/dwc2/dwc2_stm32.h ****   #include "stm32f4xx.h"
   51:lib/tinyusb/src/portable/synopsys/dwc2/dwc2_stm32.h ****   #define EP_MAX_FS       USB_OTG_FS_MAX_IN_ENDPOINTS
   52:lib/tinyusb/src/portable/synopsys/dwc2/dwc2_stm32.h ****   #define EP_FIFO_SIZE_FS USB_OTG_FS_TOTAL_FIFO_SIZE
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 47
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 47
 
 
   53:lib/tinyusb/src/portable/synopsys/dwc2/dwc2_stm32.h **** 
@@ -2818,7 +2818,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  107:lib/tinyusb/src/portable/synopsys/dwc2/dwc2_stm32.h **** 
  108:lib/tinyusb/src/portable/synopsys/dwc2/dwc2_stm32.h **** // On STM32 for consistency we associate
  109:lib/tinyusb/src/portable/synopsys/dwc2/dwc2_stm32.h **** // - Port0 to OTG_FS, and Port1 to OTG_HS
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 48
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 48
 
 
  110:lib/tinyusb/src/portable/synopsys/dwc2/dwc2_stm32.h **** static const dwc2_controller_t _dwc2_controller[] = {
@@ -2878,7 +2878,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  1032 0028 42F00202 		orr	r2, r2, #2
  1033              	.LBE252:
  1034              	.LBE301:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 49
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 49
 
 
  1035              	.LBB302:
@@ -2938,7 +2938,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  1076 003a 9A6B     		ldr	r2, [r3, #56]
  1077 003c 42F48032 		orr	r2, r2, #65536
  1078 0040 9A63     		str	r2, [r3, #56]
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 50
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 50
 
 
  1079              		.loc 4 154 5 is_stmt 1 view .LVU360
@@ -2998,7 +2998,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  200:lib/tinyusb/src/portable/synopsys/dwc2/dwc2_stm32.h ****         default:
  201:lib/tinyusb/src/portable/synopsys/dwc2/dwc2_stm32.h ****           TU_ASSERT(false, );
  202:lib/tinyusb/src/portable/synopsys/dwc2/dwc2_stm32.h ****       }
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 51
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 51
 
 
  203:lib/tinyusb/src/portable/synopsys/dwc2/dwc2_stm32.h ****       USB_HS_PHYC->USB_HS_PHYC_PLL = phyc_pll;
@@ -3058,7 +3058,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  1117              		.loc 1 444 9 view .LVU378
  1118 005e 002A     		cmp	r2, #0
  1119 0060 FCDA     		bge	.L100
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 52
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 52
 
 
  1120              	.LVL88:
@@ -3118,7 +3118,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  1157              		.loc 1 477 17 view .LVU388
  1158 0074 DA60     		str	r2, [r3, #12]
  480:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 53
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 53
 
 
  1159              		.loc 1 480 3 is_stmt 1 view .LVU389
@@ -3178,7 +3178,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  235:lib/tinyusb/src/portable/synopsys/dwc2/dwc2_stm32.h ****       turnaround = 0xAu;
  236:lib/tinyusb/src/portable/synopsys/dwc2/dwc2_stm32.h ****     }
  237:lib/tinyusb/src/portable/synopsys/dwc2/dwc2_stm32.h ****     else if (SystemCoreClock >= 18500000u) {
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 54
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 54
 
 
  1200              		.loc 4 237 10 is_stmt 1 view .LVU404
@@ -3238,7 +3238,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  556:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** #endif
  1240              		.loc 1 556 3 view .LVU418
  1241 00cc 4FF0E023 		mov	r3, #-536813568
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 55
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 55
 
 
  1242              	.LVL91:
@@ -3298,7 +3298,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  1284              	.LBE298:
  1285              	.LBE307:
  1286              	.LBB308:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 56
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 56
 
 
  1287              	.LBB309:
@@ -3358,7 +3358,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  594:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
  1330              		.loc 1 594 24 is_stmt 0 view .LVU441
  1331 0112 DA68     		ldr	r2, [r3, #12]
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 57
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 57
 
 
  594:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
@@ -3418,7 +3418,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  118:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** }
  1369              		.loc 1 118 9 view .LVU459
  1370              	.LBE310:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 58
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 58
 
 
  1371              	.LBE312:
@@ -3478,7 +3478,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  1408              		.cfi_restore 4
  1409              		.cfi_def_cfa_offset 0
  608:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   int_mask = dwc2->gotgint;
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 59
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 59
 
 
  1410              		.loc 1 608 17 view .LVU477
@@ -3538,7 +3538,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  681:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** }
  1448              		.loc 1 681 14 view .LVU494
  1449              	.LBE316:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 60
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 60
 
 
  1450              	.LBE315:
@@ -3598,7 +3598,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  1494              		.loc 4 155 22 is_stmt 0 view .LVU504
  1495 0194 1B49     		ldr	r1, .L130+60
  1496 0196 D1F80021 		ldr	r2, [r1, #256]
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 61
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 61
 
 
  1497 019a 22F08052 		bic	r2, r2, #268435456
@@ -3658,7 +3658,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  1549              	.LBE317:
  1550              		.cfi_endproc
  1551              	.LFE403:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 62
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 62
 
 
  1553              		.section	.text.dcd_int_enable,"ax",%progbits
@@ -3718,7 +3718,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
   15:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****  *
   16:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****  * www.apache.org/licenses/LICENSE-2.0
   17:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****  *
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 63
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 63
 
 
   18:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****  * Unless required by applicable law or agreed to in writing, software
@@ -3778,7 +3778,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
   72:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****     For this, __FPU_PRESENT has to be checked prior to making use of FPU specific registers and fun
   73:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** */
   74:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #if defined ( __CC_ARM )
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 64
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 64
 
 
   75:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   #if defined __TARGET_FPU_VFP
@@ -3838,7 +3838,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  129:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****     #endif
  130:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   #else
  131:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****     #define __FPU_USED         0U
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 65
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 65
 
 
  132:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   #endif
@@ -3898,7 +3898,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  186:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****     #define __FPU_PRESENT             0U
  187:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****     #warning "__FPU_PRESENT not defined in device header file; using default!"
  188:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   #endif
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 66
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 66
 
 
  189:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
@@ -3958,7 +3958,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  243:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
  244:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
  245:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 67
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 67
 
 
  246:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** /*******************************************************************************
@@ -4018,7 +4018,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  300:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
  301:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define APSR_Q_Pos                         27U                                            /*!< APSR
  302:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define APSR_Q_Msk                         (1UL << APSR_Q_Pos)                            /*!< APSR
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 68
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 68
 
 
  303:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
@@ -4078,7 +4078,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  357:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define xPSR_C_Msk                         (1UL << xPSR_C_Pos)                            /*!< xPSR
  358:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
  359:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define xPSR_V_Pos                         28U                                            /*!< xPSR
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 69
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 69
 
 
  360:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define xPSR_V_Msk                         (1UL << xPSR_V_Pos)                            /*!< xPSR
@@ -4138,7 +4138,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  414:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****  */
  415:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
  416:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** /**
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 70
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 70
 
 
  417:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   \brief  Structure type to access the Nested Vectored Interrupt Controller (NVIC).
@@ -4198,7 +4198,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  471:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   __IM  uint32_t ID_AFR;                 /*!< Offset: 0x04C (R/ )  Auxiliary Feature Register */
  472:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   __IM  uint32_t ID_MFR[4U];             /*!< Offset: 0x050 (R/ )  Memory Model Feature Register */
  473:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   __IM  uint32_t ID_ISAR[5U];            /*!< Offset: 0x060 (R/ )  Instruction Set Attributes Regis
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 71
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 71
 
 
  474:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****         uint32_t RESERVED0[1U];
@@ -4258,7 +4258,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  528:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ICSR_PENDSVSET_Msk             (1UL << SCB_ICSR_PENDSVSET_Pos)                /*!< SCB 
  529:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
  530:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ICSR_PENDSVCLR_Pos             27U                                            /*!< SCB 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 72
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 72
 
 
  531:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ICSR_PENDSVCLR_Msk             (1UL << SCB_ICSR_PENDSVCLR_Pos)                /*!< SCB 
@@ -4318,7 +4318,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  585:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCB_SCR_SLEEPDEEP_Msk              (1UL << SCB_SCR_SLEEPDEEP_Pos)                 /*!< SCB 
  586:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
  587:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCB_SCR_SLEEPONEXIT_Pos             1U                                            /*!< SCB 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 73
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 73
 
 
  588:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCB_SCR_SLEEPONEXIT_Msk            (1UL << SCB_SCR_SLEEPONEXIT_Pos)               /*!< SCB 
@@ -4378,7 +4378,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  642:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
  643:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCB_SHCSR_PENDSVACT_Pos            10U                                            /*!< SCB 
  644:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCB_SHCSR_PENDSVACT_Msk            (1UL << SCB_SHCSR_PENDSVACT_Pos)               /*!< SCB 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 74
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 74
 
 
  645:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
@@ -4438,7 +4438,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  699:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
  700:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CFSR_UNSTKERR_Pos             (SCB_CFSR_BUSFAULTSR_Pos + 3U)                  /*!< SCB 
  701:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CFSR_UNSTKERR_Msk             (1UL << SCB_CFSR_UNSTKERR_Pos)                  /*!< SCB 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 75
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 75
 
 
  702:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
@@ -4498,7 +4498,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  756:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
  757:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** /* SCB Cache Level ID Register Definitions */
  758:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CLIDR_LOUU_Pos                 27U                                            /*!< SCB 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 76
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 76
 
 
  759:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CLIDR_LOUU_Msk                 (7UL << SCB_CLIDR_LOUU_Pos)                    /*!< SCB 
@@ -4558,7 +4558,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  813:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** /* SCB D-Cache Invalidate by Set-way Register Definitions */
  814:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCB_DCISW_WAY_Pos                  30U                                            /*!< SCB 
  815:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCB_DCISW_WAY_Msk                  (3UL << SCB_DCISW_WAY_Pos)                     /*!< SCB 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 77
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 77
 
 
  816:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
@@ -4618,7 +4618,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  870:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
  871:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CACR_ECCEN_Pos                  1U                                            /*!< SCB 
  872:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CACR_ECCEN_Msk                 (1UL << SCB_CACR_ECCEN_Pos)                    /*!< SCB 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 78
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 78
 
 
  873:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
@@ -4678,7 +4678,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  927:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCnSCB_ICTR_INTLINESNUM_Pos         0U                                         /*!< ICTR: I
  928:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SCnSCB_ICTR_INTLINESNUM_Msk        (0xFUL /*<< SCnSCB_ICTR_INTLINESNUM_Pos*/)  /*!< ICTR: I
  929:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 79
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 79
 
 
  930:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** /* Auxiliary Control Register Definitions */
@@ -4738,7 +4738,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  984:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** /* SysTick Current Register Definitions */
  985:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SysTick_VAL_CURRENT_Pos             0U                                            /*!< SysT
  986:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define SysTick_VAL_CURRENT_Msk            (0xFFFFFFUL /*<< SysTick_VAL_CURRENT_Pos*/)    /*!< SysT
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 80
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 80
 
 
  987:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
@@ -4798,7 +4798,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1041:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   __IM  uint32_t CID0;                   /*!< Offset: 0xFF0 (R/ )  ITM Component  Identification Re
 1042:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   __IM  uint32_t CID1;                   /*!< Offset: 0xFF4 (R/ )  ITM Component  Identification Re
 1043:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   __IM  uint32_t CID2;                   /*!< Offset: 0xFF8 (R/ )  ITM Component  Identification Re
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 81
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 81
 
 
 1044:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   __IM  uint32_t CID3;                   /*!< Offset: 0xFFC (R/ )  ITM Component  Identification Re
@@ -4858,7 +4858,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1098:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define ITM_LSR_Present_Pos                 0U                                            /*!< ITM 
 1099:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define ITM_LSR_Present_Msk                (1UL /*<< ITM_LSR_Present_Pos*/)               /*!< ITM 
 1100:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 82
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 82
 
 
 1101:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** /*@}*/ /* end of group CMSIS_ITM */
@@ -4918,7 +4918,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1155:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define DWT_CTRL_NOCYCCNT_Msk              (0x1UL << DWT_CTRL_NOCYCCNT_Pos)            /*!< DWT CTR
 1156:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
 1157:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define DWT_CTRL_NOPRFCNT_Pos              24U                                         /*!< DWT CTR
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 83
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 83
 
 
 1158:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define DWT_CTRL_NOPRFCNT_Msk              (0x1UL << DWT_CTRL_NOPRFCNT_Pos)            /*!< DWT CTR
@@ -4978,7 +4978,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1212:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define DWT_LSUCNT_LSUCNT_Pos               0U                                         /*!< DWT LSU
 1213:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define DWT_LSUCNT_LSUCNT_Msk              (0xFFUL /*<< DWT_LSUCNT_LSUCNT_Pos*/)       /*!< DWT LSU
 1214:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 84
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 84
 
 
 1215:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** /* DWT Folded-instruction Count Register Definitions */
@@ -5038,7 +5038,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1269:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t ACPR;                   /*!< Offset: 0x010 (R/W)  Asynchronous Clock Prescaler Reg
 1270:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****         uint32_t RESERVED1[55U];
 1271:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t SPPR;                   /*!< Offset: 0x0F0 (R/W)  Selected Pin Protocol Register *
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 85
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 85
 
 
 1272:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****         uint32_t RESERVED2[131U];
@@ -5098,7 +5098,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1326:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define TPI_FIFO0_ITM_ATVALID_Msk          (0x3UL << TPI_FIFO0_ITM_ATVALID_Pos)        /*!< TPI FIF
 1327:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
 1328:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define TPI_FIFO0_ITM_bytecount_Pos        27U                                         /*!< TPI FIF
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 86
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 86
 
 
 1329:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define TPI_FIFO0_ITM_bytecount_Msk        (0x3UL << TPI_FIFO0_ITM_bytecount_Pos)      /*!< TPI FIF
@@ -5158,7 +5158,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1383:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
 1384:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define TPI_DEVID_MANCVALID_Pos            10U                                         /*!< TPI DEV
 1385:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define TPI_DEVID_MANCVALID_Msk            (0x1UL << TPI_DEVID_MANCVALID_Pos)          /*!< TPI DEV
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 87
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 87
 
 
 1386:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
@@ -5218,7 +5218,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1440:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define MPU_TYPE_DREGION_Msk               (0xFFUL << MPU_TYPE_DREGION_Pos)               /*!< MPU 
 1441:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
 1442:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define MPU_TYPE_SEPARATE_Pos               0U                                            /*!< MPU 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 88
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 88
 
 
 1443:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define MPU_TYPE_SEPARATE_Msk              (1UL /*<< MPU_TYPE_SEPARATE_Pos*/)             /*!< MPU 
@@ -5278,7 +5278,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1497:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define MPU_RASR_ENABLE_Pos                 0U                                            /*!< MPU 
 1498:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define MPU_RASR_ENABLE_Msk                (1UL /*<< MPU_RASR_ENABLE_Pos*/)               /*!< MPU 
 1499:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 89
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 89
 
 
 1500:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** /*@} end of group CMSIS_MPU */
@@ -5338,7 +5338,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1554:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define FPU_FPCAR_ADDRESS_Pos               3U                                            /*!< FPCA
 1555:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define FPU_FPCAR_ADDRESS_Msk              (0x1FFFFFFFUL << FPU_FPCAR_ADDRESS_Pos)        /*!< FPCA
 1556:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 90
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 90
 
 
 1557:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** /* Floating-Point Default Status Control Register Definitions */
@@ -5398,7 +5398,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1611:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
 1612:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
 1613:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** /**
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 91
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 91
 
 
 1614:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   \ingroup  CMSIS_core_register
@@ -5458,7 +5458,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1668:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** /* Debug Core Register Selector Register Definitions */
 1669:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define CoreDebug_DCRSR_REGWnR_Pos         16U                                            /*!< Core
 1670:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** #define CoreDebug_DCRSR_REGWnR_Msk         (1UL << CoreDebug_DCRSR_REGWnR_Pos)            /*!< Core
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 92
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 92
 
 
 1671:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
@@ -5518,7 +5518,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1725:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** /**
 1726:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   \brief   Mask and shift a bit field value for use in a register bit range.
 1727:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   \param[in] field  Name of the register bit field.
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 93
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 93
 
 
 1728:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   \param[in] value  Value of the bit field. This parameter is interpreted as an uint32_t type.
@@ -5578,7 +5578,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1782:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** /*******************************************************************************
 1783:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****  *                Hardware Abstraction Layer
 1784:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   Core Function Interface contains:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 94
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 94
 
 
 1785:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   - Core NVIC Functions
@@ -5638,7 +5638,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1839:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   uint32_t PriorityGroupTmp = (PriorityGroup & (uint32_t)0x07UL);             /* only values 0..7 a
 1840:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** 
 1841:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   reg_value  =  SCB->AIRCR;                                                   /* read old register 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 95
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 95
 
 
 1842:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   reg_value &= ~((uint32_t)(SCB_AIRCR_VECTKEY_Msk | SCB_AIRCR_PRIGROUP_Msk)); /* clear bits to chan
@@ -5698,7 +5698,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  1611              	.LBE321:
  1612              	.LBE320:
  1613              	.LBE319:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 96
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 96
 
 
  1614              	.LBE318:
@@ -5758,7 +5758,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1876:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h **** /**
 1877:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   \brief   Get Interrupt Enable status
 1878:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   \details Returns a device specific interrupt enable status from the NVIC interrupt controller.
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 97
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 97
 
 
 1879:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h ****   \param [in]      IRQn  Device specific interrupt number.
@@ -5818,7 +5818,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  1682              		.loc 5 1908 5 is_stmt 1 view .LVU544
  1683              	.LBB334:
  1684              	.LBI334:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 98
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 98
 
 
  1685              		.file 6 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_g
@@ -5878,7 +5878,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
   54:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic push
   55:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wpacked"
   56:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wattributes"
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 99
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 99
 
 
   57:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   struct __attribute__((packed)) T_UINT32 { uint32_t v; };
@@ -5938,7 +5938,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  111:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** }
  112:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** 
  113:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 100
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 100
 
 
  114:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** #if (defined (__ARM_FEATURE_CMSE ) && (__ARM_FEATURE_CMSE == 3))
@@ -5998,7 +5998,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  168:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** /**
  169:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get APSR Register
  170:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the content of the APSR Register.
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 101
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 101
 
 
  171:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               APSR Register value
@@ -6058,7 +6058,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  225:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** 
  226:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** /**
  227:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Set Process Stack Pointer
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 102
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 102
 
 
  228:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Assigns the given value to the Process Stack Pointer (PSP).
@@ -6118,7 +6118,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  282:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Assigns the given value to the Main Stack Pointer (MSP).
  283:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   \param [in]    topOfMainStack  Main Stack Pointer value to set
  284:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****  */
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 103
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 103
 
 
  285:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** __attribute__((always_inline)) __STATIC_INLINE void __set_MSP(uint32_t topOfMainStack)
@@ -6178,7 +6178,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  339:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** __attribute__((always_inline)) __STATIC_INLINE void __set_PRIMASK(uint32_t priMask)
  340:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** {
  341:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MSR primask, %0" : : "r" (priMask) : "memory");
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 104
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 104
 
 
  342:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** }
@@ -6238,7 +6238,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  396:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** 
  397:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** #if (defined (__ARM_FEATURE_CMSE ) && (__ARM_FEATURE_CMSE == 3))
  398:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** /**
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 105
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 105
 
 
  399:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get Base Priority (non-secure)
@@ -6298,7 +6298,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  453:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****  */
  454:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** __attribute__((always_inline)) __STATIC_INLINE uint32_t __get_FAULTMASK(void)
  455:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** {
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 106
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 106
 
 
  456:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
@@ -6358,7 +6358,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  510:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** /**
  511:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get Process Stack Pointer Limit
  512:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the current value of the Process Stack Pointer Limit (PSPLIM).
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 107
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 107
 
 
  513:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               PSPLIM Register value
@@ -6418,7 +6418,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  567:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get Main Stack Pointer Limit
  568:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the current value of the Main Stack Pointer Limit (MSPLIM).
  569:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               MSPLIM Register value
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 108
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 108
 
 
  570:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****  */
@@ -6478,7 +6478,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  624:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** 
  625:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** 
  626:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** #if ((defined (__ARM_ARCH_7EM__     ) && (__ARM_ARCH_7EM__     == 1)) || \
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 109
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 109
 
 
  627:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****      (defined (__ARM_ARCH_8M_MAIN__ ) && (__ARM_ARCH_8M_MAIN__ == 1))    )
@@ -6538,7 +6538,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  681:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** #define __CMSIS_GCC_OUT_REG(r) "=l" (r)
  682:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** #define __CMSIS_GCC_RW_REG(r) "+l" (r)
  683:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** #define __CMSIS_GCC_USE_REG(r) "l" (r)
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 110
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 110
 
 
  684:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** #else
@@ -6598,7 +6598,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  738:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****            after the instruction has been completed.
  739:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h ****  */
  740:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** __attribute__((always_inline)) __STATIC_INLINE void __ISB(void)
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 111
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 111
 
 
  741:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/cmsis_gcc.h **** {
@@ -6658,7 +6658,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  1722              	.L138:
  1723 002c 00000000 		.word	.LANCHOR0
  1724 0030 00E100E0 		.word	-536813312
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 112
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 112
 
 
  1725              		.cfi_endproc
@@ -6718,7 +6718,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  721:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   TU_ASSERT(fifo_alloc(rhport, desc_edpt->bEndpointAddress, tu_edpt_packet_size(desc_edpt)));
  722:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   edpt_activate(rhport, desc_edpt);
  723:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   return true;
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 113
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 113
 
 
  724:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** }
@@ -6778,7 +6778,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  1756 0006 0022     		movs	r2, #0
  1757 0008 0C4B     		ldr	r3, .L142+4
  1758              	.LBE346:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 114
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 114
 
 
  1759              	.LBE345:
@@ -6838,7 +6838,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  1797 0024 0123     		movs	r3, #1
  1798              	.LBE350:
  1799              	.LBE357:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 115
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 115
 
 
  643:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
@@ -6898,7 +6898,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  789:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
  790:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     // Zero-size packet is special case.
  791:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     if ((short_packet_size > 0) || (total_bytes == 0)) num_packets++;
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 116
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 116
 
 
  792:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
@@ -6958,7 +6958,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  652:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
  1879              		.loc 1 652 23 view .LVU593
  1880 0002 0001     		lsls	r0, r0, #4
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 117
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 117
 
 
  1881              	.LVL127:
@@ -7018,7 +7018,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  658:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   dwc2->gintmsk |= GINTMSK_SOFM;
  1924              		.loc 1 658 3 is_stmt 1 view .LVU605
  658:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   dwc2->gintmsk |= GINTMSK_SOFM;
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 118
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 118
 
 
  1925              		.loc 1 658 17 is_stmt 0 view .LVU606
@@ -7078,7 +7078,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  1965              		.loc 1 664 3 is_stmt 1 view .LVU620
  664:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** }
  1966              		.loc 1 664 14 is_stmt 0 view .LVU621
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 119
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 119
 
 
  1967 0038 D2F80438 		ldr	r3, [r2, #2052]
@@ -7138,7 +7138,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2013              		.loc 1 681 14 is_stmt 0 view .LVU631
  2014 0006 D2F80438 		ldr	r3, [r2, #2052]
  2015 000a 23F00203 		bic	r3, r3, #2
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 120
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 120
 
 
  2016 000e C2F80438 		str	r3, [r2, #2052]
@@ -7198,7 +7198,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2063              	.LFE409:
  2065              		.section	.text.dcd_sof_enable,"ax",%progbits
  2066              		.align	1
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 121
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 121
 
 
  2067              		.p2align 2,,3
@@ -7258,7 +7258,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2108              	.L158:
  712:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   }
  2109              		.loc 1 712 5 is_stmt 1 view .LVU655
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 122
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 122
 
 
  712:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   }
@@ -7318,7 +7318,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  500:lib/tinyusb/src/common/tusb_types.h ****   return tu_le16toh(desc_ep->wMaxPacketSize) & 0x7FF;
  2159              		.loc 2 500 46 is_stmt 1 view .LVU664
  2160              	.LBB375:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 123
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 123
 
 
  2161              		.loc 2 501 3 view .LVU665
@@ -7378,7 +7378,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2203              	.L163:
  721:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   edpt_activate(rhport, desc_edpt);
  2204              		.loc 1 721 3 is_stmt 1 discriminator 2 view .LVU679
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 124
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 124
 
 
  722:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   return true;
@@ -7438,7 +7438,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2249 0010 0401     		lsls	r4, r0, #4
  2250              	.LBB378:
  734:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     // disable OUT endpoint
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 125
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 125
 
 
  2251              		.loc 1 734 3 view .LVU692
@@ -7498,7 +7498,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2287              		.loc 1 736 8 view .LVU710
  2288 0032 002D     		cmp	r5, #0
  2289 0034 05DA     		bge	.L171
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 126
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 126
 
 
  737:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     }
@@ -7558,7 +7558,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2328 0066 0CF11003 		add	r3, ip, #16
  2329              	.LBE381:
  2330              	.LBE380:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 127
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 127
 
 
  751:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
@@ -7618,7 +7618,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  118:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** }
  2371              		.loc 1 118 9 view .LVU741
  118:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** }
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 128
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 128
 
 
  2372              		.loc 1 118 14 is_stmt 0 view .LVU742
@@ -7678,7 +7678,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2415              		.global	dcd_edpt_iso_alloc
  2416              		.syntax unified
  2417              		.thumb
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 129
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 129
 
 
  2418              		.thumb_func
@@ -7738,7 +7738,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2459              	
  2460              	@ 0 "" 2
  2461              		.thumb
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 130
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 130
 
 
  2462              		.syntax unified
@@ -7798,7 +7798,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2508              		.loc 1 769 1 is_stmt 0 view .LVU778
  2509 0016 0120     		movs	r0, #1
  2510 0018 38BD     		pop	{r3, r4, r5, pc}
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 131
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 131
 
 
  769:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
@@ -7858,7 +7858,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  487:lib/tinyusb/src/common/tusb_types.h ****   return (addr & TUSB_DIR_IN_MASK) ? TUSB_DIR_IN : TUSB_DIR_OUT;
  2558              		.loc 2 487 48 view .LVU788
  2559              	.LBB398:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 132
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 132
 
 
  488:lib/tinyusb/src/common/tusb_types.h **** }
@@ -7918,7 +7918,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2597              		.loc 1 778 3 view .LVU805
  778:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
  2598              		.loc 1 778 19 is_stmt 0 view .LVU806
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 133
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 133
 
 
  2599 0028 0C81     		strh	r4, [r1, #8]	@ movhi
@@ -7978,7 +7978,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2637              	.LBE401:
  2638              		.loc 1 797 3 is_stmt 1 view .LVU823
  798:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** }
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 134
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 134
 
 
  2639              		.loc 1 798 1 is_stmt 0 view .LVU824
@@ -8038,7 +8038,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2682              		@ sp needed
  2683 0070 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
  2684              	.LVL181:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 135
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 135
 
 
  2685              	.L203:
@@ -8098,7 +8098,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2731              		.loc 1 806 3 discriminator 1 view .LVU846
  2732              		.loc 1 806 3 discriminator 1 view .LVU847
  2733              		.loc 1 806 3 discriminator 1 view .LVU848
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 136
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 136
 
 
  2734              	.LBB403:
@@ -8158,7 +8158,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2766              	.LBB404:
  2767              	.LBI404:
  492:lib/tinyusb/src/common/tusb_types.h ****   return (uint8_t)(addr & (~TUSB_DIR_IN_MASK));
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 137
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 137
 
 
  2768              		.loc 2 492 45 view .LVU856
@@ -8218,7 +8218,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2808 0044 BEF80A50 		ldrh	r5, [lr, #10]
  2809              	.LVL190:
  812:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   xfer->ff = ff;
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 138
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 138
 
 
  2810              		.loc 1 812 16 view .LVU871
@@ -8278,7 +8278,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2849              		.cfi_restore_state
  820:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
  2850              		.loc 1 820 52 is_stmt 1 discriminator 1 view .LVU888
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 139
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 139
 
 
  820:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
@@ -8338,7 +8338,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  832:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** void dcd_edpt_stall(uint8_t rhport, uint8_t ep_addr) {
  2901              		.loc 1 832 54 is_stmt 1 view -0
  2902              		.cfi_startproc
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 140
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 140
 
 
  2903              		@ args = 0, pretend = 0, frame = 0
@@ -8398,7 +8398,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  839:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
  2945              		.loc 1 839 16 view .LVU904
  2946 000a 1B58     		ldr	r3, [r3, r0]
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 141
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 141
 
 
  2947              	.LVL203:
@@ -8458,7 +8458,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  2986              		.loc 1 846 5 is_stmt 1 view .LVU920
  846:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     dwc2->epin[epnum].diepctl |= DIEPCTL_SD0PID_SEVNFRM;
  2987              		.loc 1 846 31 is_stmt 0 view .LVU921
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 142
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 142
 
 
  2988 002c D3F80029 		ldr	r2, [r3, #2304]
@@ -8518,7 +8518,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  877:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   }
  878:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** }
  879:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 143
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 143
 
 
  880:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** // Write a single data packet to EPIN FIFO
@@ -8578,7 +8578,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  934:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****       // Setup packet received
  935:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
  936:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****       // We can receive up to three setup packets in succession, but
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 144
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 144
 
 
  937:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****       // only the last one is valid.
@@ -8638,7 +8638,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  991:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****           epout->doepint = clear_flags;
  992:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
  993:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****           // TU_LOG(DWC2_DEBUG, "  FIX extra transfer complete on setup/data compete\r\n");
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 145
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 145
 
 
  994:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****         }
@@ -8698,7 +8698,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1048:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   dwc2_regs_t* dwc2 = DWC2_REG(rhport);
 1049:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   uint8_t const ep_count = _dwc2_controller[rhport].ep_count;
 1050:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   dwc2_epin_t* epin = dwc2->epin;
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 146
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 146
 
 
 1051:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
@@ -8758,7 +8758,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1105:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****           dwc2->diepempmsk &= ~(1 << n);
 1106:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****         }
 1107:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****       }
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 147
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 147
 
 
 1108:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     }
@@ -8818,7 +8818,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1117:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
 1118:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   if (int_status & GINTSTS_USBRST) {
  3057              		.loc 1 1118 3 is_stmt 1 view .LVU938
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 148
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 148
 
 
  3058              		.loc 1 1118 6 is_stmt 0 view .LVU939
@@ -8878,7 +8878,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1143:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     }
 1144:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
 1145:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     // TODO must update GUSBCFG_TRDT according to link speed
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 149
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 149
 
 
 1146:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
@@ -8938,7 +8938,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
   49:lib/tinyusb/src/device/dcd.h ****   DCD_EVENT_SETUP_RECEIVED, // 6
   50:lib/tinyusb/src/device/dcd.h ****   DCD_EVENT_XFER_COMPLETE,  // 7
   51:lib/tinyusb/src/device/dcd.h ****   USBD_EVENT_FUNC_CALL,     // 8 Not an DCD event, just a convenient way to defer ISR function
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 150
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 150
 
 
   52:lib/tinyusb/src/device/dcd.h ****   DCD_EVENT_COUNT
@@ -8998,7 +8998,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  106:lib/tinyusb/src/device/dcd.h **** //--------------------------------------------------------------------+
  107:lib/tinyusb/src/device/dcd.h **** // Controller API
  108:lib/tinyusb/src/device/dcd.h **** //--------------------------------------------------------------------+
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 151
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 151
 
 
  109:lib/tinyusb/src/device/dcd.h **** 
@@ -9058,7 +9058,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  163:lib/tinyusb/src/device/dcd.h **** // Submit an transfer using fifo, When complete dcd_event_xfer_complete() is invoked to notify the 
  164:lib/tinyusb/src/device/dcd.h **** // This API is optional, may be useful for register-based for transferring data.
  165:lib/tinyusb/src/device/dcd.h **** bool dcd_edpt_xfer_fifo       (uint8_t rhport, uint8_t ep_addr, tu_fifo_t * ff, uint16_t total_byte
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 152
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 152
 
 
  166:lib/tinyusb/src/device/dcd.h **** 
@@ -9118,7 +9118,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3104 0054 8DF81830 		strb	r3, [sp, #24]
  203:lib/tinyusb/src/device/dcd.h ****   dcd_event_t event = { .rhport = rhport, .event_id = DCD_EVENT_BUS_RESET };
  3105              		.loc 7 203 15 view .LVU958
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 153
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 153
 
 
  3106 0058 029B     		ldr	r3, [sp, #8]
@@ -9178,7 +9178,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3139              	.LVL215:
 1166:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
 1167:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     if (otg_int & GOTGINT_SEDET) {
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 154
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 154
 
 
  3140              		.loc 1 1167 5 is_stmt 1 view .LVU973
@@ -9238,7 +9238,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3176              		.loc 1 1183 5 is_stmt 1 view .LVU989
  3177              	.LVL218:
  3178              	.LBB490:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 155
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 155
 
 
  3179              	.LBI490:
@@ -9298,7 +9298,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3205              	.LBE490:
  3206              	.LBE489:
 1184:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   }
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 156
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 156
 
 
 1185:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
@@ -9358,7 +9358,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  912:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   uint16_t const bcnt = (ctl_word & GRXSTSP_BCNT_Msk) >> GRXSTSP_BCNT_Pos;
  3241              		.loc 1 912 17 is_stmt 0 discriminator 1 view .LVU1014
  3242 00c6 01F00F05 		and	r5, r1, #15
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 157
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 157
 
 
  3243              	.LVL223:
@@ -9418,7 +9418,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3283              	.L248:
  940:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
  3284              		.loc 1 940 7 is_stmt 0 view .LVU1029
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 158
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 158
 
 
  3285              	.LBE516:
@@ -9478,7 +9478,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1200:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
 1201:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   // OUT endpoint interrupt handling.
 1202:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   if (int_status & GINTSTS_OEPINT) {
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 159
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 159
 
 
  3329              		.loc 1 1202 3 is_stmt 1 view .LVU1046
@@ -9538,7 +9538,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  982:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
  3363              		.loc 1 982 9 is_stmt 1 view .LVU1055
  982:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 160
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 160
 
 
  3364              		.loc 1 982 18 is_stmt 0 view .LVU1056
@@ -9598,7 +9598,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  954:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****       } else {
  3404              		.loc 1 954 9 is_stmt 1 view .LVU1071
  3405 0170 4246     		mov	r2, r8
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 161
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 161
 
 
  3406 0172 04F58051 		add	r1, r4, #4096
@@ -9658,7 +9658,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3445              	.LVL240:
  3446              	.L242:
  968:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****         }
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 162
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 162
 
 
  3447              		.loc 1 968 11 is_stmt 0 view .LVU1087
@@ -9718,7 +9718,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3489              		.loc 1 1048 23 is_stmt 0 view .LVU1099
  3490 01be 06EB0A03 		add	r3, r6, r10
 1048:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   uint8_t const ep_count = _dwc2_controller[rhport].ep_count;
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 163
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 163
 
 
  3491              		.loc 1 1048 16 view .LVU1100
@@ -9778,7 +9778,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3534              	.LBB566:
  3535              	.LBB562:
 1055:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****       // IN XFER complete (entire xfer).
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 164
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 164
 
 
  3536              		.loc 1 1055 5 is_stmt 1 view .LVU1112
@@ -9838,7 +9838,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3574              		.loc 1 1067 11 view .LVU1128
  3575 0202 62F07F02 		orn	r2, r2, #127
  3576              	.LBB533:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 165
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 165
 
 
  3577              	.LBB531:
@@ -9898,7 +9898,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3615              		.loc 1 1072 7 is_stmt 1 view .LVU1144
 1072:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****         // diepint's TXFE bit is read-only, software cannot clear it.
  3616              		.loc 1 1072 19 is_stmt 0 view .LVU1145
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 166
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 166
 
 
  3617 0228 A368     		ldr	r3, [r4, #8]
@@ -9958,7 +9958,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3659              	.L398:
  3660              		.loc 1 1218 1 view .LVU1159
  3661 0256 00BF     		.align	2
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 167
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 167
 
 
  3662              	.L397:
@@ -10018,7 +10018,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3703 0284 D4F80038 		ldr	r3, [r4, #2048]
  273:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
  3704              		.loc 1 273 11 view .LVU1173
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 168
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 168
 
 
  3705 0288 B84A     		ldr	r2, .L399+4
@@ -10078,7 +10078,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3742              	.L230:
  3743              	.LVL263:
  279:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     dwc2->epout[n].doepctl |= DOEPCTL_SNAK;
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 169
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 169
 
 
  3744              		.loc 1 279 3 view .LVU1191
@@ -10138,7 +10138,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  118:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** }
  3783              		.loc 1 118 3 is_stmt 1 view .LVU1207
  3784              	.L228:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 170
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 170
 
 
  118:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** }
@@ -10198,7 +10198,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3822              	.LBB608:
  112:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** }
  3823              		.loc 1 112 37 view .LVU1225
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 171
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 171
 
 
  3824 02ec 05F11003 		add	r3, r5, #16
@@ -10258,7 +10258,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3863              	.LBE611:
  3864              	.LBE614:
  355:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 172
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 172
 
 
  3865              		.loc 1 355 92 view .LVU1241
@@ -10318,7 +10318,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3902 0340 8B4B     		ldr	r3, .L399+8
  3903 0342 1A80     		strh	r2, [r3]	@ movhi
  355:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c **** 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 173
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 173
 
 
  3904              		.loc 1 355 3 is_stmt 1 view .LVU1259
@@ -10378,7 +10378,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3940 035c 824D     		ldr	r5, .L399
  3941              	.LBB589:
  3942              	.LBB581:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 174
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 174
 
 
  3943              	.LBB575:
@@ -10438,7 +10438,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  3985              		.loc 7 209 42 view .LVU1289
  3986              	.LBB578:
  210:lib/tinyusb/src/device/dcd.h ****   memcpy(&event.setup_received, setup, sizeof(tusb_control_request_t));
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 175
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 175
 
 
  3987              		.loc 7 210 3 view .LVU1290
@@ -10498,7 +10498,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1036:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****           // Schedule another packet to be received.
  4027              		.loc 1 1036 9 view .LVU1305
 1036:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****           // Schedule another packet to be received.
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 176
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 176
 
 
  4028              		.loc 1 1036 12 is_stmt 0 view .LVU1306
@@ -10558,7 +10558,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  221:lib/tinyusb/src/device/dcd.h ****   event.xfer_complete.result  = result;
  4068              		.loc 7 221 3 view .LVU1321
  222:lib/tinyusb/src/device/dcd.h **** 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 177
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 177
 
 
  4069              		.loc 7 222 3 view .LVU1322
@@ -10618,7 +10618,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1017:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****         uint32_t clear_flag = DOEPINT_STUP;
  4109              		.loc 1 1017 10 is_stmt 0 view .LVU1337
  4110 0402 1107     		lsls	r1, r2, #28
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 178
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 178
 
 
  4111 0404 CDD5     		bpl	.L265
@@ -10678,7 +10678,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  4151              		.loc 7 197 15 is_stmt 0 view .LVU1351
  4152 0418 0023     		movs	r3, #0
  4153 041a CDE90533 		strd	r3, r3, [sp, #20]
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 179
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 179
 
 
  4154 041e 0793     		str	r3, [sp, #28]
@@ -10738,7 +10738,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  4196 0450 8DF81530 		strb	r3, [sp, #21]
  198:lib/tinyusb/src/device/dcd.h **** }
  4197              		.loc 7 198 3 is_stmt 1 view .LVU1364
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 180
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 180
 
 
  4198 0454 FFF7FEFF 		bl	dcd_event_handler
@@ -10798,7 +10798,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  4238              	.LBE567:
  4239              	.LBE627:
  4240              	.LBB628:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 181
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 181
 
 
  4241              	.LBB519:
@@ -10858,7 +10858,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  184:lib/tinyusb/src/common/tusb_common.h **** }
  185:lib/tinyusb/src/common/tusb_common.h **** 
  186:lib/tinyusb/src/common/tusb_common.h **** //static inline uint8_t tu_log2(uint32_t value)
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 182
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 182
 
 
  187:lib/tinyusb/src/common/tusb_common.h **** //{
@@ -10918,7 +10918,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  241:lib/tinyusb/src/common/tusb_common.h ****   volatile uint8_t* buf8 = (uint8_t*) mem;
  242:lib/tinyusb/src/common/tusb_common.h ****   buf8[0] = tu_u32_byte0(value);
  243:lib/tinyusb/src/common/tusb_common.h ****   buf8[1] = tu_u32_byte1(value);
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 183
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 183
 
 
  244:lib/tinyusb/src/common/tusb_common.h ****   buf8[2] = tu_u32_byte2(value);
@@ -10978,7 +10978,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  4293 048a 18F00301 		ands	r1, r8, #3
  871:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   if (bytes_rem != 0) {
  4294              		.loc 1 871 33 view .LVU1400
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 184
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 184
 
 
  4295 048e 5FFA88FC 		uxtb	ip, r8
@@ -11038,7 +11038,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  4333              		.loc 1 876 5 is_stmt 1 view .LVU1416
  876:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   }
  4334              		.loc 1 876 8 is_stmt 0 view .LVU1417
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 185
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 185
 
 
  4335 04aa 0329     		cmp	r1, #3
@@ -11098,7 +11098,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1168:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     }
  4378              		.loc 1 1168 7 is_stmt 1 view .LVU1429
  4379              	.LBB487:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 186
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 186
 
 
  4380              	.LBI487:
@@ -11158,7 +11158,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
 1081:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****           uint16_t const remaining_bytes = (epin[n].dieptsiz & DIEPTSIZ_XFRSIZ_Msk) >> DIEPTSIZ_XFR
  4421              		.loc 1 1081 30 view .LVU1443
 1081:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****           uint16_t const remaining_bytes = (epin[n].dieptsiz & DIEPTSIZ_XFRSIZ_Msk) >> DIEPTSIZ_XFR
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 187
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 187
 
 
  4422              		.loc 1 1081 9 is_stmt 0 view .LVU1444
@@ -11218,7 +11218,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  4464              	.LBI547:
  151:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_min32 (uint32_t x, uint32_t y) { return (x < y) ? x
  4465              		.loc 3 151 46 view .LVU1457
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 188
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 188
 
 
  4466              	.LBB548:
@@ -11278,7 +11278,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  4506              	.LBB543:
  889:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     *tx_fifo = tu_unaligned_read32(src);
  4507              		.loc 1 889 9 is_stmt 0 view .LVU1472
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 189
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 189
 
 
  4508 0528 9008     		lsrs	r0, r2, #2
@@ -11338,7 +11338,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  891:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   }
  4546              		.loc 1 891 5 is_stmt 1 view .LVU1489
  4547              	.LVL322:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 190
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 190
 
 
  889:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****     *tx_fifo = tu_unaligned_read32(src);
@@ -11398,7 +11398,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  4584              		.loc 1 901 5 is_stmt 1 view .LVU1507
  901:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****   }
  4585              		.loc 1 901 14 is_stmt 0 view .LVU1508
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 191
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 191
 
 
  4586 055e 3B60     		str	r3, [r7]
@@ -11458,7 +11458,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  4629 059e 4EE6     		b	.L274
  4630              	.LVL330:
  4631              	.L391:
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 192
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 192
 
 
 1105:lib/tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c ****         }
@@ -11518,7 +11518,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  4680              		.loc 1 889 9 view .LVU1525
  4681 05be 6046     		mov	r0, ip
  4682 05c0 BEE7     		b	.L283
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 193
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 193
 
 
  4683              	.LVL335:
@@ -11578,7 +11578,7 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  4744      00000000 
  4744      00000000 
  4744      00000000 
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 194
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 194
 
 
  4744      00000000 
@@ -11605,92 +11605,92 @@ ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 1
  4767              		.file 12 "lib/tinyusb/src/portable/synopsys/dwc2/dwc2_type.h"
  4768              		.file 13 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM3
  4769              		.file 14 "<built-in>"
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 195
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 195
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 dcd_dwc2.c
-/tmp/claude-502/cct7dkOL.s:19     .text.fifo_alloc:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:25     .text.fifo_alloc:0000000000000000 fifo_alloc
-/tmp/claude-502/cct7dkOL.s:254    .text.fifo_alloc:000000000000009c $d
-/tmp/claude-502/cct7dkOL.s:260    .text.edpt_activate:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:266    .text.edpt_activate:0000000000000000 edpt_activate
-/tmp/claude-502/cct7dkOL.s:423    .text.edpt_activate:000000000000008c $d
-/tmp/claude-502/cct7dkOL.s:429    .text.edpt_disable:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:435    .text.edpt_disable:0000000000000000 edpt_disable
-/tmp/claude-502/cct7dkOL.s:681    .text.edpt_disable:00000000000000c8 $d
-/tmp/claude-502/cct7dkOL.s:688    .text.edpt_schedule_packets:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:694    .text.edpt_schedule_packets:0000000000000000 edpt_schedule_packets
-/tmp/claude-502/cct7dkOL.s:931    .text.edpt_schedule_packets:00000000000000fc $d
-/tmp/claude-502/cct7dkOL.s:939    .text.dcd_init:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:946    .text.dcd_init:0000000000000000 dcd_init
-/tmp/claude-502/cct7dkOL.s:1529   .text.dcd_init:00000000000001c8 $d
-/tmp/claude-502/cct7dkOL.s:1554   .text.dcd_int_enable:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:1561   .text.dcd_int_enable:0000000000000000 dcd_int_enable
-/tmp/claude-502/cct7dkOL.s:1620   .text.dcd_int_enable:0000000000000024 $d
-/tmp/claude-502/cct7dkOL.s:1626   .text.dcd_int_disable:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:1633   .text.dcd_int_disable:0000000000000000 dcd_int_disable
-/tmp/claude-502/cct7dkOL.s:1723   .text.dcd_int_disable:000000000000002c $d
-/tmp/claude-502/cct7dkOL.s:1729   .text.dcd_set_address:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:1736   .text.dcd_set_address:0000000000000000 dcd_set_address
-/tmp/claude-502/cct7dkOL.s:1849   .text.dcd_set_address:0000000000000038 $d
-/tmp/claude-502/cct7dkOL.s:1856   .text.dcd_remote_wakeup:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:1863   .text.dcd_remote_wakeup:0000000000000000 dcd_remote_wakeup
-/tmp/claude-502/cct7dkOL.s:1981   .text.dcd_remote_wakeup:0000000000000048 $d
-/tmp/claude-502/cct7dkOL.s:1988   .text.dcd_connect:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:1995   .text.dcd_connect:0000000000000000 dcd_connect
-/tmp/claude-502/cct7dkOL.s:2022   .text.dcd_connect:0000000000000014 $d
-/tmp/claude-502/cct7dkOL.s:2027   .text.dcd_disconnect:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:2034   .text.dcd_disconnect:0000000000000000 dcd_disconnect
-/tmp/claude-502/cct7dkOL.s:2061   .text.dcd_disconnect:0000000000000014 $d
-/tmp/claude-502/cct7dkOL.s:2066   .text.dcd_sof_enable:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:2073   .text.dcd_sof_enable:0000000000000000 dcd_sof_enable
-/tmp/claude-502/cct7dkOL.s:2119   .text.dcd_sof_enable:0000000000000024 $d
-/tmp/claude-502/cct7dkOL.s:2125   .text.dcd_edpt_open:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:2132   .text.dcd_edpt_open:0000000000000000 dcd_edpt_open
-/tmp/claude-502/cct7dkOL.s:2219   .text.dcd_edpt_close_all:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:2226   .text.dcd_edpt_close_all:0000000000000000 dcd_edpt_close_all
-/tmp/claude-502/cct7dkOL.s:2406   .text.dcd_edpt_close_all:0000000000000090 $d
-/tmp/claude-502/cct7dkOL.s:2413   .text.dcd_edpt_iso_alloc:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:2420   .text.dcd_edpt_iso_alloc:0000000000000000 dcd_edpt_iso_alloc
-/tmp/claude-502/cct7dkOL.s:2470   .text.dcd_edpt_iso_activate:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:2477   .text.dcd_edpt_iso_activate:0000000000000000 dcd_edpt_iso_activate
-/tmp/claude-502/cct7dkOL.s:2516   .text.dcd_edpt_xfer:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:2523   .text.dcd_edpt_xfer:0000000000000000 dcd_edpt_xfer
-/tmp/claude-502/cct7dkOL.s:2689   .text.dcd_edpt_xfer:0000000000000074 $d
-/tmp/claude-502/cct7dkOL.s:2695   .text.dcd_edpt_xfer_fifo:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:2702   .text.dcd_edpt_xfer_fifo:0000000000000000 dcd_edpt_xfer_fifo
-/tmp/claude-502/cct7dkOL.s:2862   .text.dcd_edpt_xfer_fifo:0000000000000074 $d
-/tmp/claude-502/cct7dkOL.s:2867   .text.dcd_edpt_close:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:2874   .text.dcd_edpt_close:0000000000000000 dcd_edpt_close
-/tmp/claude-502/cct7dkOL.s:2891   .text.dcd_edpt_stall:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:2898   .text.dcd_edpt_stall:0000000000000000 dcd_edpt_stall
-ARM GAS  /tmp/claude-502/cct7dkOL.s 			page 196
+/tmp/claude-502/ccRkNhMj.s:19     .text.fifo_alloc:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:25     .text.fifo_alloc:0000000000000000 fifo_alloc
+/tmp/claude-502/ccRkNhMj.s:254    .text.fifo_alloc:000000000000009c $d
+/tmp/claude-502/ccRkNhMj.s:260    .text.edpt_activate:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:266    .text.edpt_activate:0000000000000000 edpt_activate
+/tmp/claude-502/ccRkNhMj.s:423    .text.edpt_activate:000000000000008c $d
+/tmp/claude-502/ccRkNhMj.s:429    .text.edpt_disable:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:435    .text.edpt_disable:0000000000000000 edpt_disable
+/tmp/claude-502/ccRkNhMj.s:681    .text.edpt_disable:00000000000000c8 $d
+/tmp/claude-502/ccRkNhMj.s:688    .text.edpt_schedule_packets:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:694    .text.edpt_schedule_packets:0000000000000000 edpt_schedule_packets
+/tmp/claude-502/ccRkNhMj.s:931    .text.edpt_schedule_packets:00000000000000fc $d
+/tmp/claude-502/ccRkNhMj.s:939    .text.dcd_init:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:946    .text.dcd_init:0000000000000000 dcd_init
+/tmp/claude-502/ccRkNhMj.s:1529   .text.dcd_init:00000000000001c8 $d
+/tmp/claude-502/ccRkNhMj.s:1554   .text.dcd_int_enable:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:1561   .text.dcd_int_enable:0000000000000000 dcd_int_enable
+/tmp/claude-502/ccRkNhMj.s:1620   .text.dcd_int_enable:0000000000000024 $d
+/tmp/claude-502/ccRkNhMj.s:1626   .text.dcd_int_disable:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:1633   .text.dcd_int_disable:0000000000000000 dcd_int_disable
+/tmp/claude-502/ccRkNhMj.s:1723   .text.dcd_int_disable:000000000000002c $d
+/tmp/claude-502/ccRkNhMj.s:1729   .text.dcd_set_address:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:1736   .text.dcd_set_address:0000000000000000 dcd_set_address
+/tmp/claude-502/ccRkNhMj.s:1849   .text.dcd_set_address:0000000000000038 $d
+/tmp/claude-502/ccRkNhMj.s:1856   .text.dcd_remote_wakeup:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:1863   .text.dcd_remote_wakeup:0000000000000000 dcd_remote_wakeup
+/tmp/claude-502/ccRkNhMj.s:1981   .text.dcd_remote_wakeup:0000000000000048 $d
+/tmp/claude-502/ccRkNhMj.s:1988   .text.dcd_connect:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:1995   .text.dcd_connect:0000000000000000 dcd_connect
+/tmp/claude-502/ccRkNhMj.s:2022   .text.dcd_connect:0000000000000014 $d
+/tmp/claude-502/ccRkNhMj.s:2027   .text.dcd_disconnect:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:2034   .text.dcd_disconnect:0000000000000000 dcd_disconnect
+/tmp/claude-502/ccRkNhMj.s:2061   .text.dcd_disconnect:0000000000000014 $d
+/tmp/claude-502/ccRkNhMj.s:2066   .text.dcd_sof_enable:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:2073   .text.dcd_sof_enable:0000000000000000 dcd_sof_enable
+/tmp/claude-502/ccRkNhMj.s:2119   .text.dcd_sof_enable:0000000000000024 $d
+/tmp/claude-502/ccRkNhMj.s:2125   .text.dcd_edpt_open:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:2132   .text.dcd_edpt_open:0000000000000000 dcd_edpt_open
+/tmp/claude-502/ccRkNhMj.s:2219   .text.dcd_edpt_close_all:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:2226   .text.dcd_edpt_close_all:0000000000000000 dcd_edpt_close_all
+/tmp/claude-502/ccRkNhMj.s:2406   .text.dcd_edpt_close_all:0000000000000090 $d
+/tmp/claude-502/ccRkNhMj.s:2413   .text.dcd_edpt_iso_alloc:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:2420   .text.dcd_edpt_iso_alloc:0000000000000000 dcd_edpt_iso_alloc
+/tmp/claude-502/ccRkNhMj.s:2470   .text.dcd_edpt_iso_activate:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:2477   .text.dcd_edpt_iso_activate:0000000000000000 dcd_edpt_iso_activate
+/tmp/claude-502/ccRkNhMj.s:2516   .text.dcd_edpt_xfer:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:2523   .text.dcd_edpt_xfer:0000000000000000 dcd_edpt_xfer
+/tmp/claude-502/ccRkNhMj.s:2689   .text.dcd_edpt_xfer:0000000000000074 $d
+/tmp/claude-502/ccRkNhMj.s:2695   .text.dcd_edpt_xfer_fifo:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:2702   .text.dcd_edpt_xfer_fifo:0000000000000000 dcd_edpt_xfer_fifo
+/tmp/claude-502/ccRkNhMj.s:2862   .text.dcd_edpt_xfer_fifo:0000000000000074 $d
+/tmp/claude-502/ccRkNhMj.s:2867   .text.dcd_edpt_close:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:2874   .text.dcd_edpt_close:0000000000000000 dcd_edpt_close
+/tmp/claude-502/ccRkNhMj.s:2891   .text.dcd_edpt_stall:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:2898   .text.dcd_edpt_stall:0000000000000000 dcd_edpt_stall
+ARM GAS  /tmp/claude-502/ccRkNhMj.s 			page 196
 
 
-/tmp/claude-502/cct7dkOL.s:2915   .text.dcd_edpt_clear_stall:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:2922   .text.dcd_edpt_clear_stall:0000000000000000 dcd_edpt_clear_stall
-/tmp/claude-502/cct7dkOL.s:3002   .text.dcd_edpt_clear_stall:0000000000000048 $d
-/tmp/claude-502/cct7dkOL.s:3007   .text.dcd_int_handler:0000000000000000 $t
-/tmp/claude-502/cct7dkOL.s:3014   .text.dcd_int_handler:0000000000000000 dcd_int_handler
-/tmp/claude-502/cct7dkOL.s:3258   .text.dcd_int_handler:00000000000000dc $d
-/tmp/claude-502/cct7dkOL.s:3264   .text.dcd_int_handler:00000000000000e2 $t
-/tmp/claude-502/cct7dkOL.s:3663   .text.dcd_int_handler:0000000000000258 $d
-/tmp/claude-502/cct7dkOL.s:3674   .text.dcd_int_handler:0000000000000270 $t
-/tmp/claude-502/cct7dkOL.s:4603   .text.dcd_int_handler:0000000000000568 $d
-/tmp/claude-502/cct7dkOL.s:4617   .text.dcd_int_handler:0000000000000584 $t
-/tmp/claude-502/cct7dkOL.s:4712   .bss._allocated_fifo_words_tx:0000000000000000 $d
-/tmp/claude-502/cct7dkOL.s:4716   .bss._allocated_fifo_words_tx:0000000000000000 _allocated_fifo_words_tx
-/tmp/claude-502/cct7dkOL.s:4719   .bss._setup_packet:0000000000000000 $d
-/tmp/claude-502/cct7dkOL.s:4723   .bss._setup_packet:0000000000000000 _setup_packet
-/tmp/claude-502/cct7dkOL.s:4729   .bss._sof_en:0000000000000000 _sof_en
-/tmp/claude-502/cct7dkOL.s:4730   .bss._sof_en:0000000000000000 $d
-/tmp/claude-502/cct7dkOL.s:4732   .bss.ep0_pending:0000000000000000 $d
-/tmp/claude-502/cct7dkOL.s:4736   .bss.ep0_pending:0000000000000000 ep0_pending
-/tmp/claude-502/cct7dkOL.s:4739   .bss.xfer_status:0000000000000000 $d
-/tmp/claude-502/cct7dkOL.s:4743   .bss.xfer_status:0000000000000000 xfer_status
-/tmp/claude-502/cct7dkOL.s:4746   .rodata._dwc2_controller:0000000000000000 $d
-/tmp/claude-502/cct7dkOL.s:4750   .rodata._dwc2_controller:0000000000000000 _dwc2_controller
+/tmp/claude-502/ccRkNhMj.s:2915   .text.dcd_edpt_clear_stall:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:2922   .text.dcd_edpt_clear_stall:0000000000000000 dcd_edpt_clear_stall
+/tmp/claude-502/ccRkNhMj.s:3002   .text.dcd_edpt_clear_stall:0000000000000048 $d
+/tmp/claude-502/ccRkNhMj.s:3007   .text.dcd_int_handler:0000000000000000 $t
+/tmp/claude-502/ccRkNhMj.s:3014   .text.dcd_int_handler:0000000000000000 dcd_int_handler
+/tmp/claude-502/ccRkNhMj.s:3258   .text.dcd_int_handler:00000000000000dc $d
+/tmp/claude-502/ccRkNhMj.s:3264   .text.dcd_int_handler:00000000000000e2 $t
+/tmp/claude-502/ccRkNhMj.s:3663   .text.dcd_int_handler:0000000000000258 $d
+/tmp/claude-502/ccRkNhMj.s:3674   .text.dcd_int_handler:0000000000000270 $t
+/tmp/claude-502/ccRkNhMj.s:4603   .text.dcd_int_handler:0000000000000568 $d
+/tmp/claude-502/ccRkNhMj.s:4617   .text.dcd_int_handler:0000000000000584 $t
+/tmp/claude-502/ccRkNhMj.s:4712   .bss._allocated_fifo_words_tx:0000000000000000 $d
+/tmp/claude-502/ccRkNhMj.s:4716   .bss._allocated_fifo_words_tx:0000000000000000 _allocated_fifo_words_tx
+/tmp/claude-502/ccRkNhMj.s:4719   .bss._setup_packet:0000000000000000 $d
+/tmp/claude-502/ccRkNhMj.s:4723   .bss._setup_packet:0000000000000000 _setup_packet
+/tmp/claude-502/ccRkNhMj.s:4729   .bss._sof_en:0000000000000000 _sof_en
+/tmp/claude-502/ccRkNhMj.s:4730   .bss._sof_en:0000000000000000 $d
+/tmp/claude-502/ccRkNhMj.s:4732   .bss.ep0_pending:0000000000000000 $d
+/tmp/claude-502/ccRkNhMj.s:4736   .bss.ep0_pending:0000000000000000 ep0_pending
+/tmp/claude-502/ccRkNhMj.s:4739   .bss.xfer_status:0000000000000000 $d
+/tmp/claude-502/ccRkNhMj.s:4743   .bss.xfer_status:0000000000000000 xfer_status
+/tmp/claude-502/ccRkNhMj.s:4746   .rodata._dwc2_controller:0000000000000000 $d
+/tmp/claude-502/ccRkNhMj.s:4750   .rodata._dwc2_controller:0000000000000000 _dwc2_controller
 
 UNDEFINED SYMBOLS
 SystemCoreClock

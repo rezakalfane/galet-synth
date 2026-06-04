@@ -1,4 +1,4 @@
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   34              		@ link register save eliminated.
   35              	.LBB264:
   36              	.LBI264:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 2
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 2
 
 
   37              		.file 2 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/system.h"
@@ -118,7 +118,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   54:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/system.h **** 
   55:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/system.h ****         SysClkFreq cpu_freq;
   56:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/system.h ****         bool       use_dcache;
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 3
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 3
 
 
   57:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/system.h ****         bool       use_icache;
@@ -178,7 +178,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
    8:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/usb.h **** /** @addtogroup human_interface
    9:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/usb.h ****     @{
   10:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/usb.h **** */
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 4
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 4
 
 
   11:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/usb.h **** 
@@ -238,7 +238,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   17:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h **** /* While there may not be many configuration options here,
   18:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h **** using a struct like this allows us to add more configuration
   19:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h **** later without breaking existing functionality.
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 5
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 5
 
 
   20:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h **** */
@@ -298,7 +298,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   74:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h ****     void InitMux(dsy_gpio_pin    adc_pin,
   75:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h ****                  size_t          mux_channels,
   76:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h ****                  dsy_gpio_pin    mux_0,
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 6
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 6
 
 
   77:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h ****                  dsy_gpio_pin    mux_1 = {DSY_GPIOX, 0},
@@ -358,7 +358,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   15:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****  *           you will have to take the following steps:
   16:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****  *             1. Create and Initialize an SaiHandle or two depending on your requirements
   17:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****  *             2. Initialize the Audio Handle with the desired settings and the Initialized SaiHand
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 7
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 7
 
 
   18:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****  *             3. If the connected codec requires special configuration or initialization, do so
@@ -418,7 +418,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   72:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****      */
   73:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****     typedef void (*AudioCallback)(InputBuffer  in,
   74:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****                                   OutputBuffer out,
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 8
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 8
 
 
   75:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****                                   size_t       size);
@@ -478,7 +478,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   13:src/main.cpp  ****  *               + Ring mod amount (extreme pressure adds metallic edge)
   14:src/main.cpp  ****  *
   15:src/main.cpp  ****  * EXPRESSION:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 9
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 9
 
 
   16:src/main.cpp  ****  *   - Note quantize on initial touch, then free pitch bend on slide
@@ -538,7 +538,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   82              		.loc 6 65 5 view .LVU11
   83 0000 0028     		cmp	r0, #0
   84 0002 40D0     		beq	.L11
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 10
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 10
 
 
   85 0004 0029     		cmp	r1, #0
@@ -598,7 +598,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   71:src/main.cpp  ****     for(int i=0;i<scale_len;i++){
  128              		.loc 6 71 5 view .LVU24
  129              	.LBB274:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 11
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 11
 
 
  130              		.loc 6 71 18 view .LVU25
@@ -658,7 +658,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  177 005e 9942     		cmp	r1, r3
  178 0060 E9DC     		bgt	.L7
  179              	.LBE274:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 12
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 12
 
 
   75:src/main.cpp  ****     }
@@ -718,7 +718,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  222              		.align	2
  223              	.L14:
  224 0088 ABAAAA2A 		.word	715827883
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 13
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 13
 
 
  225              		.cfi_endproc
@@ -778,7 +778,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  272              	.LVL22:
  273              		.loc 6 88 5 is_stmt 1 discriminator 4 view .LVU66
  274              	.LBB279:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 14
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 14
 
 
   89:src/main.cpp  ****     for(int i=0;i<w;i++)out[1+i]=(i<n)?'#':' ';
@@ -838,7 +838,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  324              		.loc 6 86 25 view .LVU85
  325 004e 4FF0000C 		mov	ip, #0
  326 0052 E0E7     		b	.L17
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 15
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 15
 
 
  327              		.cfi_endproc
@@ -898,7 +898,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  375              		.loc 6 96 33 view .LVU96
  376 0012 0130     		adds	r0, r0, #1
  377              	.LVL31:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 16
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 16
 
 
  378              		.loc 6 96 33 view .LVU97
@@ -958,7 +958,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  425              	.LVL35:
  426              		.loc 6 101 20 view .LVU116
  427 0050 3246     		mov	r2, r6
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 17
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 17
 
 
  428 0052 B342     		cmp	r3, r6
@@ -1018,7 +1018,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  473      3D3D3D3D 
  473      3D3D3D3D 
  473      3D3D3D3D 
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 18
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 18
 
 
  473      00
@@ -1078,7 +1078,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  498 0134 5B766F69 		.ascii	"[voice select] %s (%d/%d) - tap/slide glass; releas"
  498      63652073 
  498      656C6563 
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 19
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 19
 
 
  498      745D2025 
@@ -1138,7 +1138,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  523 0224 20434820 		.ascii	" CH | DELTA | BAR\000"
  523      7C204445 
  523      4C544120 
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 20
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 20
 
 
  523      7C204241 
@@ -1198,7 +1198,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  548      2D2D2D2D 
  548      2D2D2D2D 
  548      2D2D2D2D 
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 21
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 21
 
 
  548      2D2D2D2D 
@@ -1258,7 +1258,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  584 000c 2DED0C8B 		vpush.64	{d8, d9, d10, d11, d12, d13}
  585              		.cfi_def_cfa_offset 84
  586              		.cfi_offset 80, -84
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 22
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 22
 
 
  587              		.cfi_offset 81, -80
@@ -1318,7 +1318,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  625              	.LVL42:
  136:src/main.cpp  **** 
  137:src/main.cpp  ****     uint16_t baseline[N_CH];
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 23
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 23
 
 
  626              		.loc 6 137 5 is_stmt 1 view .LVU144
@@ -1378,7 +1378,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  658              		.loc 6 151 5 view .LVU161
  659              		.loc 6 151 16 is_stmt 0 view .LVU162
  660 0052 FFF7FEFF 		bl	_ZN5daisy9DacHandle4InitERKNS0_6ConfigE
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 24
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 24
 
 
  661              	.LVL44:
@@ -1438,7 +1438,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  704              	.LBB530:
  163:src/main.cpp  ****     hw.adc.Start();
  164:src/main.cpp  **** 
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 25
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 25
 
 
  165:src/main.cpp  ****     constexpr uint16_t FSR_MIN       = 8000;
@@ -1498,7 +1498,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  727 00ac ADF87A30 		strh	r3, [sp, #122]	@ movhi
  171:src/main.cpp  **** 
  728              		.loc 6 171 5 is_stmt 1 view .LVU184
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 26
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 26
 
 
  182:src/main.cpp  **** 
@@ -1558,7 +1558,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  224:src/main.cpp  ****             float l1_raw = 1.0f - 2.0f * p01;                 if(l1_raw < 0) l1_raw = 0;
  225:src/main.cpp  ****             float l3_raw = 2.0f * p01 - 1.0f;                 if(l3_raw < 0) l3_raw = 0;
  226:src/main.cpp  ****             float l2_raw = 1.0f - 2.0f * fabsf(p01 - 0.5f);   if(l2_raw < 0) l2_raw = 0;
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 27
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 27
 
 
  227:src/main.cpp  ****             float led1   = sqrtf(sqrtf(l2_raw));              // middle (DAC1)
@@ -1618,7 +1618,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  754              	.LVL53:
  187:src/main.cpp  ****         while(System::GetNow() - start < 2000) {
  755              		.loc 6 187 9 is_stmt 1 view .LVU194
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 28
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 28
 
 
  187:src/main.cpp  ****         while(System::GetNow() - start < 2000) {
@@ -1678,7 +1678,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  796              		.loc 6 188 29 is_stmt 0 view .LVU208
  797 0100 0346     		mov	r3, r0
  189:src/main.cpp  ****             n++;
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 29
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 29
 
 
  798              		.loc 6 189 30 view .LVU209
@@ -1738,7 +1738,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  179:src/main.cpp  ****         fsr_dead       = (uint16_t)(fsr_max - FSR_DEADZONE * (fsr_max - FSR_MIN));
  839              		.loc 6 179 9 view .LVU223
  180:src/main.cpp  ****         fsr_active_inv = 1.0f / (float)(fsr_dead - FSR_MIN);
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 30
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 30
 
 
  840              		.loc 6 180 45 is_stmt 0 view .LVU224
@@ -1798,7 +1798,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  880              	.LBE538:
  881              	.LBE539:
  267:src/main.cpp  **** 
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 31
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 31
 
 
  268:src/main.cpp  ****     // Boot-voice snapshot for the startup banner / initial targets. The main
@@ -1858,7 +1858,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  914              		.loc 6 277 21 is_stmt 0 view .LVU256
  915 018c 3560     		str	r5, [r6]	@ float
  278:src/main.cpp  ****     engine_init();   // zero the SDRAM-resident reverb/delay buffers before audio
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 32
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 32
 
 
  916              		.loc 6 278 5 is_stmt 1 view .LVU257
@@ -1918,7 +1918,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  955              		.loc 6 291 12 is_stmt 0 view .LVU277
  956 01b4 7F48     		ldr	r0, .L554+44
  957 01b6 FFF7FEFF 		bl	usb_log
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 33
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 33
 
 
  958              	.LVL73:
@@ -1978,7 +1978,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   40:src/voice.h   ****   float keytrack;      // 0..1 — how much the cutoff follows pitch (1 = full)
   41:src/voice.h   ****   float ringmod_ratio; // ring-mod carrier pitch ratio (1.0 = unison; non-int =
   42:src/voice.h   ****                        // bell/metallic)
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 34
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 34
 
 
   43:src/voice.h   ****   float ringmod_max;   // max ring-mod wet from finger-2 pressure
@@ -2038,7 +2038,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   97:src/voice.h   ****   float sustain;
   98:src/voice.h   **** 
   99:src/voice.h   ****   // Chords: true → play a 3-note diatonic triad instead of a single note. The
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 35
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 35
 
 
  100:src/voice.h   ****   // root is the quantized finger-1 note; the engine adds the scale's 3rd and 5th
@@ -2098,7 +2098,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  154:src/voice.h   ****     semis_fifth = 7;
  155:src/voice.h   ****     return;
  156:src/voice.h   ****   }
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 36
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 36
 
 
  157:src/voice.h   ****   int pc = ((root_pc % 12) + 12) % 12;
@@ -2158,7 +2158,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  211:src/voice.h   ****     2.0f,
  212:src/voice.h   ****     0.15f,
  213:src/voice.h   ****     WAVE_TRI,            // oct   — one octave above
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 37
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 37
 
 
  214:src/voice.h   ****     // FILTER
@@ -2218,7 +2218,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  268:src/voice.h   ****     0.0f,                // noise level
  269:src/voice.h   ****     1.0f,                // keytrack
  270:src/voice.h   ****     1.0f,                // ringmod ratio
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 38
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 38
 
 
  271:src/voice.h   ****     0.12f,               // ringmod max
@@ -2278,7 +2278,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  325:src/voice.h   **** 
  326:src/voice.h   **** // ── Voice 3: rich power-chord bass with mixed waveforms + huge filter sweep ────
  327:src/voice.h   **** //   Mixed shapes for body: saw root (harmonic-rich), square fifth (hollow), a
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 39
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 39
 
 
  328:src/voice.h   **** //   clean sine sub (tight low end), saw octave on top. Starts dark, then
@@ -2338,7 +2338,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  382:src/voice.h   ****     65.0f,
  383:src/voice.h   ****     520.0f,
  384:src/voice.h   ****     2.07944f,            // 65–520 Hz, ln(8) — a melodic keyboard register
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 40
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 40
 
 
  385:src/voice.h   ****     // OSCILLATOR STACK
@@ -2398,7 +2398,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  439:src/voice.h   **** // ── Voice 5: screaming aggressive lead ──────────────────
  440:src/voice.h   **** //   Detuned sawtooth stack (root + a hair-sharp twin + octave) for a thick,
  441:src/voice.h   **** //   buzzing supersaw bite, pushed up into a cutting register. Heavy drive and a
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 41
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 41
 
 
  442:src/voice.h   **** //   very high filter resonance make the cutoff whistle and scream as pressure
@@ -2458,7 +2458,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  496:src/voice.h   **** //   tapped chords land in key. For a BASS guitar instead: drop freq_low/high ~½,
  497:src/voice.h   **** //   cut drive to ~1.5, use WAVE_TRI, and raise `sustain` if you want it to hold.
  498:src/voice.h   **** static constexpr Voice VOICE_GUITAR = {
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 42
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 42
 
 
  499:src/voice.h   ****     "Guitar",
@@ -2518,7 +2518,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  553:src/voice.h   **** //   tail, so notes bloom and linger. A whisper of noise adds air.
  554:src/voice.h   **** static constexpr Voice VOICE_PAD = {
  555:src/voice.h   ****     "Pad",
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 43
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 43
 
 
  556:src/voice.h   ****     // FREQUENCY RANGE
@@ -2578,7 +2578,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  610:src/voice.h   ****     0.22f,
  611:src/voice.h   ****     WAVE_SINE,           // osc1  — body (lower mode)
  612:src/voice.h   ****     // SECONDARY OSCILLATOR
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 44
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 44
 
 
  613:src/voice.h   ****     1.6f,
@@ -2638,7 +2638,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  667:src/voice.h   ****     1.0f,
  668:src/voice.h   ****     0.55f,
  669:src/voice.h   ****     WAVE_SINE,           // osc1  — deep sine body
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 45
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 45
 
 
  670:src/voice.h   ****     // SECONDARY OSCILLATOR
@@ -2698,7 +2698,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  724:src/voice.h   ****     // OSCILLATOR STACK
  725:src/voice.h   ****     1.0f,
  726:src/voice.h   ****     0.15f,
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 46
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 46
 
 
  727:src/voice.h   ****     WAVE_SINE,           // osc1  — body (lower mode)
@@ -2758,7 +2758,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  781:src/voice.h   ****     1.01160f,            // 4000–11000 Hz, ln(2.75) — metallic edge pitch
  782:src/voice.h   ****     // OSCILLATOR STACK
  783:src/voice.h   ****     1.0f,
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 47
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 47
 
 
  784:src/voice.h   ****     0.10f,
@@ -2818,7 +2818,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  838:src/voice.h   ****     "SH-101 min",
  839:src/voice.h   ****     // FREQUENCY RANGE
  840:src/voice.h   ****     40.0f,
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 48
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 48
 
 
  841:src/voice.h   ****     400.0f,
@@ -2878,7 +2878,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  895:src/voice.h   **** //   set. Cycle to it to switch the chord flavor live — no other change.
  896:src/voice.h   **** static constexpr Voice VOICE_SH101_MAJ = {
  897:src/voice.h   ****     "SH-101 maj",
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 49
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 49
 
 
  898:src/voice.h   ****     // FREQUENCY RANGE
@@ -2938,7 +2938,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  952:src/voice.h   **** //   triggering one drum on tap, with the fine position snapping the pitch to an
  953:src/voice.h   **** //   interval (see MULTI_* below). This struct is just a placeholder so it lives
  954:src/voice.h   **** //   in the bank / FSR cycle and shows "Drums" in the header — the actual audio
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 50
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 50
 
 
  955:src/voice.h   **** //   per tap comes from the zone's real drum voice (g_active_voice). Kick-like so
@@ -2998,7 +2998,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
 1009:src/voice.h   **** // All voices, in cycle order. Holding the FSR pressed steps through these live
 1010:src/voice.h   **** // (see the voice-switch gesture in the main loop). Edit the order here to taste.
 1011:src/voice.h   **** static constexpr Voice VOICES[] = {
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 51
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 51
 
 
 1012:src/voice.h   ****     VOICE_LEAD,  VOICE_BASS,   VOICE_BASS_OPEN,   VOICE_BASS_RICH,
@@ -3058,7 +3058,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  982 01c4 0E2B     		cmp	r3, #14
  983 01c6 1D46     		mov	r5, r3
  984 01c8 A8BF     		it	ge
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 52
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 52
 
 
  985 01ca 0E25     		movge	r5, #14
@@ -3118,7 +3118,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1029              	.LBB550:
 1045:src/voice.h   ****   for (int i = 0; i < NUM_VOICES; i++)
  1030              		.loc 7 1045 7 view .LVU301
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 53
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 53
 
 
  1031 01e8 0022     		movs	r2, #0
@@ -3178,7 +3178,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1070              		.loc 6 295 24 view .LVU315
  1071 01fc 2644     		add	r6, r6, r4
  1072 01fe 654B     		ldr	r3, .L554+12
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 54
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 54
 
 
  293:src/main.cpp  ****                  cycle_pos(g_voice_idx), cycle_total(),
@@ -3238,7 +3238,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1117 0248 6348     		ldr	r0, .L554+80
  1118 024a FFF7FEFF 		bl	usb_log
  1119              	.LVL90:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 55
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 55
 
 
  304:src/main.cpp  **** 
@@ -3298,7 +3298,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  330:src/main.cpp  ****     bool     vel_active  = false;  // capturing
  331:src/main.cpp  **** 
  332:src/main.cpp  ****     // Smoothed LED brightness state (0..1), slewed toward per-frame targets.
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 56
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 56
 
 
  333:src/main.cpp  ****     // LED1 = DAC1 (pos 0 end), LED2 = DAC2 (middle), LED3 = PWM A0 (pos 1000 end).
@@ -3358,7 +3358,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1153              		.loc 6 326 5 is_stmt 1 view .LVU351
  327:src/main.cpp  ****     float    vel_peak    = 0.0f;   // running peak pressure during the window
  1154              		.loc 6 327 5 view .LVU352
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 57
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 57
 
 
  328:src/main.cpp  ****     uint32_t vel_start   = 0;      // window start
@@ -3418,7 +3418,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1187              	.LVL98:
 1053:src/voice.h   ****     if (!VOICES[i].no_cycle)
  1188              		.loc 7 1053 28 is_stmt 0 view .LVU377
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 58
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 58
 
 
  1189 0268 A8BF     		it	ge
@@ -3478,7 +3478,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1231              		.loc 6 371 26 is_stmt 1 view .LVU391
  1232 0288 002D     		cmp	r5, #0
  1233 028a 01F09887 		beq	.L508
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 59
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 59
 
 
  1234 028e 534E     		ldr	r6, .L554+84
@@ -3538,7 +3538,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  355:src/main.cpp  ****     };
  1276              		.loc 6 355 21 view .LVU404
  1277 02b2 3360     		str	r3, [r6]	@ float
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 60
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 60
 
 
  1278              	.LVL108:
@@ -3598,7 +3598,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1318              	.LBE570:
  1319              	.LBE571:
  373:src/main.cpp  ****         }
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 61
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 61
 
 
  1320              		.loc 6 373 32 is_stmt 1 view .LVU419
@@ -3658,7 +3658,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  402:src/main.cpp  ****         int   step = (int)(subp * (float)MULTI_NINTERVALS);
  403:src/main.cpp  ****         if(step >= MULTI_NINTERVALS) step = MULTI_NINTERVALS - 1;
  404:src/main.cpp  ****         float freq = V.freq_low * MULTI_INTERVALS[step];
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 62
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 62
 
 
  405:src/main.cpp  ****         float v    = FIX_DRUM ? 1.0f : clampf((float)pressure / 100.0f, 0.0f, 1.0f);
@@ -3718,7 +3718,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1353              		.loc 6 382 14 view .LVU432
  1354 02fa 2093     		str	r3, [sp, #128]
  383:src/main.cpp  ****     float    prs_sm[MAX_FINGERS]        = {};   // lightly-smoothed pressure
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 63
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 63
 
 
  1355              		.loc 6 383 5 is_stmt 1 view .LVU433
@@ -3778,7 +3778,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  421:src/main.cpp  ****         const Voice& V = g_bank[bankidx];
  1391              		.loc 6 421 5 view .LVU452
  437:src/main.cpp  ****     {
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 64
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 64
 
 
  1392              		.loc 6 437 5 view .LVU453
@@ -3838,7 +3838,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1427              		.loc 6 450 9 is_stmt 1 view .LVU468
  1428              		.loc 6 458 43 is_stmt 0 view .LVU469
  1429 035e B4EE678A 		vcmp.f32	s16, s15
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 65
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 65
 
 
  450:src/main.cpp  ****         g_master_vol = vol;
@@ -3898,7 +3898,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1474 03ac 00000000 		.word	.LANCHOR0
  1475 03b0 CDCCCC3E 		.word	1053609165
  1476 03b4 0C000000 		.word	.LC3
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 66
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 66
 
 
  1477 03b8 20000000 		.word	.LC4
@@ -3958,7 +3958,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  465:src/main.cpp  ****             delta[i]=(int32_t)baseline[i]-(int32_t)data[i];
  1519              		.loc 6 465 58 view .LVU493
  1520 040e 30F8025B 		ldrh	r5, [r0], #2
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 67
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 67
 
 
  466:src/main.cpp  ****             if(delta[i]<0)delta[i]=0;
@@ -4018,7 +4018,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1552              	.LBB575:
  485:src/main.cpp  ****             uint32_t now = System::GetNow();
  1553              		.loc 6 485 13 view .LVU505
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 68
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 68
 
 
  1554              		.loc 6 485 42 is_stmt 0 view .LVU506
@@ -4078,7 +4078,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1584              		.loc 6 507 35 view .LVU516
  508:src/main.cpp  ****                 g_master_vol = 0.85f;                        // monitor level (the FSR mutes)
  1585              		.loc 6 508 17 view .LVU517
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 69
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 69
 
 
  1586              		.loc 6 508 30 is_stmt 0 view .LVU518
@@ -4138,7 +4138,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  532:src/main.cpp  ****                                      cycle_pos(g_voice_idx), cycle_total(), g_bank[g_voice_idx].nam
  533:src/main.cpp  ****                         blink_start(1, now);                 // single blink per advance
  534:src/main.cpp  ****                     }
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 70
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 70
 
 
  535:src/main.cpp  ****                     if(!VOICE_PREVIEW_ENABLED){
@@ -4198,7 +4198,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1640              	.LVL135:
  1641 0484 1190     		str	r0, [sp, #68]
  1642              	.LVL136:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 71
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 71
 
 
  564:src/main.cpp  ****         } else {
@@ -4258,7 +4258,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1670 04a0 069B     		ldr	r3, [sp, #24]
  1671 04a2 002B     		cmp	r3, #0
  1672 04a4 00F0DF86 		beq	.L518
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 72
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 72
 
 
  1673 04a8 0023     		movs	r3, #0
@@ -4318,7 +4318,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  607:src/main.cpp  ****         for(int i = 0; i < MAX_FINGERS; i++){
  1711              		.loc 6 607 9 is_stmt 1 view .LVU560
  1712              	.LBB784:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 73
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 73
 
 
  1713              		.loc 6 607 26 view .LVU561
@@ -4378,7 +4378,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1751              	.LBB799:
  1752 04fc 00F01E84 		beq	.L519
  1753              	.L149:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 74
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 74
 
 
  617:src/main.cpp  ****                 int z = (int)(clampf((float)tracked[i].pos/1000.0f,0.0f,1.0f) * 4.0f);
@@ -4438,7 +4438,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1797              		.loc 6 607 9 is_stmt 1 discriminator 2 view .LVU593
  607:src/main.cpp  ****             bool raw = tracked[i].alive;
  1798              		.loc 6 607 26 discriminator 2 view .LVU594
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 75
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 75
 
 
  1799 0528 0498     		ldr	r0, [sp, #16]
@@ -4498,7 +4498,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1830 0558 0123     		movs	r3, #1
  1831 055a 854A     		ldr	r2, .L556+24
  1832 055c 1370     		strb	r3, [r2]
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 76
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 76
 
 
  1833              	.L169:
@@ -4558,7 +4558,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1879              	.LBE899:
  653:src/main.cpp  **** 
  1880              		.loc 6 653 80 is_stmt 0 view .LVU624
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 77
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 77
 
 
  1881 058a 7B4D     		ldr	r5, .L556+32
@@ -4618,7 +4618,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  1919              		.loc 6 658 13 is_stmt 1 view .LVU636
  1920              		.loc 6 658 34 is_stmt 0 view .LVU637
  1921 05be 9BED027A 		vldr.32	s14, [fp, #8]	@ int
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 78
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 78
 
 
  1922              		.loc 6 658 33 view .LVU638
@@ -4678,7 +4678,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  664:src/main.cpp  ****             float ex   = 1.0f + earg*(1.0f + earg*(0.5f + earg*0.1667f));
  1966              		.loc 6 664 44 view .LVU655
  1967 060a F0EE6A6A 		vmov.f32	s13, s21
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 79
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 79
 
 
  1968 060e E7EE276A 		vfma.f32	s13, s14, s15
@@ -4738,7 +4738,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2008              	.LVL170:
  2009              	.L175:
  2010              		.loc 6 677 51 view .LVU672
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 80
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 80
 
 
  2011              	.LBE910:
@@ -4798,7 +4798,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  716:src/main.cpp  ****             // This gives the classic Moog "closed → wah → bright" feel.
  717:src/main.cpp  ****             // Power-3 on pressure so the bottom half stays dark and controlled.
  718:src/main.cpp  ****             // ── Smootherstep pressure curves (6x⁵ - 15x⁴ + 10x³) ───────�
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 81
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 81
 
 
  719:src/main.cpp  ****             // Starts slow, steep in the middle, eases gently at the top.
@@ -4858,7 +4858,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2056 0676 2BEE0B7A 		vmul.f32	s14, s22, s22
  727:src/main.cpp  ****                 return x*x*x*(x*(x*6.0f - 15.0f) + 10.0f);
  2057              		.loc 6 727 41 view .LVU689
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 82
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 82
 
 
  2058 067a EBEE066A 		vfma.f32	s13, s22, s12
@@ -4918,7 +4918,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2093              		.loc 6 741 17 is_stmt 0 view .LVU706
  2094 06ae 9FED386A 		vldr.32	s12, .L556+56
  2095 06b2 F4EEC60A 		vcmpe.f32	s1, s12
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 83
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 83
 
 
  735:src/main.cpp  ****             // Keytracking: how much the cutoff base follows pitch. keytrack=1 is
@@ -4978,7 +4978,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2142 06fe 77FEAAAA 		vselgt.f32	s21, s15, s21
  2143              	.LVL179:
  2144              	.L185:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 84
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 84
 
 
  2145              		.loc 8 13 24 view .LVU723
@@ -5038,7 +5038,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2190              		.loc 6 723 34 view .LVU739
  2191 0736 F0EE087A 		vmov.f32	s15, #3.0e+0
  723:src/main.cpp  ****             };
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 85
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 85
 
 
  2192              		.loc 6 723 25 view .LVU740
@@ -5098,7 +5098,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2236 0788 006F313F 		.word	1060204288
  2237 078c 9FCD2A3D 		.word	1026215327
  2238 0790 77BE7F3F 		.word	1065336439
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 86
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 86
 
 
  2239 0794 00A08C46 		.word	1183621120
@@ -5158,7 +5158,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2278              		.loc 6 758 21 is_stmt 0 discriminator 1 view .LVU763
  2279 07d6 F0EE4B8A 		vmov.f32	s17, s22
  2280              	.LVL186:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 87
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 87
 
 
  754:src/main.cpp  ****             if(vel_active){
@@ -5218,7 +5218,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2314              		.loc 6 763 13 view .LVU782
  764:src/main.cpp  ****             g_target_drive   = drive;
  2315              		.loc 6 764 13 view .LVU783
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 88
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 88
 
 
  765:src/main.cpp  ****             g_finger_on      = true;
@@ -5278,7 +5278,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  791:src/main.cpp  ****         // the finger during the live preview too, and resume after the save blink.
  792:src/main.cpp  ****         if(blink_left > 0 || blink_on){
  2341              		.loc 6 792 9 is_stmt 1 view .LVU794
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 89
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 89
 
 
  2342              	.LBB1008:
@@ -5338,7 +5338,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  365:src/main.cpp  ****         else if(blink_left > 0){ leds_write(true); blink_on = true; blink_t = now + 110; }
  2385              		.loc 6 365 70 view .LVU808
  2386 083e 013B     		subs	r3, r3, #1
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 90
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 90
 
 
  2387              	.LBB1018:
@@ -5398,7 +5398,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2429              	.LVL200:
  355:src/main.cpp  ****     };
  2430              		.loc 6 355 21 view .LVU821
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 91
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 91
 
 
  2431              	.LBE1016:
@@ -5458,7 +5458,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2447 0868 00F0DB82 		beq	.L226
  2448              		.loc 6 827 29 view .LVU829
  2449 086c 002E     		cmp	r6, #0
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 92
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 92
 
 
  2450 086e 00F0D882 		beq	.L226
@@ -5518,7 +5518,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2493 08b2 9FED9A7A 		vldr.32	s14, .L559+36
  830:src/main.cpp  ****             float prs01 = clampf((float)tracked[1].pressure / 100.0f, 0.0f, 1.0f); // hard clamp
  2494              		.loc 6 830 34 view .LVU846
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 93
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 93
 
 
  2495 08b6 F8EEE77A 		vcvt.f32.s32	s15, s15
@@ -5578,7 +5578,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2533              	.LBI1103:
  725:src/main.cpp  ****                 x = x<0?0:x>1?1:x;
  2534              		.loc 6 725 33 view .LVU861
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 94
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 94
 
 
  2535              	.LBB1104:
@@ -5638,7 +5638,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2574              		.loc 6 845 13 is_stmt 1 view .LVU876
  2575              	.LBB1110:
  2576              	.LBI1110:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 95
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 95
 
 
  725:src/main.cpp  ****                 x = x<0?0:x>1?1:x;
@@ -5698,7 +5698,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2614              	.LBB1122:
  849:src/main.cpp  ****                 return x*x*(3.0f - 2.0f*x);
  2615              		.loc 6 849 24 view .LVU888
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 96
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 96
 
 
  2616 0932 B4EEE66A 		vcmpe.f32	s12, s13
@@ -5758,7 +5758,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2656              		.loc 6 859 42 view .LVU900
  2657 0964 65EE875A 		vmul.f32	s11, s11, s14
  2658              	.L237:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 97
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 97
 
 
  2659              	.LVL212:
@@ -5818,7 +5818,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2701 0992 27EE267A 		vmul.f32	s14, s14, s13
  2702              	.LVL215:
  2703              	.L238:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 98
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 98
 
 
  850:src/main.cpp  ****             };
@@ -5878,7 +5878,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2739              	.LVL220:
  2740              	.L531:
  875:src/main.cpp  ****            System::GetNow() - last_print_ms < PRINT_INTERVAL_MS){
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 99
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 99
 
 
  2741              		.loc 6 875 26 discriminator 2 view .LVU932
@@ -5938,7 +5938,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
 1052:src/voice.h   ****   for (int i = 0; i <= idx && i < NUM_VOICES; i++)
  2781              		.loc 7 1052 3 view .LVU947
 1053:src/voice.h   ****     if (!VOICES[i].no_cycle)
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 100
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 100
 
 
  2782              		.loc 7 1053 3 view .LVU948
@@ -5998,7 +5998,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
 1045:src/voice.h   ****   for (int i = 0; i < NUM_VOICES; i++)
  2825              		.loc 7 1045 7 view .LVU962
  2826 0a02 0022     		movs	r2, #0
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 101
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 101
 
 
  2827              	.L253:
@@ -6058,7 +6058,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2867              		.loc 6 888 16 is_stmt 0 view .LVU976
  2868 0a34 4448     		ldr	r0, .L559+80
  2869              	.LBB1166:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 102
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 102
 
 
  2870              	.LBB1167:
@@ -6118,7 +6118,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2914 0a58 08EB8000 		add	r0, r8, r0, lsl #2
   86:src/main.cpp  ****     if(n>w)n=w;
  2915              		.loc 6 86 25 view .LVU992
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 103
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 103
 
 
  2916 0a5c B0FBF4F0 		udiv	r0, r0, r4
@@ -6178,7 +6178,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  2957              		.loc 6 90 5 view .LVU1005
   90:src/main.cpp  **** }
  2958              		.loc 6 90 13 is_stmt 0 view .LVU1006
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 104
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 104
 
 
  2959 0a8c 5D23     		movs	r3, #93
@@ -6238,7 +6238,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  893:src/main.cpp  ****                 if(tracked[s].alive&&i==tracked[s].peak_ch)mk=(s==0)?"F1":"F2";
  3003              		.loc 6 893 13 is_stmt 1 view .LVU1020
  893:src/main.cpp  ****                 if(tracked[s].alive&&i==tracked[s].peak_ch)mk=(s==0)?"F1":"F2";
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 105
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 105
 
 
  3004              		.loc 6 893 26 view .LVU1021
@@ -6298,7 +6298,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   96:src/main.cpp  ****     out[1+w]='|';out[2+w]='\0';
  3046              		.loc 6 96 5 is_stmt 1 view .LVU1036
  3047              	.LVL249:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 106
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 106
 
 
  3048              	.LBB1186:
@@ -6358,7 +6358,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  3092 0b3c 00000000 		.word	.LANCHOR4
  3093 0b40 400B0000 		.word	.LANCHOR4+2880
  3094 0b44 08020000 		.word	.LC19
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 107
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 107
 
 
  3095 0b48 24020000 		.word	.LC20
@@ -6418,7 +6418,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  3135              		.loc 6 102 14 is_stmt 0 view .LVU1060
  3136 0b92 D8BF     		it	le
  3137 0b94 431C     		addle	r3, r0, #1
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 108
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 108
 
 
  102:src/main.cpp  ****     }
@@ -6478,7 +6478,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  3181              		.loc 6 904 17 view .LVU1073
  3182              		.loc 6 904 25 is_stmt 0 view .LVU1074
  3183 0bc8 D8F80830 		ldr	r3, [r8, #8]
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 109
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 109
 
 
  3184              	.LVL258:
@@ -6538,7 +6538,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  3223 0bee 5019     		adds	r0, r2, r5
  3224 0bf0 8842     		cmp	r0, r1
  3225 0bf2 ACBF     		ite	ge
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 110
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 110
 
 
  3226 0bf4 2020     		movge	r0, #32
@@ -6598,7 +6598,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  902:src/main.cpp  ****             if(tracked[slot].alive){
  3269              		.loc 6 902 9 is_stmt 1 view .LVU1105
  902:src/main.cpp  ****             if(tracked[slot].alive){
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 111
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 111
 
 
  3270              		.loc 6 902 28 view .LVU1106
@@ -6658,7 +6658,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   86:src/main.cpp  ****     if(n>w)n=w;
  3310              		.loc 6 86 5 view .LVU1119
   86:src/main.cpp  ****     if(n>w)n=w;
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 112
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 112
 
 
  3311              		.loc 6 86 25 is_stmt 0 view .LVU1120
@@ -6718,7 +6718,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   90:src/main.cpp  **** }
  3350              		.loc 6 90 13 is_stmt 0 view .LVU1136
  3351 0c7a 5D23     		movs	r3, #93
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 113
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 113
 
 
  3352              	.LBE1203:
@@ -6778,7 +6778,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  921:src/main.cpp  ****         int bc_i    = (int)(g_bitcrush*100);
  3391              		.loc 6 921 29 view .LVU1153
  3392 0ca6 724B     		ldr	r3, .L562+28
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 114
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 114
 
 
  919:src/main.cpp  ****         int cut_i   = (int)g_target_cutoff;
@@ -6838,7 +6838,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  3432 0cde BDEEC77A 		vcvt.s32.f32	s14, s14
  3433              	.LVL280:
  3434              		.loc 6 924 9 is_stmt 1 view .LVU1174
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 115
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 115
 
 
  3435              		.loc 6 924 16 is_stmt 0 view .LVU1175
@@ -6898,7 +6898,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  3476              		.loc 6 611 48 is_stmt 0 view .LVU1186
  3477 0d26 1468     		ldr	r4, [r2]
  3478 0d28 AEEB0404 		sub	r4, lr, r4
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 116
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 116
 
 
  611:src/main.cpp  ****             deb_alive[i] = deb;
@@ -6958,7 +6958,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  3519 0d56 F7EE007A 		vmov.f32	s15, #1.0e+0
  3520 0d5a B4EEE77A 		vcmpe.f32	s14, s15
  3521 0d5e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 117
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 117
 
 
  3522 0d62 00F3AE83 		bgt	.L313
@@ -7018,7 +7018,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  3564              		.loc 6 623 13 view .LVU1215
  3565              	.LBB816:
  3566 0d8a BAF1000F 		cmp	r10, #0
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 118
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 118
 
 
  3567 0d8e 3FF4C3AB 		beq	.L530
@@ -7078,7 +7078,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  3612              	.LBE804:
  3613              	.LBE807:
  3614              	.LBE819:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 119
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 119
 
 
  620:src/main.cpp  ****             float prs = (float)tracked[i].pressure;
@@ -7138,7 +7138,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  632:src/main.cpp  ****                 }
  3653              		.loc 6 632 30 is_stmt 0 view .LVU1241
  3654 0df0 0120     		movs	r0, #1
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 120
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 120
 
 
  632:src/main.cpp  ****                 }
@@ -7198,7 +7198,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  457:src/main.cpp  ****         else if(vol >= 0.4f)   full_state = false;   // clearly eased off
  3694              		.loc 6 457 9 is_stmt 1 view .LVU1257
  3695 0e1e FFF7A8BA 		b	.L65
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 121
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 121
 
 
  3696              	.LVL297:
@@ -7258,7 +7258,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  447:src/main.cpp  ****         else if(fsr_raw <= FSR_MIN) vol = 0.0f;
  3735              		.loc 6 447 20 is_stmt 0 view .LVU1273
  3736 0e46 BDF87A80 		ldrh	r8, [sp, #122]
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 122
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 122
 
 
  877:src/main.cpp  ****         }
@@ -7318,7 +7318,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  491:src/main.cpp  ****                 if(full_state && !touching){
  3786              		.loc 6 491 13 view .LVU1279
  3787 0ea0 0C9B     		ldr	r3, [sp, #48]
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 123
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 123
 
 
  3788              	.LBE770:
@@ -7378,7 +7378,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  498:src/main.cpp  ****                           usb_log("[voice select] %s (%d/%d) - tap/slide glass; release FSR to keep
  3828              		.loc 6 498 25 view .LVU1294
  3829 0ed4 002B     		cmp	r3, #0
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 124
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 124
 
 
  3830 0ed6 01F03580 		beq	.L532
@@ -7438,7 +7438,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  3871 0ef8 C032     		adds	r2, r2, #192
 1054:src/voice.h   ****       p++;
  3872              		.loc 7 1054 5 view .LVU1309
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 125
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 125
 
 
  3873 0efa 09B9     		cbnz	r1, .L80
@@ -7498,7 +7498,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  3914 0f16 AC48     		ldr	r0, .L564+16
  3915              	.LBE736:
  3916              	.LBE735:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 126
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 126
 
 
  3917 0f18 0997     		str	r7, [sp, #36]
@@ -7558,7 +7558,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  3959 0f3c 0123     		movs	r3, #1
  3960 0f3e 0C93     		str	r3, [sp, #48]
  3961              	.LVL321:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 127
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 127
 
 
  3962              	.L72:
@@ -7618,7 +7618,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  4002              	.LBB1214:
  4003              	.LBI1214:
  200:src/main.cpp  ****         uint32_t start = System::GetNow();
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 128
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 128
 
 
  4004              		.loc 6 200 37 view .LVU1351
@@ -7678,7 +7678,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  4041 0f8c 904B     		ldr	r3, .L564+24
  4042 0f8e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
  214:src/main.cpp  **** 
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 129
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 129
 
 
  4043              		.loc 6 214 13 view .LVU1369
@@ -7738,7 +7738,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  4082 0fd0 3BEE400A 		vsub.f32	s0, s22, s0
  226:src/main.cpp  ****             float led1   = sqrtf(sqrtf(l2_raw));              // middle (DAC1)
  4083              		.loc 6 226 52 view .LVU1385
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 130
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 130
 
 
  4084 0fd4 B6EE006A 		vmov.f32	s12, #5.0e-1
@@ -7798,7 +7798,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  225:src/main.cpp  ****             float l2_raw = 1.0f - 2.0f * fabsf(p01 - 0.5f);   if(l2_raw < 0) l2_raw = 0;
  4121              		.loc 6 225 63 view .LVU1403
  4122 1012 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 131
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 131
 
 
  226:src/main.cpp  ****             float led1   = sqrtf(sqrtf(l2_raw));              // middle (DAC1)
@@ -7858,7 +7858,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  4166              		.loc 6 229 33 is_stmt 0 view .LVU1414
  4167 1074 B1EEEA0A 		vsqrt.f32	s0, s21
  4168              	.L136:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 132
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 132
 
 
  4169 1078 B5EE400A 		vcmp.f32	s0, #0
@@ -7918,7 +7918,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  232:src/main.cpp  **** 
  4210              		.loc 6 232 25 view .LVU1428
  4211 10c4 C6ED00AA 		vstr.32	s21, [r6]
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 133
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 133
 
 
  237:src/main.cpp  ****             if(fsr_now <= FSR_MIN) break;
@@ -7978,7 +7978,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  4253              	.LBI1220:
  173:src/main.cpp  ****         if(n == 0) return;
  4254              		.loc 6 173 27 view .LVU1442
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 134
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 134
 
 
  4255              	.LBB1221:
@@ -8038,7 +8038,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  179:src/main.cpp  ****         fsr_dead       = (uint16_t)(fsr_max - FSR_DEADZONE * (fsr_max - FSR_MIN));
  4296              		.loc 6 179 24 view .LVU1456
  4297 110a 229A     		ldr	r2, [sp, #136]
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 135
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 135
 
 
  180:src/main.cpp  ****         fsr_active_inv = 1.0f / (float)(fsr_dead - FSR_MIN);
@@ -8098,7 +8098,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  249:src/main.cpp  ****             int32_t max_d = 0;
  4336              		.loc 6 249 13 is_stmt 1 view .LVU1473
  249:src/main.cpp  ****             int32_t max_d = 0;
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 136
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 136
 
 
  4337              		.loc 6 249 28 is_stmt 0 view .LVU1474
@@ -8158,7 +8158,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  4376 1156 9145     		cmp	r9, r2
  4377 1158 F5D1     		bne	.L141
  4378              	.LBE1231:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 137
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 137
 
 
  255:src/main.cpp  **** 
@@ -8218,7 +8218,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  4417 1180 FFF7FEFF 		bl	_ZN5daisy9DacHandle10WriteValueENS0_7ChannelEt
  4418              	.LVL367:
  262:src/main.cpp  ****         g_led3_duty = 0.0f;
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 138
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 138
 
 
  4419              		.loc 6 262 9 is_stmt 1 view .LVU1506
@@ -8278,7 +8278,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  4459 11ae 1148     		ldr	r0, .L564+60
  4460 11b0 FFF7FEFF 		bl	usb_log
  4461              	.LVL375:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 139
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 139
 
 
  4462 11b4 FFF76AB9 		b	.L113
@@ -8338,7 +8338,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  4508              	.LBE1250:
  792:src/main.cpp  ****             blink_tick(System::GetNow());
  4509              		.loc 6 792 9 is_stmt 1 view .LVU1529
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 140
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 140
 
 
  4510              	.LBB1251:
@@ -8398,7 +8398,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  352:src/main.cpp  ****         hw.dac.WriteValue(DacHandle::Channel::ONE, on ? (uint16_t)LED1_MAX : 0);
  4551              		.loc 6 352 23 view .LVU1543
  4552              	.LBB1024:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 141
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 141
 
 
  353:src/main.cpp  ****         hw.dac.WriteValue(DacHandle::Channel::TWO, on ? (uint16_t)LED2_MAX : 0);
@@ -8458,7 +8458,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  366:src/main.cpp  ****     };
  4594              		.loc 6 366 61 is_stmt 0 view .LVU1557
  4595 125e 0123     		movs	r3, #1
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 142
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 142
 
 
  4596 1260 0B93     		str	r3, [sp, #44]
@@ -8518,7 +8518,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  892:src/main.cpp  ****             for(int s=0;s<2;s++)
  4641              		.loc 6 892 25 view .LVU1567
  4642 128a 0020     		movs	r0, #0
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 143
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 143
 
 
  4643 128c FFF7EBBB 		b	.L254
@@ -8578,7 +8578,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  798:src/main.cpp  ****                 float prs_mult = 0.75f + 0.25f * pr01;
  4688              		.loc 6 798 17 is_stmt 1 view .LVU1581
  798:src/main.cpp  ****                 float prs_mult = 0.75f + 0.25f * pr01;
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 144
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 144
 
 
  4689              		.loc 6 798 41 is_stmt 0 view .LVU1582
@@ -8638,7 +8638,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  802:src/main.cpp  ****                 led1_target    = sqrtf(sqrtf(l2_raw)) * prs_mult;  // middle tent
  4730              		.loc 6 802 23 view .LVU1598
  4731 1304 E6EEC67A 		vfms.f32	s15, s13, s12
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 145
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 145
 
 
  4732 1308 B0EE677A 		vmov.f32	s14, s15
@@ -8698,7 +8698,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  4772              	.L212:
  4773 134c B5EE40BA 		vcmp.f32	s22, #0
  803:src/main.cpp  ****                 led2_target    = sqrtf(sqrtf(l1_raw)) * prs_mult;  // pos 0 ramp
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 146
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 146
 
 
  4774              		.loc 6 803 32 view .LVU1613
@@ -8758,7 +8758,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  4818              	.LVL407:
  805:src/main.cpp  ****             }
  4819              		.loc 6 805 32 view .LVU1624
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 147
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 147
 
 
  4820              	.LBE1048:
@@ -8818,7 +8818,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  4861 13d4 5B48     		ldr	r0, .L566+16
  4862 13d6 FCEEEAAA 		vcvt.u32.f32	s21, s21
  4863 13da 1AEE903A 		vmov	r3, s21	@ int
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 148
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 148
 
 
  4864 13de 9AB2     		uxth	r2, r3
@@ -8878,7 +8878,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  4905 140c FFF738B8 		b	.L285
  4906              	.LVL418:
  4907              	.L324:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 149
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 149
 
 
  504:src/main.cpp  ****                 }
@@ -8938,7 +8938,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  722:src/main.cpp  ****                 return x*x*(3.0f - 2.0f*x);
  4953              		.loc 6 722 24 view .LVU1663
  4954 1428 DFED4B7A 		vldr.32	s15, .L566+36
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 150
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 150
 
 
  4955 142c FFF7CBB9 		b	.L187
@@ -8998,7 +8998,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5004              	.LBB960:
  726:src/main.cpp  ****                 return x*x*x*(x*(x*6.0f - 15.0f) + 10.0f);
  5005              		.loc 6 726 24 view .LVU1674
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 151
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 151
 
 
  5006 144e B5EEC0BA 		vcmpe.f32	s22, #0
@@ -9058,7 +9058,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5052              	.LVL430:
  5053              		.loc 8 13 16 view .LVU1688
  5054 1474 FFF7B9B8 		b	.L173
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 152
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 152
 
 
  5055              	.LVL431:
@@ -9118,7 +9118,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5101              	.LBB719:
  5102              	.LBB670:
  540:src/main.cpp  ****                         // Drums kit: a tap fires a kick + snare "one-two" (one-shots).
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 153
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 153
 
 
  5103              		.loc 6 540 21 view .LVU1698
@@ -9178,7 +9178,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  567:src/main.cpp  ****                 if(!serial_display_muted()) usb_log("[rebaseline]");
  5142              		.loc 6 567 33 is_stmt 0 view .LVU1714
  5143 14ac FFF7FEFF 		bl	_Z16capture_baselinePt
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 154
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 154
 
 
  5144              	.LVL439:
@@ -9238,7 +9238,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5186              	.LBB1261:
  5187              	.LBB1153:
  834:src/main.cpp  **** 
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 155
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 155
 
 
  5188              		.loc 6 834 13 is_stmt 1 view .LVU1727
@@ -9298,7 +9298,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5228 14ec 84EE235A 		vdiv.f32	s10, s8, s7
  5229              	.LBB1140:
  5230              	.LBB1102:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 156
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 156
 
 
  727:src/main.cpp  ****             };
@@ -9358,7 +9358,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5276              	.LBB1133:
  5277 151c 9FED0E7A 		vldr.32	s14, .L566+36
  5278 1520 FFF739BA 		b	.L238
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 157
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 157
 
 
  5279              	.LVL450:
@@ -9418,7 +9418,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5328 157e B046     		mov	r8, r6
  5329              	.LVL453:
  5330              	.L166:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 158
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 158
 
 
  640:src/main.cpp  ****                 else if(!deb_alive[i] && hit_was_alive[i])    g_hits[i].gate = false;  // lifted �
@@ -9478,7 +9478,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5370              		.loc 6 650 63 is_stmt 0 view .LVU1774
  5371 15a8 9DF81C31 		ldrb	r3, [sp, #284]	@ zero_extendqisi2
  5372 15ac 8DF88030 		strb	r3, [sp, #128]
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 159
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 159
 
 
  650:src/main.cpp  **** 
@@ -9538,7 +9538,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5409              		.loc 6 653 80 view .LVU1792
  5410 15da FFF720B9 		b	.L167
  5411              	.LVL461:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 160
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 160
 
 
  5412              	.L543:
@@ -9598,7 +9598,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  398:src/main.cpp  ****         int   vidx = MULTI_ZONES[zone];
  5457              		.loc 6 398 30 view .LVU1805
  5458 160e B1EE007A 		vmov.f32	s14, #4.0e+0
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 161
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 161
 
 
  399:src/main.cpp  ****         const Voice& V = g_bank[vidx];
@@ -9658,7 +9658,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5497              		.loc 6 402 9 view .LVU1821
  403:src/main.cpp  ****         float freq = V.freq_low * MULTI_INTERVALS[step];
  5498              		.loc 6 403 9 view .LVU1822
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 162
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 162
 
 
  404:src/main.cpp  ****         float v    = FIX_DRUM ? 1.0f : clampf((float)pressure / 100.0f, 0.0f, 1.0f);
@@ -9718,7 +9718,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5541              	.LBE838:
  406:src/main.cpp  ****         // Cutoff from velocity, same curve as the mono path.
  5542              		.loc 6 406 9 is_stmt 1 view .LVU1839
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 163
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 163
 
 
  406:src/main.cpp  ****         // Cutoff from velocity, same curve as the mono path.
@@ -9778,7 +9778,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5578 16c6 B6EE007A 		vmov.f32	s14, #5.0e-1
  410:src/main.cpp  ****         float tf = (V.keytrack >= 0.999f) ? freq
  5579              		.loc 6 410 61 view .LVU1856
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 164
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 164
 
 
  5580 16ca DFED685A 		vldr.32	s11, .L568+44
@@ -9838,7 +9838,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5618              	.L162:
  413:src/main.cpp  ****         float drive  = 1.0f + smoothstep_f(v) * V.drive_max;
  5619              		.loc 6 413 9 is_stmt 1 view .LVU1873
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 165
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 165
 
 
  413:src/main.cpp  ****         float drive  = 1.0f + smoothstep_f(v) * V.drive_max;
@@ -9898,7 +9898,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5663              	.LVL475:
   13:src/dsp.h     **** }
  5664              		.loc 8 13 24 view .LVU1885
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 166
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 166
 
 
  5665              	.LBE853:
@@ -9958,7 +9958,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5706 1790 CDED041A 		vstr.32	s3, [sp, #16]	@ int
  5707              	.LVL477:
  415:src/main.cpp  ****         g_active_voice = vidx;   // header shows the last-hit drum
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 167
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 167
 
 
  5708              		.loc 6 415 9 is_stmt 1 view .LVU1899
@@ -10018,7 +10018,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5754              		.loc 6 406 15 view .LVU1910
  5755 17ce DFED25BA 		vldr.32	s23, .L568+36
  5756              	.LBB866:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 168
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 168
 
 
  5757              	.LBB846:
@@ -10078,7 +10078,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5804              	.LBB1266:
  5805              	.LBB1076:
  5806              	.LBB1064:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 169
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 169
 
 
  5807 17f8 DFED217A 		vldr.32	s15, .L568+64
@@ -10138,7 +10138,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  817:src/main.cpp  ****             }
  5848              		.loc 6 817 17 discriminator 4 view .LVU1937
  5849              	.LBE1059:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 170
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 170
 
 
  5850              	.LBE1067:
@@ -10198,7 +10198,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5898 1864 EC51383F 		.word	1060655596
  5899 1868 006F313F 		.word	1060204288
  5900 186c 9FCD2A3D 		.word	1026215327
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 171
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 171
 
 
  5901 1870 77BE7F3F 		.word	1065336439
@@ -10258,7 +10258,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5944              		.loc 6 680 75 view .LVU1954
  5945              	.LBE947:
  5946              	.LBE997:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 172
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 172
 
 
  670:src/main.cpp  ****             float y2 = y*y;
@@ -10318,7 +10318,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  5986 1908 FFF7FEFF 		bl	_Z13quantize_midifPKai
  5987              	.LVL497:
  682:src/main.cpp  ****                 freq = clampf(440.0f*(1.0f+qe*(1.0f+qe*(0.5f+qe*0.1667f))), VOICE.freq_low, VOICE.f
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 173
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 173
 
 
  5988              		.loc 6 682 17 is_stmt 1 view .LVU1970
@@ -10378,7 +10378,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6027              		.loc 8 13 24 view .LVU1985
  6028 1940 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  6029 1944 48BF     		it	mi
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 174
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 174
 
 
  6030 1946 F0EE6BAA 		vmovmi.f32	s21, s23
@@ -10438,7 +10438,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6071              		.loc 7 159 16 view .LVU1998
  6072              	.LBE928:
  6073              	.LBE931:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 175
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 175
 
 
  691:src/main.cpp  ****                     // Voicing width: lift the 3rd by chord_spread octaves (0 = close
@@ -10498,7 +10498,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6113 19a2 48BF     		it	mi
  6114 19a4 B71A     		submi	r7, r6, r2
  6115              	.LVL508:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 176
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 176
 
 
  164:src/voice.h   ****       best = d;
@@ -10558,7 +10558,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6157 19c8 10F90E70 		ldrsb	r7, [r0, lr]
  6158              	.LVL515:
  169:src/voice.h   ****   int base = deg(idx);
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 177
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 177
 
 
  6159              		.loc 7 169 60 view .LVU2027
@@ -10618,7 +10618,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6199              		.loc 7 169 27 view .LVU2041
  169:src/voice.h   ****   int base = deg(idx);
  6200              		.loc 7 169 45 is_stmt 0 view .LVU2042
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 178
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 178
 
 
  6201 19ec 4056     		ldrsb	r0, [r0, r1]
@@ -10678,7 +10678,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6240              		.loc 6 697 21 is_stmt 1 view .LVU2057
  697:src/main.cpp  ****                 }
  6241              		.loc 6 697 44 is_stmt 0 view .LVU2058
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 179
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 179
 
 
  6242 1a22 F8EEEBBA 		vcvt.f32.s32	s23, s23
@@ -10738,7 +10738,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6287 1a50 9FED827A 		vldr.32	s14, .L570+16
  6288              	.LVL527:
  856:src/main.cpp  ****             float rm    = smoothstep2(rm_in) * VOICE.ringmod_max;
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 180
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 180
 
 
  6289              		.loc 6 856 33 view .LVU2068
@@ -10798,7 +10798,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6333              	.LBE859:
  6334              	.LBE870:
  6335              	.LBB871:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 181
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 181
 
 
  6336              	.LBB854:
@@ -10858,7 +10858,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   13:src/dsp.h     **** }
  6379              		.loc 8 13 16 view .LVU2090
  6380              	.LBE836:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 182
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 182
 
 
  6381              	.LBE874:
@@ -10918,7 +10918,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6421 1aae 0E2B     		cmp	r3, #14
  6422 1ab0 1846     		mov	r0, r3
  6423 1ab2 A8BF     		it	ge
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 183
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 183
 
 
  6424 1ab4 0E20     		movge	r0, #14
@@ -10978,7 +10978,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6465              	.LBB676:
  359:src/main.cpp  ****         else     { leds_write(false); blink_on = false; }
  6466              		.loc 6 359 9 view .LVU2120
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 184
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 184
 
 
  6467 1ad4 6346     		mov	r3, ip
@@ -11038,7 +11038,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6508 1afa 5F4B     		ldr	r3, .L570+44
  6509 1afc 1699     		ldr	r1, [sp, #88]
  6510              	.LBE679:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 185
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 185
 
 
  6511              	.LBE681:
@@ -11098,7 +11098,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  521:src/main.cpp  ****                     blink_start(cycle_pos(g_voice_idx), now); // confirm saved voice (non-blocking)
  6553              		.loc 6 521 30 view .LVU2146
  6554 1b10 0C92     		str	r2, [sp, #48]
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 186
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 186
 
 
  6555              	.LBB700:
@@ -11158,7 +11158,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6601 1b34 9FED537A 		vldr.32	s14, .L570+56
  798:src/main.cpp  ****                 float prs_mult = 0.75f + 0.25f * pr01;
  6602              		.loc 6 798 41 view .LVU2155
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 187
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 187
 
 
  6603 1b38 F8EEE77A 		vcvt.f32.s32	s15, s15
@@ -11218,7 +11218,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  411:src/main.cpp  ****                    : V.freq_low * powf(freq / V.freq_low, V.keytrack);
  6646              		.loc 6 411 43 view .LVU2167
  6647 1b68 6DEE00AA 		vmul.f32	s21, s26, s0
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 188
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 188
 
 
  6648              	.LVL561:
@@ -11278,7 +11278,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6691 1b82 414B     		ldr	r3, .L570+60
  426:src/main.cpp  ****         float drive  = 1.0f + 0.6f * V.drive_max;
  6692              		.loc 6 426 30 view .LVU2179
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 189
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 189
 
 
  6693 1b84 B0EE087A 		vmov.f32	s14, #3.0e+0
@@ -11338,7 +11338,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  428:src/main.cpp  ****         // ONE-SHOT: jump to full amp and immediately ungate so the hit decays on
  6735              		.loc 6 428 21 view .LVU2192
  6736 1bc6 3548     		ldr	r0, .L570+80
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 190
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 190
 
 
  6737              	.LVL569:
@@ -11398,7 +11398,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6780              		.loc 6 551 25 is_stmt 1 view .LVU2203
  552:src/main.cpp  ****                     }
  6781              		.loc 6 552 25 view .LVU2204
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 191
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 191
 
 
  6782              	.LBB594:
@@ -11458,7 +11458,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6823              		.loc 6 353 26 view .LVU2217
  6824 1c1a 1146     		mov	r1, r2
  6825              	.LBE599:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 192
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 192
 
 
  6826              	.LBE602:
@@ -11518,7 +11518,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6866              		.loc 6 552 42 is_stmt 1 view .LVU2231
  552:src/main.cpp  ****                     }
  6867              		.loc 6 552 55 is_stmt 0 view .LVU2232
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 193
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 193
 
 
  6868 1c3c 0320     		movs	r0, #3
@@ -11578,7 +11578,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6916              	.L515:
  526:src/main.cpp  ****                         // glass tap (debounced rising edge) → advance one voice (wraps)
  6917              		.loc 6 526 21 is_stmt 1 view .LVU2239
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 194
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 194
 
 
  528:src/main.cpp  ****                         g_voice_idx = cycle_next(g_voice_idx);
@@ -11638,7 +11638,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  6959 1ccc 03EB430C 		add	ip, r3, r3, lsl #1
  6960 1cd0 00EB8C1C 		add	ip, r0, ip, lsl #6
  6961              		.loc 7 1062 5 view .LVU2255
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 195
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 195
 
 
  6962 1cd4 9CF87CC0 		ldrb	ip, [ip, #124]	@ zero_extendqisi2
@@ -11698,7 +11698,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7002              		.loc 6 353 26 is_stmt 0 view .LVU2269
  7003 1cf8 40F6FF72 		movw	r2, #4095
  7004 1cfc 0021     		movs	r1, #0
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 196
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 196
 
 
  7005 1cfe B248     		ldr	r0, .L572+12
@@ -11758,7 +11758,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7044              		.loc 6 540 21 view .LVU2284
  7045 1d20 0E2B     		cmp	r3, #14
  7046 1d22 65D0     		beq	.L103
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 197
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 197
 
 
  7047              	.LBB633:
@@ -11818,7 +11818,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7095              	.LBB1278:
  908:src/main.cpp  ****             }
  7096              		.loc 6 908 17 is_stmt 1 view .LVU2291
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 198
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 198
 
 
  908:src/main.cpp  ****             }
@@ -11878,7 +11878,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7139              	.LBE1279:
  568:src/main.cpp  ****                 idle_since=System::GetNow();
  7140              		.loc 6 568 45 is_stmt 1 discriminator 1 view .LVU2304
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 199
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 199
 
 
  568:src/main.cpp  ****                 idle_since=System::GetNow();
@@ -11938,7 +11938,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7185              		.loc 8 12 21 is_stmt 1 view .LVU2314
  7186              	.LBB1040:
   13:src/dsp.h     **** }
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 200
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 200
 
 
  7187              		.loc 8 13 5 view .LVU2315
@@ -11998,7 +11998,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7230              	.LBE685:
  360:src/main.cpp  ****     };
  7231              		.loc 6 360 48 view .LVU2327
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 201
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 201
 
 
  7232 1dca 1746     		mov	r7, r2
@@ -12058,7 +12058,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  521:src/main.cpp  ****                     blink_start(cycle_pos(g_voice_idx), now); // confirm saved voice (non-blocking)
  7274              		.loc 6 521 30 view .LVU2340
  7275 1dea 0C97     		str	r7, [sp, #48]
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 202
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 202
 
 
  7276 1dec FEF745BB 		b	.L92
@@ -12118,7 +12118,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  426:src/main.cpp  ****         float drive  = 1.0f + 0.6f * V.drive_max;
  7318              		.loc 6 426 30 view .LVU2353
  7319 1e10 28EE078A 		vmul.f32	s16, s16, s14
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 203
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 203
 
 
  7320              	.LBE644:
@@ -12178,7 +12178,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7361              	.LBB630:
  359:src/main.cpp  ****         else     { leds_write(false); blink_on = false; }
  7362              		.loc 6 359 47 view .LVU2367
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 204
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 204
 
 
  7363 1e40 099B     		ldr	r3, [sp, #36]
@@ -12238,7 +12238,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7407              		.loc 6 528 37 view .LVU2377
  7408 1e76 1A96     		str	r6, [sp, #104]
  7409              	.LBB657:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 205
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 205
 
 
  7410              	.LBB648:
@@ -12298,7 +12298,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7449              		.loc 6 360 20 view .LVU2392
  7450              	.LBB743:
  7451              	.LBI743:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 206
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 206
 
 
  352:src/main.cpp  ****         hw.dac.WriteValue(DacHandle::Channel::ONE, on ? (uint16_t)LED1_MAX : 0);
@@ -12358,7 +12358,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7490              		.loc 6 360 39 is_stmt 0 view .LVU2408
  7491              	.LBE742:
  7492              	.LBE741:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 207
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 207
 
 
  7493              	.LBE748:
@@ -12418,7 +12418,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7541              		.loc 7 1061 9 view .LVU2414
  7542              	.LBE1196:
  7543              	.LBE1198:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 208
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 208
 
 
  7544              	.LBE1282:
@@ -12478,7 +12478,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7587 1eda 1946     		mov	r1, r3
  7588              	.LVL632:
  7589              	.L86:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 209
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 209
 
 
  7590              	.LBB711:
@@ -12538,7 +12538,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
 1046:src/voice.h   ****     if (!VOICES[i].no_cycle)
  7629              		.loc 7 1046 21 view .LVU2441
  7630 1ef4 C033     		adds	r3, r3, #192
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 210
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 210
 
 
 1047:src/voice.h   ****       n++;
@@ -12598,7 +12598,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  518:src/main.cpp  ****                     }
  7672              		.loc 6 518 32 view .LVU2455
  7673              	.LBE726:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 211
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 211
 
 
  7674              	.LBE758:
@@ -12658,7 +12658,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
 1053:src/voice.h   ****     if (!VOICES[i].no_cycle)
  7717              		.loc 7 1053 28 view .LVU2467
  7718              	.LBE761:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 212
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 212
 
 
 1052:src/voice.h   ****   for (int i = 0; i <= idx && i < NUM_VOICES; i++)
@@ -12718,7 +12718,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7759              	.LVL650:
  7760              	.L74:
 1053:src/voice.h   ****     if (!VOICES[i].no_cycle)
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 213
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 213
 
 
  7761              		.loc 7 1053 28 view .LVU2482
@@ -12778,7 +12778,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7801 1f9a FFF7FEFF 		bl	usb_log
  7802              	.LVL654:
  7803 1f9e FEF79CBF 		b	.L73
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 214
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 214
 
 
  7804              	.LVL655:
@@ -12838,7 +12838,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7856              	.L490:
   13:src/dsp.h     **** }
  7857              		.loc 8 13 24 view .LVU2499
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 215
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 215
 
 
  7858 2030 F4EEE76A 		vcmpe.f32	s13, s15
@@ -12898,7 +12898,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7900              	.LBE1288:
  7901              	.LBE1287:
  882:src/main.cpp  ****                 cycle_pos(g_voice_idx), cycle_total(), VOICE.name);
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 216
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 216
 
 
  7902              		.loc 6 882 20 view .LVU2512
@@ -12958,7 +12958,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7942 2084 F7DA     		bge	.L245
  7943              	.LVL666:
  7944              	.L243:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 217
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 217
 
 
 1053:src/voice.h   ****     if (!VOICES[i].no_cycle)
@@ -13018,7 +13018,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  7984 209c 7D48     		ldr	r0, .L574+12
  7985 209e FFF7FEFF 		bl	usb_log
  7986              	.LVL670:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 218
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 218
 
 
  7987 20a2 FEF7C7BC 		b	.L248
@@ -13078,7 +13078,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8032 20b2 0E2B     		cmp	r3, #14
  8033 20b4 9C46     		mov	ip, r3
  8034 20b6 A8BF     		it	ge
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 219
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 219
 
 
  8035 20b8 4FF00E0C 		movge	ip, #14
@@ -13138,7 +13138,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8076              	.LBB665:
 1047:src/voice.h   ****       n++;
  8077              		.loc 7 1047 5 is_stmt 1 view .LVU2564
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 220
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 220
 
 
 1048:src/voice.h   ****   return n;
@@ -13198,7 +13198,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8118              	.LBB649:
  8119              	.LBB642:
  8120              	.LBB640:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 221
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 221
 
 
   13:src/dsp.h     **** }
@@ -13258,7 +13258,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8162 211e 0B99     		ldr	r1, [sp, #44]
  8163 2120 40F6FF72 		movw	r2, #4095
  8164 2124 5F48     		ldr	r0, .L574+28
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 222
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 222
 
 
  8165 2126 FFF7FEFF 		bl	_ZN5daisy9DacHandle10WriteValueENS0_7ChannelEt
@@ -13318,7 +13318,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8207              	.LBE604:
  8208              	.LBE613:
  8209              	.LBE667:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 223
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 223
 
 
  8210              	.LBB668:
@@ -13378,7 +13378,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8255              		.loc 6 801 23 view .LVU2612
  8256 2168 BFEE00CA 		vmov.f32	s24, #-1.0e+0
  800:src/main.cpp  ****                 float l3_raw   = 2.0f * p01 - 1.0f;                 if(l3_raw < 0) l3_raw = 0;
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 224
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 224
 
 
  8257              		.loc 6 800 23 view .LVU2613
@@ -13438,7 +13438,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8297 2198 2046     		mov	r0, r4
  8298 219a FFF7FEFF 		bl	_Z16capture_baselinePt
  8299              	.LVL699:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 225
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 225
 
 
  8300 219e FDF74FBF 		b	.L46
@@ -13498,7 +13498,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8348              	.LBE1310:
  8349              	.LBB1311:
  8350              	.LBB547:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 226
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 226
 
 
  8351 21c6 0021     		movs	r1, #0
@@ -13558,7 +13558,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8399 21fc FFF7FEFF 		bl	sqrtf
  8400              	.LVL713:
  8401 2200 F0EE407A 		vmov.f32	s15, s0
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 227
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 227
 
 
  8402 2204 FFF7A2B8 		b	.L212
@@ -13618,7 +13618,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8445 222c 67EEA67A 		vmul.f32	s15, s15, s13
  8446 2230 FEF77BBB 		b	.L232
  8447              	.LVL715:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 228
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 228
 
 
  8448              	.L497:
@@ -13678,7 +13678,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8494              	.LBE1247:
  8495              	.LBE1304:
  8496              	.LBB1305:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 229
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 229
 
 
  8497              	.LBB783:
@@ -13738,7 +13738,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8543 2290 400B0000 		.word	.LANCHOR4+2880
  8544 2294 D8010000 		.word	.LC18
  8545 2298 07000000 		.word	7
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 230
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 230
 
 
  8546 229c 00000000 		.word	g_bank
@@ -13798,7 +13798,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   12:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h **** #define DSY_QSPI_DATA       \
   13:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****     __attribute__((section( \
   14:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****         ".qspiflash_data"))) /**< used for reading memory in memory_mapped mode. */
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 231
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 231
 
 
   15:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h **** #define DSY_QSPI_BSS        \
@@ -13858,7 +13858,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   69:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****         Memory Mapped mode: QSPI configured so that the QSPI can be
   70:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****         read from starting address 0x90000000. Writing is not
   71:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****         possible in this mode. \n 
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 232
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 232
 
 
   72:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****         Indirect Polling mode: Device driver enabled. 
@@ -13918,7 +13918,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  126:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****         Writes data in buffer to to the QSPI. Starting at address to address+size 
  127:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****         \param address Address to write to
  128:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****         \param size Buffer size
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 233
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 233
 
 
  129:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****         \param buffer Buffer to write
@@ -13978,7 +13978,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8604              	.LBB1347:
  8605              	.LBB1348:
  8606              		.loc 9 166 34 view .LVU2672
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 234
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 234
 
 
  8607 0002 0948     		ldr	r0, .L578
@@ -14038,7 +14038,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
    7:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/dac.h **** namespace daisy
    8:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/dac.h **** {
    9:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/dac.h **** /** @brief DAC handle for Built-in DAC Peripheral 
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 235
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 235
 
 
   10:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/dac.h ****  *  @ingroup per_analog
@@ -14098,7 +14098,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   64:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/dac.h ****     {
   65:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/dac.h ****         ENABLED,
   66:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/dac.h ****         DISABLED,
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 236
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 236
 
 
   67:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/dac.h ****     };
@@ -14158,7 +14158,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   10:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h ****  * Support for I2S Audio Protocol with different bit-depth, samplerate options
   11:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h ****  * Allows for master or slave, as well as freedom of selecting direction, 
   12:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h ****  * and other behavior for each peripheral, and block.
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 237
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 237
 
 
   13:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h ****  * 
@@ -14218,7 +14218,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   67:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h ****         {
   68:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h ****             SAI_16BIT,
   69:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h ****             SAI_24BIT,
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 238
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 238
 
 
   70:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h ****             SAI_32BIT,
@@ -14278,7 +14278,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8686              	.LVL737:
  8687              	.LBB1369:
  8688              	.LBI1369:
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 239
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 239
 
 
  8689              		.file 12 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h"
@@ -14338,7 +14338,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   54:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         VERY_HIGH,
   55:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     };
   56:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** 
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 240
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 240
 
 
   57:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     /** @brief Configuration for a given GPIO */
@@ -14398,7 +14398,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   26:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** 
   27:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** THE DTCM RAM section is also non-cached. However, is not suitable 
   28:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** for DMA transfers. Performance is on par with internal SRAM w/ 
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 241
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 241
 
 
   29:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** cache enabled.
@@ -14458,7 +14458,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
   83:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
   84:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /**
   85:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     Converts float to unsigned 8-bit
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 242
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 242
 
 
   86:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** */
@@ -14518,7 +14518,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  140:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     x = (x ^ S24SIGN) - S24SIGN; //sign extend aka ((x<<8)>>8)
  141:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     return (float)x * S242F_SCALE;
  142:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** }
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 243
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 243
 
 
  143:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /**
@@ -14578,7 +14578,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  197:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** Hardware define pins 
  198:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  
  199:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  The dsy_gpio_pin struct should no longer be used, and is only available for
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 244
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 244
 
 
  200:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  backwards compatability.
@@ -14638,7 +14638,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  254:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     PORTJ, /**< Port J */
  255:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     PORTK, /**< Port K */
  256:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     PORTX, /**< Used as a dummy port to signal an invalid pin. */
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 245
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 245
 
 
  257:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** };
@@ -14698,7 +14698,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8737              		.section	.init_array,"aw",%init_array
  8738              		.align	2
  8739 0000 00000000 		.word	_GLOBAL__sub_I_g_voice_idx(target1)
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 246
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 246
 
 
  8740              		.global	led3
@@ -14758,7 +14758,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8782              	.LC41:
  8783 0060 53482D31 		.ascii	"SH-101 min\000"
  8783      3031206D 
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 247
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 247
 
 
  8783      696E00
@@ -14818,7 +14818,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8839 0000 00020305 		.ascii	"\000\002\003\005\007\010\012"
  8839      07080A
  8840              		.section	.rodata._ZL15MULTI_INTERVALS,"a"
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 248
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 248
 
 
  8841              		.align	2
@@ -14878,7 +14878,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8895 00d4 6666E63E 		.word	1055286886
  8896 00d8 00       		.byte	0
  8897 00d9 000000   		.space	3
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 249
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 249
 
 
  8898 00dc 9FC8BF3F 		.word	1069533343
@@ -14938,7 +14938,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8948 01cc 6666E63F 		.word	1072064102
  8949 01d0 00000000 		.word	0
  8950 01d4 0000803F 		.word	1065353216
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 250
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 250
 
 
  8951 01d8 0000803F 		.word	1065353216
@@ -14998,7 +14998,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  8997 0314 6666E63E 		.word	1055286886
  8998 0318 01       		.byte	1
  8999 0319 000000   		.space	3
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 251
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 251
 
 
  9000 031c D7A3803F 		.word	1065395159
@@ -15058,7 +15058,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  9051 03d8 03       		.byte	3
  9052 03d9 000000   		.space	3
  9053 03dc 2506813F 		.word	1065420325
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 252
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 252
 
 
  9054 03e0 5C8FC23E 		.word	1052938076
@@ -15118,7 +15118,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  9104 04d0 8FC2F53C 		.word	1022739087
  9105 04d4 0000803F 		.word	1065353216
  9106 04d8 0000803F 		.word	1065353216
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 253
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 253
 
 
  9107 04dc 8FC2F53D 		.word	1039516303
@@ -15178,7 +15178,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  9157 05a8 0000FA44 		.word	1157234688
  9158 05ac 0000A042 		.word	1117782016
  9159 05b0 00000000 		.space	80
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 254
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 254
 
 
  9159      00000000 
@@ -15238,7 +15238,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  9206 06d4 CDCC0C3F 		.word	1057803469
  9207 06d8 01       		.byte	1
  9208 06d9 000000   		.space	3
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 255
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 255
 
 
  9209 06dc 00000040 		.word	1073741824
@@ -15298,7 +15298,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  9259 07b8 00000000 		.word	0
  9260 07bc 01       		.byte	1
  9261 07bd 00       		.byte	0
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 256
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 256
 
 
  9262 07be 0000     		.space	2
@@ -15358,7 +15358,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  9312 08a0 CDCC4C3D 		.word	1028443341
  9313 08a4 0000803F 		.word	1065353216
  9314 08a8 00002043 		.word	1126170624
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 257
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 257
 
 
  9315 08ac 00004040 		.word	1077936128
@@ -15418,7 +15418,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  9365 0989 000000   		.space	3
  9366 098c 00000000 		.word	_ZL11SCALE_MINOR
  9367 0990 07000000 		.word	7
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 258
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 258
 
 
  9368 0994 00000000 		.word	0
@@ -15478,7 +15478,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  9418 0a50 07000000 		.word	7
  9419 0a54 00000000 		.word	0
  9420 0a58 00000000 		.word	0
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 259
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 259
 
 
  9421 0a5c 01       		.byte	1
@@ -15538,7 +15538,7 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  9469 0000 02       		.byte	2
  9470 0001 00       		.byte	0
  9471              		.text
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 260
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 260
 
 
  9472              	.Letext0:
@@ -15584,74 +15584,74 @@ ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 1
  9512              		.file 53 "src/persist.h"
  9513              		.file 54 "src/usb_glue.h"
  9514              		.file 55 "<built-in>"
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 261
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 261
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 main.cpp
-/tmp/claude-502/cc5EW27a.s:19     .text._ZN5daisy9DaisySeedD2Ev:0000000000000000 $t
-/tmp/claude-502/cc5EW27a.s:26     .text._ZN5daisy9DaisySeedD2Ev:0000000000000000 _ZN5daisy9DaisySeedD2Ev
-/tmp/claude-502/cc5EW27a.s:26     .text._ZN5daisy9DaisySeedD2Ev:0000000000000000 _ZN5daisy9DaisySeedD1Ev
-/tmp/claude-502/cc5EW27a.s:67     .text._Z13quantize_midifPKai:0000000000000000 $t
-/tmp/claude-502/cc5EW27a.s:74     .text._Z13quantize_midifPKai:0000000000000000 _Z13quantize_midifPKai
-/tmp/claude-502/cc5EW27a.s:224    .text._Z13quantize_midifPKai:0000000000000088 $d
-/tmp/claude-502/cc5EW27a.s:229    .text._Z8make_barPclli:0000000000000000 $t
-/tmp/claude-502/cc5EW27a.s:236    .text._Z8make_barPclli:0000000000000000 _Z8make_barPclli
-/tmp/claude-502/cc5EW27a.s:332    .text._Z12make_pos_barPci:0000000000000000 $t
-/tmp/claude-502/cc5EW27a.s:339    .text._Z12make_pos_barPci:0000000000000000 _Z12make_pos_barPci
-/tmp/claude-502/cc5EW27a.s:454    .text._Z12make_pos_barPci:000000000000006c $d
-/tmp/claude-502/cc5EW27a.s:459    .rodata.main.str1.4:0000000000000000 $d
-/tmp/claude-502/cc5EW27a.s:550    .text.startup.main:0000000000000000 $t
-/tmp/claude-502/cc5EW27a.s:557    .text.startup.main:0000000000000000 main
-/tmp/claude-502/cc5EW27a.s:762    .text.startup.main:00000000000000cc $d
-/tmp/claude-502/cc5EW27a.s:773    .text.startup.main:00000000000000ec $t
-/tmp/claude-502/cc5EW27a.s:1465   .text.startup.main:0000000000000388 $d
-/tmp/claude-502/cc5EW27a.s:1496   .text.startup.main:00000000000003f8 $t
-/tmp/claude-502/cc5EW27a.s:2224   .text.startup.main:0000000000000758 $d
-/tmp/claude-502/cc5EW27a.s:2246   .text.startup.main:00000000000007a4 $t
-/tmp/claude-502/cc5EW27a.s:3075   .text.startup.main:0000000000000af8 $d
-/tmp/claude-502/cc5EW27a.s:3112   .text.startup.main:0000000000000b64 $t
-/tmp/claude-502/cc5EW27a.s:3753   .text.startup.main:0000000000000e54 $d
-/tmp/claude-502/cc5EW27a.s:3783   .text.startup.main:0000000000000e9c $t
-/tmp/claude-502/cc5EW27a.s:4466   .text.startup.main:00000000000011b8 $d
-/tmp/claude-502/cc5EW27a.s:4485   .text.startup.main:00000000000011f8 $t
-/tmp/claude-502/cc5EW27a.s:5298   .text.startup.main:0000000000001534 $d
-/tmp/claude-502/cc5EW27a.s:5321   .text.startup.main:0000000000001574 $t
-/tmp/claude-502/cc5EW27a.s:5889   .text.startup.main:0000000000001840 $d
-/tmp/claude-502/cc5EW27a.s:5922   .text.startup.main:00000000000018ac $t
-/tmp/claude-502/cc5EW27a.s:6892   .text.startup.main:0000000000001c4c $d
-/tmp/claude-502/cc5EW27a.s:6921   .text.startup.main:0000000000001ca8 $t
-/tmp/claude-502/cc5EW27a.s:7826   .text.startup.main:0000000000001fbc $d
-/tmp/claude-502/cc5EW27a.s:7858   .text.startup.main:0000000000002030 $t
-/tmp/claude-502/cc5EW27a.s:8541   .text.startup.main:0000000000002288 $d
-/tmp/claude-502/cc5EW27a.s:8564   .text.startup._GLOBAL__sub_I_g_voice_idx:0000000000000000 $t
-/tmp/claude-502/cc5EW27a.s:8570   .text.startup._GLOBAL__sub_I_g_voice_idx:0000000000000000 _GLOBAL__sub_I_g_voice_idx
-/tmp/claude-502/cc5EW27a.s:8730   .text.startup._GLOBAL__sub_I_g_voice_idx:0000000000000028 $d
-/tmp/claude-502/cc5EW27a.s:8738   .init_array:0000000000000000 $d
-/tmp/claude-502/cc5EW27a.s:8802   .bss.led3:0000000000000000 led3
-/tmp/claude-502/cc5EW27a.s:8795   .bss.hw:0000000000000000 hw
-/tmp/claude-502/cc5EW27a.s:8809   .data.g_active_voice:0000000000000000 g_active_voice
-/tmp/claude-502/cc5EW27a.s:8816   .data.g_voice_idx:0000000000000000 g_voice_idx
-/tmp/claude-502/cc5EW27a.s:8745   .rodata.str1.4:0000000000000000 $d
-/tmp/claude-502/cc5EW27a.s:8791   .bss.hw:0000000000000000 $d
-/tmp/claude-502/cc5EW27a.s:8798   .bss.led3:0000000000000000 $d
-/tmp/claude-502/cc5EW27a.s:8805   .data.g_active_voice:0000000000000000 $d
-/tmp/claude-502/cc5EW27a.s:8812   .data.g_voice_idx:0000000000000000 $d
-/tmp/claude-502/cc5EW27a.s:8819   .rodata._ZL11MULTI_ZONES:0000000000000000 $d
-/tmp/claude-502/cc5EW27a.s:8823   .rodata._ZL11MULTI_ZONES:0000000000000000 _ZL11MULTI_ZONES
-/tmp/claude-502/cc5EW27a.s:8829   .rodata._ZL11SCALE_MAJOR:0000000000000000 $d
-/tmp/claude-502/cc5EW27a.s:8832   .rodata._ZL11SCALE_MAJOR:0000000000000000 _ZL11SCALE_MAJOR
-/tmp/claude-502/cc5EW27a.s:8835   .rodata._ZL11SCALE_MINOR:0000000000000000 $d
-/tmp/claude-502/cc5EW27a.s:8838   .rodata._ZL11SCALE_MINOR:0000000000000000 _ZL11SCALE_MINOR
-/tmp/claude-502/cc5EW27a.s:8841   .rodata._ZL15MULTI_INTERVALS:0000000000000000 $d
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 262
+/tmp/claude-502/ccJ8DnOJ.s:19     .text._ZN5daisy9DaisySeedD2Ev:0000000000000000 $t
+/tmp/claude-502/ccJ8DnOJ.s:26     .text._ZN5daisy9DaisySeedD2Ev:0000000000000000 _ZN5daisy9DaisySeedD2Ev
+/tmp/claude-502/ccJ8DnOJ.s:26     .text._ZN5daisy9DaisySeedD2Ev:0000000000000000 _ZN5daisy9DaisySeedD1Ev
+/tmp/claude-502/ccJ8DnOJ.s:67     .text._Z13quantize_midifPKai:0000000000000000 $t
+/tmp/claude-502/ccJ8DnOJ.s:74     .text._Z13quantize_midifPKai:0000000000000000 _Z13quantize_midifPKai
+/tmp/claude-502/ccJ8DnOJ.s:224    .text._Z13quantize_midifPKai:0000000000000088 $d
+/tmp/claude-502/ccJ8DnOJ.s:229    .text._Z8make_barPclli:0000000000000000 $t
+/tmp/claude-502/ccJ8DnOJ.s:236    .text._Z8make_barPclli:0000000000000000 _Z8make_barPclli
+/tmp/claude-502/ccJ8DnOJ.s:332    .text._Z12make_pos_barPci:0000000000000000 $t
+/tmp/claude-502/ccJ8DnOJ.s:339    .text._Z12make_pos_barPci:0000000000000000 _Z12make_pos_barPci
+/tmp/claude-502/ccJ8DnOJ.s:454    .text._Z12make_pos_barPci:000000000000006c $d
+/tmp/claude-502/ccJ8DnOJ.s:459    .rodata.main.str1.4:0000000000000000 $d
+/tmp/claude-502/ccJ8DnOJ.s:550    .text.startup.main:0000000000000000 $t
+/tmp/claude-502/ccJ8DnOJ.s:557    .text.startup.main:0000000000000000 main
+/tmp/claude-502/ccJ8DnOJ.s:762    .text.startup.main:00000000000000cc $d
+/tmp/claude-502/ccJ8DnOJ.s:773    .text.startup.main:00000000000000ec $t
+/tmp/claude-502/ccJ8DnOJ.s:1465   .text.startup.main:0000000000000388 $d
+/tmp/claude-502/ccJ8DnOJ.s:1496   .text.startup.main:00000000000003f8 $t
+/tmp/claude-502/ccJ8DnOJ.s:2224   .text.startup.main:0000000000000758 $d
+/tmp/claude-502/ccJ8DnOJ.s:2246   .text.startup.main:00000000000007a4 $t
+/tmp/claude-502/ccJ8DnOJ.s:3075   .text.startup.main:0000000000000af8 $d
+/tmp/claude-502/ccJ8DnOJ.s:3112   .text.startup.main:0000000000000b64 $t
+/tmp/claude-502/ccJ8DnOJ.s:3753   .text.startup.main:0000000000000e54 $d
+/tmp/claude-502/ccJ8DnOJ.s:3783   .text.startup.main:0000000000000e9c $t
+/tmp/claude-502/ccJ8DnOJ.s:4466   .text.startup.main:00000000000011b8 $d
+/tmp/claude-502/ccJ8DnOJ.s:4485   .text.startup.main:00000000000011f8 $t
+/tmp/claude-502/ccJ8DnOJ.s:5298   .text.startup.main:0000000000001534 $d
+/tmp/claude-502/ccJ8DnOJ.s:5321   .text.startup.main:0000000000001574 $t
+/tmp/claude-502/ccJ8DnOJ.s:5889   .text.startup.main:0000000000001840 $d
+/tmp/claude-502/ccJ8DnOJ.s:5922   .text.startup.main:00000000000018ac $t
+/tmp/claude-502/ccJ8DnOJ.s:6892   .text.startup.main:0000000000001c4c $d
+/tmp/claude-502/ccJ8DnOJ.s:6921   .text.startup.main:0000000000001ca8 $t
+/tmp/claude-502/ccJ8DnOJ.s:7826   .text.startup.main:0000000000001fbc $d
+/tmp/claude-502/ccJ8DnOJ.s:7858   .text.startup.main:0000000000002030 $t
+/tmp/claude-502/ccJ8DnOJ.s:8541   .text.startup.main:0000000000002288 $d
+/tmp/claude-502/ccJ8DnOJ.s:8564   .text.startup._GLOBAL__sub_I_g_voice_idx:0000000000000000 $t
+/tmp/claude-502/ccJ8DnOJ.s:8570   .text.startup._GLOBAL__sub_I_g_voice_idx:0000000000000000 _GLOBAL__sub_I_g_voice_idx
+/tmp/claude-502/ccJ8DnOJ.s:8730   .text.startup._GLOBAL__sub_I_g_voice_idx:0000000000000028 $d
+/tmp/claude-502/ccJ8DnOJ.s:8738   .init_array:0000000000000000 $d
+/tmp/claude-502/ccJ8DnOJ.s:8802   .bss.led3:0000000000000000 led3
+/tmp/claude-502/ccJ8DnOJ.s:8795   .bss.hw:0000000000000000 hw
+/tmp/claude-502/ccJ8DnOJ.s:8809   .data.g_active_voice:0000000000000000 g_active_voice
+/tmp/claude-502/ccJ8DnOJ.s:8816   .data.g_voice_idx:0000000000000000 g_voice_idx
+/tmp/claude-502/ccJ8DnOJ.s:8745   .rodata.str1.4:0000000000000000 $d
+/tmp/claude-502/ccJ8DnOJ.s:8791   .bss.hw:0000000000000000 $d
+/tmp/claude-502/ccJ8DnOJ.s:8798   .bss.led3:0000000000000000 $d
+/tmp/claude-502/ccJ8DnOJ.s:8805   .data.g_active_voice:0000000000000000 $d
+/tmp/claude-502/ccJ8DnOJ.s:8812   .data.g_voice_idx:0000000000000000 $d
+/tmp/claude-502/ccJ8DnOJ.s:8819   .rodata._ZL11MULTI_ZONES:0000000000000000 $d
+/tmp/claude-502/ccJ8DnOJ.s:8823   .rodata._ZL11MULTI_ZONES:0000000000000000 _ZL11MULTI_ZONES
+/tmp/claude-502/ccJ8DnOJ.s:8829   .rodata._ZL11SCALE_MAJOR:0000000000000000 $d
+/tmp/claude-502/ccJ8DnOJ.s:8832   .rodata._ZL11SCALE_MAJOR:0000000000000000 _ZL11SCALE_MAJOR
+/tmp/claude-502/ccJ8DnOJ.s:8835   .rodata._ZL11SCALE_MINOR:0000000000000000 $d
+/tmp/claude-502/ccJ8DnOJ.s:8838   .rodata._ZL11SCALE_MINOR:0000000000000000 _ZL11SCALE_MINOR
+/tmp/claude-502/ccJ8DnOJ.s:8841   .rodata._ZL15MULTI_INTERVALS:0000000000000000 $d
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 262
 
 
-/tmp/claude-502/cc5EW27a.s:8845   .rodata._ZL15MULTI_INTERVALS:0000000000000000 _ZL15MULTI_INTERVALS
-/tmp/claude-502/cc5EW27a.s:8851   .rodata._ZL6VOICES:0000000000000000 $d
-/tmp/claude-502/cc5EW27a.s:8855   .rodata._ZL6VOICES:0000000000000000 _ZL6VOICES
-/tmp/claude-502/cc5EW27a.s:9464   .rodata._ZN5daisy4seedL2A0E:0000000000000000 $d
-/tmp/claude-502/cc5EW27a.s:9468   .rodata._ZN5daisy4seedL2A0E:0000000000000000 _ZN5daisy4seedL2A0E
+/tmp/claude-502/ccJ8DnOJ.s:8845   .rodata._ZL15MULTI_INTERVALS:0000000000000000 _ZL15MULTI_INTERVALS
+/tmp/claude-502/ccJ8DnOJ.s:8851   .rodata._ZL6VOICES:0000000000000000 $d
+/tmp/claude-502/ccJ8DnOJ.s:8855   .rodata._ZL6VOICES:0000000000000000 _ZL6VOICES
+/tmp/claude-502/ccJ8DnOJ.s:9464   .rodata._ZN5daisy4seedL2A0E:0000000000000000 $d
+/tmp/claude-502/ccJ8DnOJ.s:9468   .rodata._ZN5daisy4seedL2A0E:0000000000000000 _ZN5daisy4seedL2A0E
                            .group:0000000000000000 _ZN5daisy9DaisySeedD5Ev
 
 UNDEFINED SYMBOLS
@@ -15704,7 +15704,7 @@ cosf
 g_serial_quiet
 _Z16capture_baselinePt
 powf
-ARM GAS  /tmp/claude-502/cc5EW27a.s 			page 263
+ARM GAS  /tmp/claude-502/ccJ8DnOJ.s 			page 263
 
 
 _ZN5daisy9DaisySeed15AudioSampleRateEv

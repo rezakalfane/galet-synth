@@ -69,10 +69,20 @@ static constexpr float DELAY_DAMP = 0.30f;
 
 // Zero the SDRAM-resident effect buffers (NOLOAD section). Call once after
 // hw.Init() (SDRAM up) and before StartAudio.
+// ── Audio-callback CPU load meter (DWT cycle counter) ─────────────────────────
+// Captures the worst block (the one that also pumps tud_task), so we can see how
+// much deadline headroom the USB servicing leaves. Reported by `astat`.
+volatile float g_cpu_avg = 0.0f;   // % of the block period, smoothed
+volatile float g_cpu_max = 0.0f;   // % peak (resettable)
+
 void engine_init()
 {
     memset(&s_reverb, 0, sizeof(s_reverb));
     memset(&s_delay,  0, sizeof(s_delay));
+    // Enable the DWT cycle counter for the CPU meter.
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+    DWT->CYCCNT = 0;
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
 }
 
 // White-noise generator state (xorshift32) for the per-voice noise oscillator.
@@ -162,6 +172,7 @@ static float drum_render(DrumHit& h, float sr)
 void AudioCallback(AudioHandle::InputBuffer,
                    AudioHandle::OutputBuffer out, size_t size)
 {
+    uint32_t cyc0 = DWT->CYCCNT;     // CPU-load meter: cycles used this block
     // LED3 fixed-frequency PWM (200 Hz, 240 levels). Per-sample duty smoother
     // (~20 ms TC) interpolates between the main loop's 16 Hz updates so the
     // brightness transitions look continuous even at low intensity.
@@ -479,4 +490,11 @@ void AudioCallback(AudioHandle::InputBuffer,
         static uint32_t usb_div = 0;
         if(++usb_div >= 6) { usb_div = 0; usb_task(); }
     }
+
+    // CPU-load meter: cycles used vs cycles available in this block period.
+    uint32_t used  = DWT->CYCCNT - cyc0;
+    float    avail = (float)SystemCoreClock * (float)size / sr;
+    float    pct   = (avail > 1.0f) ? (100.0f * (float)used / avail) : 0.0f;
+    g_cpu_avg += (pct - g_cpu_avg) * 0.01f;
+    if(pct > g_cpu_max) g_cpu_max = pct;
 }
