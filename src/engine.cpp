@@ -1,5 +1,7 @@
 #include "engine.h"
 #include "persist.h"   // g_bank — the live, editable voice bank the engine plays
+#include "dev/sdram.h" // DSY_SDRAM_BSS — place the big effect buffers in SDRAM
+#include <string.h>    // memset — zero the NOLOAD SDRAM buffers at init
 
 using namespace daisy;
 using namespace daisy::seed;
@@ -51,16 +53,25 @@ static float s_phase1c   = 0.0f, s_phase2c = 0.0f; // 5th
 static float s_flt[4]    = {0,0,0,0};
 
 // Shared reverb — one instance, fed by whichever voice has a reverb_send. Its
-// ~66 KB of delay lines live in static storage (zero-initialised = silent). HF
-// damping is fixed for now; tail length / level are the global g_reverb_* params.
-static Reverb s_reverb;
+// ~66 KB of delay lines + the delay's 144 KB buffer live in SDRAM (DSY_SDRAM_BSS):
+// under BOOT_SRAM the program runs from the 480 KB SRAM and data/bss lives in the
+// 128 KB DTCM, so these big audio buffers must go to the 64 MB SDRAM. NOTE:
+// .sdram_bss is NOLOAD (not zeroed by startup), so engine_init() memsets them —
+// the in-struct `= {}` zero-init does NOT apply in this section. HF damping fixed;
+// tail length / level are the global g_reverb_* / g_delay_* params.
+static Reverb DSY_SDRAM_BSS s_reverb;
 static constexpr float REVERB_DAMP = 0.4f;
 
-// Shared delay/echo — one instance, fed by whichever voice has a delay_send. Its
-// 750 ms buffer (~144 KB) is static (zero = silent). Feedback HF damping fixed;
-// time / feedback / level are the global g_delay_* params.
-static Delay s_delay;
+static Delay DSY_SDRAM_BSS s_delay;
 static constexpr float DELAY_DAMP = 0.30f;
+
+// Zero the SDRAM-resident effect buffers (NOLOAD section). Call once after
+// hw.Init() (SDRAM up) and before StartAudio.
+void engine_init()
+{
+    memset(&s_reverb, 0, sizeof(s_reverb));
+    memset(&s_delay,  0, sizeof(s_delay));
+}
 
 // White-noise generator state (xorshift32) for the per-voice noise oscillator.
 static uint32_t s_noise_rng = 0x1234567u;

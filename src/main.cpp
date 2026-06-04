@@ -102,9 +102,21 @@ void make_pos_bar(char* out,int w)
     }
 }
 
+// Our vector table (startup_stm32h750xx.c, placed at the start of SRAM by the
+// BOOT_SRAM linker). Used to fix SCB->VTOR below.
+extern "C" void* g_pfnVectors[];
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 int main()
 {
+    // BOOT_SRAM persistence fix: the Daisy bootloader can leave SCB->VTOR at the
+    // QSPI image base, so libDaisy's GetProgramMemoryRegion() reports QSPI and
+    // refuses QSPI writes (storage.Save() silently no-ops → the selected voice
+    // never persists). Point VTOR at our real SRAM vector table so the program
+    // region reads as SRAM and QSPI flash writes are allowed. (Do this before
+    // persist_init(), which may Save() on a first-boot magic mismatch.)
+    SCB->VTOR = (uint32_t)g_pfnVectors;
+
     hw.Init();
     hw.SetAudioBlockSize(4);
 
@@ -262,6 +274,7 @@ int main()
     g_target_freq   = VOICE.freq_low * 2.0f;
     g_target_cutoff = 100.0f;
     g_amp_target    = 0.0f;
+    engine_init();   // zero the SDRAM-resident reverb/delay buffers before audio
     hw.StartAudio(AudioCallback);
 
     // Boot beep — 200ms tone so you can confirm headphone audio is working

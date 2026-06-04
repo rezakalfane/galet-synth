@@ -59,32 +59,46 @@ the test asserts the envelope, not an idealized curve.
 
 ## Flash
 
-> **The device now runs from QSPI via the Daisy bootloader** (since the USB-audio
-> work — see `docs/usb-audio-plan.md`). The synth lives in QSPI at `0x90040000`;
-> internal flash holds the bootloader. Power-on shows a **~2 s LED breathe**
-> (bootloader) before the synth starts. Build the app with `APP_TYPE=BOOT_QSPI`.
+> **The device runs from SRAM via the Daisy bootloader** (since the USB-audio work —
+> see `docs/usb-audio-plan.md`). The app image is stored in QSPI at `0x90040000` and
+> the bootloader **copies it into SRAM** to run (`APP_TYPE=BOOT_SRAM`, now the
+> Makefile default for `src/main`); internal flash holds the bootloader. Power-on
+> shows a **~2.5 s LED breathe** (bootloader) before the synth starts.
+>
+> **Why SRAM, not QSPI-XIP:** running from SRAM keeps QSPI **writable**, so voice
+> persistence (`storage.Save()`) works — under `BOOT_QSPI` libDaisy refuses QSPI
+> writes (you're executing from it) and the selected voice never persists. The big
+> reverb/delay buffers live in **SDRAM** (`DSY_SDRAM_BSS`, zeroed in `engine_init()`)
+> so data fits the 128 KB DTCM. `main()` also points `SCB->VTOR` at the SRAM vector
+> table so libDaisy's `GetProgramMemoryRegion()` reports SRAM (else it sees the QSPI
+> image base and still blocks writes).
 
-Put Daisy in DFU mode (hold BOOT, tap RESET), then **flash the app to QSPI**:
+**Entering the bootloader's DFU** (this trips people up — there are TWO DFU modes):
+- **Hold BOOT + tap RESET** → the STM32 *ROM* DFU (`@Internal Flash 0x08000000`).
+  Use this **only** to (re)install the bootloader via `program-boot`.
+- **Tap RESET, then tap BOOT during the breathe** → the *Daisy bootloader* DFU
+  (`@Flash 0x90000000…` = QSPI). The LED answers with rapid blinks and holds in DFU
+  indefinitely. **This is the one for flashing the app.** Verify with
+  `dfu-util -l | grep 0x90000000`.
 
+Flash the app (Makefile default `APP_TYPE=BOOT_SRAM`):
 ```bash
-make TARGET=src/main APP_TYPE=BOOT_QSPI program-dfu \
+make TARGET=src/main program-dfu \
   libdaisy_dir=$LIBDAISY SYSTEM_FILES_DIR=$LIBDAISY/core LIBDAISY_DIR=$LIBDAISY
-# equivalently: dfu-util -a 0 -s 0x90040000:leave -D build/src/main.bin
+# writes build/src/main.bin to 0x90040000; you'll see "Transitioning to dfuMANIFEST
+# state" with no error (the `:leave` get_status error only appears in ROM DFU).
 ```
 
-Installing/repairing the **bootloader** itself (only needed once, or to re-install):
+Installing/repairing the **bootloader** itself (once; uses the ROM DFU above):
 ```bash
 make program-boot libdaisy_dir=$LIBDAISY SYSTEM_FILES_DIR=$LIBDAISY/core LIBDAISY_DIR=$LIBDAISY
 # flashes dsy_bootloader_v6_2-intdfu-2000ms.bin to internal flash (0x08000000)
 ```
 
-The `dfu-util: Error during download get_status` at the end of a `:leave` is normal
-— the device booted successfully. (When flashing via the bootloader you'll instead
-see `Transitioning to dfuMANIFEST state` with no error.)
-
-To revert to a plain **internal-flash** build (no bootloader), build with the
-default `APP_TYPE=BOOT_NONE` and `dfu-util -a 0 -s 0x08000000:leave -D build/src/main.bin`
-(this overwrites the bootloader). Tools still build/flash as `BOOT_NONE` to `0x08000000`.
+To revert to a plain **internal-flash** build (no bootloader): build with
+`APP_TYPE=BOOT_NONE` and, in the ROM DFU, `dfu-util -a 0 -s 0x08000000:leave -D
+build/src/main.bin` (overwrites the bootloader). Tools build/flash as `BOOT_NONE`
+to `0x08000000`.
 
 ## Serial monitor
 

@@ -16,6 +16,12 @@
 // also extern'd on the engine seam for the audio path).
 extern Voice g_bank[NUM_VOICES];
 
+// The persisted power-on voice index (what's stored in flash) — distinct from the
+// live g_voice_idx, which the dropdown/gesture can move without persisting. Set at
+// boot and on every persist_save_bank(). The tuner reports it (dump `boot=`) so the
+// GUI can mark the default voice.
+extern int g_boot_voice;
+
 // Build the factory bank, then load any saved overrides from flash and restore
 // the persisted voice index. Call once at boot (replaces the old voice-only
 // PersistentStorage). Needs hw.qspi → call after hw.Init().
