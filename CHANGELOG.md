@@ -4,6 +4,17 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Changed — `feat: Drums kit plays the real drum voices`
+- **`engine.cpp` / `engine.h`**: each polyphonic `DrumHit` now runs the **4-pole
+  Moog ladder with its drum voice's own `resonance`** (the same filter the mono
+  engine uses), replacing the cheap 1-pole lowpass approximation. The oscillator/
+  noise/envelope content + the velocity→cutoff/drive curve already matched the
+  mono path, so a kit hit now sounds like selecting that drum and tapping it —
+  tuning Kick/Snare/Tom/HiHat in the tuner carries through to the Drums kit.
+- **`voice.h`**: `FIX_DRUM` defaulted to `false` — drum taps respond to velocity
+  (loudness + brightness + drive, scaled by each drum's `vel_sens`) instead of
+  every tap being a fixed 100% hit. Set back to `true` for consistent hits.
+
 ### Added — `feat: per-voice LFO (vibrato / auto-wah / tremolo)`
 - **Firmware** (`voice.h`, `engine.cpp`): every `Voice` gains one triangle LFO with
   three independently-routed destinations — `lfo_rate` (Hz, 0 → the classic 6 Hz),

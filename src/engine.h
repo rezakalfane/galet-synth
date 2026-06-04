@@ -57,7 +57,7 @@ struct DrumHit {
     float freq=80.0f, amp_tgt=0.0f, cutoff=200.0f, drive=1.0f;
     float ph1=0,ph2=0,phs=0,pho=0;
     float amp=0.0f, pmult=1.0f, noise_lp=0.0f;
-    float lp_state=0.0f, lp_coeff=1.0f;   // per-drum 1-pole lowpass
+    float flt[4]={0,0,0,0};                // per-drum 4-pole Moog ladder state
     float atk_c=0, rel_c=0, penv_c=0, penv_start=1.0f;
 };
 

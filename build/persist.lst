@@ -1,4 +1,4 @@
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
   28:src/persist.cpp **** 
   29:src/persist.cpp **** static PersistentStorage<StoredBank> *g_store = nullptr;
   30:src/persist.cpp **** 
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 2
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 2
 
 
   31:src/persist.cpp **** // ── scale <-> id ─────────────────────────�
@@ -118,7 +118,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
   70:src/persist.cpp ****     b.voice_idx = g_voice_idx;
   43              		.loc 1 70 17 view .LVU3
   44 0002 1A4B     		ldr	r3, .L12
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 3
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 3
 
 
   45 0004 00F1C805 		add	r5, r0, #200
@@ -178,7 +178,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
   72:src/persist.cpp ****         b.voices[i].v = g_bank[i];
   87              		.loc 1 72 23 is_stmt 0 discriminator 2 view .LVU16
   88 0032 2146     		mov	r1, r4
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 4
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 4
 
 
   89 0034 C022     		movs	r2, #192
@@ -238,7 +238,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  131              	.LBE31:
  132              	.LBE36:
   71:src/persist.cpp ****         b.voices[i].v = g_bank[i];
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 5
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 5
 
 
  133              		.loc 1 71 22 view .LVU31
@@ -298,7 +298,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  178              	.LFE2586:
  180              		.section	.rodata._Z12persist_initv.str1.4,"aMS",%progbits,1
  181              		.align	2
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 6
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 6
 
 
  182              	.LC0:
@@ -358,7 +358,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  221              		.cfi_offset 9, -8
  222              		.cfi_offset 14, -4
  223 0004 944F     		ldr	r7, .L61
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 7
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 7
 
 
  224 0006 ADF5CF5D 		sub	sp, sp, #6624
@@ -418,7 +418,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  268              		.loc 1 63 5 view .LVU56
   63:src/persist.cpp ****         g_bank[i] = VOICES[i];
  269              		.loc 1 63 22 view .LVU57
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 8
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 8
 
 
  270 0034 0ED0     		beq	.L16
@@ -478,7 +478,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  313 0070 03A8     		add	r0, sp, #12
   90:src/persist.cpp ****     g_store = &store;
  314              		.loc 1 90 13 view .LVU70
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 9
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 9
 
 
  315 0072 1E60     		str	r6, [r3]
@@ -538,7 +538,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
   43:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
   44:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     /** Constructor for storage class 
   45:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      *  \param qspi reference to the hardware qspi peripheral.
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 10
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 10
 
 
   46:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****      */
@@ -598,7 +598,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
   73:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h **** 
   74:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         // check to see if the state is already in use.
   75:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         State cur_state = storage_data->storage_state;
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 11
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 11
 
 
  351              		.loc 2 75 15 view .LVU83
@@ -658,7 +658,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  387              	.LBB94:
  388              	.LBB95:
  389              	.LBB96:
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 12
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 12
 
 
   86:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         }
@@ -718,7 +718,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  406              	.LBB102:
  407              	.LBB99:
  121:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         s.user_data     = settings_;
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 13
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 13
 
 
  408              		.loc 2 121 9 view .LVU99
@@ -778,7 +778,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  448 00fa 211D     		adds	r1, r4, #4
  449              	.LVL31:
   26:src/persist.cpp **** };
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 14
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 14
 
 
  450              		.loc 1 26 63 view .LVU111
@@ -838,7 +838,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  488              		.cfi_def_cfa_offset 28
  489              		@ sp needed
  490 0118 BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 15
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 15
 
 
  491              	.LVL35:
@@ -898,7 +898,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  120:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         s.user_data     = settings_;
  538              		.loc 2 120 25 view .LVU129
  539 0150 CDF8F83C 		str	r3, [sp, #3320]
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 16
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 16
 
 
  120:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         s.user_data     = settings_;
@@ -958,7 +958,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  582              	.LVL51:
   26:src/persist.cpp **** };
  583              		.loc 1 26 63 view .LVU142
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 17
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 17
 
 
  584              	.LBE86:
@@ -1018,7 +1018,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
   55:src/persist.cpp ****     strncpy(g_names[i], src ? src : "", VOICE_NAME_MAX - 1);
  630              		.loc 1 55 13 view .LVU153
  631              	.LBB113:
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 18
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 18
 
 
   56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
@@ -1078,7 +1078,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
   82:src/persist.cpp ****         g_bank[i].scale_len = id_scale_len(b.voices[i].scale_id);
  674              		.loc 1 82 25 is_stmt 0 view .LVU166
  675 01dc 5CF82320 		ldr	r2, [ip, r3, lsl #2]
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 19
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 19
 
 
  676 01e0 50F82310 		ldr	r1, [r0, r3, lsl #2]
@@ -1138,7 +1138,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  715              		.loc 1 89 55 discriminator 1 view .LVU181
  716 0208 4046     		mov	r0, r8
  717              	.LBB119:
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 20
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 20
 
 
  718              	.LBB120:
@@ -1198,7 +1198,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  766 0242 06F6F440 		addw	r0, r6, #3316
  767 0246 FFF7FEFF 		bl	memset
  768              	.LVL66:
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 21
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 21
 
 
  769              	.LBE122:
@@ -1258,7 +1258,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  821              	.LFB2590:
  105:src/persist.cpp **** 
  106:src/persist.cpp **** void persist_save_bank() {
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 22
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 22
 
 
  107:src/persist.cpp ****     if(!g_store) return;
@@ -1318,7 +1318,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  865              		.loc 1 115 5 is_stmt 1 view .LVU201
  866              	.LBB135:
  867              	.LBI131:
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 23
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 23
 
 
   55:src/persist.cpp ****     strncpy(g_names[i], src ? src : "", VOICE_NAME_MAX - 1);
@@ -1378,7 +1378,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  907              		.loc 1 56 12 view .LVU216
  908 0048 014D     		ldr	r5, .L72+4
  909              	.LVL78:
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 24
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 24
 
 
   56:src/persist.cpp ****     g_names[i][VOICE_NAME_MAX - 1] = 0;
@@ -1438,7 +1438,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  959              		.cfi_offset 8, -12
  960              		.cfi_offset 9, -8
  961              		.cfi_offset 14, -4
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 25
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 25
 
 
  962              	.LBB149:
@@ -1498,7 +1498,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1006              		.loc 1 58 20 view .LVU235
  1007 0046 A401     		lsls	r4, r4, #6
   57:src/persist.cpp ****     g_bank[i].name = g_names[i];
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 26
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 26
 
 
  1008              		.loc 1 57 36 view .LVU236
@@ -1558,7 +1558,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1056              		.loc 1 124 24 is_stmt 1 view -0
  1057              		.cfi_startproc
  1058              		@ args = 0, pretend = 0, frame = 0
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 27
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 27
 
 
  1059              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -1618,7 +1618,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1107              	.LBB164:
   57:src/persist.cpp ****     g_bank[i].name = g_names[i];
  1108              		.loc 1 57 36 view .LVU252
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 28
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 28
 
 
  1109 001e 0023     		movs	r3, #0
@@ -1678,7 +1678,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1156              		.loc 1 120 5 view .LVU263
  120:src/persist.cpp ****     set_name(idx, VOICES[idx].name);
  1157              		.loc 1 120 17 is_stmt 0 view .LVU264
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 29
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 29
 
 
  1158 0030 C022     		movs	r2, #192
@@ -1738,7 +1738,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1208              		.cfi_startproc
  1209              		@ args = 0, pretend = 0, frame = 3312
  1210              		@ frame_needed = 0, uses_anonymous_args = 0
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 30
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 30
 
 
  117:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****     {
@@ -1798,7 +1798,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1253              	.LBB186:
   26:src/persist.cpp **** };
  1254              		.loc 1 26 50 view .LVU283
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 31
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 31
 
 
   26:src/persist.cpp **** };
@@ -1858,7 +1858,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1297              	.LBE188:
  140:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/PersistentStorage.h ****         {
  1298              		.loc 2 140 9 view .LVU295
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 32
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 32
 
 
  1299 005c 0028     		cmp	r0, #0
@@ -1918,7 +1918,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1347              		.loc 1 107 5 view .LVU305
  1348 0006 5CB1     		cbz	r4, .L104
  108:src/persist.cpp ****     g_store->Save();                 // erases/writes QSPI only if the blob changed
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 33
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 33
 
 
  1349              		.loc 1 108 5 is_stmt 1 view .LVU306
@@ -1978,7 +1978,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1392      00
  1393 0005 000000   		.align	2
  1394              	.LC3:
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 34
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 34
 
 
  1395 0008 4F70656E 		.ascii	"OpenBass\000"
@@ -2038,7 +2038,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1434              		.set	.LANCHOR6,. + 0
  1437              	_ZGVZ12persist_initvE5store:
  1438 0000 00000000 		.space	4
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 35
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 35
 
 
  1439              		.section	.bss._ZL7g_names,"aw",%nobits
@@ -2098,7 +2098,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1496              	_ZL11SCALE_MINOR:
  1497 0000 00020305 		.ascii	"\000\002\003\005\007\010\012"
  1497      07080A
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 36
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 36
 
 
  1498              		.section	.rodata._ZL15SCALE_CHROMATIC,"a"
@@ -2158,7 +2158,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1550 00d4 6666E63E 		.word	1055286886
  1551 00d8 00       		.byte	0
  1552 00d9 000000   		.space	3
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 37
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 37
 
 
  1553 00dc 9FC8BF3F 		.word	1069533343
@@ -2218,7 +2218,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1603 01cc 6666E63F 		.word	1072064102
  1604 01d0 00000000 		.word	0
  1605 01d4 0000803F 		.word	1065353216
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 38
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 38
 
 
  1606 01d8 0000803F 		.word	1065353216
@@ -2278,7 +2278,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1652 0314 6666E63E 		.word	1055286886
  1653 0318 01       		.byte	1
  1654 0319 000000   		.space	3
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 39
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 39
 
 
  1655 031c D7A3803F 		.word	1065395159
@@ -2338,7 +2338,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1706 03d8 03       		.byte	3
  1707 03d9 000000   		.space	3
  1708 03dc 2506813F 		.word	1065420325
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 40
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 40
 
 
  1709 03e0 5C8FC23E 		.word	1052938076
@@ -2398,7 +2398,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1759 04d0 8FC2F53C 		.word	1022739087
  1760 04d4 0000803F 		.word	1065353216
  1761 04d8 0000803F 		.word	1065353216
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 41
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 41
 
 
  1762 04dc 8FC2F53D 		.word	1039516303
@@ -2458,7 +2458,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1812 05a8 0000FA44 		.word	1157234688
  1813 05ac 0000A042 		.word	1117782016
  1814 05b0 00000000 		.space	80
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 42
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 42
 
 
  1814      00000000 
@@ -2518,7 +2518,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1861 06d4 CDCC0C3F 		.word	1057803469
  1862 06d8 01       		.byte	1
  1863 06d9 000000   		.space	3
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 43
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 43
 
 
  1864 06dc 00000040 		.word	1073741824
@@ -2578,7 +2578,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1914 07b8 00000000 		.word	0
  1915 07bc 01       		.byte	1
  1916 07bd 00       		.byte	0
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 44
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 44
 
 
  1917 07be 0000     		.space	2
@@ -2638,7 +2638,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  1967 08a0 CDCC4C3D 		.word	1028443341
  1968 08a4 0000803F 		.word	1065353216
  1969 08a8 00002043 		.word	1126170624
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 45
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 45
 
 
  1970 08ac 00004040 		.word	1077936128
@@ -2698,7 +2698,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  2020 0989 000000   		.space	3
  2021 098c 00000000 		.word	_ZL11SCALE_MINOR
  2022 0990 07000000 		.word	7
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 46
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 46
 
 
  2023 0994 00000000 		.word	0
@@ -2758,7 +2758,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  2073 0a50 07000000 		.word	7
  2074 0a54 00000000 		.word	0
  2075 0a58 00000000 		.word	0
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 47
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 47
 
 
  2076 0a5c 01       		.byte	1
@@ -2818,7 +2818,7 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  2122              		.file 5 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/stdint.h"
  2123              		.file 6 "/Library/DaisyToolchain/0.2.0/arm/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
  2124              		.file 7 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cmath"
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 48
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 48
 
 
  2125              		.file 8 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/std_abs.h"
@@ -2866,55 +2866,55 @@ ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 1
  2167              		.file 50 "src/engine.h"
  2168              		.file 51 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/dma.h"
  2169              		.file 52 "<built-in>"
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 49
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 49
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 persist.cpp
-/tmp/claude-502/ccNlsGUA.s:19     .text._ZL9serializeR10StoredBank:0000000000000000 $t
-/tmp/claude-502/ccNlsGUA.s:25     .text._ZL9serializeR10StoredBank:0000000000000000 _ZL9serializeR10StoredBank
-/tmp/claude-502/ccNlsGUA.s:168    .text._ZL9serializeR10StoredBank:000000000000006c $d
-/tmp/claude-502/ccNlsGUA.s:181    .rodata._Z12persist_initv.str1.4:0000000000000000 $d
-/tmp/claude-502/ccNlsGUA.s:188    .text._Z12persist_initv:0000000000000000 $t
-/tmp/claude-502/ccNlsGUA.s:195    .text._Z12persist_initv:0000000000000000 _Z12persist_initv
-/tmp/claude-502/ccNlsGUA.s:791    .text._Z12persist_initv:0000000000000258 $d
-/tmp/claude-502/ccNlsGUA.s:1457   .bss._ZZ12persist_initvE5store:0000000000000000 _ZZ12persist_initvE5store
-/tmp/claude-502/ccNlsGUA.s:812    .text._Z8bank_setiRK5VoicePKc:0000000000000000 $t
-/tmp/claude-502/ccNlsGUA.s:819    .text._Z8bank_setiRK5VoicePKc:0000000000000000 _Z8bank_setiRK5VoicePKc
-/tmp/claude-502/ccNlsGUA.s:915    .text._Z8bank_setiRK5VoicePKc:000000000000004c $d
-/tmp/claude-502/ccNlsGUA.s:924    .text._Z17bank_revert_voicei:0000000000000000 $t
-/tmp/claude-502/ccNlsGUA.s:931    .text._Z17bank_revert_voicei:0000000000000000 _Z17bank_revert_voicei
-/tmp/claude-502/ccNlsGUA.s:1035   .text._Z17bank_revert_voicei:0000000000000054 $d
-/tmp/claude-502/ccNlsGUA.s:1047   .text._Z15bank_revert_allv:0000000000000000 $t
-/tmp/claude-502/ccNlsGUA.s:1054   .text._Z15bank_revert_allv:0000000000000000 _Z15bank_revert_allv
-/tmp/claude-502/ccNlsGUA.s:1188   .text._Z15bank_revert_allv:0000000000000050 $d
-/tmp/claude-502/ccNlsGUA.s:1197   .text._ZN5daisy17PersistentStorageI10StoredBankE22StoreSettingsIfChangedEv:0000000000000000 $t
-/tmp/claude-502/ccNlsGUA.s:1204   .text._ZN5daisy17PersistentStorageI10StoredBankE22StoreSettingsIfChangedEv:0000000000000000 _ZN5daisy17PersistentStorageI10StoredBankE22StoreSettingsIfChangedEv
-/tmp/claude-502/ccNlsGUA.s:1324   .text._Z17persist_save_bankv:0000000000000000 $t
-/tmp/claude-502/ccNlsGUA.s:1331   .text._Z17persist_save_bankv:0000000000000000 _Z17persist_save_bankv
-/tmp/claude-502/ccNlsGUA.s:1384   .text._Z17persist_save_bankv:0000000000000024 $d
-/tmp/claude-502/ccNlsGUA.s:1464   .bss.g_bank:0000000000000000 g_bank
-/tmp/claude-502/ccNlsGUA.s:1390   .rodata.str1.4:0000000000000000 $d
-/tmp/claude-502/ccNlsGUA.s:1433   .bss._ZGVZ12persist_initvE5store:0000000000000000 $d
-/tmp/claude-502/ccNlsGUA.s:1437   .bss._ZGVZ12persist_initvE5store:0000000000000000 _ZGVZ12persist_initvE5store
-/tmp/claude-502/ccNlsGUA.s:1440   .bss._ZL7g_names:0000000000000000 $d
-/tmp/claude-502/ccNlsGUA.s:1444   .bss._ZL7g_names:0000000000000000 _ZL7g_names
-/tmp/claude-502/ccNlsGUA.s:1447   .bss._ZL7g_store:0000000000000000 $d
-/tmp/claude-502/ccNlsGUA.s:1451   .bss._ZL7g_store:0000000000000000 _ZL7g_store
-/tmp/claude-502/ccNlsGUA.s:1454   .bss._ZZ12persist_initvE5store:0000000000000000 $d
-/tmp/claude-502/ccNlsGUA.s:1460   .bss.g_bank:0000000000000000 $d
-/tmp/claude-502/ccNlsGUA.s:1467   .rodata.CSWTCH.16:0000000000000000 $d
-/tmp/claude-502/ccNlsGUA.s:1471   .rodata.CSWTCH.16:0000000000000000 CSWTCH.16
-/tmp/claude-502/ccNlsGUA.s:1503   .rodata._ZL15SCALE_CHROMATIC:0000000000000000 _ZL15SCALE_CHROMATIC
-/tmp/claude-502/ccNlsGUA.s:1489   .rodata._ZL11SCALE_MAJOR:0000000000000000 _ZL11SCALE_MAJOR
-/tmp/claude-502/ccNlsGUA.s:1496   .rodata._ZL11SCALE_MINOR:0000000000000000 _ZL11SCALE_MINOR
-/tmp/claude-502/ccNlsGUA.s:1476   .rodata.CSWTCH.18:0000000000000000 $d
-/tmp/claude-502/ccNlsGUA.s:1480   .rodata.CSWTCH.18:0000000000000000 CSWTCH.18
-/tmp/claude-502/ccNlsGUA.s:1485   .rodata._ZL11SCALE_MAJOR:0000000000000000 $d
-/tmp/claude-502/ccNlsGUA.s:1492   .rodata._ZL11SCALE_MINOR:0000000000000000 $d
-/tmp/claude-502/ccNlsGUA.s:1499   .rodata._ZL15SCALE_CHROMATIC:0000000000000000 $d
-/tmp/claude-502/ccNlsGUA.s:1506   .rodata._ZL6VOICES:0000000000000000 $d
-/tmp/claude-502/ccNlsGUA.s:1510   .rodata._ZL6VOICES:0000000000000000 _ZL6VOICES
+/tmp/claude-502/ccA3hCp4.s:19     .text._ZL9serializeR10StoredBank:0000000000000000 $t
+/tmp/claude-502/ccA3hCp4.s:25     .text._ZL9serializeR10StoredBank:0000000000000000 _ZL9serializeR10StoredBank
+/tmp/claude-502/ccA3hCp4.s:168    .text._ZL9serializeR10StoredBank:000000000000006c $d
+/tmp/claude-502/ccA3hCp4.s:181    .rodata._Z12persist_initv.str1.4:0000000000000000 $d
+/tmp/claude-502/ccA3hCp4.s:188    .text._Z12persist_initv:0000000000000000 $t
+/tmp/claude-502/ccA3hCp4.s:195    .text._Z12persist_initv:0000000000000000 _Z12persist_initv
+/tmp/claude-502/ccA3hCp4.s:791    .text._Z12persist_initv:0000000000000258 $d
+/tmp/claude-502/ccA3hCp4.s:1457   .bss._ZZ12persist_initvE5store:0000000000000000 _ZZ12persist_initvE5store
+/tmp/claude-502/ccA3hCp4.s:812    .text._Z8bank_setiRK5VoicePKc:0000000000000000 $t
+/tmp/claude-502/ccA3hCp4.s:819    .text._Z8bank_setiRK5VoicePKc:0000000000000000 _Z8bank_setiRK5VoicePKc
+/tmp/claude-502/ccA3hCp4.s:915    .text._Z8bank_setiRK5VoicePKc:000000000000004c $d
+/tmp/claude-502/ccA3hCp4.s:924    .text._Z17bank_revert_voicei:0000000000000000 $t
+/tmp/claude-502/ccA3hCp4.s:931    .text._Z17bank_revert_voicei:0000000000000000 _Z17bank_revert_voicei
+/tmp/claude-502/ccA3hCp4.s:1035   .text._Z17bank_revert_voicei:0000000000000054 $d
+/tmp/claude-502/ccA3hCp4.s:1047   .text._Z15bank_revert_allv:0000000000000000 $t
+/tmp/claude-502/ccA3hCp4.s:1054   .text._Z15bank_revert_allv:0000000000000000 _Z15bank_revert_allv
+/tmp/claude-502/ccA3hCp4.s:1188   .text._Z15bank_revert_allv:0000000000000050 $d
+/tmp/claude-502/ccA3hCp4.s:1197   .text._ZN5daisy17PersistentStorageI10StoredBankE22StoreSettingsIfChangedEv:0000000000000000 $t
+/tmp/claude-502/ccA3hCp4.s:1204   .text._ZN5daisy17PersistentStorageI10StoredBankE22StoreSettingsIfChangedEv:0000000000000000 _ZN5daisy17PersistentStorageI10StoredBankE22StoreSettingsIfChangedEv
+/tmp/claude-502/ccA3hCp4.s:1324   .text._Z17persist_save_bankv:0000000000000000 $t
+/tmp/claude-502/ccA3hCp4.s:1331   .text._Z17persist_save_bankv:0000000000000000 _Z17persist_save_bankv
+/tmp/claude-502/ccA3hCp4.s:1384   .text._Z17persist_save_bankv:0000000000000024 $d
+/tmp/claude-502/ccA3hCp4.s:1464   .bss.g_bank:0000000000000000 g_bank
+/tmp/claude-502/ccA3hCp4.s:1390   .rodata.str1.4:0000000000000000 $d
+/tmp/claude-502/ccA3hCp4.s:1433   .bss._ZGVZ12persist_initvE5store:0000000000000000 $d
+/tmp/claude-502/ccA3hCp4.s:1437   .bss._ZGVZ12persist_initvE5store:0000000000000000 _ZGVZ12persist_initvE5store
+/tmp/claude-502/ccA3hCp4.s:1440   .bss._ZL7g_names:0000000000000000 $d
+/tmp/claude-502/ccA3hCp4.s:1444   .bss._ZL7g_names:0000000000000000 _ZL7g_names
+/tmp/claude-502/ccA3hCp4.s:1447   .bss._ZL7g_store:0000000000000000 $d
+/tmp/claude-502/ccA3hCp4.s:1451   .bss._ZL7g_store:0000000000000000 _ZL7g_store
+/tmp/claude-502/ccA3hCp4.s:1454   .bss._ZZ12persist_initvE5store:0000000000000000 $d
+/tmp/claude-502/ccA3hCp4.s:1460   .bss.g_bank:0000000000000000 $d
+/tmp/claude-502/ccA3hCp4.s:1467   .rodata.CSWTCH.16:0000000000000000 $d
+/tmp/claude-502/ccA3hCp4.s:1471   .rodata.CSWTCH.16:0000000000000000 CSWTCH.16
+/tmp/claude-502/ccA3hCp4.s:1503   .rodata._ZL15SCALE_CHROMATIC:0000000000000000 _ZL15SCALE_CHROMATIC
+/tmp/claude-502/ccA3hCp4.s:1489   .rodata._ZL11SCALE_MAJOR:0000000000000000 _ZL11SCALE_MAJOR
+/tmp/claude-502/ccA3hCp4.s:1496   .rodata._ZL11SCALE_MINOR:0000000000000000 _ZL11SCALE_MINOR
+/tmp/claude-502/ccA3hCp4.s:1476   .rodata.CSWTCH.18:0000000000000000 $d
+/tmp/claude-502/ccA3hCp4.s:1480   .rodata.CSWTCH.18:0000000000000000 CSWTCH.18
+/tmp/claude-502/ccA3hCp4.s:1485   .rodata._ZL11SCALE_MAJOR:0000000000000000 $d
+/tmp/claude-502/ccA3hCp4.s:1492   .rodata._ZL11SCALE_MINOR:0000000000000000 $d
+/tmp/claude-502/ccA3hCp4.s:1499   .rodata._ZL15SCALE_CHROMATIC:0000000000000000 $d
+/tmp/claude-502/ccA3hCp4.s:1506   .rodata._ZL6VOICES:0000000000000000 $d
+/tmp/claude-502/ccA3hCp4.s:1510   .rodata._ZL6VOICES:0000000000000000 _ZL6VOICES
 
 UNDEFINED SYMBOLS
 memcpy
@@ -2926,7 +2926,7 @@ memcmp
 _ZN5daisy10QSPIHandle5EraseEmm
 _ZN5daisy10QSPIHandle5WriteEmmPh
 dsy_dma_invalidate_cache_for_buffer
-ARM GAS  /tmp/claude-502/ccNlsGUA.s 			page 50
+ARM GAS  /tmp/claude-502/ccA3hCp4.s 			page 50
 
 
 __cxa_guard_acquire
