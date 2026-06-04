@@ -76,11 +76,17 @@ class Link:
         return lines
 
     def dump(self, timeout=2.0):
-        """Send `dump` and parse the field=value reply into a dict."""
+        """Send `dump` and parse the field=value reply into a dict.
+
+        The capture window can also pick up late async replies from earlier
+        commands (e.g. `ok select=…`, the `tune` ack). The firmware emits a dump
+        as one contiguous block led by `dump name=…`, so reset on that marker:
+        the returned dict is exactly one dump's fields, never a mix of an `idx`
+        from one moment and a `name` from another."""
         kv = {}
         for ln in self._capture("dump", timeout):
             if ln.startswith("dump name="):
-                kv["name"] = ln.split("=", 1)[1]
+                kv = {"name": ln.split("=", 1)[1]}   # fresh block — drop any prior noise
             elif "=" in ln and ln != "end":
                 k, v = ln.split("=", 1)
                 kv[k.strip()] = v.strip()

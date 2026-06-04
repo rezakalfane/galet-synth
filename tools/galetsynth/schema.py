@@ -76,6 +76,10 @@ SPEC = [
     ("chord_spread",    "i",       0, 3,      True),
     ("reverb_send",     "f",     0.0, 1.0,    True),
     ("delay_send",      "f",     0.0, 1.0,    True),
+    ("lfo_rate",        "f",     0.0, 12.0,   True),
+    ("lfo_pitch",       "f",     0.0, 1.0,    True),
+    ("lfo_filter",      "f",     0.0, 1.0,    True),
+    ("lfo_amp",         "f",     0.0, 1.0,    True),
 ]
 
 # Global (non-Voice) effect params: (name, lo, hi). Set live, shared by all voices.
@@ -107,6 +111,7 @@ GROUPS = [
     ("Dynamics",         ["vel_sens", "retrig_ms", "no_cycle"]),
     ("Quantize / Chords", ["quantize", "scale", "chords", "chord_level", "chord_spread"]),
     ("Sends",            ["reverb_send", "delay_send"]),
+    ("LFO",              ["lfo_rate", "lfo_pitch", "lfo_filter", "lfo_amp"]),
     ("Global FX",        ["reverb_decay", "reverb_level", "delay_time_ms",
                           "delay_feedback", "delay_level"]),
 ]
@@ -134,6 +139,8 @@ GROUP_HELP = {
     "Quantize / Chords": "Pitch quantize + scale, and diatonic-triad chord mode "
                          "(chord level + voicing width).",
     "Sends": "Per-voice aux sends into the shared reverb and delay.",
+    "LFO": "One triangle LFO per voice. Set a destination's depth above 0 to route "
+           "it: pitch = vibrato, filter = auto-wah, amp = tremolo (combinable).",
     "Global FX": "Shared reverb + delay settings (tail, level, time, feedback). Global — "
                  "they shape every voice's sends.",
 }
@@ -204,6 +211,14 @@ HELP = {
                       "~0.7 a wash.",
     "delay_send":     "Per-voice send into the shared delay/echo (0..1). Repeats darken as "
                       "they decay.",
+    "lfo_rate":       "LFO speed in Hz, shared by all three destinations. 0 = the default "
+                      "6 Hz. ~5 for vibrato/tremolo, slower for a sweeping wah.",
+    "lfo_pitch":      "Vibrato: LFO → pitch depth 0..1 (adds to the finger-pressure "
+                      "vibrato). ~0.2 a gentle wobble; 0 = off.",
+    "lfo_filter":     "Auto-wah: LFO → Moog cutoff depth 0..1 (sweeps ±~90% around the "
+                      "current cutoff at full depth). 0 = off.",
+    "lfo_amp":        "Tremolo: LFO → amplitude depth 0..1 (1 = dips to silence on each "
+                      "trough; ~0.3 a subtle throb). 0 = off.",
     "reverb_decay":   "Global reverb tail length (0..0.97). Higher = longer.",
     "reverb_level":   "Global reverb output (wet) level.",
     "delay_time_ms":  "Global delay (echo) time in ms.",

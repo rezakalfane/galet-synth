@@ -12,7 +12,7 @@ static char g_names[NUM_VOICES][VOICE_NAME_MAX];
 // ── Flash format ──────────────────────────────────────────────────────────────
 // Bump BANK_MAGIC whenever the Voice struct layout changes — a mismatch makes the
 // stored blob be ignored (falls back to factory), so old data can't be misread.
-static constexpr uint32_t BANK_MAGIC = 0x47564231;  // 'GVB1'
+static constexpr uint32_t BANK_MAGIC = 0x47564232;  // 'GVB2' (bumped: Voice gained the lfo_* fields)
 
 struct StoredVoice {
     Voice   v;                       // raw; v.name / v.scale are fixed up on load
