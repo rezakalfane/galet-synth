@@ -89,7 +89,11 @@ untouched until the whole project works.** (Design: `docs/usb-audio-plan.md`.)
   so switched to **`BOOT_SRAM`** (QSPI stays writable), moved the reverb/delay
   buffers to SDRAM, fixed `SCB->VTOR`, added the `bootvoice` command + VoiceLab
   **"Set as default"** (yellow ★ on the default voice).
-- ⏭️ Next: TinyUSB CDC swap → UAC2 capture → composite → host testing.
+- **Phase 1 — TinyUSB CDC** (`feature/usbaudio-tinyusb-cdc`): replaced libDaisy's
+  USB logger with a vendored TinyUSB (`lib/tinyusb`); VoiceLab serial now runs over
+  TinyUSB CDC (`usb_log`/`usb_cdc_read_avail`). Verified the full protocol on
+  hardware. The base for the composite UAC device.
+- ⏭️ Next: UAC2 capture → composite CDC + UAC → host testing (DAW / iOS / TP-7).
 
 ---
 
