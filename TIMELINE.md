@@ -99,8 +99,13 @@ untouched until the whole project works.** (Design: `docs/usb-audio-plan.md`.)
   on one cable. Async ring + 47/48/49 clock tracking; the key fix was pumping
   `tud_task()` from the audio callback (~2 kHz) so the iso IN endpoint isn't
   starved by the slow control loop. Verified clean capture on macOS. 🎛️
-- ⏭️ Next: hardening (latency/24-bit), then host testing — iOS / Android / TP-7 /
-  TX-6 — then merge `usb-audio` → `main`.
+- **Phase 3 — hardening** (`feature/usbaudio-harden`): a DWT CPU-load meter on the
+  audio callback (**17% avg / 30% max** — confirms pumping USB from the audio
+  callback is safe), host **mute**, and **lower latency** (cushion 256→128 ≈
+  2.7 ms; ring holds steady, zero under/overruns). Confirmed working on macOS **and
+  iOS**.
+- ⏭️ Next: host testing — Android / TP-7 / TX-6 (UAC1 fallback if needed) — then
+  merge `usb-audio` → `main`.
 
 ---
 
