@@ -288,9 +288,11 @@ static void handle_command(char *line) {
         // USB-audio capture diagnostics: ring fill (frames), starved/overrun counts,
         // pre-load calls, streaming flag.
         extern volatile uint32_t g_aud_over, g_aud_under, g_aud_calls, g_aud_fill;
-        usb_log("astat streaming=%d fill=%lu calls=%lu under=%lu over=%lu",
+        extern volatile float    g_cpu_avg, g_cpu_max;
+        usb_log("astat streaming=%d fill=%lu calls=%lu under=%lu over=%lu cpu=%d%% max=%d%%",
                 usb_audio_is_streaming(), (unsigned long)g_aud_fill,
-                (unsigned long)g_aud_calls, (unsigned long)g_aud_under, (unsigned long)g_aud_over);
+                (unsigned long)g_aud_calls, (unsigned long)g_aud_under, (unsigned long)g_aud_over,
+                (int)(g_cpu_avg + 0.5f), (int)(g_cpu_max + 0.5f));
         return;
     }
     if(!strcmp(cmd, "bootvoice")) {

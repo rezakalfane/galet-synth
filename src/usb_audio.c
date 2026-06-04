@@ -57,8 +57,8 @@ bool tud_audio_set_itf_close_EP_cb(uint8_t rhport, tusb_control_request_t const 
 // Async IN clock tracking: hold the ring near TARGET frames of latency by sending
 // 48±1 frames/packet. The packet-size variation conveys the device's true rate to
 // the host, which locks its resampler to it — no feedback endpoint needed.
-#define AUD_TARGET_FRAMES 256       // ~5.3 ms latency cushion
-#define AUD_HYST          24
+#define AUD_TARGET_FRAMES 128       // ~2.7 ms latency cushion (snappier monitoring)
+#define AUD_HYST          24        // hold fill in [104,152]; clock is well-matched
 
 bool tud_audio_tx_done_pre_load_cb(uint8_t rhport, uint8_t itf, uint8_t ep_in, uint8_t cur_alt_setting)
 {
@@ -85,6 +85,7 @@ bool tud_audio_tx_done_pre_load_cb(uint8_t rhport, uint8_t itf, uint8_t ep_in, u
     for(; i < real * N_CH; i++) tmp[i] = s_ring[(s_rd + i) & (RING_SZ - 1)];
     s_rd += real * N_CH;
     for(; i < send * N_CH; i++) tmp[i] = 0;                     // pad with silence if short
+    if(s_mute[0]) for(i = 0; i < send * N_CH; i++) tmp[i] = 0;  // host mute → silence
     tud_audio_write((uint8_t *)tmp, (uint16_t)(send * N_CH * 2));
     return true;
 }
