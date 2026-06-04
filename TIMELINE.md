@@ -93,7 +93,14 @@ untouched until the whole project works.** (Design: `docs/usb-audio-plan.md`.)
   USB logger with a vendored TinyUSB (`lib/tinyusb`); VoiceLab serial now runs over
   TinyUSB CDC (`usb_log`/`usb_cdc_read_avail`). Verified the full protocol on
   hardware. The base for the composite UAC device.
-- ⏭️ Next: UAC2 capture → composite CDC + UAC → host testing (DAW / iOS / TP-7).
+- **Phase 2 — UAC2 stereo capture** (`feature/usbaudio-uac`): composite **CDC +
+  UAC2** device — the Daisy is now a class-compliant **2-ch / 48 kHz** USB
+  soundcard ("GaletSynth Audio"), recordable live in a DAW while VoiceLab tunes,
+  on one cable. Async ring + 47/48/49 clock tracking; the key fix was pumping
+  `tud_task()` from the audio callback (~2 kHz) so the iso IN endpoint isn't
+  starved by the slow control loop. Verified clean capture on macOS. 🎛️
+- ⏭️ Next: hardening (latency/24-bit), then host testing — iOS / Android / TP-7 /
+  TX-6 — then merge `usb-audio` → `main`.
 
 ---
 
