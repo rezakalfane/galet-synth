@@ -82,14 +82,21 @@ class Link:
         commands (e.g. `ok select=…`, the `tune` ack). The firmware emits a dump
         as one contiguous block led by `dump name=…`, so reset on that marker:
         the returned dict is exactly one dump's fields, never a mix of an `idx`
-        from one moment and a `name` from another."""
+        from one moment and a `name` from another.
+
+        A USB framing glitch can also merge two replies into one captured line
+        (e.g. `osc1_ratio=1.0000\\r$$oct_wave=sine`); split on any embedded CR/LF
+        so each `key=value` parses cleanly instead of feeding a `float()` crash
+        downstream."""
         kv = {}
         for ln in self._capture("dump", timeout):
-            if ln.startswith("dump name="):
-                kv = {"name": ln.split("=", 1)[1]}   # fresh block — drop any prior noise
-            elif "=" in ln and ln != "end":
-                k, v = ln.split("=", 1)
-                kv[k.strip()] = v.strip()
+            for seg in ln.replace("\r", "\n").split("\n"):
+                seg = seg.strip()
+                if seg.startswith("dump name="):
+                    kv = {"name": seg.split("=", 1)[1]}   # fresh block — drop prior noise
+                elif "=" in seg and seg != "end":
+                    k, v = seg.split("=", 1)
+                    kv[k.strip()] = v.strip()
         return kv
 
     def names(self, timeout=2.0):
