@@ -59,15 +59,32 @@ the test asserts the envelope, not an idealized curve.
 
 ## Flash
 
-Put Daisy in DFU mode (hold BOOT, tap RESET), then:
+> **The device now runs from QSPI via the Daisy bootloader** (since the USB-audio
+> work — see `docs/usb-audio-plan.md`). The synth lives in QSPI at `0x90040000`;
+> internal flash holds the bootloader. Power-on shows a **~2 s LED breathe**
+> (bootloader) before the synth starts. Build the app with `APP_TYPE=BOOT_QSPI`.
+
+Put Daisy in DFU mode (hold BOOT, tap RESET), then **flash the app to QSPI**:
 
 ```bash
-dfu-util -a 0 -s 0x08000000:leave -D build/src/main.bin
-# or for a tool:
-dfu-util -a 0 -s 0x08000000:leave -D build/tools/<name>.bin
+make TARGET=src/main APP_TYPE=BOOT_QSPI program-dfu \
+  libdaisy_dir=$LIBDAISY SYSTEM_FILES_DIR=$LIBDAISY/core LIBDAISY_DIR=$LIBDAISY
+# equivalently: dfu-util -a 0 -s 0x90040000:leave -D build/src/main.bin
 ```
 
-The `dfu-util: Error during download get_status` at the end is normal — the device booted successfully.
+Installing/repairing the **bootloader** itself (only needed once, or to re-install):
+```bash
+make program-boot libdaisy_dir=$LIBDAISY SYSTEM_FILES_DIR=$LIBDAISY/core LIBDAISY_DIR=$LIBDAISY
+# flashes dsy_bootloader_v6_2-intdfu-2000ms.bin to internal flash (0x08000000)
+```
+
+The `dfu-util: Error during download get_status` at the end of a `:leave` is normal
+— the device booted successfully. (When flashing via the bootloader you'll instead
+see `Transitioning to dfuMANIFEST state` with no error.)
+
+To revert to a plain **internal-flash** build (no bootloader), build with the
+default `APP_TYPE=BOOT_NONE` and `dfu-util -a 0 -s 0x08000000:leave -D build/src/main.bin`
+(this overwrites the bootloader). Tools still build/flash as `BOOT_NONE` to `0x08000000`.
 
 ## Serial monitor
 
