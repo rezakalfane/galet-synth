@@ -104,14 +104,18 @@ untouched until the whole project works.** (Design: `docs/usb-audio-plan.md`.)
   callback is safe), host **mute**, and **lower latency** (cushion 256→128 ≈
   2.7 ms; ring holds steady, zero under/overruns). Confirmed working on macOS **and
   iOS**.
-- ⏭️ Next: host testing — Android / TP-7 / TX-6 (UAC1 fallback if needed) — then
-  merge `usb-audio` → `main`.
+- ✅ **Merged to `main` and released as `v2.0.0`** (`v1.0.0` is the pre-USB-audio
+  instrument). ⏭️ Optional next: host testing — Android / TP-7 / TX-6 (add a UAC1
+  fallback if a host is fussy).
 
 ---
 
+### 🏷️ Releases
+- **v1.0.0** — the complete instrument + VoiceLab (runs from internal flash).
+- **v2.0.0** — composite USB soundcard (CDC + UAC2); runs from SRAM via the Daisy
+  bootloader (breaking flash-procedure change).
+
 ### 🌿 Unmerged side branches
-- `usb-audio` — the in-progress USB-audio integration branch (Phase 7 above); merges
-  to `main` once the soundcard works end to end.
 - `update/sensor-jlc` & `update/sensor-jlc-optimized` — sensor / volume / serial-log
   experiments, never merged to `main`.
 
@@ -120,4 +124,4 @@ untouched until the whole project works.** (Design: `docs/usb-audio-plan.md`.)
 |---|---|
 | **Span** | Apr 4 → Jun 4 2026 (~2 months, bulk of the work in 5 days) |
 | **Workflow** | `feature/*` → `--no-ff` merge → delete branch → CHANGELOG. Bigger efforts (USB audio) use an **integration branch** (`usb-audio`) with per-phase sub-branches, kept off `main` until done |
-| **Arc** | one bass voice → 15-voice bank + poly drum kit → live USB tuner → shipped macOS app → USB-audio soundcard (in progress) |
+| **Arc** | one bass voice → 15-voice bank + poly drum kit → live USB tuner → shipped macOS app → USB-audio soundcard (v2.0.0) |

@@ -4,6 +4,36 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-06-04
+
+**GaletSynth is now a USB soundcard.** A composite USB device: a class-compliant
+**2-ch / 48 kHz / 16-bit audio input** ("GaletSynth Audio") **+** the VoiceLab CDC
+serial link, on one cable — record the synth live in a DAW while tuning. Verified
+on macOS and iOS.
+
+### ⚠️ Breaking
+- The firmware now runs from **SRAM via the Daisy bootloader** (`APP_TYPE=BOOT_SRAM`),
+  not internal flash. The device **requires the bootloader installed** (`make
+  program-boot` once), and the flash procedure changed — enter the *Daisy bootloader*
+  DFU (tap RESET, then BOOT during the LED breathe), then `make program-dfu`. See
+  the rewritten Flash section in `CLAUDE.md`.
+
+### Added
+- **TinyUSB** vendored (`lib/tinyusb`, 0.17 subset) replacing libDaisy's USB stack;
+  composite **CDC + UAC2** descriptors. USB serial now goes through `usb_log()`.
+- **UAC2 stereo capture**: the audio callback taps its output into a lock-free ring
+  drained by the isochronous IN endpoint with async 47/48/49 clock tracking; host
+  mute supported. `astat` serial command reports ring/CPU diagnostics.
+- VoiceLab **"Set as default"** boot-voice button (firmware `bootvoice`).
+
+### Changed / Fixed
+- Run from SRAM keeps QSPI **writable**, so voice persistence still works (it would
+  break under QSPI-execute); big reverb/delay buffers moved to SDRAM; `SCB->VTOR`
+  pointed at the SRAM vector table.
+- Pump `tud_task()` from the **audio callback** (~2 kHz), not the ~150 Hz control
+  loop — the iso audio endpoint would otherwise be starved (decimated capture).
+- Hardening: DWT CPU-load meter (17 % avg / 30 % max), ~2.7 ms capture latency.
+
 ## [1.0.0] - 2026-06-04
 
 First complete release — the full instrument. A glass touch bass/lead synth for
