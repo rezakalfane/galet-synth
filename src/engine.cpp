@@ -101,9 +101,8 @@ void drum_trigger(DrumHit& h, int vidx, float freq, float amp_tgt,
     h.freq=freq; h.amp_tgt=amp_tgt; h.cutoff=cutoff; h.drive=drive;
     h.ph1=h.ph2=h.phs=h.pho=0.0f;
     h.amp=0.0f; h.noise_lp=0.0f;
-    // 1-pole lowpass coefficient from the (latched) cutoff: a = 1 - e^(-2π·fc/sr).
-    h.lp_state = 0.0f;
-    h.lp_coeff = clampf(1.0f - expf(-6.2831853f * cutoff / sr), 0.0f, 1.0f);
+    // Fresh ladder state per hit (the cutoff/res are read live in drum_render).
+    h.flt[0]=h.flt[1]=h.flt[2]=h.flt[3]=0.0f;
     h.atk_c      = ms_to_coeff(V.attack_ms,    sr);
     h.rel_c      = ms_to_coeff(V.release_ms,   sr);
     h.penv_c     = ms_to_coeff(V.pitch_env_ms, sr);
@@ -136,14 +135,15 @@ static float drum_render(DrumHit& h, float sr)
         mix += (white + (bright*2.0f - white)*V.noise_hp) * V.noise_level;
     }
     mix = fast_tanh(mix * h.drive);
-    // Per-drum 1-pole lowpass (cheap — one multiply-add — instead of the 4-pole
-    // Moog) at the drum's own cutoff: keeps Kick/Tom dark, Snare/Hat bright.
-    h.lp_state += h.lp_coeff * (mix - h.lp_state);
+    // Per-drum 4-pole Moog ladder at the latched cutoff with the drum voice's own
+    // resonance — the same filter the mono engine runs, so a kit hit sounds like
+    // selecting that drum and tapping it (not a dulled 1-pole approximation).
+    float filtered = moog_st(mix, clampf(h.cutoff, 20.0f, 20000.0f), V.resonance, sr, h.flt);
     h.ph1 += f*V.osc1_ratio/sr; if(h.ph1>=1.0f)h.ph1-=1.0f;
     h.ph2 += f*V.osc2_ratio/sr; if(h.ph2>=1.0f)h.ph2-=1.0f;
     h.phs += f*V.sub_ratio /sr; if(h.phs>=1.0f)h.phs-=1.0f;
     h.pho += f*V.oct_ratio /sr; if(h.pho>=1.0f)h.pho-=1.0f;
-    return fast_tanh(h.lp_state*1.3f) * h.amp;
+    return fast_tanh(filtered*1.3f) * h.amp;
 }
 
 void AudioCallback(AudioHandle::InputBuffer,

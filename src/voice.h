@@ -1035,7 +1035,7 @@ static constexpr int MULTI_NINTERVALS =
 // Drums: when true, every tap is treated as full (100%) pressure — consistent
 // hits regardless of how hard the glass reads. Set false for velocity dynamics
 // (uses the drum's vel_sens). Drums only.
-static constexpr bool FIX_DRUM = true;
+static constexpr bool FIX_DRUM = false;
 
 // ── Voice cycling ─────────────────────────────────────────────────────────────
 // Voices with no_cycle = true are skipped by the FSR-hold gesture. These helpers
