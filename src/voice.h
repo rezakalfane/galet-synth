@@ -124,6 +124,20 @@ struct Voice {
   // delay's time / feedback / level are global (g_delay_* in the engine). Same
   // idea as reverb_send. Appended last; every voice but the Organ zero-inits to 0.
   float delay_send;
+
+  // ── LFO (per-voice modulation) ────────────────────────────────────────────
+  // One triangle LFO per voice, routed to any of three destinations by its own
+  // depth (0 = that destination off) — so a voice can do vibrato, auto-wah,
+  // tremolo, or any combination. All default 0, and lfo_rate 0 falls back to the
+  // classic 6 Hz, so existing presets are unchanged: they keep only the finger-
+  // pressure vibrato on pitch. Appended last to keep positional initializers stable.
+  float lfo_rate;    // LFO speed in Hz (0 → 6 Hz). Shared by all destinations below.
+  float lfo_pitch;   // pitch-mod depth 0..1 → always-on VIBRATO (sums with the
+                     // finger-pressure vibrato). ~0.2 = a gentle wobble.
+  float lfo_filter;  // cutoff-mod depth 0..1 → AUTO-WAH (the Moog cutoff sweeps up
+                     // to ±~90% around its current value at full depth).
+  float lfo_amp;     // amp-mod depth 0..1 → TREMOLO (1 = level dips to silence on
+                     // each trough; ~0.3 = a subtle throb).
 };
 
 // ── Diatonic triad ──────────────────────────────────────────────────────────

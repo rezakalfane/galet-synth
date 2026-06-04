@@ -4,6 +4,36 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added — `feat: per-voice LFO (vibrato / auto-wah / tremolo)`
+- **Firmware** (`voice.h`, `engine.cpp`): every `Voice` gains one triangle LFO with
+  three independently-routed destinations — `lfo_rate` (Hz, 0 → the classic 6 Hz),
+  `lfo_pitch` (→ vibrato, sums with the finger-pressure vibrato), `lfo_filter`
+  (→ auto-wah, sweeps the Moog cutoff ±~90% at full depth), `lfo_amp` (→ tremolo).
+  All default 0, so existing presets are unchanged. Fields appended last to keep
+  the positional initializers stable.
+- **Tuner**: the LFO fields are live-editable (`serialtune.cpp` field table,
+  `schema.py` `SPEC`/`GROUPS`/help, GUI "LFO" group with a `∼` glyph).
+
+### Fixed
+- **Persistence corruption on the `Voice` layout change** (`persist.cpp`): bumped
+  `BANK_MAGIC` `'GVB1'`→`'GVB2'`. Growing `Voice` (the `lfo_*` fields) changed the
+  `StoredBank` layout; without a magic bump the stale QSPI blob was misread as the
+  new layout → garbage voice bank (no sound, "Drums" reading as "Kick", saves
+  reverting). The bump makes the old blob fail the magic check → fall back to
+  factory + re-save clean. **Always bump `BANK_MAGIC` when `Voice` grows.**
+- **GUI slider crash on a garbage dump** (`voicelab_gui.py`): `_to_slider` now
+  clamps to the slider's `[0, 1000]` range, so an out-of-range / NaN field (the
+  firmware's `%d` float formatter can emit a near-`INT_MIN` value for a NaN) can't
+  overflow `QSlider.setValue` and take down the GUI.
+- **`dump()` cross-contamination** (`galetsynth/link.py`): the capture window could
+  pick up late async replies (`ok select=…`, the `tune` ack), mixing an `idx` from
+  one moment with a `name` from another. It now resets on the `dump name=` marker,
+  returning exactly one dump's fields.
+- **Drums meta-voice mislabeled in the GUI** (`voicelab_gui.py`): selecting `Drums`
+  remaps the engine to the Kick zone, so `dump` reports `name=Kick`. `refresh()`
+  no longer relabels the `Drums` picker entry or shows the zone drum in the name
+  field — both stay "Drums". (To tune the kit, select Kick/Snare/Tom/HiHat directly.)
+
 ### Added — `feat: package the voice tuner as a macOS .app`
 - **`tools/build_macapp.sh`**: one-command PyInstaller build of the PySide6 tuner
   into a self-contained `VoiceLab.app` (bundles its own Python + PySide6 + pyserial

@@ -98,6 +98,8 @@ static const FDef FIELDS[] = {
     VF(decay_ms, FT_F),    VF(sustain, FT_F),
     VF(chords, FT_B),      VF(chord_level, FT_F),   VF(chord_spread, FT_I),
     VF(reverb_send, FT_F), VF(delay_send, FT_F),
+    VF(lfo_rate, FT_F),    VF(lfo_pitch, FT_F),
+    VF(lfo_filter, FT_F),  VF(lfo_amp, FT_F),
 };
 static constexpr int NFIELDS = (int)(sizeof(FIELDS) / sizeof(FIELDS[0]));
 

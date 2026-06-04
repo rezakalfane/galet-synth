@@ -54,6 +54,7 @@ GROUP_ICONS = {
     "Dynamics":          "⇅",
     "Quantize / Chords": "♫",
     "Sends":             "↪",
+    "LFO":               "∼",
     "Global FX":         "✦",
 }
 
@@ -105,7 +106,15 @@ class FieldRow:
 
     # ── value <-> slider mapping for floats/ints ──
     def _to_slider(self, v):
-        return int(round((v - self.lo) / (self.hi - self.lo) * 1000)) if self.hi > self.lo else 0
+        if self.hi <= self.lo:
+            return 0
+        # Clamp to the slider's [0, 1000] range: an out-of-range value pegs at an
+        # end, and a garbage/NaN dump (the firmware's %d formatter can emit a near-
+        # INT_MIN value for a NaN field) can't overflow QSlider's C int and crash.
+        if v != v:                       # NaN
+            return 0
+        s = int(round((v - self.lo) / (self.hi - self.lo) * 1000))
+        return max(0, min(1000, s))
 
     def _from_slider(self, s):
         return self.lo + (self.hi - self.lo) * s / 1000.0
@@ -646,7 +655,6 @@ class Tuner(QtWidgets.QMainWindow):
         for row in self.rows.values():
             row.load(kv)
         name = kv.get("name", "")
-        self.name.setText(name)        # load the editable name (no signal on setText)
         # Sync the picker to the device's reported slot. Prefer the index (works
         # even for renamed voices); fall back to matching the factory name.
         idx = self.voice.currentIndex()
@@ -654,12 +662,21 @@ class Tuner(QtWidgets.QMainWindow):
             idx = int(kv["idx"])
         elif name in schema.VOICE_NAMES:
             idx = schema.VOICE_NAMES.index(name)
+        # The Drums meta-voice remaps the engine to a drum zone, so dump reports
+        # that zone's name + params (e.g. "Kick"), not "Drums". Show the meta-
+        # voice's own name in the name field and never relabel its picker entry —
+        # otherwise both the field and the dropdown drift to "Kick".
+        is_multi = (idx == schema.MULTI_IDX)
+        display = (schema.VOICE_NAMES[idx]
+                   if is_multi and 0 <= idx < len(schema.VOICE_NAMES) else name)
+        self.name.setText(display)     # editable name (no signal on setText)
         if 0 <= idx < self.voice.count():
             self.voice.blockSignals(True)
             self.voice.setCurrentIndex(idx)
             self.voice.blockSignals(False)
-            self.voice.setItemText(idx, f"{idx}: {name}")   # reflect (possibly renamed) name
-        self.append_log(f"reloaded {name}" if name else "reloaded")
+            if not is_multi and name:  # reflect a (possibly renamed) name in the picker
+                self.voice.setItemText(idx, f"{idx}: {name}")
+        self.append_log(f"reloaded {display}" if display else "reloaded")
         return True
 
     def export(self):

@@ -258,6 +258,9 @@ void AudioCallback(AudioHandle::InputBuffer,
     if(onset){ s_pmult = s_penv_start; s_decay = 1.0f; }  // fresh note → reset decay to peak
     s_prev_tamp = tamp;
 
+    // Per-voice LFO rate (0 → the classic 6 Hz, preserving the pressure vibrato).
+    float lfo_rate_hz = (VOICE.lfo_rate > 0.0f) ? VOICE.lfo_rate : 6.0f;
+
     for(size_t i=0;i<size;i++)
     {
         // Slew all parameters
@@ -306,14 +309,15 @@ void AudioCallback(AudioHandle::InputBuffer,
             tcut = close_target;
         }
 
-        // LFO for vibrato (6 Hz sine approximation via triangle)
-        s_lfo_phase += 6.0f/sr;
+        // Per-voice LFO (triangle, -1..1) at lfo_rate_hz. Drives the finger-
+        // pressure vibrato plus any per-voice pitch/filter/amp modulation.
+        s_lfo_phase += lfo_rate_hz/sr;
         if(s_lfo_phase>=1.0f)s_lfo_phase-=1.0f;
         float lfo = tri(s_lfo_phase); // -1..1
 
-        // Vibrato: modulate frequency by ±1 semitone * depth
-        // powf(2, semitones/12) — approx for small values: exp(x*0.0578)
-        float vib_amt = lfo * s_vibdepth * 0.05f; // max ±~0.05 semitones*depth
+        // Vibrato: modulate frequency by ±~1 semitone * depth. Depth = the
+        // finger-pressure amount (s_vibdepth) + the voice's always-on lfo_pitch.
+        float vib_amt = lfo * (s_vibdepth + VOICE.lfo_pitch) * 0.05f;
         float freq_vib = s_freq * (1.0f + vib_amt) * s_pmult;  // s_pmult: pitch-env sweep
 
         // Osc 2 frequency. Lead: finger-2 detune around the base ratio.
@@ -389,15 +393,22 @@ void AudioCallback(AudioHandle::InputBuffer,
         // Waveshaper drive before filter (adds harmonics, warms tone)
         mix = fast_tanh(mix * s_drive);
 
-        // Moog ladder filter — no attack boost (was causing onset clicks)
-        float eff_cutoff = clampf(s_cutoff, 20.0f, 20000.0f);
+        // Moog ladder filter — no attack boost (was causing onset clicks).
+        // Auto-wah: the LFO sweeps the cutoff around its current value (±~90% at
+        // full lfo_filter). Folds away when lfo_filter == 0.
+        float cut = s_cutoff;
+        if(VOICE.lfo_filter > 0.0f) cut *= (1.0f + lfo * VOICE.lfo_filter * 0.9f);
+        float eff_cutoff = clampf(cut, 20.0f, 20000.0f);
         float filtered = moog(mix, eff_cutoff, VOICE.resonance, sr);
 
         // Wavefold distortion (finger 2 pressure)
         float crushed = wavefold(filtered, s_bitcrush);
 
         // Soft clip output → the dry instrument signal (pre master volume).
-        float dry = fast_tanh(crushed * 1.3f) * s_amp;
+        // Tremolo: the LFO dips the amplitude (full depth → down to silence on each
+        // trough). 1.0 (no dip) when lfo_amp == 0.
+        float trem = (VOICE.lfo_amp > 0.0f) ? (1.0f - VOICE.lfo_amp * 0.5f * (1.0f - lfo)) : 1.0f;
+        float dry = fast_tanh(crushed * 1.3f) * s_amp * trem;
 
         // Reverb + delay as parallel aux sends. Both read the clean instrument
         // signal (`src`) and add their wet return on top, so they don't cascade
