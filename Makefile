@@ -29,6 +29,17 @@ CPP_SOURCES = $(TARGET).cpp
 # The synth (src/main) is split across modules; the tools stay standalone.
 ifeq ($(TARGET),src/main)
 CPP_SOURCES += src/mpr121.cpp src/touch.cpp src/engine.cpp src/serialtune.cpp src/persist.cpp
+CPP_SOURCES += src/usb_glue.cpp
+# TinyUSB (vendored subset, lib/tinyusb) + our descriptors — the CDC device that
+# replaces libDaisy's USB logger (Phase 1 of the USB-audio work). CFG_TUSB_MCU is
+# set in src/tusb_config.h, found via -Isrc.
+TINYUSB = lib/tinyusb/src
+C_SOURCES   += src/usb_descriptors.c \
+  $(TINYUSB)/tusb.c $(TINYUSB)/common/tusb_fifo.c \
+  $(TINYUSB)/device/usbd.c $(TINYUSB)/device/usbd_control.c \
+  $(TINYUSB)/class/cdc/cdc_device.c \
+  $(TINYUSB)/portable/synopsys/dwc2/dcd_dwc2.c
+C_INCLUDES  += -I$(TINYUSB) -Isrc
 # Run from SRAM via the Daisy bootloader: big enough for the USB-audio work AND
 # keeps QSPI writable so voice persistence (storage.Save) works. Big audio buffers
 # live in SDRAM (DSY_SDRAM_BSS) so data fits the 128 KB DTCM. Override on the CLI.

@@ -1,0 +1,2040 @@
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"usbd_control.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text._data_stage_xact,"ax",%progbits
+  19              		.align	1
+  20              		.p2align 2,,3
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	_data_stage_xact:
+  26              	.LVL0:
+  27              	.LFB418:
+  28              		.file 1 "lib/tinyusb/src/device/usbd_control.c"
+   1:lib/tinyusb/src/device/usbd_control.c **** /*
+   2:lib/tinyusb/src/device/usbd_control.c ****  * The MIT License (MIT)
+   3:lib/tinyusb/src/device/usbd_control.c ****  *
+   4:lib/tinyusb/src/device/usbd_control.c ****  * Copyright (c) 2019 Ha Thach (tinyusb.org)
+   5:lib/tinyusb/src/device/usbd_control.c ****  *
+   6:lib/tinyusb/src/device/usbd_control.c ****  * Permission is hereby granted, free of charge, to any person obtaining a copy
+   7:lib/tinyusb/src/device/usbd_control.c ****  * of this software and associated documentation files (the "Software"), to deal
+   8:lib/tinyusb/src/device/usbd_control.c ****  * in the Software without restriction, including without limitation the rights
+   9:lib/tinyusb/src/device/usbd_control.c ****  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  10:lib/tinyusb/src/device/usbd_control.c ****  * copies of the Software, and to permit persons to whom the Software is
+  11:lib/tinyusb/src/device/usbd_control.c ****  * furnished to do so, subject to the following conditions:
+  12:lib/tinyusb/src/device/usbd_control.c ****  *
+  13:lib/tinyusb/src/device/usbd_control.c ****  * The above copyright notice and this permission notice shall be included in
+  14:lib/tinyusb/src/device/usbd_control.c ****  * all copies or substantial portions of the Software.
+  15:lib/tinyusb/src/device/usbd_control.c ****  *
+  16:lib/tinyusb/src/device/usbd_control.c ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  17:lib/tinyusb/src/device/usbd_control.c ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  18:lib/tinyusb/src/device/usbd_control.c ****  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  19:lib/tinyusb/src/device/usbd_control.c ****  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  20:lib/tinyusb/src/device/usbd_control.c ****  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  21:lib/tinyusb/src/device/usbd_control.c ****  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  22:lib/tinyusb/src/device/usbd_control.c ****  * THE SOFTWARE.
+  23:lib/tinyusb/src/device/usbd_control.c ****  *
+  24:lib/tinyusb/src/device/usbd_control.c ****  * This file is part of the TinyUSB stack.
+  25:lib/tinyusb/src/device/usbd_control.c ****  */
+  26:lib/tinyusb/src/device/usbd_control.c **** 
+  27:lib/tinyusb/src/device/usbd_control.c **** #include "tusb_option.h"
+  28:lib/tinyusb/src/device/usbd_control.c **** 
+  29:lib/tinyusb/src/device/usbd_control.c **** #if CFG_TUD_ENABLED
+  30:lib/tinyusb/src/device/usbd_control.c **** 
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 2
+
+
+  31:lib/tinyusb/src/device/usbd_control.c **** #include "dcd.h"
+  32:lib/tinyusb/src/device/usbd_control.c **** #include "tusb.h"
+  33:lib/tinyusb/src/device/usbd_control.c **** #include "device/usbd_pvt.h"
+  34:lib/tinyusb/src/device/usbd_control.c **** 
+  35:lib/tinyusb/src/device/usbd_control.c **** //--------------------------------------------------------------------+
+  36:lib/tinyusb/src/device/usbd_control.c **** // Callback weak stubs (called if application does not provide)
+  37:lib/tinyusb/src/device/usbd_control.c **** //--------------------------------------------------------------------+
+  38:lib/tinyusb/src/device/usbd_control.c **** TU_ATTR_WEAK void dcd_edpt0_status_complete(uint8_t rhport, tusb_control_request_t const* request) 
+  39:lib/tinyusb/src/device/usbd_control.c ****   (void) rhport;
+  40:lib/tinyusb/src/device/usbd_control.c ****   (void) request;
+  41:lib/tinyusb/src/device/usbd_control.c **** }
+  42:lib/tinyusb/src/device/usbd_control.c **** 
+  43:lib/tinyusb/src/device/usbd_control.c **** //--------------------------------------------------------------------+
+  44:lib/tinyusb/src/device/usbd_control.c **** // MACRO CONSTANT TYPEDEF
+  45:lib/tinyusb/src/device/usbd_control.c **** //--------------------------------------------------------------------+
+  46:lib/tinyusb/src/device/usbd_control.c **** 
+  47:lib/tinyusb/src/device/usbd_control.c **** #if CFG_TUSB_DEBUG >= CFG_TUD_LOG_LEVEL
+  48:lib/tinyusb/src/device/usbd_control.c **** extern void usbd_driver_print_control_complete_name(usbd_control_xfer_cb_t callback);
+  49:lib/tinyusb/src/device/usbd_control.c **** #endif
+  50:lib/tinyusb/src/device/usbd_control.c **** 
+  51:lib/tinyusb/src/device/usbd_control.c **** enum {
+  52:lib/tinyusb/src/device/usbd_control.c ****   EDPT_CTRL_OUT = 0x00,
+  53:lib/tinyusb/src/device/usbd_control.c ****   EDPT_CTRL_IN = 0x80
+  54:lib/tinyusb/src/device/usbd_control.c **** };
+  55:lib/tinyusb/src/device/usbd_control.c **** 
+  56:lib/tinyusb/src/device/usbd_control.c **** typedef struct {
+  57:lib/tinyusb/src/device/usbd_control.c ****   tusb_control_request_t request;
+  58:lib/tinyusb/src/device/usbd_control.c ****   uint8_t* buffer;
+  59:lib/tinyusb/src/device/usbd_control.c ****   uint16_t data_len;
+  60:lib/tinyusb/src/device/usbd_control.c ****   uint16_t total_xferred;
+  61:lib/tinyusb/src/device/usbd_control.c ****   usbd_control_xfer_cb_t complete_cb;
+  62:lib/tinyusb/src/device/usbd_control.c **** } usbd_control_xfer_t;
+  63:lib/tinyusb/src/device/usbd_control.c **** 
+  64:lib/tinyusb/src/device/usbd_control.c **** tu_static usbd_control_xfer_t _ctrl_xfer;
+  65:lib/tinyusb/src/device/usbd_control.c **** 
+  66:lib/tinyusb/src/device/usbd_control.c **** CFG_TUD_MEM_SECTION CFG_TUSB_MEM_ALIGN
+  67:lib/tinyusb/src/device/usbd_control.c **** tu_static uint8_t _usbd_ctrl_buf[CFG_TUD_ENDPOINT0_SIZE];
+  68:lib/tinyusb/src/device/usbd_control.c **** 
+  69:lib/tinyusb/src/device/usbd_control.c **** //--------------------------------------------------------------------+
+  70:lib/tinyusb/src/device/usbd_control.c **** // Application API
+  71:lib/tinyusb/src/device/usbd_control.c **** //--------------------------------------------------------------------+
+  72:lib/tinyusb/src/device/usbd_control.c **** 
+  73:lib/tinyusb/src/device/usbd_control.c **** // Queue ZLP status transaction
+  74:lib/tinyusb/src/device/usbd_control.c **** static inline bool _status_stage_xact(uint8_t rhport, tusb_control_request_t const* request) {
+  75:lib/tinyusb/src/device/usbd_control.c ****   // Opposite to endpoint in Data Phase
+  76:lib/tinyusb/src/device/usbd_control.c ****   uint8_t const ep_addr = request->bmRequestType_bit.direction ? EDPT_CTRL_OUT : EDPT_CTRL_IN;
+  77:lib/tinyusb/src/device/usbd_control.c ****   return usbd_edpt_xfer(rhport, ep_addr, NULL, 0);
+  78:lib/tinyusb/src/device/usbd_control.c **** }
+  79:lib/tinyusb/src/device/usbd_control.c **** 
+  80:lib/tinyusb/src/device/usbd_control.c **** // Status phase
+  81:lib/tinyusb/src/device/usbd_control.c **** bool tud_control_status(uint8_t rhport, tusb_control_request_t const* request) {
+  82:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.request = (*request);
+  83:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.buffer = NULL;
+  84:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.total_xferred = 0;
+  85:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.data_len = 0;
+  86:lib/tinyusb/src/device/usbd_control.c **** 
+  87:lib/tinyusb/src/device/usbd_control.c ****   return _status_stage_xact(rhport, request);
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 3
+
+
+  88:lib/tinyusb/src/device/usbd_control.c **** }
+  89:lib/tinyusb/src/device/usbd_control.c **** 
+  90:lib/tinyusb/src/device/usbd_control.c **** // Queue a transaction in Data Stage
+  91:lib/tinyusb/src/device/usbd_control.c **** // Each transaction has up to Endpoint0's max packet size.
+  92:lib/tinyusb/src/device/usbd_control.c **** // This function can also transfer an zero-length packet
+  93:lib/tinyusb/src/device/usbd_control.c **** static bool _data_stage_xact(uint8_t rhport) {
+  29              		.loc 1 93 46 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 8
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  94:lib/tinyusb/src/device/usbd_control.c ****   uint16_t const xact_len = tu_min16(_ctrl_xfer.data_len - _ctrl_xfer.total_xferred,
+  33              		.loc 1 94 3 view .LVU1
+  34              		.loc 1 94 48 is_stmt 0 view .LVU2
+  35 0000 1A49     		ldr	r1, .L10
+  36 0002 B1F80CC0 		ldrh	ip, [r1, #12]
+  37              		.loc 1 94 70 view .LVU3
+  38 0006 CA89     		ldrh	r2, [r1, #14]
+  39              	.LVL1:
+  40              	.LBB17:
+  41              	.LBI17:
+  42              		.file 2 "lib/tinyusb/src/common/tusb_common.h"
+   1:lib/tinyusb/src/common/tusb_common.h **** /*
+   2:lib/tinyusb/src/common/tusb_common.h ****  * The MIT License (MIT)
+   3:lib/tinyusb/src/common/tusb_common.h ****  *
+   4:lib/tinyusb/src/common/tusb_common.h ****  * Copyright (c) 2019 Ha Thach (tinyusb.org)
+   5:lib/tinyusb/src/common/tusb_common.h ****  *
+   6:lib/tinyusb/src/common/tusb_common.h ****  * Permission is hereby granted, free of charge, to any person obtaining a copy
+   7:lib/tinyusb/src/common/tusb_common.h ****  * of this software and associated documentation files (the "Software"), to deal
+   8:lib/tinyusb/src/common/tusb_common.h ****  * in the Software without restriction, including without limitation the rights
+   9:lib/tinyusb/src/common/tusb_common.h ****  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  10:lib/tinyusb/src/common/tusb_common.h ****  * copies of the Software, and to permit persons to whom the Software is
+  11:lib/tinyusb/src/common/tusb_common.h ****  * furnished to do so, subject to the following conditions:
+  12:lib/tinyusb/src/common/tusb_common.h ****  *
+  13:lib/tinyusb/src/common/tusb_common.h ****  * The above copyright notice and this permission notice shall be included in
+  14:lib/tinyusb/src/common/tusb_common.h ****  * all copies or substantial portions of the Software.
+  15:lib/tinyusb/src/common/tusb_common.h ****  *
+  16:lib/tinyusb/src/common/tusb_common.h ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  17:lib/tinyusb/src/common/tusb_common.h ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  18:lib/tinyusb/src/common/tusb_common.h ****  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  19:lib/tinyusb/src/common/tusb_common.h ****  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  20:lib/tinyusb/src/common/tusb_common.h ****  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  21:lib/tinyusb/src/common/tusb_common.h ****  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  22:lib/tinyusb/src/common/tusb_common.h ****  * THE SOFTWARE.
+  23:lib/tinyusb/src/common/tusb_common.h ****  *
+  24:lib/tinyusb/src/common/tusb_common.h ****  * This file is part of the TinyUSB stack.
+  25:lib/tinyusb/src/common/tusb_common.h ****  */
+  26:lib/tinyusb/src/common/tusb_common.h **** 
+  27:lib/tinyusb/src/common/tusb_common.h **** #ifndef _TUSB_COMMON_H_
+  28:lib/tinyusb/src/common/tusb_common.h **** #define _TUSB_COMMON_H_
+  29:lib/tinyusb/src/common/tusb_common.h **** 
+  30:lib/tinyusb/src/common/tusb_common.h **** #ifdef __cplusplus
+  31:lib/tinyusb/src/common/tusb_common.h ****  extern "C" {
+  32:lib/tinyusb/src/common/tusb_common.h **** #endif
+  33:lib/tinyusb/src/common/tusb_common.h **** 
+  34:lib/tinyusb/src/common/tusb_common.h **** //--------------------------------------------------------------------+
+  35:lib/tinyusb/src/common/tusb_common.h **** // Macros Helper
+  36:lib/tinyusb/src/common/tusb_common.h **** //--------------------------------------------------------------------+
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 4
+
+
+  37:lib/tinyusb/src/common/tusb_common.h **** #define TU_ARRAY_SIZE(_arr)   ( sizeof(_arr) / sizeof(_arr[0]) )
+  38:lib/tinyusb/src/common/tusb_common.h **** #define TU_MIN(_x, _y)        ( ( (_x) < (_y) ) ? (_x) : (_y) )
+  39:lib/tinyusb/src/common/tusb_common.h **** #define TU_MAX(_x, _y)        ( ( (_x) > (_y) ) ? (_x) : (_y) )
+  40:lib/tinyusb/src/common/tusb_common.h **** #define TU_DIV_CEIL(n, d)     (((n) + (d) - 1) / (d))
+  41:lib/tinyusb/src/common/tusb_common.h **** 
+  42:lib/tinyusb/src/common/tusb_common.h **** #define TU_U16(_high, _low)   ((uint16_t) (((_high) << 8) | (_low)))
+  43:lib/tinyusb/src/common/tusb_common.h **** #define TU_U16_HIGH(_u16)     ((uint8_t) (((_u16) >> 8) & 0x00ff))
+  44:lib/tinyusb/src/common/tusb_common.h **** #define TU_U16_LOW(_u16)      ((uint8_t) ((_u16)       & 0x00ff))
+  45:lib/tinyusb/src/common/tusb_common.h **** #define U16_TO_U8S_BE(_u16)   TU_U16_HIGH(_u16), TU_U16_LOW(_u16)
+  46:lib/tinyusb/src/common/tusb_common.h **** #define U16_TO_U8S_LE(_u16)   TU_U16_LOW(_u16), TU_U16_HIGH(_u16)
+  47:lib/tinyusb/src/common/tusb_common.h **** 
+  48:lib/tinyusb/src/common/tusb_common.h **** #define TU_U32_BYTE3(_u32)    ((uint8_t) ((((uint32_t) _u32) >> 24) & 0x000000ff)) // MSB
+  49:lib/tinyusb/src/common/tusb_common.h **** #define TU_U32_BYTE2(_u32)    ((uint8_t) ((((uint32_t) _u32) >> 16) & 0x000000ff))
+  50:lib/tinyusb/src/common/tusb_common.h **** #define TU_U32_BYTE1(_u32)    ((uint8_t) ((((uint32_t) _u32) >>  8) & 0x000000ff))
+  51:lib/tinyusb/src/common/tusb_common.h **** #define TU_U32_BYTE0(_u32)    ((uint8_t) (((uint32_t)  _u32)        & 0x000000ff)) // LSB
+  52:lib/tinyusb/src/common/tusb_common.h **** 
+  53:lib/tinyusb/src/common/tusb_common.h **** #define U32_TO_U8S_BE(_u32)   TU_U32_BYTE3(_u32), TU_U32_BYTE2(_u32), TU_U32_BYTE1(_u32), TU_U32_BY
+  54:lib/tinyusb/src/common/tusb_common.h **** #define U32_TO_U8S_LE(_u32)   TU_U32_BYTE0(_u32), TU_U32_BYTE1(_u32), TU_U32_BYTE2(_u32), TU_U32_BY
+  55:lib/tinyusb/src/common/tusb_common.h **** 
+  56:lib/tinyusb/src/common/tusb_common.h **** #define TU_BIT(n)             (1UL << (n))
+  57:lib/tinyusb/src/common/tusb_common.h **** 
+  58:lib/tinyusb/src/common/tusb_common.h **** // Generate a mask with bit from high (31) to low (0) set, e.g TU_GENMASK(3, 0) = 0b1111
+  59:lib/tinyusb/src/common/tusb_common.h **** #define TU_GENMASK(h, l)      ( (UINT32_MAX << (l)) & (UINT32_MAX >> (31 - (h))) )
+  60:lib/tinyusb/src/common/tusb_common.h **** 
+  61:lib/tinyusb/src/common/tusb_common.h **** //--------------------------------------------------------------------+
+  62:lib/tinyusb/src/common/tusb_common.h **** // Includes
+  63:lib/tinyusb/src/common/tusb_common.h **** //--------------------------------------------------------------------+
+  64:lib/tinyusb/src/common/tusb_common.h **** 
+  65:lib/tinyusb/src/common/tusb_common.h **** // Standard Headers
+  66:lib/tinyusb/src/common/tusb_common.h **** #include <stdbool.h>
+  67:lib/tinyusb/src/common/tusb_common.h **** #include <stdint.h>
+  68:lib/tinyusb/src/common/tusb_common.h **** #include <inttypes.h>
+  69:lib/tinyusb/src/common/tusb_common.h **** #include <stddef.h>
+  70:lib/tinyusb/src/common/tusb_common.h **** #include <string.h>
+  71:lib/tinyusb/src/common/tusb_common.h **** #include <stdio.h>
+  72:lib/tinyusb/src/common/tusb_common.h **** 
+  73:lib/tinyusb/src/common/tusb_common.h **** // Tinyusb Common Headers
+  74:lib/tinyusb/src/common/tusb_common.h **** #include "tusb_option.h"
+  75:lib/tinyusb/src/common/tusb_common.h **** #include "tusb_compiler.h"
+  76:lib/tinyusb/src/common/tusb_common.h **** #include "tusb_verify.h"
+  77:lib/tinyusb/src/common/tusb_common.h **** #include "tusb_types.h"
+  78:lib/tinyusb/src/common/tusb_common.h **** #include "tusb_debug.h"
+  79:lib/tinyusb/src/common/tusb_common.h **** 
+  80:lib/tinyusb/src/common/tusb_common.h **** //--------------------------------------------------------------------+
+  81:lib/tinyusb/src/common/tusb_common.h **** // Optional API implemented by application if needed
+  82:lib/tinyusb/src/common/tusb_common.h **** // TODO move to a more ovious place/file
+  83:lib/tinyusb/src/common/tusb_common.h **** //--------------------------------------------------------------------+
+  84:lib/tinyusb/src/common/tusb_common.h **** 
+  85:lib/tinyusb/src/common/tusb_common.h **** // flush data cache
+  86:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_WEAK extern void tusb_app_dcache_flush(uintptr_t addr, uint32_t data_size);
+  87:lib/tinyusb/src/common/tusb_common.h **** 
+  88:lib/tinyusb/src/common/tusb_common.h **** // invalidate data cache
+  89:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_WEAK extern void tusb_app_dcache_invalidate(uintptr_t addr, uint32_t data_size);
+  90:lib/tinyusb/src/common/tusb_common.h **** 
+  91:lib/tinyusb/src/common/tusb_common.h **** // Optional physical <-> virtual address translation
+  92:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_WEAK extern void* tusb_app_virt_to_phys(void *virt_addr);
+  93:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_WEAK extern void* tusb_app_phys_to_virt(void *phys_addr);
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 5
+
+
+  94:lib/tinyusb/src/common/tusb_common.h **** 
+  95:lib/tinyusb/src/common/tusb_common.h **** //--------------------------------------------------------------------+
+  96:lib/tinyusb/src/common/tusb_common.h **** // Internal Inline Functions
+  97:lib/tinyusb/src/common/tusb_common.h **** //--------------------------------------------------------------------+
+  98:lib/tinyusb/src/common/tusb_common.h **** 
+  99:lib/tinyusb/src/common/tusb_common.h **** //------------- Mem -------------//
+ 100:lib/tinyusb/src/common/tusb_common.h **** #define tu_memclr(buffer, size)  memset((buffer), 0, (size))
+ 101:lib/tinyusb/src/common/tusb_common.h **** #define tu_varclr(_var)          tu_memclr(_var, sizeof(*(_var)))
+ 102:lib/tinyusb/src/common/tusb_common.h **** 
+ 103:lib/tinyusb/src/common/tusb_common.h **** // This is a backport of memset_s from c11
+ 104:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline int tu_memset_s(void *dest, size_t destsz, int ch, size_t count
+ 105:lib/tinyusb/src/common/tusb_common.h ****   // TODO may check if desst and src is not NULL
+ 106:lib/tinyusb/src/common/tusb_common.h ****   if ( count > destsz ) {
+ 107:lib/tinyusb/src/common/tusb_common.h ****     return -1;
+ 108:lib/tinyusb/src/common/tusb_common.h ****   }
+ 109:lib/tinyusb/src/common/tusb_common.h ****   memset(dest, ch, count);
+ 110:lib/tinyusb/src/common/tusb_common.h ****   return 0;
+ 111:lib/tinyusb/src/common/tusb_common.h **** }
+ 112:lib/tinyusb/src/common/tusb_common.h **** 
+ 113:lib/tinyusb/src/common/tusb_common.h **** // This is a backport of memcpy_s from c11
+ 114:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline int tu_memcpy_s(void *dest, size_t destsz, const void *src, siz
+ 115:lib/tinyusb/src/common/tusb_common.h ****   // TODO may check if desst and src is not NULL
+ 116:lib/tinyusb/src/common/tusb_common.h ****   if ( count > destsz ) {
+ 117:lib/tinyusb/src/common/tusb_common.h ****     return -1;
+ 118:lib/tinyusb/src/common/tusb_common.h ****   }
+ 119:lib/tinyusb/src/common/tusb_common.h ****   memcpy(dest, src, count);
+ 120:lib/tinyusb/src/common/tusb_common.h ****   return 0;
+ 121:lib/tinyusb/src/common/tusb_common.h **** }
+ 122:lib/tinyusb/src/common/tusb_common.h **** 
+ 123:lib/tinyusb/src/common/tusb_common.h **** 
+ 124:lib/tinyusb/src/common/tusb_common.h **** //------------- Bytes -------------//
+ 125:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_u32(uint8_t b3, uint8_t b2, uint8_t b1, uint8_t b0)
+ 126:lib/tinyusb/src/common/tusb_common.h ****   return ( ((uint32_t) b3) << 24) | ( ((uint32_t) b2) << 16) | ( ((uint32_t) b1) << 8) | b0;
+ 127:lib/tinyusb/src/common/tusb_common.h **** }
+ 128:lib/tinyusb/src/common/tusb_common.h **** 
+ 129:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint16_t tu_u16(uint8_t high, uint8_t low) {
+ 130:lib/tinyusb/src/common/tusb_common.h ****   return (uint16_t) ((((uint16_t) high) << 8) | low);
+ 131:lib/tinyusb/src/common/tusb_common.h **** }
+ 132:lib/tinyusb/src/common/tusb_common.h **** 
+ 133:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t tu_u32_byte3(uint32_t ui32) { return TU_U32_BYTE3(ui32)
+ 134:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t tu_u32_byte2(uint32_t ui32) { return TU_U32_BYTE2(ui32)
+ 135:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t tu_u32_byte1(uint32_t ui32) { return TU_U32_BYTE1(ui32)
+ 136:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t tu_u32_byte0(uint32_t ui32) { return TU_U32_BYTE0(ui32)
+ 137:lib/tinyusb/src/common/tusb_common.h **** 
+ 138:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint16_t tu_u32_high16(uint32_t ui32) { return (uint16_t) (ui32
+ 139:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint16_t tu_u32_low16 (uint32_t ui32) { return (uint16_t) (ui32
+ 140:lib/tinyusb/src/common/tusb_common.h **** 
+ 141:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t tu_u16_high(uint16_t ui16) { return TU_U16_HIGH(ui16); 
+ 142:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t tu_u16_low (uint16_t ui16) { return TU_U16_LOW(ui16); }
+ 143:lib/tinyusb/src/common/tusb_common.h **** 
+ 144:lib/tinyusb/src/common/tusb_common.h **** //------------- Bits -------------//
+ 145:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_bit_set  (uint32_t value, uint8_t pos) { return val
+ 146:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_bit_clear(uint32_t value, uint8_t pos) { return val
+ 147:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline bool     tu_bit_test (uint32_t value, uint8_t pos) { return (va
+ 148:lib/tinyusb/src/common/tusb_common.h **** 
+ 149:lib/tinyusb/src/common/tusb_common.h **** //------------- Min -------------//
+ 150:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t  tu_min8  (uint8_t  x, uint8_t y ) { return (x < y) ? x
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 6
+
+
+ 151:lib/tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint16_t tu_min16 (uint16_t x, uint16_t y) { return (x < y) ? x
+  43              		.loc 2 151 46 is_stmt 1 view .LVU4
+  44              	.LBB18:
+  45              		.loc 2 151 82 view .LVU5
+  46              	.LBE18:
+  47              	.LBE17:
+  48              		.loc 1 94 29 is_stmt 0 view .LVU6
+  49 0008 ACEB0203 		sub	r3, ip, r2
+  50              	.LBB22:
+  51              	.LBB19:
+  52              		.loc 2 151 101 view .LVU7
+  53 000c 9BB2     		uxth	r3, r3
+  54              	.LBE19:
+  55              	.LBE22:
+  93:lib/tinyusb/src/device/usbd_control.c ****   uint16_t const xact_len = tu_min16(_ctrl_xfer.data_len - _ctrl_xfer.total_xferred,
+  56              		.loc 1 93 46 view .LVU8
+  57 000e 10B5     		push	{r4, lr}
+  58              		.cfi_def_cfa_offset 8
+  59              		.cfi_offset 4, -8
+  60              		.cfi_offset 14, -4
+  61              	.LBB23:
+  62              	.LBB20:
+  63              		.loc 2 151 101 view .LVU9
+  64 0010 402B     		cmp	r3, #64
+  65              	.LBE20:
+  66              	.LBE23:
+  93:lib/tinyusb/src/device/usbd_control.c ****   uint16_t const xact_len = tu_min16(_ctrl_xfer.data_len - _ctrl_xfer.total_xferred,
+  67              		.loc 1 93 46 view .LVU10
+  68 0012 0446     		mov	r4, r0
+  95:lib/tinyusb/src/device/usbd_control.c ****                                      CFG_TUD_ENDPOINT0_SIZE);
+  96:lib/tinyusb/src/device/usbd_control.c **** 
+  97:lib/tinyusb/src/device/usbd_control.c ****   uint8_t ep_addr = EDPT_CTRL_OUT;
+  98:lib/tinyusb/src/device/usbd_control.c **** 
+  99:lib/tinyusb/src/device/usbd_control.c ****   if (_ctrl_xfer.request.bmRequestType_bit.direction == TUSB_DIR_IN) {
+  69              		.loc 1 99 6 view .LVU11
+  70 0014 91F90000 		ldrsb	r0, [r1]
+  71              	.LVL2:
+  93:lib/tinyusb/src/device/usbd_control.c ****   uint16_t const xact_len = tu_min16(_ctrl_xfer.data_len - _ctrl_xfer.total_xferred,
+  72              		.loc 1 93 46 view .LVU12
+  73 0018 82B0     		sub	sp, sp, #8
+  74              		.cfi_def_cfa_offset 16
+  75              	.LBB24:
+  76              	.LBB21:
+  77              		.loc 2 151 101 view .LVU13
+  78 001a 28BF     		it	cs
+  79 001c 4023     		movcs	r3, #64
+  80              	.LVL3:
+  81              		.loc 2 151 101 view .LVU14
+  82              	.LBE21:
+  83              	.LBE24:
+  97:lib/tinyusb/src/device/usbd_control.c **** 
+  84              		.loc 1 97 3 is_stmt 1 view .LVU15
+  85              		.loc 1 99 3 view .LVU16
+  86              		.loc 1 99 6 is_stmt 0 view .LVU17
+  87 001e 0028     		cmp	r0, #0
+  88 0020 12DB     		blt	.L9
+ 100:lib/tinyusb/src/device/usbd_control.c ****     ep_addr = EDPT_CTRL_IN;
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 7
+
+
+ 101:lib/tinyusb/src/device/usbd_control.c ****     if (xact_len) {
+ 102:lib/tinyusb/src/device/usbd_control.c ****       TU_VERIFY(0 == tu_memcpy_s(_usbd_ctrl_buf, CFG_TUD_ENDPOINT0_SIZE, _ctrl_xfer.buffer, xact_le
+  89              		.loc 1 102 7 is_stmt 1 discriminator 2 view .LVU18
+ 103:lib/tinyusb/src/device/usbd_control.c ****     }
+ 104:lib/tinyusb/src/device/usbd_control.c ****   }
+ 105:lib/tinyusb/src/device/usbd_control.c **** 
+ 106:lib/tinyusb/src/device/usbd_control.c ****   return usbd_edpt_xfer(rhport, ep_addr, xact_len ? _usbd_ctrl_buf : NULL, xact_len);
+  90              		.loc 1 106 3 discriminator 2 view .LVU19
+  91              		.loc 1 106 10 is_stmt 0 discriminator 2 view .LVU20
+  92 0022 9445     		cmp	ip, r2
+  97:lib/tinyusb/src/device/usbd_control.c **** 
+  93              		.loc 1 97 11 discriminator 2 view .LVU21
+  94 0024 4FF00001 		mov	r1, #0
+  95              		.loc 1 106 10 discriminator 2 view .LVU22
+  96 0028 07D0     		beq	.L7
+  97              		.loc 1 106 10 view .LVU23
+  98 002a 114A     		ldr	r2, .L10+4
+  99              	.LVL4:
+ 100              		.loc 1 106 10 view .LVU24
+ 101 002c 2046     		mov	r0, r4
+ 107:lib/tinyusb/src/device/usbd_control.c **** }
+ 102              		.loc 1 107 1 view .LVU25
+ 103 002e 02B0     		add	sp, sp, #8
+ 104              		.cfi_remember_state
+ 105              		.cfi_def_cfa_offset 8
+ 106              		@ sp needed
+ 107 0030 BDE81040 		pop	{r4, lr}
+ 108              		.cfi_restore 14
+ 109              		.cfi_restore 4
+ 110              		.cfi_def_cfa_offset 0
+ 106:lib/tinyusb/src/device/usbd_control.c **** }
+ 111              		.loc 1 106 10 view .LVU26
+ 112 0034 FFF7FEBF 		b	usbd_edpt_xfer
+ 113              	.LVL5:
+ 114              	.L4:
+ 115              		.cfi_restore_state
+ 100:lib/tinyusb/src/device/usbd_control.c ****     if (xact_len) {
+ 116              		.loc 1 100 13 view .LVU27
+ 117 0038 8021     		movs	r1, #128
+ 118              	.LVL6:
+ 119              	.L7:
+ 106:lib/tinyusb/src/device/usbd_control.c **** }
+ 120              		.loc 1 106 10 view .LVU28
+ 121 003a 0022     		movs	r2, #0
+ 122 003c 2046     		mov	r0, r4
+ 123              		.loc 1 107 1 view .LVU29
+ 124 003e 02B0     		add	sp, sp, #8
+ 125              		.cfi_remember_state
+ 126              		.cfi_def_cfa_offset 8
+ 127              		@ sp needed
+ 128 0040 BDE81040 		pop	{r4, lr}
+ 129              		.cfi_restore 14
+ 130              		.cfi_restore 4
+ 131              		.cfi_def_cfa_offset 0
+ 106:lib/tinyusb/src/device/usbd_control.c **** }
+ 132              		.loc 1 106 10 view .LVU30
+ 133 0044 FFF7FEBF 		b	usbd_edpt_xfer
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 8
+
+
+ 134              	.LVL7:
+ 135              	.L9:
+ 136              		.cfi_restore_state
+ 100:lib/tinyusb/src/device/usbd_control.c ****     if (xact_len) {
+ 137              		.loc 1 100 5 is_stmt 1 view .LVU31
+ 101:lib/tinyusb/src/device/usbd_control.c ****       TU_VERIFY(0 == tu_memcpy_s(_usbd_ctrl_buf, CFG_TUD_ENDPOINT0_SIZE, _ctrl_xfer.buffer, xact_le
+ 138              		.loc 1 101 5 view .LVU32
+ 101:lib/tinyusb/src/device/usbd_control.c ****       TU_VERIFY(0 == tu_memcpy_s(_usbd_ctrl_buf, CFG_TUD_ENDPOINT0_SIZE, _ctrl_xfer.buffer, xact_le
+ 139              		.loc 1 101 8 is_stmt 0 view .LVU33
+ 140 0048 9445     		cmp	ip, r2
+ 141 004a F5D0     		beq	.L4
+ 102:lib/tinyusb/src/device/usbd_control.c ****     }
+ 142              		.loc 1 102 7 is_stmt 1 view .LVU34
+ 102:lib/tinyusb/src/device/usbd_control.c ****     }
+ 143              		.loc 1 102 7 view .LVU35
+ 144              	.LVL8:
+ 145              	.LBB25:
+ 146              	.LBI25:
+ 114:lib/tinyusb/src/common/tusb_common.h ****   // TODO may check if desst and src is not NULL
+ 147              		.loc 2 114 41 view .LVU36
+ 148              	.LBB26:
+ 116:lib/tinyusb/src/common/tusb_common.h ****     return -1;
+ 149              		.loc 2 116 3 view .LVU37
+ 119:lib/tinyusb/src/common/tusb_common.h ****   return 0;
+ 150              		.loc 2 119 3 view .LVU38
+ 151 004c 1A46     		mov	r2, r3
+ 152 004e 8968     		ldr	r1, [r1, #8]
+ 153 0050 0748     		ldr	r0, .L10+4
+ 154 0052 0193     		str	r3, [sp, #4]
+ 155 0054 FFF7FEFF 		bl	memcpy
+ 156              	.LVL9:
+ 120:lib/tinyusb/src/common/tusb_common.h **** }
+ 157              		.loc 2 120 3 view .LVU39
+ 120:lib/tinyusb/src/common/tusb_common.h **** }
+ 158              		.loc 2 120 3 is_stmt 0 view .LVU40
+ 159              	.LBE26:
+ 160              	.LBE25:
+ 102:lib/tinyusb/src/device/usbd_control.c ****     }
+ 161              		.loc 1 102 7 is_stmt 1 view .LVU41
+ 106:lib/tinyusb/src/device/usbd_control.c **** }
+ 162              		.loc 1 106 3 view .LVU42
+ 100:lib/tinyusb/src/device/usbd_control.c ****     if (xact_len) {
+ 163              		.loc 1 100 13 is_stmt 0 view .LVU43
+ 164 0058 8021     		movs	r1, #128
+ 106:lib/tinyusb/src/device/usbd_control.c **** }
+ 165              		.loc 1 106 10 view .LVU44
+ 166 005a 054A     		ldr	r2, .L10+4
+ 167 005c 019B     		ldr	r3, [sp, #4]
+ 168              	.LVL10:
+ 106:lib/tinyusb/src/device/usbd_control.c **** }
+ 169              		.loc 1 106 10 view .LVU45
+ 170 005e 2046     		mov	r0, r4
+ 171              		.loc 1 107 1 view .LVU46
+ 172 0060 02B0     		add	sp, sp, #8
+ 173              		.cfi_def_cfa_offset 8
+ 174              		@ sp needed
+ 175 0062 BDE81040 		pop	{r4, lr}
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 9
+
+
+ 176              		.cfi_restore 14
+ 177              		.cfi_restore 4
+ 178              		.cfi_def_cfa_offset 0
+ 179              	.LVL11:
+ 106:lib/tinyusb/src/device/usbd_control.c **** }
+ 180              		.loc 1 106 10 view .LVU47
+ 181 0066 FFF7FEBF 		b	usbd_edpt_xfer
+ 182              	.LVL12:
+ 183              	.L11:
+ 184 006a 00BF     		.align	2
+ 185              	.L10:
+ 186 006c 00000000 		.word	.LANCHOR1
+ 187 0070 00000000 		.word	.LANCHOR0
+ 188              		.cfi_endproc
+ 189              	.LFE418:
+ 191              		.section	.text.dcd_edpt0_status_complete,"ax",%progbits
+ 192              		.align	1
+ 193              		.p2align 2,,3
+ 194              		.weak	dcd_edpt0_status_complete
+ 195              		.syntax unified
+ 196              		.thumb
+ 197              		.thumb_func
+ 199              	dcd_edpt0_status_complete:
+ 200              	.LVL13:
+ 201              	.LFB415:
+  38:lib/tinyusb/src/device/usbd_control.c ****   (void) rhport;
+ 202              		.loc 1 38 100 is_stmt 1 view -0
+ 203              		.cfi_startproc
+ 204              		@ args = 0, pretend = 0, frame = 0
+ 205              		@ frame_needed = 0, uses_anonymous_args = 0
+ 206              		@ link register save eliminated.
+  39:lib/tinyusb/src/device/usbd_control.c ****   (void) request;
+ 207              		.loc 1 39 3 view .LVU49
+  40:lib/tinyusb/src/device/usbd_control.c **** }
+ 208              		.loc 1 40 3 view .LVU50
+  41:lib/tinyusb/src/device/usbd_control.c **** 
+ 209              		.loc 1 41 1 is_stmt 0 view .LVU51
+ 210 0000 7047     		bx	lr
+ 211              		.cfi_endproc
+ 212              	.LFE415:
+ 214 0002 00BF     		.section	.text.tud_control_status,"ax",%progbits
+ 215              		.align	1
+ 216              		.p2align 2,,3
+ 217              		.global	tud_control_status
+ 218              		.syntax unified
+ 219              		.thumb
+ 220              		.thumb_func
+ 222              	tud_control_status:
+ 223              	.LVL14:
+ 224              	.LFB417:
+  81:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.request = (*request);
+ 225              		.loc 1 81 80 is_stmt 1 view -0
+ 226              		.cfi_startproc
+ 227              		@ args = 0, pretend = 0, frame = 0
+ 228              		@ frame_needed = 0, uses_anonymous_args = 0
+ 229              		@ link register save eliminated.
+  82:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.buffer = NULL;
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 10
+
+
+ 230              		.loc 1 82 3 view .LVU53
+  81:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.request = (*request);
+ 231              		.loc 1 81 80 is_stmt 0 view .LVU54
+ 232 0000 10B4     		push	{r4}
+ 233              		.cfi_def_cfa_offset 4
+ 234              		.cfi_offset 4, -4
+  82:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.buffer = NULL;
+ 235              		.loc 1 82 22 view .LVU55
+ 236 0002 0B4C     		ldr	r4, .L17
+  81:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.request = (*request);
+ 237              		.loc 1 81 80 view .LVU56
+ 238 0004 0B46     		mov	r3, r1
+ 239 0006 8446     		mov	ip, r0
+  82:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.buffer = NULL;
+ 240              		.loc 1 82 22 view .LVU57
+ 241 0008 0868     		ldr	r0, [r1]	@ unaligned
+ 242              	.LVL15:
+  82:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.buffer = NULL;
+ 243              		.loc 1 82 22 view .LVU58
+ 244 000a 2246     		mov	r2, r4
+ 245 000c 4968     		ldr	r1, [r1, #4]	@ unaligned
+ 246              	.LVL16:
+  82:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.buffer = NULL;
+ 247              		.loc 1 82 22 view .LVU59
+ 248 000e 03C2     		stmia	r2!, {r0, r1}
+  83:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.total_xferred = 0;
+ 249              		.loc 1 83 3 is_stmt 1 view .LVU60
+  84:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.data_len = 0;
+ 250              		.loc 1 84 3 view .LVU61
+  85:lib/tinyusb/src/device/usbd_control.c **** 
+ 251              		.loc 1 85 3 view .LVU62
+ 252              	.LBB29:
+ 253              	.LBB30:
+  76:lib/tinyusb/src/device/usbd_control.c ****   return usbd_edpt_xfer(rhport, ep_addr, NULL, 0);
+ 254              		.loc 1 76 17 is_stmt 0 view .LVU63
+ 255 0010 93F90020 		ldrsb	r2, [r3]
+ 256              	.LBE30:
+ 257              	.LBE29:
+  83:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.total_xferred = 0;
+ 258              		.loc 1 83 21 view .LVU64
+ 259 0014 0023     		movs	r3, #0
+ 260              	.LVL17:
+ 261              	.LBB34:
+ 262              	.LBB31:
+  77:lib/tinyusb/src/device/usbd_control.c **** }
+ 263              		.loc 1 77 10 view .LVU65
+ 264 0016 6046     		mov	r0, ip
+  76:lib/tinyusb/src/device/usbd_control.c ****   return usbd_edpt_xfer(rhport, ep_addr, NULL, 0);
+ 265              		.loc 1 76 17 view .LVU66
+ 266 0018 9A42     		cmp	r2, r3
+  77:lib/tinyusb/src/device/usbd_control.c **** }
+ 267              		.loc 1 77 10 view .LVU67
+ 268 001a 1A46     		mov	r2, r3
+ 269              	.LBE31:
+ 270              	.LBE34:
+  85:lib/tinyusb/src/device/usbd_control.c **** 
+ 271              		.loc 1 85 23 view .LVU68
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 11
+
+
+ 272 001c C4E90233 		strd	r3, r3, [r4, #8]
+  87:lib/tinyusb/src/device/usbd_control.c **** }
+ 273              		.loc 1 87 3 is_stmt 1 view .LVU69
+ 274              	.LVL18:
+ 275              	.LBB35:
+ 276              	.LBI29:
+  74:lib/tinyusb/src/device/usbd_control.c ****   // Opposite to endpoint in Data Phase
+ 277              		.loc 1 74 20 view .LVU70
+ 278              	.LBB32:
+  76:lib/tinyusb/src/device/usbd_control.c ****   return usbd_edpt_xfer(rhport, ep_addr, NULL, 0);
+ 279              		.loc 1 76 3 view .LVU71
+  77:lib/tinyusb/src/device/usbd_control.c **** }
+ 280              		.loc 1 77 3 view .LVU72
+  77:lib/tinyusb/src/device/usbd_control.c **** }
+ 281              		.loc 1 77 10 is_stmt 0 view .LVU73
+ 282 0020 ACBF     		ite	ge
+ 283 0022 8021     		movge	r1, #128
+ 284 0024 1946     		movlt	r1, r3
+ 285              	.LBE32:
+ 286              	.LBE35:
+  88:lib/tinyusb/src/device/usbd_control.c **** 
+ 287              		.loc 1 88 1 view .LVU74
+ 288 0026 5DF8044B 		ldr	r4, [sp], #4
+ 289              		.cfi_restore 4
+ 290              		.cfi_def_cfa_offset 0
+ 291              	.LBB36:
+ 292              	.LBB33:
+  77:lib/tinyusb/src/device/usbd_control.c **** }
+ 293              		.loc 1 77 10 view .LVU75
+ 294 002a FFF7FEBF 		b	usbd_edpt_xfer
+ 295              	.LVL19:
+ 296              	.L18:
+  77:lib/tinyusb/src/device/usbd_control.c **** }
+ 297              		.loc 1 77 10 view .LVU76
+ 298 002e 00BF     		.align	2
+ 299              	.L17:
+ 300 0030 00000000 		.word	.LANCHOR1
+ 301              	.LBE33:
+ 302              	.LBE36:
+ 303              		.cfi_endproc
+ 304              	.LFE417:
+ 306              		.section	.text.tud_control_xfer,"ax",%progbits
+ 307              		.align	1
+ 308              		.p2align 2,,3
+ 309              		.global	tud_control_xfer
+ 310              		.syntax unified
+ 311              		.thumb
+ 312              		.thumb_func
+ 314              	tud_control_xfer:
+ 315              	.LVL20:
+ 316              	.LFB419:
+ 108:lib/tinyusb/src/device/usbd_control.c **** 
+ 109:lib/tinyusb/src/device/usbd_control.c **** // Transmit data to/from the control endpoint.
+ 110:lib/tinyusb/src/device/usbd_control.c **** // If the request's wLength is zero, a status packet is sent instead.
+ 111:lib/tinyusb/src/device/usbd_control.c **** bool tud_control_xfer(uint8_t rhport, tusb_control_request_t const* request, void* buffer, uint16_t
+ 317              		.loc 1 111 106 is_stmt 1 view -0
+ 318              		.cfi_startproc
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 12
+
+
+ 319              		@ args = 0, pretend = 0, frame = 0
+ 320              		@ frame_needed = 0, uses_anonymous_args = 0
+ 112:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.request = (*request);
+ 321              		.loc 1 112 3 view .LVU78
+ 111:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.request = (*request);
+ 322              		.loc 1 111 106 is_stmt 0 view .LVU79
+ 323 0000 38B5     		push	{r3, r4, r5, lr}
+ 324              		.cfi_def_cfa_offset 16
+ 325              		.cfi_offset 3, -16
+ 326              		.cfi_offset 4, -12
+ 327              		.cfi_offset 5, -8
+ 328              		.cfi_offset 14, -4
+ 329              		.loc 1 112 22 view .LVU80
+ 330 0002 1E4C     		ldr	r4, .L46
+ 111:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.request = (*request);
+ 331              		.loc 1 111 106 view .LVU81
+ 332 0004 8E46     		mov	lr, r1
+ 333 0006 0546     		mov	r5, r0
+ 334              		.loc 1 112 22 view .LVU82
+ 335 0008 0868     		ldr	r0, [r1]	@ unaligned
+ 336              	.LVL21:
+ 337              		.loc 1 112 22 view .LVU83
+ 338 000a A446     		mov	ip, r4
+ 339 000c 4968     		ldr	r1, [r1, #4]	@ unaligned
+ 340              	.LVL22:
+ 113:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.buffer = (uint8_t*) buffer;
+ 341              		.loc 1 113 21 view .LVU84
+ 342 000e A260     		str	r2, [r4, #8]
+ 112:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.request = (*request);
+ 343              		.loc 1 112 22 view .LVU85
+ 344 0010 ACE80300 		stmia	ip!, {r0, r1}
+ 345              		.loc 1 113 3 is_stmt 1 view .LVU86
+ 114:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.total_xferred = 0U;
+ 346              		.loc 1 114 3 view .LVU87
+ 347              		.loc 1 114 28 is_stmt 0 view .LVU88
+ 348 0014 4FF0000C 		mov	ip, #0
+ 349 0018 A4F80EC0 		strh	ip, [r4, #14]	@ movhi
+ 115:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.data_len = tu_min16(len, request->wLength);
+ 350              		.loc 1 115 3 is_stmt 1 view .LVU89
+ 351              		.loc 1 115 25 is_stmt 0 view .LVU90
+ 352 001c BEF80610 		ldrh	r1, [lr, #6]	@ unaligned
+ 353              	.LVL23:
+ 354              	.LBB44:
+ 355              	.LBI44:
+ 356              		.loc 2 151 46 is_stmt 1 view .LVU91
+ 357              	.LBB45:
+ 358              		.loc 2 151 82 view .LVU92
+ 359              		.loc 2 151 101 is_stmt 0 view .LVU93
+ 360 0020 8B42     		cmp	r3, r1
+ 361 0022 28BF     		it	cs
+ 362 0024 0B46     		movcs	r3, r1
+ 363              	.LVL24:
+ 364              		.loc 2 151 101 view .LVU94
+ 365              	.LBE45:
+ 366              	.LBE44:
+ 367              		.loc 1 115 23 view .LVU95
+ 368 0026 A381     		strh	r3, [r4, #12]	@ movhi
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 13
+
+
+ 116:lib/tinyusb/src/device/usbd_control.c **** 
+ 117:lib/tinyusb/src/device/usbd_control.c ****   if (request->wLength > 0U) {
+ 369              		.loc 1 117 3 is_stmt 1 view .LVU96
+ 370              		.loc 1 117 6 is_stmt 0 view .LVU97
+ 371 0028 39B1     		cbz	r1, .L20
+ 118:lib/tinyusb/src/device/usbd_control.c ****     if (_ctrl_xfer.data_len > 0U) {
+ 372              		.loc 1 118 5 is_stmt 1 view .LVU98
+ 119:lib/tinyusb/src/device/usbd_control.c ****       TU_ASSERT(buffer);
+ 373              		.loc 1 119 7 view .LVU99
+ 374              		.loc 1 119 7 view .LVU100
+ 375 002a 02B9     		cbnz	r2, .L21
+ 376 002c D3B9     		cbnz	r3, .L45
+ 377              	.L21:
+ 378              		.loc 1 119 7 discriminator 2 view .LVU101
+ 120:lib/tinyusb/src/device/usbd_control.c ****     }
+ 121:lib/tinyusb/src/device/usbd_control.c **** 
+ 122:lib/tinyusb/src/device/usbd_control.c **** //    TU_LOG2("  Control total data length is %u bytes\r\n", _ctrl_xfer.data_len);
+ 123:lib/tinyusb/src/device/usbd_control.c **** 
+ 124:lib/tinyusb/src/device/usbd_control.c ****     // Data stage
+ 125:lib/tinyusb/src/device/usbd_control.c ****     TU_ASSERT(_data_stage_xact(rhport));
+ 379              		.loc 1 125 5 discriminator 2 view .LVU102
+ 380              		.loc 1 125 5 discriminator 2 view .LVU103
+ 381 002e 2846     		mov	r0, r5
+ 382 0030 FFF7FEFF 		bl	_data_stage_xact
+ 383              	.LVL25:
+ 384              		.loc 1 125 5 is_stmt 0 discriminator 2 view .LVU104
+ 385 0034 70B1     		cbz	r0, .L44
+ 386              	.L27:
+ 126:lib/tinyusb/src/device/usbd_control.c ****   } else {
+ 127:lib/tinyusb/src/device/usbd_control.c ****     // Status stage
+ 128:lib/tinyusb/src/device/usbd_control.c ****     TU_ASSERT(_status_stage_xact(rhport, request));
+ 129:lib/tinyusb/src/device/usbd_control.c ****   }
+ 130:lib/tinyusb/src/device/usbd_control.c **** 
+ 131:lib/tinyusb/src/device/usbd_control.c ****   return true;
+ 387              		.loc 1 131 10 view .LVU105
+ 388 0036 0120     		movs	r0, #1
+ 132:lib/tinyusb/src/device/usbd_control.c **** }
+ 389              		.loc 1 132 1 view .LVU106
+ 390 0038 38BD     		pop	{r3, r4, r5, pc}
+ 391              	.LVL26:
+ 392              	.L20:
+ 128:lib/tinyusb/src/device/usbd_control.c ****   }
+ 393              		.loc 1 128 5 is_stmt 1 view .LVU107
+ 128:lib/tinyusb/src/device/usbd_control.c ****   }
+ 394              		.loc 1 128 5 view .LVU108
+ 395              	.LBB46:
+ 396              	.LBI46:
+  74:lib/tinyusb/src/device/usbd_control.c ****   // Opposite to endpoint in Data Phase
+ 397              		.loc 1 74 20 view .LVU109
+ 398              	.LBB47:
+  76:lib/tinyusb/src/device/usbd_control.c ****   return usbd_edpt_xfer(rhport, ep_addr, NULL, 0);
+ 399              		.loc 1 76 3 view .LVU110
+  76:lib/tinyusb/src/device/usbd_control.c ****   return usbd_edpt_xfer(rhport, ep_addr, NULL, 0);
+ 400              		.loc 1 76 17 is_stmt 0 view .LVU111
+ 401 003a 9EF90040 		ldrsb	r4, [lr]
+  77:lib/tinyusb/src/device/usbd_control.c **** }
+ 402              		.loc 1 77 10 view .LVU112
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 14
+
+
+ 403 003e 0B46     		mov	r3, r1
+ 404 0040 0A46     		mov	r2, r1
+ 405              	.LVL27:
+  77:lib/tinyusb/src/device/usbd_control.c **** }
+ 406              		.loc 1 77 10 view .LVU113
+ 407 0042 2846     		mov	r0, r5
+  76:lib/tinyusb/src/device/usbd_control.c ****   return usbd_edpt_xfer(rhport, ep_addr, NULL, 0);
+ 408              		.loc 1 76 17 view .LVU114
+ 409 0044 002C     		cmp	r4, #0
+ 410              	.LVL28:
+  77:lib/tinyusb/src/device/usbd_control.c **** }
+ 411              		.loc 1 77 3 is_stmt 1 view .LVU115
+  77:lib/tinyusb/src/device/usbd_control.c **** }
+ 412              		.loc 1 77 10 is_stmt 0 view .LVU116
+ 413 0046 ACBF     		ite	ge
+ 414 0048 8021     		movge	r1, #128
+ 415 004a 0021     		movlt	r1, #0
+ 416 004c FFF7FEFF 		bl	usbd_edpt_xfer
+ 417              	.LVL29:
+  77:lib/tinyusb/src/device/usbd_control.c **** }
+ 418              		.loc 1 77 10 view .LVU117
+ 419              	.LBE47:
+ 420              	.LBE46:
+ 128:lib/tinyusb/src/device/usbd_control.c ****   }
+ 421              		.loc 1 128 5 view .LVU118
+ 422 0050 0028     		cmp	r0, #0
+ 423 0052 F0D1     		bne	.L27
+ 424              	.LVL30:
+ 425              	.L44:
+ 128:lib/tinyusb/src/device/usbd_control.c ****   }
+ 426              		.loc 1 128 5 is_stmt 1 discriminator 1 view .LVU119
+ 128:lib/tinyusb/src/device/usbd_control.c ****   }
+ 427              		.loc 1 128 5 discriminator 1 view .LVU120
+ 128:lib/tinyusb/src/device/usbd_control.c ****   }
+ 428              		.loc 1 128 5 discriminator 1 view .LVU121
+ 128:lib/tinyusb/src/device/usbd_control.c ****   }
+ 429              		.loc 1 128 5 discriminator 1 view .LVU122
+ 430              	.LBB48:
+ 128:lib/tinyusb/src/device/usbd_control.c ****   }
+ 431              		.loc 1 128 5 discriminator 1 view .LVU123
+ 128:lib/tinyusb/src/device/usbd_control.c ****   }
+ 432              		.loc 1 128 5 discriminator 1 view .LVU124
+ 433 0054 4FF0E023 		mov	r3, #-536813568
+ 434 0058 D3F8F03D 		ldr	r3, [r3, #3568]
+ 435 005c DB07     		lsls	r3, r3, #31
+ 436 005e 07D5     		bpl	.L25
+ 128:lib/tinyusb/src/device/usbd_control.c ****   }
+ 437              		.loc 1 128 5 discriminator 3 view .LVU125
+ 438              		.syntax unified
+ 439              	@ 128 "lib/tinyusb/src/device/usbd_control.c" 1
+ 440 0060 00BE     		BKPT #0
+ 441              	
+ 442              	@ 0 "" 2
+ 443              		.thumb
+ 444              		.syntax unified
+ 445              	.LBE48:
+ 446              		.loc 1 132 1 is_stmt 0 discriminator 3 view .LVU126
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 15
+
+
+ 447 0062 38BD     		pop	{r3, r4, r5, pc}
+ 448              	.LVL31:
+ 449              	.L45:
+ 119:lib/tinyusb/src/device/usbd_control.c ****     }
+ 450              		.loc 1 119 7 is_stmt 1 discriminator 1 view .LVU127
+ 119:lib/tinyusb/src/device/usbd_control.c ****     }
+ 451              		.loc 1 119 7 discriminator 1 view .LVU128
+ 119:lib/tinyusb/src/device/usbd_control.c ****     }
+ 452              		.loc 1 119 7 discriminator 1 view .LVU129
+ 119:lib/tinyusb/src/device/usbd_control.c ****     }
+ 453              		.loc 1 119 7 discriminator 1 view .LVU130
+ 454              	.LBB49:
+ 119:lib/tinyusb/src/device/usbd_control.c ****     }
+ 455              		.loc 1 119 7 discriminator 1 view .LVU131
+ 119:lib/tinyusb/src/device/usbd_control.c ****     }
+ 456              		.loc 1 119 7 discriminator 1 view .LVU132
+ 457 0064 4FF0E023 		mov	r3, #-536813568
+ 458 0068 D3F8F03D 		ldr	r3, [r3, #3568]
+ 459 006c DA07     		lsls	r2, r3, #31
+ 460              	.LVL32:
+ 119:lib/tinyusb/src/device/usbd_control.c ****     }
+ 461              		.loc 1 119 7 is_stmt 0 discriminator 1 view .LVU133
+ 462 006e 01D4     		bmi	.L22
+ 463              	.LVL33:
+ 464              	.L25:
+ 119:lib/tinyusb/src/device/usbd_control.c ****     }
+ 465              		.loc 1 119 7 discriminator 1 view .LVU134
+ 466              	.LBE49:
+ 119:lib/tinyusb/src/device/usbd_control.c ****     }
+ 467              		.loc 1 119 7 view .LVU135
+ 468 0070 0020     		movs	r0, #0
+ 469              		.loc 1 132 1 view .LVU136
+ 470 0072 38BD     		pop	{r3, r4, r5, pc}
+ 471              	.LVL34:
+ 472              	.L22:
+ 473              	.LBB50:
+ 119:lib/tinyusb/src/device/usbd_control.c ****     }
+ 474              		.loc 1 119 7 is_stmt 1 discriminator 3 view .LVU137
+ 475              		.syntax unified
+ 476              	@ 119 "lib/tinyusb/src/device/usbd_control.c" 1
+ 477 0074 00BE     		BKPT #0
+ 478              	
+ 479              	@ 0 "" 2
+ 480              		.thumb
+ 481              		.syntax unified
+ 482              	.LBE50:
+ 483 0076 6046     		mov	r0, ip
+ 484              		.loc 1 132 1 is_stmt 0 discriminator 3 view .LVU138
+ 485 0078 38BD     		pop	{r3, r4, r5, pc}
+ 486              	.L47:
+ 487              		.loc 1 132 1 discriminator 3 view .LVU139
+ 488 007a 00BF     		.align	2
+ 489              	.L46:
+ 490 007c 00000000 		.word	.LANCHOR1
+ 491              		.cfi_endproc
+ 492              	.LFE419:
+ 494              		.section	.text.usbd_control_reset,"ax",%progbits
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 16
+
+
+ 495              		.align	1
+ 496              		.p2align 2,,3
+ 497              		.global	usbd_control_reset
+ 498              		.syntax unified
+ 499              		.thumb
+ 500              		.thumb_func
+ 502              	usbd_control_reset:
+ 503              	.LFB420:
+ 133:lib/tinyusb/src/device/usbd_control.c **** 
+ 134:lib/tinyusb/src/device/usbd_control.c **** //--------------------------------------------------------------------+
+ 135:lib/tinyusb/src/device/usbd_control.c **** // USBD API
+ 136:lib/tinyusb/src/device/usbd_control.c **** //--------------------------------------------------------------------+
+ 137:lib/tinyusb/src/device/usbd_control.c **** void usbd_control_reset(void);
+ 138:lib/tinyusb/src/device/usbd_control.c **** void usbd_control_set_request(tusb_control_request_t const* request);
+ 139:lib/tinyusb/src/device/usbd_control.c **** void usbd_control_set_complete_callback(usbd_control_xfer_cb_t fp);
+ 140:lib/tinyusb/src/device/usbd_control.c **** bool usbd_control_xfer_cb(uint8_t rhport, uint8_t ep_addr, xfer_result_t result, uint32_t xferred_b
+ 141:lib/tinyusb/src/device/usbd_control.c **** 
+ 142:lib/tinyusb/src/device/usbd_control.c **** void usbd_control_reset(void) {
+ 504              		.loc 1 142 31 is_stmt 1 view -0
+ 505              		.cfi_startproc
+ 506              		@ args = 0, pretend = 0, frame = 0
+ 507              		@ frame_needed = 0, uses_anonymous_args = 0
+ 508              		@ link register save eliminated.
+ 143:lib/tinyusb/src/device/usbd_control.c ****   tu_varclr(&_ctrl_xfer);
+ 509              		.loc 1 143 3 view .LVU141
+ 510 0000 034B     		ldr	r3, .L49
+ 511 0002 0022     		movs	r2, #0
+ 512 0004 C3E90022 		strd	r2, r2, [r3]
+ 513 0008 C3E90222 		strd	r2, r2, [r3, #8]
+ 514 000c 1A61     		str	r2, [r3, #16]
+ 144:lib/tinyusb/src/device/usbd_control.c **** }
+ 515              		.loc 1 144 1 is_stmt 0 view .LVU142
+ 516 000e 7047     		bx	lr
+ 517              	.L50:
+ 518              		.align	2
+ 519              	.L49:
+ 520 0010 00000000 		.word	.LANCHOR1
+ 521              		.cfi_endproc
+ 522              	.LFE420:
+ 524              		.section	.text.usbd_control_set_complete_callback,"ax",%progbits
+ 525              		.align	1
+ 526              		.p2align 2,,3
+ 527              		.global	usbd_control_set_complete_callback
+ 528              		.syntax unified
+ 529              		.thumb
+ 530              		.thumb_func
+ 532              	usbd_control_set_complete_callback:
+ 533              	.LVL35:
+ 534              	.LFB421:
+ 145:lib/tinyusb/src/device/usbd_control.c **** 
+ 146:lib/tinyusb/src/device/usbd_control.c **** // Set complete callback
+ 147:lib/tinyusb/src/device/usbd_control.c **** void usbd_control_set_complete_callback(usbd_control_xfer_cb_t fp) {
+ 535              		.loc 1 147 68 is_stmt 1 view -0
+ 536              		.cfi_startproc
+ 537              		@ args = 0, pretend = 0, frame = 0
+ 538              		@ frame_needed = 0, uses_anonymous_args = 0
+ 539              		@ link register save eliminated.
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 17
+
+
+ 148:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.complete_cb = fp;
+ 540              		.loc 1 148 3 view .LVU144
+ 541              		.loc 1 148 26 is_stmt 0 view .LVU145
+ 542 0000 014B     		ldr	r3, .L52
+ 543 0002 1861     		str	r0, [r3, #16]
+ 149:lib/tinyusb/src/device/usbd_control.c **** }
+ 544              		.loc 1 149 1 view .LVU146
+ 545 0004 7047     		bx	lr
+ 546              	.L53:
+ 547 0006 00BF     		.align	2
+ 548              	.L52:
+ 549 0008 00000000 		.word	.LANCHOR1
+ 550              		.cfi_endproc
+ 551              	.LFE421:
+ 553              		.section	.text.usbd_control_set_request,"ax",%progbits
+ 554              		.align	1
+ 555              		.p2align 2,,3
+ 556              		.global	usbd_control_set_request
+ 557              		.syntax unified
+ 558              		.thumb
+ 559              		.thumb_func
+ 561              	usbd_control_set_request:
+ 562              	.LVL36:
+ 563              	.LFB422:
+ 150:lib/tinyusb/src/device/usbd_control.c **** 
+ 151:lib/tinyusb/src/device/usbd_control.c **** // for dcd_set_address where DCD is responsible for status response
+ 152:lib/tinyusb/src/device/usbd_control.c **** void usbd_control_set_request(tusb_control_request_t const* request) {
+ 564              		.loc 1 152 70 is_stmt 1 view -0
+ 565              		.cfi_startproc
+ 566              		@ args = 0, pretend = 0, frame = 0
+ 567              		@ frame_needed = 0, uses_anonymous_args = 0
+ 568              		@ link register save eliminated.
+ 153:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.request = (*request);
+ 569              		.loc 1 153 3 view .LVU148
+ 152:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.request = (*request);
+ 570              		.loc 1 152 70 is_stmt 0 view .LVU149
+ 571 0000 10B4     		push	{r4}
+ 572              		.cfi_def_cfa_offset 4
+ 573              		.cfi_offset 4, -4
+ 152:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.request = (*request);
+ 574              		.loc 1 152 70 view .LVU150
+ 575 0002 0246     		mov	r2, r0
+ 576              		.loc 1 153 22 view .LVU151
+ 577 0004 054C     		ldr	r4, .L56
+ 578 0006 0068     		ldr	r0, [r0]	@ unaligned
+ 579              	.LVL37:
+ 580              		.loc 1 153 22 view .LVU152
+ 581 0008 2346     		mov	r3, r4
+ 582 000a 5168     		ldr	r1, [r2, #4]	@ unaligned
+ 583 000c 03C3     		stmia	r3!, {r0, r1}
+ 154:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.buffer = NULL;
+ 584              		.loc 1 154 3 is_stmt 1 view .LVU153
+ 155:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.total_xferred = 0;
+ 585              		.loc 1 155 3 view .LVU154
+ 156:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.data_len = 0;
+ 586              		.loc 1 156 3 view .LVU155
+ 154:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.buffer = NULL;
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 18
+
+
+ 587              		.loc 1 154 21 is_stmt 0 view .LVU156
+ 588 000e 0023     		movs	r3, #0
+ 589              		.loc 1 156 23 view .LVU157
+ 590 0010 C4E90233 		strd	r3, r3, [r4, #8]
+ 157:lib/tinyusb/src/device/usbd_control.c **** }
+ 591              		.loc 1 157 1 view .LVU158
+ 592 0014 5DF8044B 		ldr	r4, [sp], #4
+ 593              		.cfi_restore 4
+ 594              		.cfi_def_cfa_offset 0
+ 595 0018 7047     		bx	lr
+ 596              	.L57:
+ 597 001a 00BF     		.align	2
+ 598              	.L56:
+ 599 001c 00000000 		.word	.LANCHOR1
+ 600              		.cfi_endproc
+ 601              	.LFE422:
+ 603              		.section	.text.usbd_control_xfer_cb,"ax",%progbits
+ 604              		.align	1
+ 605              		.p2align 2,,3
+ 606              		.global	usbd_control_xfer_cb
+ 607              		.syntax unified
+ 608              		.thumb
+ 609              		.thumb_func
+ 611              	usbd_control_xfer_cb:
+ 612              	.LVL38:
+ 613              	.LFB423:
+ 158:lib/tinyusb/src/device/usbd_control.c **** 
+ 159:lib/tinyusb/src/device/usbd_control.c **** // callback when a transaction complete on
+ 160:lib/tinyusb/src/device/usbd_control.c **** // - DATA stage of control endpoint or
+ 161:lib/tinyusb/src/device/usbd_control.c **** // - Status stage
+ 162:lib/tinyusb/src/device/usbd_control.c **** bool usbd_control_xfer_cb(uint8_t rhport, uint8_t ep_addr, xfer_result_t result, uint32_t xferred_b
+ 614              		.loc 1 162 106 is_stmt 1 view -0
+ 615              		.cfi_startproc
+ 616              		@ args = 0, pretend = 0, frame = 0
+ 617              		@ frame_needed = 0, uses_anonymous_args = 0
+ 163:lib/tinyusb/src/device/usbd_control.c ****   (void) result;
+ 618              		.loc 1 163 3 view .LVU160
+ 164:lib/tinyusb/src/device/usbd_control.c **** 
+ 165:lib/tinyusb/src/device/usbd_control.c ****   // Endpoint Address is opposite to direction bit, this is Status Stage complete event
+ 166:lib/tinyusb/src/device/usbd_control.c ****   if (tu_edpt_dir(ep_addr) != _ctrl_xfer.request.bmRequestType_bit.direction) {
+ 619              		.loc 1 166 3 view .LVU161
+ 620              	.LBB59:
+ 621              	.LBI59:
+ 622              		.file 3 "lib/tinyusb/src/common/tusb_types.h"
+   1:lib/tinyusb/src/common/tusb_types.h **** /*
+   2:lib/tinyusb/src/common/tusb_types.h ****  * The MIT License (MIT)
+   3:lib/tinyusb/src/common/tusb_types.h ****  *
+   4:lib/tinyusb/src/common/tusb_types.h ****  * Copyright (c) 2019 Ha Thach (tinyusb.org)
+   5:lib/tinyusb/src/common/tusb_types.h ****  *
+   6:lib/tinyusb/src/common/tusb_types.h ****  * Permission is hereby granted, free of charge, to any person obtaining a copy
+   7:lib/tinyusb/src/common/tusb_types.h ****  * of this software and associated documentation files (the "Software"), to deal
+   8:lib/tinyusb/src/common/tusb_types.h ****  * in the Software without restriction, including without limitation the rights
+   9:lib/tinyusb/src/common/tusb_types.h ****  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  10:lib/tinyusb/src/common/tusb_types.h ****  * copies of the Software, and to permit persons to whom the Software is
+  11:lib/tinyusb/src/common/tusb_types.h ****  * furnished to do so, subject to the following conditions:
+  12:lib/tinyusb/src/common/tusb_types.h ****  *
+  13:lib/tinyusb/src/common/tusb_types.h ****  * The above copyright notice and this permission notice shall be included in
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 19
+
+
+  14:lib/tinyusb/src/common/tusb_types.h ****  * all copies or substantial portions of the Software.
+  15:lib/tinyusb/src/common/tusb_types.h ****  *
+  16:lib/tinyusb/src/common/tusb_types.h ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  17:lib/tinyusb/src/common/tusb_types.h ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  18:lib/tinyusb/src/common/tusb_types.h ****  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  19:lib/tinyusb/src/common/tusb_types.h ****  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  20:lib/tinyusb/src/common/tusb_types.h ****  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  21:lib/tinyusb/src/common/tusb_types.h ****  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  22:lib/tinyusb/src/common/tusb_types.h ****  * THE SOFTWARE.
+  23:lib/tinyusb/src/common/tusb_types.h ****  *
+  24:lib/tinyusb/src/common/tusb_types.h ****  * This file is part of the TinyUSB stack.
+  25:lib/tinyusb/src/common/tusb_types.h ****  */
+  26:lib/tinyusb/src/common/tusb_types.h **** 
+  27:lib/tinyusb/src/common/tusb_types.h **** #ifndef TUSB_TYPES_H_
+  28:lib/tinyusb/src/common/tusb_types.h **** #define TUSB_TYPES_H_
+  29:lib/tinyusb/src/common/tusb_types.h **** 
+  30:lib/tinyusb/src/common/tusb_types.h **** #include <stdbool.h>
+  31:lib/tinyusb/src/common/tusb_types.h **** #include <stdint.h>
+  32:lib/tinyusb/src/common/tusb_types.h **** #include "tusb_compiler.h"
+  33:lib/tinyusb/src/common/tusb_types.h **** 
+  34:lib/tinyusb/src/common/tusb_types.h **** #ifdef __cplusplus
+  35:lib/tinyusb/src/common/tusb_types.h ****  extern "C" {
+  36:lib/tinyusb/src/common/tusb_types.h **** #endif
+  37:lib/tinyusb/src/common/tusb_types.h **** 
+  38:lib/tinyusb/src/common/tusb_types.h **** /*------------------------------------------------------------------*/
+  39:lib/tinyusb/src/common/tusb_types.h **** /* CONSTANTS
+  40:lib/tinyusb/src/common/tusb_types.h ****  *------------------------------------------------------------------*/
+  41:lib/tinyusb/src/common/tusb_types.h **** 
+  42:lib/tinyusb/src/common/tusb_types.h **** /// defined base on EHCI specs value for Endpoint Speed
+  43:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
+  44:lib/tinyusb/src/common/tusb_types.h ****   TUSB_SPEED_FULL = 0,
+  45:lib/tinyusb/src/common/tusb_types.h ****   TUSB_SPEED_LOW  = 1,
+  46:lib/tinyusb/src/common/tusb_types.h ****   TUSB_SPEED_HIGH = 2,
+  47:lib/tinyusb/src/common/tusb_types.h ****   TUSB_SPEED_INVALID = 0xff,
+  48:lib/tinyusb/src/common/tusb_types.h **** } tusb_speed_t;
+  49:lib/tinyusb/src/common/tusb_types.h **** 
+  50:lib/tinyusb/src/common/tusb_types.h **** /// defined base on USB Specs Endpoint's bmAttributes
+  51:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
+  52:lib/tinyusb/src/common/tusb_types.h ****   TUSB_XFER_CONTROL = 0 ,
+  53:lib/tinyusb/src/common/tusb_types.h ****   TUSB_XFER_ISOCHRONOUS ,
+  54:lib/tinyusb/src/common/tusb_types.h ****   TUSB_XFER_BULK        ,
+  55:lib/tinyusb/src/common/tusb_types.h ****   TUSB_XFER_INTERRUPT
+  56:lib/tinyusb/src/common/tusb_types.h **** } tusb_xfer_type_t;
+  57:lib/tinyusb/src/common/tusb_types.h **** 
+  58:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
+  59:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DIR_OUT = 0,
+  60:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DIR_IN  = 1,
+  61:lib/tinyusb/src/common/tusb_types.h **** 
+  62:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DIR_IN_MASK = 0x80
+  63:lib/tinyusb/src/common/tusb_types.h **** } tusb_dir_t;
+  64:lib/tinyusb/src/common/tusb_types.h **** 
+  65:lib/tinyusb/src/common/tusb_types.h **** enum {
+  66:lib/tinyusb/src/common/tusb_types.h ****   TUSB_EPSIZE_BULK_FS = 64,
+  67:lib/tinyusb/src/common/tusb_types.h ****   TUSB_EPSIZE_BULK_HS = 512,
+  68:lib/tinyusb/src/common/tusb_types.h **** 
+  69:lib/tinyusb/src/common/tusb_types.h ****   TUSB_EPSIZE_ISO_FS_MAX = 1023,
+  70:lib/tinyusb/src/common/tusb_types.h ****   TUSB_EPSIZE_ISO_HS_MAX = 1024,
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 20
+
+
+  71:lib/tinyusb/src/common/tusb_types.h **** };
+  72:lib/tinyusb/src/common/tusb_types.h **** 
+  73:lib/tinyusb/src/common/tusb_types.h **** /// Isochronous Endpoint Attributes
+  74:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
+  75:lib/tinyusb/src/common/tusb_types.h ****   TUSB_ISO_EP_ATT_NO_SYNC         = 0x00,
+  76:lib/tinyusb/src/common/tusb_types.h ****   TUSB_ISO_EP_ATT_ASYNCHRONOUS    = 0x04,
+  77:lib/tinyusb/src/common/tusb_types.h ****   TUSB_ISO_EP_ATT_ADAPTIVE        = 0x08,
+  78:lib/tinyusb/src/common/tusb_types.h ****   TUSB_ISO_EP_ATT_SYNCHRONOUS     = 0x0C,
+  79:lib/tinyusb/src/common/tusb_types.h ****   TUSB_ISO_EP_ATT_DATA            = 0x00, ///< Data End Point
+  80:lib/tinyusb/src/common/tusb_types.h ****   TUSB_ISO_EP_ATT_EXPLICIT_FB     = 0x10, ///< Feedback End Point
+  81:lib/tinyusb/src/common/tusb_types.h ****   TUSB_ISO_EP_ATT_IMPLICIT_FB     = 0x20, ///< Data endpoint that also serves as an implicit feedba
+  82:lib/tinyusb/src/common/tusb_types.h **** } tusb_iso_ep_attribute_t;
+  83:lib/tinyusb/src/common/tusb_types.h **** 
+  84:lib/tinyusb/src/common/tusb_types.h **** /// USB Descriptor Types
+  85:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
+  86:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_DEVICE                = 0x01,
+  87:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_CONFIGURATION         = 0x02,
+  88:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_STRING                = 0x03,
+  89:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_INTERFACE             = 0x04,
+  90:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_ENDPOINT              = 0x05,
+  91:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_DEVICE_QUALIFIER      = 0x06,
+  92:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_OTHER_SPEED_CONFIG    = 0x07,
+  93:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_INTERFACE_POWER       = 0x08,
+  94:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_OTG                   = 0x09,
+  95:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_DEBUG                 = 0x0A,
+  96:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_INTERFACE_ASSOCIATION = 0x0B,
+  97:lib/tinyusb/src/common/tusb_types.h **** 
+  98:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_BOS                   = 0x0F,
+  99:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_DEVICE_CAPABILITY     = 0x10,
+ 100:lib/tinyusb/src/common/tusb_types.h **** 
+ 101:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_FUNCTIONAL            = 0x21,
+ 102:lib/tinyusb/src/common/tusb_types.h **** 
+ 103:lib/tinyusb/src/common/tusb_types.h ****   // Class Specific Descriptor
+ 104:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_CS_DEVICE             = 0x21,
+ 105:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_CS_CONFIGURATION      = 0x22,
+ 106:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_CS_STRING             = 0x23,
+ 107:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_CS_INTERFACE          = 0x24,
+ 108:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_CS_ENDPOINT           = 0x25,
+ 109:lib/tinyusb/src/common/tusb_types.h **** 
+ 110:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_SUPERSPEED_ENDPOINT_COMPANION     = 0x30,
+ 111:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_SUPERSPEED_ISO_ENDPOINT_COMPANION = 0x31
+ 112:lib/tinyusb/src/common/tusb_types.h **** } tusb_desc_type_t;
+ 113:lib/tinyusb/src/common/tusb_types.h **** 
+ 114:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
+ 115:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_GET_STATUS        = 0  ,
+ 116:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_CLEAR_FEATURE     = 1  ,
+ 117:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_RESERVED          = 2  ,
+ 118:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_SET_FEATURE       = 3  ,
+ 119:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_RESERVED2         = 4  ,
+ 120:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_SET_ADDRESS       = 5  ,
+ 121:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_GET_DESCRIPTOR    = 6  ,
+ 122:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_SET_DESCRIPTOR    = 7  ,
+ 123:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_GET_CONFIGURATION = 8  ,
+ 124:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_SET_CONFIGURATION = 9  ,
+ 125:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_GET_INTERFACE     = 10 ,
+ 126:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_SET_INTERFACE     = 11 ,
+ 127:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_SYNCH_FRAME       = 12
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 21
+
+
+ 128:lib/tinyusb/src/common/tusb_types.h **** } tusb_request_code_t;
+ 129:lib/tinyusb/src/common/tusb_types.h **** 
+ 130:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
+ 131:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_FEATURE_EDPT_HALT     = 0,
+ 132:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_FEATURE_REMOTE_WAKEUP = 1,
+ 133:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_FEATURE_TEST_MODE     = 2
+ 134:lib/tinyusb/src/common/tusb_types.h **** } tusb_request_feature_selector_t;
+ 135:lib/tinyusb/src/common/tusb_types.h **** 
+ 136:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
+ 137:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_TYPE_STANDARD = 0,
+ 138:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_TYPE_CLASS,
+ 139:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_TYPE_VENDOR,
+ 140:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_TYPE_INVALID
+ 141:lib/tinyusb/src/common/tusb_types.h **** } tusb_request_type_t;
+ 142:lib/tinyusb/src/common/tusb_types.h **** 
+ 143:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
+ 144:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_RCPT_DEVICE =0,
+ 145:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_RCPT_INTERFACE,
+ 146:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_RCPT_ENDPOINT,
+ 147:lib/tinyusb/src/common/tusb_types.h ****   TUSB_REQ_RCPT_OTHER
+ 148:lib/tinyusb/src/common/tusb_types.h **** } tusb_request_recipient_t;
+ 149:lib/tinyusb/src/common/tusb_types.h **** 
+ 150:lib/tinyusb/src/common/tusb_types.h **** // https://www.usb.org/defined-class-codes
+ 151:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
+ 152:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_UNSPECIFIED          = 0    ,
+ 153:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_AUDIO                = 1    ,
+ 154:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_CDC                  = 2    ,
+ 155:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_HID                  = 3    ,
+ 156:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_RESERVED_4           = 4    ,
+ 157:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_PHYSICAL             = 5    ,
+ 158:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_IMAGE                = 6    ,
+ 159:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_PRINTER              = 7    ,
+ 160:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_MSC                  = 8    ,
+ 161:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_HUB                  = 9    ,
+ 162:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_CDC_DATA             = 10   ,
+ 163:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_SMART_CARD           = 11   ,
+ 164:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_RESERVED_12          = 12   ,
+ 165:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_CONTENT_SECURITY     = 13   ,
+ 166:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_VIDEO                = 14   ,
+ 167:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_PERSONAL_HEALTHCARE  = 15   ,
+ 168:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_AUDIO_VIDEO          = 16   ,
+ 169:lib/tinyusb/src/common/tusb_types.h **** 
+ 170:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_DIAGNOSTIC           = 0xDC ,
+ 171:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_WIRELESS_CONTROLLER  = 0xE0 ,
+ 172:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_MISC                 = 0xEF ,
+ 173:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_APPLICATION_SPECIFIC = 0xFE ,
+ 174:lib/tinyusb/src/common/tusb_types.h ****   TUSB_CLASS_VENDOR_SPECIFIC      = 0xFF
+ 175:lib/tinyusb/src/common/tusb_types.h **** } tusb_class_code_t;
+ 176:lib/tinyusb/src/common/tusb_types.h **** 
+ 177:lib/tinyusb/src/common/tusb_types.h **** typedef enum
+ 178:lib/tinyusb/src/common/tusb_types.h **** {
+ 179:lib/tinyusb/src/common/tusb_types.h ****   MISC_SUBCLASS_COMMON = 2
+ 180:lib/tinyusb/src/common/tusb_types.h **** }misc_subclass_type_t;
+ 181:lib/tinyusb/src/common/tusb_types.h **** 
+ 182:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
+ 183:lib/tinyusb/src/common/tusb_types.h ****   MISC_PROTOCOL_IAD = 1
+ 184:lib/tinyusb/src/common/tusb_types.h **** } misc_protocol_type_t;
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 22
+
+
+ 185:lib/tinyusb/src/common/tusb_types.h **** 
+ 186:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
+ 187:lib/tinyusb/src/common/tusb_types.h ****   APP_SUBCLASS_USBTMC = 0x03,
+ 188:lib/tinyusb/src/common/tusb_types.h ****   APP_SUBCLASS_DFU_RUNTIME = 0x01
+ 189:lib/tinyusb/src/common/tusb_types.h **** } app_subclass_type_t;
+ 190:lib/tinyusb/src/common/tusb_types.h **** 
+ 191:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
+ 192:lib/tinyusb/src/common/tusb_types.h ****   DEVICE_CAPABILITY_WIRELESS_USB               = 0x01,
+ 193:lib/tinyusb/src/common/tusb_types.h ****   DEVICE_CAPABILITY_USB20_EXTENSION            = 0x02,
+ 194:lib/tinyusb/src/common/tusb_types.h ****   DEVICE_CAPABILITY_SUPERSPEED_USB             = 0x03,
+ 195:lib/tinyusb/src/common/tusb_types.h ****   DEVICE_CAPABILITY_CONTAINER_id               = 0x04,
+ 196:lib/tinyusb/src/common/tusb_types.h ****   DEVICE_CAPABILITY_PLATFORM                   = 0x05,
+ 197:lib/tinyusb/src/common/tusb_types.h ****   DEVICE_CAPABILITY_POWER_DELIVERY             = 0x06,
+ 198:lib/tinyusb/src/common/tusb_types.h ****   DEVICE_CAPABILITY_BATTERY_INFO               = 0x07,
+ 199:lib/tinyusb/src/common/tusb_types.h ****   DEVICE_CAPABILITY_PD_CONSUMER_PORT           = 0x08,
+ 200:lib/tinyusb/src/common/tusb_types.h ****   DEVICE_CAPABILITY_PD_PROVIDER_PORT           = 0x09,
+ 201:lib/tinyusb/src/common/tusb_types.h ****   DEVICE_CAPABILITY_SUPERSPEED_PLUS            = 0x0A,
+ 202:lib/tinyusb/src/common/tusb_types.h ****   DEVICE_CAPABILITY_PRECESION_TIME_MEASUREMENT = 0x0B,
+ 203:lib/tinyusb/src/common/tusb_types.h ****   DEVICE_CAPABILITY_WIRELESS_USB_EXT           = 0x0C,
+ 204:lib/tinyusb/src/common/tusb_types.h ****   DEVICE_CAPABILITY_BILLBOARD                  = 0x0D,
+ 205:lib/tinyusb/src/common/tusb_types.h ****   DEVICE_CAPABILITY_AUTHENTICATION             = 0x0E,
+ 206:lib/tinyusb/src/common/tusb_types.h ****   DEVICE_CAPABILITY_BILLBOARD_EX               = 0x0F,
+ 207:lib/tinyusb/src/common/tusb_types.h ****   DEVICE_CAPABILITY_CONFIGURATION_SUMMARY      = 0x10
+ 208:lib/tinyusb/src/common/tusb_types.h **** } device_capability_type_t;
+ 209:lib/tinyusb/src/common/tusb_types.h **** 
+ 210:lib/tinyusb/src/common/tusb_types.h **** enum {
+ 211:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_CONFIG_ATT_REMOTE_WAKEUP = 1u << 5,
+ 212:lib/tinyusb/src/common/tusb_types.h ****   TUSB_DESC_CONFIG_ATT_SELF_POWERED  = 1u << 6,
+ 213:lib/tinyusb/src/common/tusb_types.h **** };
+ 214:lib/tinyusb/src/common/tusb_types.h **** 
+ 215:lib/tinyusb/src/common/tusb_types.h **** #define TUSB_DESC_CONFIG_POWER_MA(x)  ((x)/2)
+ 216:lib/tinyusb/src/common/tusb_types.h **** 
+ 217:lib/tinyusb/src/common/tusb_types.h **** // USB 2.0 Spec Table 9-7: Test Mode Selectors
+ 218:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
+ 219:lib/tinyusb/src/common/tusb_types.h ****   TUSB_FEATURE_TEST_J = 1,
+ 220:lib/tinyusb/src/common/tusb_types.h ****   TUSB_FEATURE_TEST_K,
+ 221:lib/tinyusb/src/common/tusb_types.h ****   TUSB_FEATURE_TEST_SE0_NAK,
+ 222:lib/tinyusb/src/common/tusb_types.h ****   TUSB_FEATURE_TEST_PACKET,
+ 223:lib/tinyusb/src/common/tusb_types.h ****   TUSB_FEATURE_TEST_FORCE_ENABLE,
+ 224:lib/tinyusb/src/common/tusb_types.h **** } tusb_feature_test_mode_t;
+ 225:lib/tinyusb/src/common/tusb_types.h **** 
+ 226:lib/tinyusb/src/common/tusb_types.h **** //--------------------------------------------------------------------+
+ 227:lib/tinyusb/src/common/tusb_types.h **** //
+ 228:lib/tinyusb/src/common/tusb_types.h **** //--------------------------------------------------------------------+
+ 229:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
+ 230:lib/tinyusb/src/common/tusb_types.h ****   XFER_RESULT_SUCCESS = 0,
+ 231:lib/tinyusb/src/common/tusb_types.h ****   XFER_RESULT_FAILED,
+ 232:lib/tinyusb/src/common/tusb_types.h ****   XFER_RESULT_STALLED,
+ 233:lib/tinyusb/src/common/tusb_types.h ****   XFER_RESULT_TIMEOUT,
+ 234:lib/tinyusb/src/common/tusb_types.h ****   XFER_RESULT_INVALID
+ 235:lib/tinyusb/src/common/tusb_types.h **** } xfer_result_t;
+ 236:lib/tinyusb/src/common/tusb_types.h **** 
+ 237:lib/tinyusb/src/common/tusb_types.h **** // TODO remove
+ 238:lib/tinyusb/src/common/tusb_types.h **** enum {
+ 239:lib/tinyusb/src/common/tusb_types.h ****   DESC_OFFSET_LEN  = 0,
+ 240:lib/tinyusb/src/common/tusb_types.h ****   DESC_OFFSET_TYPE = 1
+ 241:lib/tinyusb/src/common/tusb_types.h **** };
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 23
+
+
+ 242:lib/tinyusb/src/common/tusb_types.h **** 
+ 243:lib/tinyusb/src/common/tusb_types.h **** enum {
+ 244:lib/tinyusb/src/common/tusb_types.h ****   INTERFACE_INVALID_NUMBER = 0xff
+ 245:lib/tinyusb/src/common/tusb_types.h **** };
+ 246:lib/tinyusb/src/common/tusb_types.h **** 
+ 247:lib/tinyusb/src/common/tusb_types.h **** typedef enum {
+ 248:lib/tinyusb/src/common/tusb_types.h ****   MS_OS_20_SET_HEADER_DESCRIPTOR       = 0x00,
+ 249:lib/tinyusb/src/common/tusb_types.h ****   MS_OS_20_SUBSET_HEADER_CONFIGURATION = 0x01,
+ 250:lib/tinyusb/src/common/tusb_types.h ****   MS_OS_20_SUBSET_HEADER_FUNCTION      = 0x02,
+ 251:lib/tinyusb/src/common/tusb_types.h ****   MS_OS_20_FEATURE_COMPATBLE_ID        = 0x03,
+ 252:lib/tinyusb/src/common/tusb_types.h ****   MS_OS_20_FEATURE_REG_PROPERTY        = 0x04,
+ 253:lib/tinyusb/src/common/tusb_types.h ****   MS_OS_20_FEATURE_MIN_RESUME_TIME     = 0x05,
+ 254:lib/tinyusb/src/common/tusb_types.h ****   MS_OS_20_FEATURE_MODEL_ID            = 0x06,
+ 255:lib/tinyusb/src/common/tusb_types.h ****   MS_OS_20_FEATURE_CCGP_DEVICE         = 0x07,
+ 256:lib/tinyusb/src/common/tusb_types.h ****   MS_OS_20_FEATURE_VENDOR_REVISION     = 0x08
+ 257:lib/tinyusb/src/common/tusb_types.h **** } microsoft_os_20_type_t;
+ 258:lib/tinyusb/src/common/tusb_types.h **** 
+ 259:lib/tinyusb/src/common/tusb_types.h **** enum {
+ 260:lib/tinyusb/src/common/tusb_types.h ****   CONTROL_STAGE_IDLE,
+ 261:lib/tinyusb/src/common/tusb_types.h ****   CONTROL_STAGE_SETUP,
+ 262:lib/tinyusb/src/common/tusb_types.h ****   CONTROL_STAGE_DATA,
+ 263:lib/tinyusb/src/common/tusb_types.h ****   CONTROL_STAGE_ACK
+ 264:lib/tinyusb/src/common/tusb_types.h **** };
+ 265:lib/tinyusb/src/common/tusb_types.h **** 
+ 266:lib/tinyusb/src/common/tusb_types.h **** enum {
+ 267:lib/tinyusb/src/common/tusb_types.h ****   TUSB_INDEX_INVALID_8 = 0xFFu
+ 268:lib/tinyusb/src/common/tusb_types.h **** };
+ 269:lib/tinyusb/src/common/tusb_types.h **** 
+ 270:lib/tinyusb/src/common/tusb_types.h **** //--------------------------------------------------------------------+
+ 271:lib/tinyusb/src/common/tusb_types.h **** // USB Descriptors
+ 272:lib/tinyusb/src/common/tusb_types.h **** //--------------------------------------------------------------------+
+ 273:lib/tinyusb/src/common/tusb_types.h **** 
+ 274:lib/tinyusb/src/common/tusb_types.h **** // Start of all packed definitions for compiler without per-type packed
+ 275:lib/tinyusb/src/common/tusb_types.h **** TU_ATTR_PACKED_BEGIN
+ 276:lib/tinyusb/src/common/tusb_types.h **** TU_ATTR_BIT_FIELD_ORDER_BEGIN
+ 277:lib/tinyusb/src/common/tusb_types.h **** 
+ 278:lib/tinyusb/src/common/tusb_types.h **** /// USB Device Descriptor
+ 279:lib/tinyusb/src/common/tusb_types.h **** typedef struct TU_ATTR_PACKED {
+ 280:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bLength            ; ///< Size of this descriptor in bytes.
+ 281:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDescriptorType    ; ///< DEVICE Descriptor Type.
+ 282:lib/tinyusb/src/common/tusb_types.h ****   uint16_t bcdUSB             ; ///< BUSB Specification Release Number in Binary-Coded Decimal (i.e
+ 283:lib/tinyusb/src/common/tusb_types.h **** 
+ 284:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDeviceClass       ; ///< Class code (assigned by the USB-IF).
+ 285:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDeviceSubClass    ; ///< Subclass code (assigned by the USB-IF).
+ 286:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDeviceProtocol    ; ///< Protocol code (assigned by the USB-IF).
+ 287:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bMaxPacketSize0    ; ///< Maximum packet size for endpoint zero (only 8, 16, 32, or 64 a
+ 288:lib/tinyusb/src/common/tusb_types.h **** 
+ 289:lib/tinyusb/src/common/tusb_types.h ****   uint16_t idVendor           ; ///< Vendor ID (assigned by the USB-IF).
+ 290:lib/tinyusb/src/common/tusb_types.h ****   uint16_t idProduct          ; ///< Product ID (assigned by the manufacturer).
+ 291:lib/tinyusb/src/common/tusb_types.h ****   uint16_t bcdDevice          ; ///< Device release number in binary-coded decimal.
+ 292:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  iManufacturer      ; ///< Index of string descriptor describing manufacturer.
+ 293:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  iProduct           ; ///< Index of string descriptor describing product.
+ 294:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  iSerialNumber      ; ///< Index of string descriptor describing the device's serial numb
+ 295:lib/tinyusb/src/common/tusb_types.h **** 
+ 296:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bNumConfigurations ; ///< Number of possible configurations.
+ 297:lib/tinyusb/src/common/tusb_types.h **** } tusb_desc_device_t;
+ 298:lib/tinyusb/src/common/tusb_types.h **** 
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 24
+
+
+ 299:lib/tinyusb/src/common/tusb_types.h **** TU_VERIFY_STATIC( sizeof(tusb_desc_device_t) == 18, "size is not correct");
+ 300:lib/tinyusb/src/common/tusb_types.h **** 
+ 301:lib/tinyusb/src/common/tusb_types.h **** // USB Binary Device Object Store (BOS) Descriptor
+ 302:lib/tinyusb/src/common/tusb_types.h **** typedef struct TU_ATTR_PACKED {
+ 303:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bLength         ; ///< Size of this descriptor in bytes
+ 304:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDescriptorType ; ///< CONFIGURATION Descriptor Type
+ 305:lib/tinyusb/src/common/tusb_types.h ****   uint16_t wTotalLength    ; ///< Total length of data returned for this descriptor
+ 306:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bNumDeviceCaps  ; ///< Number of device capability descriptors in the BOS
+ 307:lib/tinyusb/src/common/tusb_types.h **** } tusb_desc_bos_t;
+ 308:lib/tinyusb/src/common/tusb_types.h **** 
+ 309:lib/tinyusb/src/common/tusb_types.h **** TU_VERIFY_STATIC( sizeof(tusb_desc_bos_t) == 5, "size is not correct");
+ 310:lib/tinyusb/src/common/tusb_types.h **** 
+ 311:lib/tinyusb/src/common/tusb_types.h **** /// USB Configuration Descriptor
+ 312:lib/tinyusb/src/common/tusb_types.h **** typedef struct TU_ATTR_PACKED {
+ 313:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bLength             ; ///< Size of this descriptor in bytes
+ 314:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDescriptorType     ; ///< CONFIGURATION Descriptor Type
+ 315:lib/tinyusb/src/common/tusb_types.h ****   uint16_t wTotalLength        ; ///< Total length of data returned for this configuration. Include
+ 316:lib/tinyusb/src/common/tusb_types.h **** 
+ 317:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bNumInterfaces      ; ///< Number of interfaces supported by this configuration
+ 318:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bConfigurationValue ; ///< Value to use as an argument to the SetConfiguration() request
+ 319:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  iConfiguration      ; ///< Index of string descriptor describing this configuration
+ 320:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bmAttributes        ; ///< Configuration characteristics \n D7: Reserved (set to one)\n 
+ 321:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bMaxPower           ; ///< Maximum power consumption of the USB device from the bus in t
+ 322:lib/tinyusb/src/common/tusb_types.h **** } tusb_desc_configuration_t;
+ 323:lib/tinyusb/src/common/tusb_types.h **** 
+ 324:lib/tinyusb/src/common/tusb_types.h **** TU_VERIFY_STATIC( sizeof(tusb_desc_configuration_t) == 9, "size is not correct");
+ 325:lib/tinyusb/src/common/tusb_types.h **** 
+ 326:lib/tinyusb/src/common/tusb_types.h **** /// USB Interface Descriptor
+ 327:lib/tinyusb/src/common/tusb_types.h **** typedef struct TU_ATTR_PACKED {
+ 328:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bLength            ; ///< Size of this descriptor in bytes
+ 329:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDescriptorType    ; ///< INTERFACE Descriptor Type
+ 330:lib/tinyusb/src/common/tusb_types.h **** 
+ 331:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bInterfaceNumber   ; ///< Number of this interface. Zero-based value identifying the ind
+ 332:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bAlternateSetting  ; ///< Value used to select this alternate setting for the interface 
+ 333:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bNumEndpoints      ; ///< Number of endpoints used by this interface (excluding endpoint
+ 334:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bInterfaceClass    ; ///< Class code (assigned by the USB-IF). \li A value of zero is re
+ 335:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bInterfaceSubClass ; ///< Subclass code (assigned by the USB-IF). \n These codes are qua
+ 336:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bInterfaceProtocol ; ///< Protocol code (assigned by the USB). \n These codes are qualif
+ 337:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  iInterface         ; ///< Index of string descriptor describing this interface
+ 338:lib/tinyusb/src/common/tusb_types.h **** } tusb_desc_interface_t;
+ 339:lib/tinyusb/src/common/tusb_types.h **** 
+ 340:lib/tinyusb/src/common/tusb_types.h **** TU_VERIFY_STATIC( sizeof(tusb_desc_interface_t) == 9, "size is not correct");
+ 341:lib/tinyusb/src/common/tusb_types.h **** 
+ 342:lib/tinyusb/src/common/tusb_types.h **** /// USB Endpoint Descriptor
+ 343:lib/tinyusb/src/common/tusb_types.h **** typedef struct TU_ATTR_PACKED {
+ 344:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bLength          ; // Size of this descriptor in bytes
+ 345:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDescriptorType  ; // ENDPOINT Descriptor Type
+ 346:lib/tinyusb/src/common/tusb_types.h **** 
+ 347:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bEndpointAddress ; // The address of the endpoint
+ 348:lib/tinyusb/src/common/tusb_types.h **** 
+ 349:lib/tinyusb/src/common/tusb_types.h ****   struct TU_ATTR_PACKED {
+ 350:lib/tinyusb/src/common/tusb_types.h ****     uint8_t xfer  : 2;        // Control, ISO, Bulk, Interrupt
+ 351:lib/tinyusb/src/common/tusb_types.h ****     uint8_t sync  : 2;        // None, Asynchronous, Adaptive, Synchronous
+ 352:lib/tinyusb/src/common/tusb_types.h ****     uint8_t usage : 2;        // Data, Feedback, Implicit feedback
+ 353:lib/tinyusb/src/common/tusb_types.h ****     uint8_t       : 2;
+ 354:lib/tinyusb/src/common/tusb_types.h ****   } bmAttributes;
+ 355:lib/tinyusb/src/common/tusb_types.h **** 
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 25
+
+
+ 356:lib/tinyusb/src/common/tusb_types.h ****   uint16_t wMaxPacketSize   ; // Bit 10..0 : max packet size, bit 12..11 additional transaction per
+ 357:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bInterval        ; // Polling interval, in frames or microframes depending on the operat
+ 358:lib/tinyusb/src/common/tusb_types.h **** } tusb_desc_endpoint_t;
+ 359:lib/tinyusb/src/common/tusb_types.h **** 
+ 360:lib/tinyusb/src/common/tusb_types.h **** TU_VERIFY_STATIC( sizeof(tusb_desc_endpoint_t) == 7, "size is not correct");
+ 361:lib/tinyusb/src/common/tusb_types.h **** 
+ 362:lib/tinyusb/src/common/tusb_types.h **** /// USB Other Speed Configuration Descriptor
+ 363:lib/tinyusb/src/common/tusb_types.h **** typedef struct TU_ATTR_PACKED {
+ 364:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bLength             ; ///< Size of descriptor
+ 365:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDescriptorType     ; ///< Other_speed_Configuration Type
+ 366:lib/tinyusb/src/common/tusb_types.h ****   uint16_t wTotalLength        ; ///< Total length of data returned
+ 367:lib/tinyusb/src/common/tusb_types.h **** 
+ 368:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bNumInterfaces      ; ///< Number of interfaces supported by this speed configuration
+ 369:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bConfigurationValue ; ///< Value to use to select configuration
+ 370:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  iConfiguration      ; ///< Index of string descriptor
+ 371:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bmAttributes        ; ///< Same as Configuration descriptor
+ 372:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bMaxPower           ; ///< Same as Configuration descriptor
+ 373:lib/tinyusb/src/common/tusb_types.h **** } tusb_desc_other_speed_t;
+ 374:lib/tinyusb/src/common/tusb_types.h **** 
+ 375:lib/tinyusb/src/common/tusb_types.h **** /// USB Device Qualifier Descriptor
+ 376:lib/tinyusb/src/common/tusb_types.h **** typedef struct TU_ATTR_PACKED {
+ 377:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bLength            ; ///< Size of descriptor
+ 378:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDescriptorType    ; ///< Device Qualifier Type
+ 379:lib/tinyusb/src/common/tusb_types.h ****   uint16_t bcdUSB             ; ///< USB specification version number (e.g., 0200H for V2.00)
+ 380:lib/tinyusb/src/common/tusb_types.h **** 
+ 381:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDeviceClass       ; ///< Class Code
+ 382:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDeviceSubClass    ; ///< SubClass Code
+ 383:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDeviceProtocol    ; ///< Protocol Code
+ 384:lib/tinyusb/src/common/tusb_types.h **** 
+ 385:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bMaxPacketSize0    ; ///< Maximum packet size for other speed
+ 386:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bNumConfigurations ; ///< Number of Other-speed Configurations
+ 387:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bReserved          ; ///< Reserved for future use, must be zero
+ 388:lib/tinyusb/src/common/tusb_types.h **** } tusb_desc_device_qualifier_t;
+ 389:lib/tinyusb/src/common/tusb_types.h **** 
+ 390:lib/tinyusb/src/common/tusb_types.h **** TU_VERIFY_STATIC( sizeof(tusb_desc_device_qualifier_t) == 10, "size is not correct");
+ 391:lib/tinyusb/src/common/tusb_types.h **** 
+ 392:lib/tinyusb/src/common/tusb_types.h **** /// USB Interface Association Descriptor (IAD ECN)
+ 393:lib/tinyusb/src/common/tusb_types.h **** typedef struct TU_ATTR_PACKED {
+ 394:lib/tinyusb/src/common/tusb_types.h ****   uint8_t bLength           ; ///< Size of descriptor
+ 395:lib/tinyusb/src/common/tusb_types.h ****   uint8_t bDescriptorType   ; ///< Other_speed_Configuration Type
+ 396:lib/tinyusb/src/common/tusb_types.h **** 
+ 397:lib/tinyusb/src/common/tusb_types.h ****   uint8_t bFirstInterface   ; ///< Index of the first associated interface.
+ 398:lib/tinyusb/src/common/tusb_types.h ****   uint8_t bInterfaceCount   ; ///< Total number of associated interfaces.
+ 399:lib/tinyusb/src/common/tusb_types.h **** 
+ 400:lib/tinyusb/src/common/tusb_types.h ****   uint8_t bFunctionClass    ; ///< Interface class ID.
+ 401:lib/tinyusb/src/common/tusb_types.h ****   uint8_t bFunctionSubClass ; ///< Interface subclass ID.
+ 402:lib/tinyusb/src/common/tusb_types.h ****   uint8_t bFunctionProtocol ; ///< Interface protocol ID.
+ 403:lib/tinyusb/src/common/tusb_types.h **** 
+ 404:lib/tinyusb/src/common/tusb_types.h ****   uint8_t iFunction         ; ///< Index of the string descriptor describing the interface associat
+ 405:lib/tinyusb/src/common/tusb_types.h **** } tusb_desc_interface_assoc_t;
+ 406:lib/tinyusb/src/common/tusb_types.h **** 
+ 407:lib/tinyusb/src/common/tusb_types.h **** TU_VERIFY_STATIC( sizeof(tusb_desc_interface_assoc_t) == 8, "size is not correct");
+ 408:lib/tinyusb/src/common/tusb_types.h **** 
+ 409:lib/tinyusb/src/common/tusb_types.h **** // USB String Descriptor
+ 410:lib/tinyusb/src/common/tusb_types.h **** typedef struct TU_ATTR_PACKED {
+ 411:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bLength         ; ///< Size of this descriptor in bytes
+ 412:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDescriptorType ; ///< Descriptor Type
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 26
+
+
+ 413:lib/tinyusb/src/common/tusb_types.h ****   uint16_t unicode_string[];
+ 414:lib/tinyusb/src/common/tusb_types.h **** } tusb_desc_string_t;
+ 415:lib/tinyusb/src/common/tusb_types.h **** 
+ 416:lib/tinyusb/src/common/tusb_types.h **** // USB Binary Device Object Store (BOS)
+ 417:lib/tinyusb/src/common/tusb_types.h **** typedef struct TU_ATTR_PACKED {
+ 418:lib/tinyusb/src/common/tusb_types.h ****   uint8_t bLength;
+ 419:lib/tinyusb/src/common/tusb_types.h ****   uint8_t bDescriptorType ;
+ 420:lib/tinyusb/src/common/tusb_types.h ****   uint8_t bDevCapabilityType;
+ 421:lib/tinyusb/src/common/tusb_types.h ****   uint8_t bReserved;
+ 422:lib/tinyusb/src/common/tusb_types.h ****   uint8_t PlatformCapabilityUUID[16];
+ 423:lib/tinyusb/src/common/tusb_types.h ****   uint8_t CapabilityData[];
+ 424:lib/tinyusb/src/common/tusb_types.h **** } tusb_desc_bos_platform_t;
+ 425:lib/tinyusb/src/common/tusb_types.h **** 
+ 426:lib/tinyusb/src/common/tusb_types.h **** // USB WebUSB URL Descriptor
+ 427:lib/tinyusb/src/common/tusb_types.h **** typedef struct TU_ATTR_PACKED {
+ 428:lib/tinyusb/src/common/tusb_types.h ****   uint8_t bLength;
+ 429:lib/tinyusb/src/common/tusb_types.h ****   uint8_t bDescriptorType;
+ 430:lib/tinyusb/src/common/tusb_types.h ****   uint8_t bScheme;
+ 431:lib/tinyusb/src/common/tusb_types.h ****   char    url[];
+ 432:lib/tinyusb/src/common/tusb_types.h **** } tusb_desc_webusb_url_t;
+ 433:lib/tinyusb/src/common/tusb_types.h **** 
+ 434:lib/tinyusb/src/common/tusb_types.h **** // DFU Functional Descriptor
+ 435:lib/tinyusb/src/common/tusb_types.h **** typedef struct TU_ATTR_PACKED {
+ 436:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bLength;
+ 437:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bDescriptorType;
+ 438:lib/tinyusb/src/common/tusb_types.h **** 
+ 439:lib/tinyusb/src/common/tusb_types.h ****   union {
+ 440:lib/tinyusb/src/common/tusb_types.h ****     struct TU_ATTR_PACKED {
+ 441:lib/tinyusb/src/common/tusb_types.h ****       uint8_t bitCanDnload             : 1;
+ 442:lib/tinyusb/src/common/tusb_types.h ****       uint8_t bitCanUpload             : 1;
+ 443:lib/tinyusb/src/common/tusb_types.h ****       uint8_t bitManifestationTolerant : 1;
+ 444:lib/tinyusb/src/common/tusb_types.h ****       uint8_t bitWillDetach            : 1;
+ 445:lib/tinyusb/src/common/tusb_types.h ****       uint8_t reserved                 : 4;
+ 446:lib/tinyusb/src/common/tusb_types.h ****     } bmAttributes;
+ 447:lib/tinyusb/src/common/tusb_types.h **** 
+ 448:lib/tinyusb/src/common/tusb_types.h ****     uint8_t bAttributes;
+ 449:lib/tinyusb/src/common/tusb_types.h ****   };
+ 450:lib/tinyusb/src/common/tusb_types.h **** 
+ 451:lib/tinyusb/src/common/tusb_types.h ****   uint16_t wDetachTimeOut;
+ 452:lib/tinyusb/src/common/tusb_types.h ****   uint16_t wTransferSize;
+ 453:lib/tinyusb/src/common/tusb_types.h ****   uint16_t bcdDFUVersion;
+ 454:lib/tinyusb/src/common/tusb_types.h **** } tusb_desc_dfu_functional_t;
+ 455:lib/tinyusb/src/common/tusb_types.h **** 
+ 456:lib/tinyusb/src/common/tusb_types.h **** //--------------------------------------------------------------------+
+ 457:lib/tinyusb/src/common/tusb_types.h **** //
+ 458:lib/tinyusb/src/common/tusb_types.h **** //--------------------------------------------------------------------+
+ 459:lib/tinyusb/src/common/tusb_types.h **** 
+ 460:lib/tinyusb/src/common/tusb_types.h **** typedef struct TU_ATTR_PACKED {
+ 461:lib/tinyusb/src/common/tusb_types.h ****   union {
+ 462:lib/tinyusb/src/common/tusb_types.h ****     struct TU_ATTR_PACKED {
+ 463:lib/tinyusb/src/common/tusb_types.h ****       uint8_t recipient :  5; ///< Recipient type tusb_request_recipient_t.
+ 464:lib/tinyusb/src/common/tusb_types.h ****       uint8_t type      :  2; ///< Request type tusb_request_type_t.
+ 465:lib/tinyusb/src/common/tusb_types.h ****       uint8_t direction :  1; ///< Direction type. tusb_dir_t
+ 466:lib/tinyusb/src/common/tusb_types.h ****     } bmRequestType_bit;
+ 467:lib/tinyusb/src/common/tusb_types.h **** 
+ 468:lib/tinyusb/src/common/tusb_types.h ****     uint8_t bmRequestType;
+ 469:lib/tinyusb/src/common/tusb_types.h ****   };
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 27
+
+
+ 470:lib/tinyusb/src/common/tusb_types.h **** 
+ 471:lib/tinyusb/src/common/tusb_types.h ****   uint8_t  bRequest;
+ 472:lib/tinyusb/src/common/tusb_types.h ****   uint16_t wValue;
+ 473:lib/tinyusb/src/common/tusb_types.h ****   uint16_t wIndex;
+ 474:lib/tinyusb/src/common/tusb_types.h ****   uint16_t wLength;
+ 475:lib/tinyusb/src/common/tusb_types.h **** } tusb_control_request_t;
+ 476:lib/tinyusb/src/common/tusb_types.h **** 
+ 477:lib/tinyusb/src/common/tusb_types.h **** TU_VERIFY_STATIC( sizeof(tusb_control_request_t) == 8, "size is not correct");
+ 478:lib/tinyusb/src/common/tusb_types.h **** 
+ 479:lib/tinyusb/src/common/tusb_types.h **** TU_ATTR_PACKED_END  // End of all packed definitions
+ 480:lib/tinyusb/src/common/tusb_types.h **** TU_ATTR_BIT_FIELD_ORDER_END
+ 481:lib/tinyusb/src/common/tusb_types.h **** 
+ 482:lib/tinyusb/src/common/tusb_types.h **** //--------------------------------------------------------------------+
+ 483:lib/tinyusb/src/common/tusb_types.h **** // Endpoint helper
+ 484:lib/tinyusb/src/common/tusb_types.h **** //--------------------------------------------------------------------+
+ 485:lib/tinyusb/src/common/tusb_types.h **** 
+ 486:lib/tinyusb/src/common/tusb_types.h **** // Get direction from Endpoint address
+ 487:lib/tinyusb/src/common/tusb_types.h **** TU_ATTR_ALWAYS_INLINE static inline tusb_dir_t tu_edpt_dir(uint8_t addr) {
+ 623              		.loc 3 487 48 view .LVU162
+ 624              	.LBB60:
+ 488:lib/tinyusb/src/common/tusb_types.h ****   return (addr & TUSB_DIR_IN_MASK) ? TUSB_DIR_IN : TUSB_DIR_OUT;
+ 625              		.loc 3 488 3 view .LVU163
+ 626              		.loc 3 488 3 is_stmt 0 view .LVU164
+ 627              	.LBE60:
+ 628              	.LBE59:
+ 162:lib/tinyusb/src/device/usbd_control.c ****   (void) result;
+ 629              		.loc 1 162 106 view .LVU165
+ 630 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 631              		.cfi_def_cfa_offset 24
+ 632              		.cfi_offset 3, -24
+ 633              		.cfi_offset 4, -20
+ 634              		.cfi_offset 5, -16
+ 635              		.cfi_offset 6, -12
+ 636              		.cfi_offset 7, -8
+ 637              		.cfi_offset 14, -4
+ 638              		.loc 1 166 67 view .LVU166
+ 639 0002 344C     		ldr	r4, .L90
+ 640              		.loc 1 166 6 view .LVU167
+ 641 0004 C909     		lsrs	r1, r1, #7
+ 642              	.LVL39:
+ 162:lib/tinyusb/src/device/usbd_control.c ****   (void) result;
+ 643              		.loc 1 162 106 view .LVU168
+ 644 0006 0646     		mov	r6, r0
+ 645 0008 1F46     		mov	r7, r3
+ 646              		.loc 1 166 67 view .LVU169
+ 647 000a 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 648              	.LVL40:
+ 649              		.loc 1 166 6 view .LVU170
+ 650 000c B1EBD21F 		cmp	r1, r2, lsr #7
+ 651 0010 1FD0     		beq	.L59
+ 167:lib/tinyusb/src/device/usbd_control.c ****     TU_ASSERT(0 == xferred_bytes);
+ 652              		.loc 1 167 5 is_stmt 1 view .LVU171
+ 653              		.loc 1 167 5 view .LVU172
+ 654 0012 4BB1     		cbz	r3, .L60
+ 655              		.loc 1 167 5 discriminator 1 view .LVU173
+ 656              		.loc 1 167 5 discriminator 1 view .LVU174
+ 657              		.loc 1 167 5 discriminator 1 view .LVU175
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 28
+
+
+ 658              		.loc 1 167 5 discriminator 1 view .LVU176
+ 659              	.LBB61:
+ 660              		.loc 1 167 5 discriminator 1 view .LVU177
+ 661              	.LVL41:
+ 662              		.loc 1 167 5 discriminator 1 view .LVU178
+ 663 0014 4FF0E023 		mov	r3, #-536813568
+ 664              	.LVL42:
+ 665              		.loc 1 167 5 is_stmt 0 discriminator 1 view .LVU179
+ 666 0018 D3F8F03D 		ldr	r3, [r3, #3568]
+ 667 001c DA07     		lsls	r2, r3, #31
+ 668 001e 00D5     		bpl	.L85
+ 669              		.loc 1 167 5 is_stmt 1 discriminator 3 view .LVU180
+ 670              		.syntax unified
+ 671              	@ 167 "lib/tinyusb/src/device/usbd_control.c" 1
+ 672 0020 00BE     		BKPT #0
+ 673              	
+ 674              	@ 0 "" 2
+ 675              	.LVL43:
+ 676              		.thumb
+ 677              		.syntax unified
+ 678              	.L85:
+ 679              		.loc 1 167 5 is_stmt 0 discriminator 3 view .LVU181
+ 680              	.LBE61:
+ 681 0022 0025     		movs	r5, #0
+ 682              	.L62:
+ 168:lib/tinyusb/src/device/usbd_control.c **** 
+ 169:lib/tinyusb/src/device/usbd_control.c ****     // invoke optional dcd hook if available
+ 170:lib/tinyusb/src/device/usbd_control.c ****     dcd_edpt0_status_complete(rhport, &_ctrl_xfer.request);
+ 171:lib/tinyusb/src/device/usbd_control.c **** 
+ 172:lib/tinyusb/src/device/usbd_control.c ****     if (_ctrl_xfer.complete_cb) {
+ 173:lib/tinyusb/src/device/usbd_control.c ****       // TODO refactor with usbd_driver_print_control_complete_name
+ 174:lib/tinyusb/src/device/usbd_control.c ****       _ctrl_xfer.complete_cb(rhport, CONTROL_STAGE_ACK, &_ctrl_xfer.request);
+ 175:lib/tinyusb/src/device/usbd_control.c ****     }
+ 176:lib/tinyusb/src/device/usbd_control.c **** 
+ 177:lib/tinyusb/src/device/usbd_control.c ****     return true;
+ 178:lib/tinyusb/src/device/usbd_control.c ****   }
+ 179:lib/tinyusb/src/device/usbd_control.c **** 
+ 180:lib/tinyusb/src/device/usbd_control.c ****   if (_ctrl_xfer.request.bmRequestType_bit.direction == TUSB_DIR_OUT) {
+ 181:lib/tinyusb/src/device/usbd_control.c ****     TU_VERIFY(_ctrl_xfer.buffer);
+ 182:lib/tinyusb/src/device/usbd_control.c ****     memcpy(_ctrl_xfer.buffer, _usbd_ctrl_buf, xferred_bytes);
+ 183:lib/tinyusb/src/device/usbd_control.c ****     TU_LOG_MEM(CFG_TUD_LOG_LEVEL, _usbd_ctrl_buf, xferred_bytes, 2);
+ 184:lib/tinyusb/src/device/usbd_control.c ****   }
+ 185:lib/tinyusb/src/device/usbd_control.c **** 
+ 186:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.total_xferred += (uint16_t) xferred_bytes;
+ 187:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.buffer += xferred_bytes;
+ 188:lib/tinyusb/src/device/usbd_control.c **** 
+ 189:lib/tinyusb/src/device/usbd_control.c ****   // Data Stage is complete when all request's length are transferred or
+ 190:lib/tinyusb/src/device/usbd_control.c ****   // a short packet is sent including zero-length packet.
+ 191:lib/tinyusb/src/device/usbd_control.c ****   if ((_ctrl_xfer.request.wLength == _ctrl_xfer.total_xferred) ||
+ 192:lib/tinyusb/src/device/usbd_control.c ****       (xferred_bytes < CFG_TUD_ENDPOINT0_SIZE)) {
+ 193:lib/tinyusb/src/device/usbd_control.c ****     // DATA stage is complete
+ 194:lib/tinyusb/src/device/usbd_control.c ****     bool is_ok = true;
+ 195:lib/tinyusb/src/device/usbd_control.c **** 
+ 196:lib/tinyusb/src/device/usbd_control.c ****     // invoke complete callback if set
+ 197:lib/tinyusb/src/device/usbd_control.c ****     // callback can still stall control in status phase e.g out data does not make sense
+ 198:lib/tinyusb/src/device/usbd_control.c ****     if (_ctrl_xfer.complete_cb) {
+ 199:lib/tinyusb/src/device/usbd_control.c ****       #if CFG_TUSB_DEBUG >= CFG_TUD_LOG_LEVEL
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 29
+
+
+ 200:lib/tinyusb/src/device/usbd_control.c ****       usbd_driver_print_control_complete_name(_ctrl_xfer.complete_cb);
+ 201:lib/tinyusb/src/device/usbd_control.c ****       #endif
+ 202:lib/tinyusb/src/device/usbd_control.c **** 
+ 203:lib/tinyusb/src/device/usbd_control.c ****       is_ok = _ctrl_xfer.complete_cb(rhport, CONTROL_STAGE_DATA, &_ctrl_xfer.request);
+ 204:lib/tinyusb/src/device/usbd_control.c ****     }
+ 205:lib/tinyusb/src/device/usbd_control.c **** 
+ 206:lib/tinyusb/src/device/usbd_control.c ****     if (is_ok) {
+ 207:lib/tinyusb/src/device/usbd_control.c ****       // Send status
+ 208:lib/tinyusb/src/device/usbd_control.c ****       TU_ASSERT(_status_stage_xact(rhport, &_ctrl_xfer.request));
+ 209:lib/tinyusb/src/device/usbd_control.c ****     } else {
+ 210:lib/tinyusb/src/device/usbd_control.c ****       // Stall both IN and OUT control endpoint
+ 211:lib/tinyusb/src/device/usbd_control.c ****       dcd_edpt_stall(rhport, EDPT_CTRL_OUT);
+ 212:lib/tinyusb/src/device/usbd_control.c ****       dcd_edpt_stall(rhport, EDPT_CTRL_IN);
+ 213:lib/tinyusb/src/device/usbd_control.c ****     }
+ 214:lib/tinyusb/src/device/usbd_control.c ****   } else {
+ 215:lib/tinyusb/src/device/usbd_control.c ****     // More data to transfer
+ 216:lib/tinyusb/src/device/usbd_control.c ****     TU_ASSERT(_data_stage_xact(rhport));
+ 217:lib/tinyusb/src/device/usbd_control.c ****   }
+ 218:lib/tinyusb/src/device/usbd_control.c **** 
+ 219:lib/tinyusb/src/device/usbd_control.c ****   return true;
+ 220:lib/tinyusb/src/device/usbd_control.c **** }
+ 683              		.loc 1 220 1 view .LVU182
+ 684 0024 2846     		mov	r0, r5
+ 685 0026 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 686              	.LVL44:
+ 687              	.L60:
+ 167:lib/tinyusb/src/device/usbd_control.c ****     TU_ASSERT(0 == xferred_bytes);
+ 688              		.loc 1 167 5 is_stmt 1 discriminator 2 view .LVU183
+ 170:lib/tinyusb/src/device/usbd_control.c **** 
+ 689              		.loc 1 170 5 discriminator 2 view .LVU184
+ 690 0028 2146     		mov	r1, r4
+ 691 002a FFF7FEFF 		bl	dcd_edpt0_status_complete
+ 692              	.LVL45:
+ 172:lib/tinyusb/src/device/usbd_control.c ****       // TODO refactor with usbd_driver_print_control_complete_name
+ 693              		.loc 1 172 5 discriminator 2 view .LVU185
+ 172:lib/tinyusb/src/device/usbd_control.c ****       // TODO refactor with usbd_driver_print_control_complete_name
+ 694              		.loc 1 172 19 is_stmt 0 discriminator 2 view .LVU186
+ 695 002e 2369     		ldr	r3, [r4, #16]
+ 172:lib/tinyusb/src/device/usbd_control.c ****       // TODO refactor with usbd_driver_print_control_complete_name
+ 696              		.loc 1 172 8 discriminator 2 view .LVU187
+ 697 0030 63B1     		cbz	r3, .L71
+ 174:lib/tinyusb/src/device/usbd_control.c ****     }
+ 698              		.loc 1 174 7 is_stmt 1 view .LVU188
+ 177:lib/tinyusb/src/device/usbd_control.c ****   }
+ 699              		.loc 1 177 12 is_stmt 0 view .LVU189
+ 700 0032 0125     		movs	r5, #1
+ 174:lib/tinyusb/src/device/usbd_control.c ****     }
+ 701              		.loc 1 174 7 view .LVU190
+ 702 0034 2246     		mov	r2, r4
+ 703 0036 0321     		movs	r1, #3
+ 704 0038 3046     		mov	r0, r6
+ 705 003a 9847     		blx	r3
+ 706              	.LVL46:
+ 707              		.loc 1 220 1 view .LVU191
+ 708 003c 2846     		mov	r0, r5
+ 709 003e F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 710              	.LVL47:
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 30
+
+
+ 711              	.L66:
+ 216:lib/tinyusb/src/device/usbd_control.c ****   }
+ 712              		.loc 1 216 5 is_stmt 1 view .LVU192
+ 216:lib/tinyusb/src/device/usbd_control.c ****   }
+ 713              		.loc 1 216 5 view .LVU193
+ 714 0040 3046     		mov	r0, r6
+ 715 0042 FFF7FEFF 		bl	_data_stage_xact
+ 716              	.LVL48:
+ 717 0046 0546     		mov	r5, r0
+ 718 0048 0028     		cmp	r0, #0
+ 719 004a 31D0     		beq	.L88
+ 720              	.L71:
+ 177:lib/tinyusb/src/device/usbd_control.c ****   }
+ 721              		.loc 1 177 12 is_stmt 0 view .LVU194
+ 722 004c 0125     		movs	r5, #1
+ 723              		.loc 1 220 1 view .LVU195
+ 724 004e 2846     		mov	r0, r5
+ 725 0050 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 726              	.LVL49:
+ 727              	.L59:
+ 180:lib/tinyusb/src/device/usbd_control.c ****     TU_VERIFY(_ctrl_xfer.buffer);
+ 728              		.loc 1 180 3 is_stmt 1 view .LVU196
+ 180:lib/tinyusb/src/device/usbd_control.c ****     TU_VERIFY(_ctrl_xfer.buffer);
+ 729              		.loc 1 180 6 is_stmt 0 view .LVU197
+ 730 0052 94F90020 		ldrsb	r2, [r4]
+ 731 0056 002A     		cmp	r2, #0
+ 732 0058 06DB     		blt	.L64
+ 181:lib/tinyusb/src/device/usbd_control.c ****     memcpy(_ctrl_xfer.buffer, _usbd_ctrl_buf, xferred_bytes);
+ 733              		.loc 1 181 5 is_stmt 1 view .LVU198
+ 181:lib/tinyusb/src/device/usbd_control.c ****     memcpy(_ctrl_xfer.buffer, _usbd_ctrl_buf, xferred_bytes);
+ 734              		.loc 1 181 5 view .LVU199
+ 735 005a A068     		ldr	r0, [r4, #8]
+ 736              	.LVL50:
+ 181:lib/tinyusb/src/device/usbd_control.c ****     memcpy(_ctrl_xfer.buffer, _usbd_ctrl_buf, xferred_bytes);
+ 737              		.loc 1 181 5 is_stmt 0 view .LVU200
+ 738 005c 0028     		cmp	r0, #0
+ 739 005e E0D0     		beq	.L85
+ 181:lib/tinyusb/src/device/usbd_control.c ****     memcpy(_ctrl_xfer.buffer, _usbd_ctrl_buf, xferred_bytes);
+ 740              		.loc 1 181 5 is_stmt 1 discriminator 2 view .LVU201
+ 182:lib/tinyusb/src/device/usbd_control.c ****     TU_LOG_MEM(CFG_TUD_LOG_LEVEL, _usbd_ctrl_buf, xferred_bytes, 2);
+ 741              		.loc 1 182 5 discriminator 2 view .LVU202
+ 742 0060 1A46     		mov	r2, r3
+ 743 0062 1D49     		ldr	r1, .L90+4
+ 744 0064 FFF7FEFF 		bl	memcpy
+ 745              	.LVL51:
+ 746              	.L64:
+ 183:lib/tinyusb/src/device/usbd_control.c ****   }
+ 747              		.loc 1 183 68 view .LVU203
+ 186:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.buffer += xferred_bytes;
+ 748              		.loc 1 186 3 view .LVU204
+ 186:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.buffer += xferred_bytes;
+ 749              		.loc 1 186 28 is_stmt 0 view .LVU205
+ 750 0068 E589     		ldrh	r5, [r4, #14]
+ 187:lib/tinyusb/src/device/usbd_control.c **** 
+ 751              		.loc 1 187 21 view .LVU206
+ 752 006a A268     		ldr	r2, [r4, #8]
+ 186:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.buffer += xferred_bytes;
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 31
+
+
+ 753              		.loc 1 186 28 view .LVU207
+ 754 006c 3D44     		add	r5, r5, r7
+ 187:lib/tinyusb/src/device/usbd_control.c **** 
+ 755              		.loc 1 187 21 view .LVU208
+ 756 006e 3A44     		add	r2, r2, r7
+ 186:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.buffer += xferred_bytes;
+ 757              		.loc 1 186 28 view .LVU209
+ 758 0070 A8B2     		uxth	r0, r5
+ 191:lib/tinyusb/src/device/usbd_control.c ****       (xferred_bytes < CFG_TUD_ENDPOINT0_SIZE)) {
+ 759              		.loc 1 191 6 view .LVU210
+ 760 0072 E588     		ldrh	r5, [r4, #6]
+ 187:lib/tinyusb/src/device/usbd_control.c **** 
+ 761              		.loc 1 187 21 view .LVU211
+ 762 0074 A260     		str	r2, [r4, #8]
+ 191:lib/tinyusb/src/device/usbd_control.c ****       (xferred_bytes < CFG_TUD_ENDPOINT0_SIZE)) {
+ 763              		.loc 1 191 64 view .LVU212
+ 764 0076 8542     		cmp	r5, r0
+ 765 0078 18BF     		it	ne
+ 766 007a 3F2F     		cmpne	r7, #63
+ 186:lib/tinyusb/src/device/usbd_control.c ****   _ctrl_xfer.buffer += xferred_bytes;
+ 767              		.loc 1 186 28 view .LVU213
+ 768 007c E081     		strh	r0, [r4, #14]	@ movhi
+ 187:lib/tinyusb/src/device/usbd_control.c **** 
+ 769              		.loc 1 187 3 is_stmt 1 view .LVU214
+ 191:lib/tinyusb/src/device/usbd_control.c ****       (xferred_bytes < CFG_TUD_ENDPOINT0_SIZE)) {
+ 770              		.loc 1 191 3 view .LVU215
+ 191:lib/tinyusb/src/device/usbd_control.c ****       (xferred_bytes < CFG_TUD_ENDPOINT0_SIZE)) {
+ 771              		.loc 1 191 64 is_stmt 0 view .LVU216
+ 772 007e 94BF     		ite	ls
+ 773 0080 0125     		movls	r5, #1
+ 774 0082 0025     		movhi	r5, #0
+ 775 0084 DCD8     		bhi	.L66
+ 776              	.LBB62:
+ 194:lib/tinyusb/src/device/usbd_control.c **** 
+ 777              		.loc 1 194 5 is_stmt 1 view .LVU217
+ 778              	.LVL52:
+ 198:lib/tinyusb/src/device/usbd_control.c ****       #if CFG_TUSB_DEBUG >= CFG_TUD_LOG_LEVEL
+ 779              		.loc 1 198 5 view .LVU218
+ 198:lib/tinyusb/src/device/usbd_control.c ****       #if CFG_TUSB_DEBUG >= CFG_TUD_LOG_LEVEL
+ 780              		.loc 1 198 19 is_stmt 0 view .LVU219
+ 781 0086 2369     		ldr	r3, [r4, #16]
+ 198:lib/tinyusb/src/device/usbd_control.c ****       #if CFG_TUSB_DEBUG >= CFG_TUD_LOG_LEVEL
+ 782              		.loc 1 198 8 view .LVU220
+ 783 0088 23B1     		cbz	r3, .L69
+ 203:lib/tinyusb/src/device/usbd_control.c ****     }
+ 784              		.loc 1 203 7 is_stmt 1 view .LVU221
+ 203:lib/tinyusb/src/device/usbd_control.c ****     }
+ 785              		.loc 1 203 15 is_stmt 0 view .LVU222
+ 786 008a 124A     		ldr	r2, .L90
+ 787 008c 0221     		movs	r1, #2
+ 788 008e 3046     		mov	r0, r6
+ 789 0090 9847     		blx	r3
+ 790              	.LVL53:
+ 206:lib/tinyusb/src/device/usbd_control.c ****       // Send status
+ 791              		.loc 1 206 5 is_stmt 1 view .LVU223
+ 206:lib/tinyusb/src/device/usbd_control.c ****       // Send status
+ 792              		.loc 1 206 8 is_stmt 0 view .LVU224
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 32
+
+
+ 793 0092 A8B1     		cbz	r0, .L89
+ 794              	.LVL54:
+ 795              	.L69:
+ 208:lib/tinyusb/src/device/usbd_control.c ****     } else {
+ 796              		.loc 1 208 7 is_stmt 1 view .LVU225
+ 208:lib/tinyusb/src/device/usbd_control.c ****     } else {
+ 797              		.loc 1 208 7 view .LVU226
+ 798              	.LBB63:
+ 799              	.LBI63:
+  74:lib/tinyusb/src/device/usbd_control.c ****   // Opposite to endpoint in Data Phase
+ 800              		.loc 1 74 20 view .LVU227
+ 801              	.LBB64:
+  76:lib/tinyusb/src/device/usbd_control.c ****   return usbd_edpt_xfer(rhport, ep_addr, NULL, 0);
+ 802              		.loc 1 76 3 view .LVU228
+  77:lib/tinyusb/src/device/usbd_control.c **** }
+ 803              		.loc 1 77 10 is_stmt 0 view .LVU229
+ 804 0094 0023     		movs	r3, #0
+  76:lib/tinyusb/src/device/usbd_control.c ****   return usbd_edpt_xfer(rhport, ep_addr, NULL, 0);
+ 805              		.loc 1 76 17 view .LVU230
+ 806 0096 94F90020 		ldrsb	r2, [r4]
+  77:lib/tinyusb/src/device/usbd_control.c **** }
+ 807              		.loc 1 77 10 view .LVU231
+ 808 009a 3046     		mov	r0, r6
+  76:lib/tinyusb/src/device/usbd_control.c ****   return usbd_edpt_xfer(rhport, ep_addr, NULL, 0);
+ 809              		.loc 1 76 17 view .LVU232
+ 810 009c 9A42     		cmp	r2, r3
+ 811              	.LVL55:
+  77:lib/tinyusb/src/device/usbd_control.c **** }
+ 812              		.loc 1 77 3 is_stmt 1 view .LVU233
+  77:lib/tinyusb/src/device/usbd_control.c **** }
+ 813              		.loc 1 77 10 is_stmt 0 view .LVU234
+ 814 009e 1A46     		mov	r2, r3
+ 815 00a0 ACBF     		ite	ge
+ 816 00a2 8021     		movge	r1, #128
+ 817 00a4 1946     		movlt	r1, r3
+ 818 00a6 FFF7FEFF 		bl	usbd_edpt_xfer
+ 819              	.LVL56:
+  77:lib/tinyusb/src/device/usbd_control.c **** }
+ 820              		.loc 1 77 10 view .LVU235
+ 821              	.LBE64:
+ 822              	.LBE63:
+ 208:lib/tinyusb/src/device/usbd_control.c ****     } else {
+ 823              		.loc 1 208 7 view .LVU236
+ 824 00aa 0546     		mov	r5, r0
+ 825 00ac 0028     		cmp	r0, #0
+ 826 00ae CDD1     		bne	.L71
+ 827              	.L88:
+ 208:lib/tinyusb/src/device/usbd_control.c ****     } else {
+ 828              		.loc 1 208 7 view .LVU237
+ 829              	.LBE62:
+ 216:lib/tinyusb/src/device/usbd_control.c ****   }
+ 830              		.loc 1 216 5 is_stmt 1 discriminator 1 view .LVU238
+ 216:lib/tinyusb/src/device/usbd_control.c ****   }
+ 831              		.loc 1 216 5 discriminator 1 view .LVU239
+ 216:lib/tinyusb/src/device/usbd_control.c ****   }
+ 832              		.loc 1 216 5 discriminator 1 view .LVU240
+ 216:lib/tinyusb/src/device/usbd_control.c ****   }
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 33
+
+
+ 833              		.loc 1 216 5 discriminator 1 view .LVU241
+ 834              	.LBB65:
+ 216:lib/tinyusb/src/device/usbd_control.c ****   }
+ 835              		.loc 1 216 5 discriminator 1 view .LVU242
+ 836              	.LVL57:
+ 216:lib/tinyusb/src/device/usbd_control.c ****   }
+ 837              		.loc 1 216 5 discriminator 1 view .LVU243
+ 838 00b0 4FF0E023 		mov	r3, #-536813568
+ 839 00b4 D3F8F03D 		ldr	r3, [r3, #3568]
+ 840 00b8 DB07     		lsls	r3, r3, #31
+ 841 00ba B2D5     		bpl	.L85
+ 216:lib/tinyusb/src/device/usbd_control.c ****   }
+ 842              		.loc 1 216 5 discriminator 3 view .LVU244
+ 843              		.syntax unified
+ 844              	@ 216 "lib/tinyusb/src/device/usbd_control.c" 1
+ 845 00bc 00BE     		BKPT #0
+ 846              	
+ 847              	@ 0 "" 2
+ 848              		.thumb
+ 849              		.syntax unified
+ 850 00be B1E7     		b	.L62
+ 851              	.LVL58:
+ 852              	.L89:
+ 216:lib/tinyusb/src/device/usbd_control.c ****   }
+ 853              		.loc 1 216 5 is_stmt 0 discriminator 3 view .LVU245
+ 854              	.LBE65:
+ 855              	.LBB66:
+ 211:lib/tinyusb/src/device/usbd_control.c ****       dcd_edpt_stall(rhport, EDPT_CTRL_IN);
+ 856              		.loc 1 211 7 is_stmt 1 view .LVU246
+ 857 00c0 0146     		mov	r1, r0
+ 858 00c2 3046     		mov	r0, r6
+ 859              	.LVL59:
+ 211:lib/tinyusb/src/device/usbd_control.c ****       dcd_edpt_stall(rhport, EDPT_CTRL_IN);
+ 860              		.loc 1 211 7 is_stmt 0 view .LVU247
+ 861 00c4 FFF7FEFF 		bl	dcd_edpt_stall
+ 862              	.LVL60:
+ 212:lib/tinyusb/src/device/usbd_control.c ****     }
+ 863              		.loc 1 212 7 is_stmt 1 view .LVU248
+ 864 00c8 8021     		movs	r1, #128
+ 865 00ca 3046     		mov	r0, r6
+ 866 00cc FFF7FEFF 		bl	dcd_edpt_stall
+ 867              	.LVL61:
+ 868 00d0 A8E7     		b	.L62
+ 869              	.L91:
+ 870 00d2 00BF     		.align	2
+ 871              	.L90:
+ 872 00d4 00000000 		.word	.LANCHOR1
+ 873 00d8 00000000 		.word	.LANCHOR0
+ 874              	.LBE66:
+ 875              		.cfi_endproc
+ 876              	.LFE423:
+ 878              		.section	.bss._ctrl_xfer,"aw",%nobits
+ 879              		.align	2
+ 880              		.set	.LANCHOR1,. + 0
+ 883              	_ctrl_xfer:
+ 884 0000 00000000 		.space	20
+ 884      00000000 
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 34
+
+
+ 884      00000000 
+ 884      00000000 
+ 884      00000000 
+ 885              		.section	.bss._usbd_ctrl_buf,"aw",%nobits
+ 886              		.align	2
+ 887              		.set	.LANCHOR0,. + 0
+ 890              	_usbd_ctrl_buf:
+ 891 0000 00000000 		.space	64
+ 891      00000000 
+ 891      00000000 
+ 891      00000000 
+ 891      00000000 
+ 892              		.text
+ 893              	.Letext0:
+ 894              		.file 4 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/machine/_default_types.h"
+ 895              		.file 5 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/_stdint.h"
+ 896              		.file 6 "/Library/DaisyToolchain/0.2.0/arm/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
+ 897              		.file 7 "lib/tinyusb/src/device/usbd_pvt.h"
+ 898              		.file 8 "lib/tinyusb/src/device/dcd.h"
+ 899              		.file 9 "<built-in>"
+ARM GAS  /tmp/claude-502/ccKyfRy5.s 			page 35
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 usbd_control.c
+/tmp/claude-502/ccKyfRy5.s:19     .text._data_stage_xact:0000000000000000 $t
+/tmp/claude-502/ccKyfRy5.s:25     .text._data_stage_xact:0000000000000000 _data_stage_xact
+/tmp/claude-502/ccKyfRy5.s:186    .text._data_stage_xact:000000000000006c $d
+/tmp/claude-502/ccKyfRy5.s:192    .text.dcd_edpt0_status_complete:0000000000000000 $t
+/tmp/claude-502/ccKyfRy5.s:199    .text.dcd_edpt0_status_complete:0000000000000000 dcd_edpt0_status_complete
+/tmp/claude-502/ccKyfRy5.s:215    .text.tud_control_status:0000000000000000 $t
+/tmp/claude-502/ccKyfRy5.s:222    .text.tud_control_status:0000000000000000 tud_control_status
+/tmp/claude-502/ccKyfRy5.s:300    .text.tud_control_status:0000000000000030 $d
+/tmp/claude-502/ccKyfRy5.s:307    .text.tud_control_xfer:0000000000000000 $t
+/tmp/claude-502/ccKyfRy5.s:314    .text.tud_control_xfer:0000000000000000 tud_control_xfer
+/tmp/claude-502/ccKyfRy5.s:490    .text.tud_control_xfer:000000000000007c $d
+/tmp/claude-502/ccKyfRy5.s:495    .text.usbd_control_reset:0000000000000000 $t
+/tmp/claude-502/ccKyfRy5.s:502    .text.usbd_control_reset:0000000000000000 usbd_control_reset
+/tmp/claude-502/ccKyfRy5.s:520    .text.usbd_control_reset:0000000000000010 $d
+/tmp/claude-502/ccKyfRy5.s:525    .text.usbd_control_set_complete_callback:0000000000000000 $t
+/tmp/claude-502/ccKyfRy5.s:532    .text.usbd_control_set_complete_callback:0000000000000000 usbd_control_set_complete_callback
+/tmp/claude-502/ccKyfRy5.s:549    .text.usbd_control_set_complete_callback:0000000000000008 $d
+/tmp/claude-502/ccKyfRy5.s:554    .text.usbd_control_set_request:0000000000000000 $t
+/tmp/claude-502/ccKyfRy5.s:561    .text.usbd_control_set_request:0000000000000000 usbd_control_set_request
+/tmp/claude-502/ccKyfRy5.s:599    .text.usbd_control_set_request:000000000000001c $d
+/tmp/claude-502/ccKyfRy5.s:604    .text.usbd_control_xfer_cb:0000000000000000 $t
+/tmp/claude-502/ccKyfRy5.s:611    .text.usbd_control_xfer_cb:0000000000000000 usbd_control_xfer_cb
+/tmp/claude-502/ccKyfRy5.s:872    .text.usbd_control_xfer_cb:00000000000000d4 $d
+/tmp/claude-502/ccKyfRy5.s:879    .bss._ctrl_xfer:0000000000000000 $d
+/tmp/claude-502/ccKyfRy5.s:883    .bss._ctrl_xfer:0000000000000000 _ctrl_xfer
+/tmp/claude-502/ccKyfRy5.s:886    .bss._usbd_ctrl_buf:0000000000000000 $d
+/tmp/claude-502/ccKyfRy5.s:890    .bss._usbd_ctrl_buf:0000000000000000 _usbd_ctrl_buf
+
+UNDEFINED SYMBOLS
+usbd_edpt_xfer
+memcpy
+dcd_edpt_stall

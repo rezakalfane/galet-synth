@@ -1,4 +1,4 @@
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
   46              		.cfi_offset 6, -12
   47              		.cfi_offset 7, -8
   48              		.cfi_offset 14, -4
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 2
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 2
 
 
    7:src/touch.cpp ****     int32_t sw=0,swx=0,pk=0;int pkc=s;
@@ -118,7 +118,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
   93              		.loc 1 12 9 view .LVU21
   94              	.LBE5:
    9:src/touch.cpp ****         int32_t w=d[i]>0?d[i]:0;
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 3
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 3
 
 
   95              		.loc 1 9 5 is_stmt 1 discriminator 2 view .LVU22
@@ -178,7 +178,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
  137 005c 20EAE070 		bic	r0, r0, r0, asr #31
   18:src/touch.cpp ****     return p;
   19:src/touch.cpp **** }
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 4
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 4
 
 
  138              		.loc 1 19 1 view .LVU39
@@ -238,7 +238,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
  183 0008 53F82110 		ldr	r1, [r3, r1, lsl #2]
  184              	.LVL14:
   23:src/touch.cpp ****     int32_t raw   = pk - TOUCH_THRESHOLD;
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 5
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 5
 
 
  185              		.loc 1 23 5 is_stmt 1 view .LVU52
@@ -298,7 +298,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
  229              		.loc 1 33 5 is_stmt 1 view .LVU68
  230              		.loc 1 33 20 is_stmt 0 view .LVU69
  231 003e 93FBF1F2 		sdiv	r2, r3, r1
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 6
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 6
 
 
  232              		.loc 1 33 7 view .LVU70
@@ -358,7 +358,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
  276              		.loc 1 24 29 view .LVU84
  277 0070 0020     		movs	r0, #0
   39:src/touch.cpp ****     return s;
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 7
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 7
 
 
   40:src/touch.cpp **** }
@@ -418,7 +418,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
  322              		.cfi_offset 10, -12
  323              		.cfi_offset 11, -8
  324              		.cfi_offset 14, -4
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 8
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 8
 
 
  325              	.LBB23:
@@ -478,7 +478,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
   51:src/touch.cpp **** 
   52:src/touch.cpp ****     int peaks[MAX_FINGERS];
   53:src/touch.cpp ****     int found=0;
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 9
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 9
 
 
   54:src/touch.cpp ****     for(int attempt=0; attempt<maxf && found<maxf; attempt++){
@@ -538,7 +538,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
  421              	.LVL41:
  422              	.LBB30:
   58:src/touch.cpp **** 
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 10
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 10
 
 
   59:src/touch.cpp ****         bool sep_ok=true;
@@ -598,7 +598,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
   70:src/touch.cpp ****         for(int i=pk-2;i<=pk+2;i++) if(i>=0 && i<N_CH) work[i]=0;
  466              		.loc 1 70 17 is_stmt 0 view .LVU130
  467 0088 A51E     		subs	r5, r4, #2
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 11
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 11
 
 
  468              		.loc 1 70 29 view .LVU131
@@ -658,7 +658,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
  516 00bc 3046     		mov	r0, r6
  517 00be 15B0     		add	sp, sp, #84
  518              		.cfi_remember_state
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 12
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 12
 
 
  519              		.cfi_def_cfa_offset 36
@@ -718,7 +718,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
  560 00e2 4FF00009 		mov	r9, #0
  561 00e6 08AA     		add	r2, sp, #32
  562              	.LVL58:
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 13
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 13
 
 
    8:src/touch.cpp ****     for(int i=s;i<=e;i++){
@@ -778,7 +778,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
   12:src/touch.cpp ****     }
  603              		.loc 1 12 9 view .LVU175
  604              	.LBE41:
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 14
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 14
 
 
    9:src/touch.cpp ****         int32_t w=d[i]>0?d[i]:0;
@@ -838,7 +838,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
  643              		.loc 1 65 23 is_stmt 0 view .LVU191
  644 0134 06EB8602 		add	r2, r6, r6, lsl #2
   65:src/touch.cpp ****             peaks[found]=pk;
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 15
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 15
 
 
  645              		.loc 1 65 46 view .LVU192
@@ -898,7 +898,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
  687 0174 4FF00009 		mov	r9, #0
  688              	.LVL76:
  689              	.L66:
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 16
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 16
 
 
   15:src/touch.cpp ****     int32_t p=(swx*1000)/(sw*(N_CH-1));
@@ -958,7 +958,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
  737              		.cfi_offset 6, -24
  738              		.cfi_offset 7, -20
  739              		.cfi_offset 8, -16
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 17
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 17
 
 
  740              		.cfi_offset 9, -12
@@ -1018,7 +1018,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
   90:src/touch.cpp ****         } else tracked[slot].alive=false;
   91:src/touch.cpp ****     }
   92:src/touch.cpp ****     for(int r=0;r<n;r++){
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 18
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 18
 
 
  777              		.loc 1 92 18 is_stmt 1 view .LVU224
@@ -1078,7 +1078,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
  819              	.LBB53:
   81:src/touch.cpp ****             if(ra[r])continue;
  820              		.loc 1 81 22 is_stmt 1 view .LVU234
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 19
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 19
 
 
  821 003e 0029     		cmp	r1, #0
@@ -1138,7 +1138,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
   84:src/touch.cpp ****         }
  862              		.loc 1 84 13 is_stmt 0 view .LVU248
  863              	.LBE54:
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 20
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 20
 
 
   81:src/touch.cpp ****             if(ra[r])continue;
@@ -1198,7 +1198,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
  901              		.loc 1 88 34 view .LVU265
  902 009e DC60     		str	r4, [r3, #12]
   88:src/touch.cpp ****             ra[br]=true;
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 21
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 21
 
 
  903              		.loc 1 88 51 is_stmt 1 view .LVU266
@@ -1258,7 +1258,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
  942 00b8 F8D1     		bne	.L77
  943              	.L94:
   96:src/touch.cpp ****                 ra[r]=true;break;
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 22
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 22
 
 
  944              		.loc 1 96 17 is_stmt 1 view .LVU282
@@ -1318,7 +1318,7 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
  985              	.LBE66:
  986              		.cfi_endproc
  987              	.LFE547:
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 23
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 23
 
 
  989              		.global	tracked
@@ -1361,24 +1361,24 @@ ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 1
  1026              		.file 11 "src/touch.h"
  1027              		.file 12 "src/config.h"
  1028              		.file 13 "<built-in>"
-ARM GAS  /tmp/claude-502/ccHhOFRn.s 			page 24
+ARM GAS  /tmp/claude-502/ccIZwtpX.s 			page 24
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 touch.cpp
-/tmp/claude-502/ccHhOFRn.s:19     .text._Z15centroid_windowPliiS_Pi:0000000000000000 $t
-/tmp/claude-502/ccHhOFRn.s:26     .text._Z15centroid_windowPliiS_Pi:0000000000000000 _Z15centroid_windowPliiS_Pi
-/tmp/claude-502/ccHhOFRn.s:160    .text._Z12pressure_pctli:0000000000000000 $t
-/tmp/claude-502/ccHhOFRn.s:167    .text._Z12pressure_pctli:0000000000000000 _Z12pressure_pctli
-/tmp/claude-502/ccHhOFRn.s:290    .text._Z12pressure_pctli:0000000000000078 $d
-/tmp/claude-502/ccHhOFRn.s:295    .text._Z10detect_rawPlP6Fingeri:0000000000000000 $t
-/tmp/claude-502/ccHhOFRn.s:302    .text._Z10detect_rawPlP6Fingeri:0000000000000000 _Z10detect_rawPlP6Fingeri
-/tmp/claude-502/ccHhOFRn.s:717    .text._Z14update_trackedP6Fingeri:0000000000000000 $t
-/tmp/claude-502/ccHhOFRn.s:724    .text._Z14update_trackedP6Fingeri:0000000000000000 _Z14update_trackedP6Fingeri
-/tmp/claude-502/ccHhOFRn.s:983    .text._Z14update_trackedP6Fingeri:00000000000000e8 $d
-/tmp/claude-502/ccHhOFRn.s:995    .bss.tracked:0000000000000000 tracked
-/tmp/claude-502/ccHhOFRn.s:991    .bss.tracked:0000000000000000 $d
-/tmp/claude-502/ccHhOFRn.s:998    .rodata._ZL16PRESSURE_MAX_REF:0000000000000000 $d
-/tmp/claude-502/ccHhOFRn.s:1002   .rodata._ZL16PRESSURE_MAX_REF:0000000000000000 _ZL16PRESSURE_MAX_REF
+/tmp/claude-502/ccIZwtpX.s:19     .text._Z15centroid_windowPliiS_Pi:0000000000000000 $t
+/tmp/claude-502/ccIZwtpX.s:26     .text._Z15centroid_windowPliiS_Pi:0000000000000000 _Z15centroid_windowPliiS_Pi
+/tmp/claude-502/ccIZwtpX.s:160    .text._Z12pressure_pctli:0000000000000000 $t
+/tmp/claude-502/ccIZwtpX.s:167    .text._Z12pressure_pctli:0000000000000000 _Z12pressure_pctli
+/tmp/claude-502/ccIZwtpX.s:290    .text._Z12pressure_pctli:0000000000000078 $d
+/tmp/claude-502/ccIZwtpX.s:295    .text._Z10detect_rawPlP6Fingeri:0000000000000000 $t
+/tmp/claude-502/ccIZwtpX.s:302    .text._Z10detect_rawPlP6Fingeri:0000000000000000 _Z10detect_rawPlP6Fingeri
+/tmp/claude-502/ccIZwtpX.s:717    .text._Z14update_trackedP6Fingeri:0000000000000000 $t
+/tmp/claude-502/ccIZwtpX.s:724    .text._Z14update_trackedP6Fingeri:0000000000000000 _Z14update_trackedP6Fingeri
+/tmp/claude-502/ccIZwtpX.s:983    .text._Z14update_trackedP6Fingeri:00000000000000e8 $d
+/tmp/claude-502/ccIZwtpX.s:995    .bss.tracked:0000000000000000 tracked
+/tmp/claude-502/ccIZwtpX.s:991    .bss.tracked:0000000000000000 $d
+/tmp/claude-502/ccIZwtpX.s:998    .rodata._ZL16PRESSURE_MAX_REF:0000000000000000 $d
+/tmp/claude-502/ccIZwtpX.s:1002   .rodata._ZL16PRESSURE_MAX_REF:0000000000000000 _ZL16PRESSURE_MAX_REF
 
 NO UNDEFINED SYMBOLS

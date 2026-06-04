@@ -1,6 +1,7 @@
 #include "serialtune.h"
 #include "engine.h"   // hw, NUM_VOICES, MULTI_*, g_* control + tuning seam
 #include "persist.h"  // g_bank, bank_set, bank_revert_*, persist_save_bank, VOICE_NAME_MAX
+#include "usb_glue.h" // usb_log (CDC TX) + usb_cdc_read_avail (CDC RX) — replaces hw.PrintLine
 #include <stddef.h>   // offsetof
 #include <string.h>   // strcmp / strtok
 #include <math.h>     // logf
@@ -47,22 +48,9 @@ volatile bool     g_serial_quiet = false;
 // printing to a dead port hangs the synth.
 bool serial_display_muted() { return g_serial_quiet || (g_live_tune && !g_mon); }
 
-// ── USB CDC receive ring buffer ───────────────────────────────────────────────
-// The receive callback runs in USB interrupt context, so it only copies bytes
-// into this ring; serial_tune_poll() (control-loop thread) parses whole lines.
-static constexpr int     RX_SZ = 512;
-static volatile char     s_rx[RX_SZ];
-static volatile uint16_t s_rx_head = 0, s_rx_tail = 0;
-
-static void rx_cb(uint8_t *buf, uint32_t *len) {
-    uint32_t n = *len;
-    for(uint32_t i = 0; i < n; i++) {
-        uint16_t nh = (uint16_t)((s_rx_head + 1) % RX_SZ);
-        if(nh == s_rx_tail) break;   // ring full → drop the rest
-        s_rx[s_rx_head] = (char)buf[i];
-        s_rx_head = nh;
-    }
-}
+// ── USB CDC receive ───────────────────────────────────────────────────────────
+// TinyUSB buffers incoming bytes in its own RX FIFO; the control loop drains them
+// in serial_tune_poll() via usb_cdc_read_avail(). No ISR ring buffer needed now.
 
 // ── Float key=value print (no stdio: the logger has no %f, and pulling in
 // snprintf adds ~16 KB to internal flash). Decompose to integer parts and use
@@ -73,7 +61,7 @@ static void print_kv_f(const char *key, float v) {
     int ip = (int)v;
     int fp = (int)((v - (float)ip) * 10000.0f + 0.5f);
     if(fp >= 10000) { ip++; fp -= 10000; }
-    hw.PrintLine("%s=%c%d.%04d", key, sign, ip, fp);
+    usb_log("%s=%c%d.%04d", key, sign, ip, fp);
 }
 
 // ── Field table (name → offset in Voice) ──────────────────────────────────────
@@ -174,26 +162,26 @@ static bool set_param(const char *f, const char *v) {
 }
 
 static void dump_voice() {
-    hw.PrintLine("dump name=%s", g_live_voice.name);
-    hw.PrintLine("idx=%d", g_voice_idx);   // bank slot, so the host syncs by index (rename-proof)
-    hw.PrintLine("boot=%d", g_boot_voice); // persisted power-on voice → GUI marks the default
+    usb_log("dump name=%s", g_live_voice.name);
+    usb_log("idx=%d", g_voice_idx);   // bank slot, so the host syncs by index (rename-proof)
+    usb_log("boot=%d", g_boot_voice); // persisted power-on voice → GUI marks the default
     const char *base = (const char *)&g_live_voice;
     for(int i = 0; i < NFIELDS; i++) {
         const void *p = base + FIELDS[i].off;
         switch(FIELDS[i].type) {
             case FT_F: print_kv_f(FIELDS[i].name, *(const float *)p); break;
-            case FT_I: hw.PrintLine("%s=%d", FIELDS[i].name, *(const int *)p); break;
-            case FT_B: hw.PrintLine("%s=%d", FIELDS[i].name, *(const bool *)p ? 1 : 0); break;
-            case FT_W: hw.PrintLine("%s=%s", FIELDS[i].name, wave_name(*(const Waveform *)p)); break;
+            case FT_I: usb_log("%s=%d", FIELDS[i].name, *(const int *)p); break;
+            case FT_B: usb_log("%s=%d", FIELDS[i].name, *(const bool *)p ? 1 : 0); break;
+            case FT_W: usb_log("%s=%s", FIELDS[i].name, wave_name(*(const Waveform *)p)); break;
         }
     }
-    hw.PrintLine("scale=%s", scale_name(g_live_voice.scale));
+    usb_log("scale=%s", scale_name(g_live_voice.scale));
     print_kv_f("reverb_decay",   g_reverb_decay);
     print_kv_f("reverb_level",   g_reverb_level);
     print_kv_f("delay_time_ms",  g_delay_time_ms);
     print_kv_f("delay_feedback", g_delay_feedback);
     print_kv_f("delay_level",    g_delay_level);
-    hw.PrintLine("end");
+    usb_log("end");
 }
 
 // Snapshot the currently-selected bank voice into the live working copy. The
@@ -217,8 +205,8 @@ static void handle_command(char *line) {
         char *a = strtok(NULL, " \t");
         if(a && to_i(a)) { g_serial_quiet = false;   // a host is here
                            snapshot_active(); g_live_tune = true;
-                           hw.PrintLine("ok tune=1 voice=%s", g_live_voice.name); }
-        else             { g_live_tune = false; hw.PrintLine("ok tune=0"); }
+                           usb_log("ok tune=1 voice=%s", g_live_voice.name); }
+        else             { g_live_tune = false; usb_log("ok tune=0"); }
         return;
     }
     if(!strcmp(cmd, "bye")) {
@@ -226,13 +214,13 @@ static void handle_command(char *line) {
         // idle chase resumes) and go silent so no autonomous print blocks on the
         // now-dead USB port. Cleared again by the next `tune 1`.
         g_live_tune = false;
-        hw.PrintLine("ok bye");      // last line out while the host is still here
+        usb_log("ok bye");      // last line out while the host is still here
         g_serial_quiet = true;
         return;
     }
     if(!strcmp(cmd, "set")) {
         char *f = strtok(NULL, " \t");
-        if(!f) { hw.PrintLine("err set <field> <value>"); return; }
+        if(!f) { usb_log("err set <field> <value>"); return; }
         if(!strcmp(f, "name")) {
             // Name is the rest of the line (may contain spaces, e.g. "SH-101 min").
             char *rest = strtok(NULL, "");
@@ -240,13 +228,13 @@ static void handle_command(char *line) {
             strncpy(g_live_name, rest ? rest : "", VOICE_NAME_MAX - 1);
             g_live_name[VOICE_NAME_MAX - 1] = 0;
             g_live_voice.name = g_live_name;
-            hw.PrintLine("ok name=%s", g_live_name);
+            usb_log("ok name=%s", g_live_name);
             return;
         }
         char *v = strtok(NULL, " \t");
-        if(!v) { hw.PrintLine("err set <field> <value>"); return; }
-        if(set_param(f, v)) { g_live_rev++; hw.PrintLine("ok %s=%s", f, v); }
-        else hw.PrintLine("err unknown field '%s'", f);
+        if(!v) { usb_log("err set <field> <value>"); return; }
+        if(set_param(f, v)) { g_live_rev++; usb_log("ok %s=%s", f, v); }
+        else usb_log("err unknown field '%s'", f);
         return;
     }
     if(!strcmp(cmd, "select")) {
@@ -256,27 +244,27 @@ static void handle_command(char *line) {
             g_voice_idx   = n;
             g_active_voice = (n == MULTI_IDX) ? MULTI_ZONES[0] : n;
             if(g_live_tune) snapshot_active();   // tune the newly selected voice
-            hw.PrintLine("ok select=%d %s", n, g_bank[n].name);
-        } else hw.PrintLine("err select 0..%d", NUM_VOICES - 1);
+            usb_log("ok select=%d %s", n, g_bank[n].name);
+        } else usb_log("err select 0..%d", NUM_VOICES - 1);
         return;
     }
     if(!strcmp(cmd, "dump"))  { dump_voice(); return; }
     if(!strcmp(cmd, "names")) {
         // List every bank slot's (possibly edited) name so the host can label its
         // voice picker from flash, not just the factory defaults.
-        for(int i = 0; i < NUM_VOICES; i++) hw.PrintLine("name %d %s", i, g_bank[i].name);
-        hw.PrintLine("end");
+        for(int i = 0; i < NUM_VOICES; i++) usb_log("name %d %s", i, g_bank[i].name);
+        usb_log("end");
         return;
     }
     if(!strcmp(cmd, "mon"))   { char *a = strtok(NULL, " \t"); g_mon = (a && to_i(a));
-                                hw.PrintLine("ok mon=%d", g_mon ? 1 : 0); return; }
+                                usb_log("ok mon=%d", g_mon ? 1 : 0); return; }
     if(!strcmp(cmd, "save")) {
         // Commit the live voice (incl. name) into its bank slot, then persist the
         // whole bank to flash — survives power-off.
         int vi = g_active_voice; if(vi < 0 || vi >= NUM_VOICES) vi = 0;
         bank_set(vi, g_live_voice, g_live_name);
         persist_save_bank();
-        hw.PrintLine("ok saved %d %s", vi, g_bank[vi].name);
+        usb_log("ok saved %d %s", vi, g_bank[vi].name);
         return;
     }
     if(!strcmp(cmd, "copy")) {
@@ -291,8 +279,8 @@ static void handle_command(char *line) {
             while(nm && (*nm == ' ' || *nm == '\t')) nm++;
             bank_set(n, g_live_voice, (nm && *nm) ? nm : g_live_name);
             persist_save_bank();
-            hw.PrintLine("ok copy=%d %s", n, g_bank[n].name);
-        } else hw.PrintLine("err copy 0..%d", NUM_VOICES - 1);
+            usb_log("ok copy=%d %s", n, g_bank[n].name);
+        } else usb_log("err copy 0..%d", NUM_VOICES - 1);
         return;
     }
     if(!strcmp(cmd, "bootvoice")) {
@@ -301,7 +289,7 @@ static void handle_command(char *line) {
         // already-committed bank) to flash. The GUI's "Set as default" button.
         persist_save_bank();
         int vi = (g_voice_idx < 0 || g_voice_idx >= NUM_VOICES) ? 0 : g_voice_idx;
-        hw.PrintLine("ok bootvoice=%d %s", g_voice_idx, g_bank[vi].name);
+        usb_log("ok bootvoice=%d %s", g_voice_idx, g_bank[vi].name);
         return;
     }
     if(!strcmp(cmd, "factory")) {
@@ -316,32 +304,37 @@ static void handle_command(char *line) {
         }
         persist_save_bank();
         if(g_live_tune) snapshot_active();   // reload the live copy from the reverted bank
-        hw.PrintLine("ok factory %s", (a && !strcmp(a, "all")) ? "all" : g_bank[g_active_voice].name);
+        usb_log("ok factory %s", (a && !strcmp(a, "all")) ? "all" : g_bank[g_active_voice].name);
         return;
     }
     if(!strcmp(cmd, "help")) {
-        hw.PrintLine("cmds: tune 0|1 | set <field> <val> | set name <text> | select <n>");
-        hw.PrintLine("      dump | save | copy <n> [name] | bootvoice | factory [all] | mon 0|1 | bye");
-        for(int i = 0; i < NFIELDS; i++) hw.PrintLine("  %s", FIELDS[i].name);
-        hw.PrintLine("  name scale(chromatic|major|minor) reverb_decay reverb_level delay_time_ms delay_feedback delay_level");
+        usb_log("cmds: tune 0|1 | set <field> <val> | set name <text> | select <n>");
+        usb_log("      dump | save | copy <n> [name] | bootvoice | factory [all] | mon 0|1 | bye");
+        for(int i = 0; i < NFIELDS; i++) usb_log("  %s", FIELDS[i].name);
+        usb_log("  name scale(chromatic|major|minor) reverb_decay reverb_level delay_time_ms delay_feedback delay_level");
         return;
     }
-    hw.PrintLine("err unknown cmd '%s'", cmd);
+    usb_log("err unknown cmd '%s'", cmd);
 }
 
 void serial_tune_init() {
-    hw.usb_handle.SetReceiveCallback(rx_cb, UsbHandle::FS_INTERNAL);
+    // USB (incl. the CDC RX FIFO) is brought up by usb_fs_init() in main; nothing
+    // to wire here now that TinyUSB owns the port.
 }
 
 void serial_tune_poll() {
+    usb_task();              // service the USB device stack every poll (enum + IN/OUT)
     static char line[160];
     static int  li = 0;
-    while(s_rx_tail != s_rx_head) {
-        char c = s_rx[s_rx_tail];
-        s_rx_tail = (uint16_t)((s_rx_tail + 1) % RX_SZ);
-        // Either CR or LF ends a line — terminals (screen) send '\r' on Enter,
-        // others send '\n', and CRLF just yields one empty line we skip (li == 0).
-        if(c == '\r' || c == '\n') { line[li] = 0; if(li > 0) handle_command(line); li = 0; }
-        else if(li < (int)sizeof(line) - 1) line[li++] = c;
+    char chunk[64];
+    int  n;
+    while((n = usb_cdc_read_avail(chunk, (int)sizeof(chunk))) > 0) {
+        for(int i = 0; i < n; i++) {
+            char c = chunk[i];
+            // Either CR or LF ends a line — terminals (screen) send '\r' on Enter,
+            // others send '\n', and CRLF just yields one empty line we skip (li == 0).
+            if(c == '\r' || c == '\n') { line[li] = 0; if(li > 0) handle_command(line); li = 0; }
+            else if(li < (int)sizeof(line) - 1) line[li++] = c;
+        }
     }
 }

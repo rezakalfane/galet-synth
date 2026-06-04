@@ -34,6 +34,7 @@ using namespace daisy::seed;
 #include "mpr121.h"   // capacitive sensor driver (bit-bang I2C)
 #include "touch.h"    // finger detection / tracking
 #include "engine.h"   // audio engine: synth state, drum voices, AudioCallback
+#include "usb_glue.h" // TinyUSB CDC: usb_fs_init / usb_task / usb_log (replaces hw logger)
 #include "serialtune.h" // live voice tuning over USB serial
 #include "persist.h"  // editable, persistent voice bank (g_bank)
 
@@ -284,22 +285,22 @@ int main()
     System::Delay(50);
 
     // ── USB serial (blocks until host connects) ───────────────────────────────
-    hw.StartLog(false); // false = don't wait for serial monitor
-    serial_tune_init(); // add the USB receive path for the live tuning protocol
+    usb_fs_init();      // bring up the TinyUSB CDC device (replaces hw.StartLog)
+    serial_tune_init(); // (no-op now — TinyUSB owns the USB port)
 
-    hw.PrintLine("Glass Moog Synth");
-    hw.PrintLine("================");
-    hw.PrintLine("Voice %d/%d: %s  (%d-%dHz)",
+    usb_log("Glass Moog Synth");
+    usb_log("================");
+    usb_log("Voice %d/%d: %s  (%d-%dHz)",
                  cycle_pos(g_voice_idx), cycle_total(),
                  VOICE.name, (int)VOICE.freq_low, (int)VOICE.freq_high);
-    hw.PrintLine("F1 pos=pitch  F1 prs=cutoff+vibrato");
+    usb_log("F1 pos=pitch  F1 prs=cutoff+vibrato");
     if(VOICE.osc2_detune)
-        hw.PrintLine("F2 pos=detune F2 prs=wavefold+ringmod");
+        usb_log("F2 pos=detune F2 prs=wavefold+ringmod");
     else
-        hw.PrintLine("F2 prs=wavefold+ringmod (osc2=fixed)");
-    hw.PrintLine("Press FSR fully (no touch) 2s -> select; tap to cycle; release to keep");
-    hw.PrintLine("MPR121 OK — baseline captured");
-    hw.PrintLine("Ready.\n");
+        usb_log("F2 prs=wavefold+ringmod (osc2=fixed)");
+    usb_log("Press FSR fully (no touch) 2s -> select; tap to cycle; release to keep");
+    usb_log("MPR121 OK — baseline captured");
+    usb_log("Ready.\n");
 
     uint16_t data[N_CH];
     int32_t  delta[N_CH];
@@ -495,7 +496,7 @@ int main()
                         sel_mode     = 1;
                         g_amp_target = 0.0f;                 // silence any held note
                         if(!g_serial_quiet)
-                          hw.PrintLine("[voice select] %s (%d/%d) - tap/slide glass; release FSR to keep",
+                          usb_log("[voice select] %s (%d/%d) - tap/slide glass; release FSR to keep",
                                      g_bank[g_voice_idx].name, cycle_pos(g_voice_idx), cycle_total());
                         blink_start(cycle_pos(g_voice_idx), now);  // blink the current voice number
                     }
@@ -511,10 +512,10 @@ int main()
                     // section) so playing isn't stalled.
                     persist_save_bank();                     // persists g_voice_idx (+ bank), QSPI write only if changed
                     if(!g_serial_quiet){
-                        hw.PrintLine("[voice kept %d/%d] %s",
+                        usb_log("[voice kept %d/%d] %s",
                                      cycle_pos(g_voice_idx), cycle_total(), g_bank[g_voice_idx].name);
                         // Machine event so a connected host tuner follows the change.
-                        hw.PrintLine("voice %d", g_voice_idx);
+                        usb_log("voice %d", g_voice_idx);
                     }
                     drum2_at = 0;
                     sel_mode = 0; full_since = 0;
@@ -527,7 +528,7 @@ int main()
                         last_tap_ms = now;
                         g_voice_idx = cycle_next(g_voice_idx);
                         if(!g_serial_quiet)
-                          hw.PrintLine("[voice %d/%d] %s",
+                          usb_log("[voice %d/%d] %s",
                                      cycle_pos(g_voice_idx), cycle_total(), g_bank[g_voice_idx].name);
                         blink_start(1, now);                 // single blink per advance
                     }
@@ -564,7 +565,7 @@ int main()
             if(System::GetNow()-idle_since>=REBASELINE_IDLE_MS){
                 tracked[0].alive=tracked[1].alive=false;
                 capture_baseline(baseline);
-                if(!serial_display_muted()) hw.PrintLine("[rebaseline]");
+                if(!serial_display_muted()) usb_log("[rebaseline]");
                 idle_since=System::GetNow();
             }
         }
@@ -578,7 +579,7 @@ int main()
             idle_chase_and_calibrate();
             last_touch_ms = System::GetNow();
             idle_since    = System::GetNow();
-            if(!serial_display_muted()) hw.PrintLine("[fsr recal] fsr_max=%d", (int)fsr_max);
+            if(!serial_display_muted()) usb_log("[fsr recal] fsr_max=%d", (int)fsr_max);
         }
 
         update_tracked(raw,n_raw);
@@ -878,33 +879,33 @@ int main()
         last_print_ms = System::GetNow();
 
         if(g_voice_idx == MULTI_IDX)
-            hw.PrintLine("VOICE %d/%d  Drums [Kick|Snare|Tom|Hat]  -> %s",
+            usb_log("VOICE %d/%d  Drums [Kick|Snare|Tom|Hat]  -> %s",
                 cycle_pos(g_voice_idx), cycle_total(), VOICE.name);
         else
-            hw.PrintLine("VOICE %d/%d  %s  (%d-%dHz)",
+            usb_log("VOICE %d/%d  %s  (%d-%dHz)",
                 cycle_pos(g_voice_idx), cycle_total(), VOICE.name,
                 (int)VOICE.freq_low, (int)VOICE.freq_high);
-        hw.PrintLine(" CH | DELTA | BAR");
-        hw.PrintLine("----+-------+----------------------");
+        usb_log(" CH | DELTA | BAR");
+        usb_log("----+-------+----------------------");
         for(int i=0;i<N_CH;i++){
             make_bar(bar,delta[i],max_delta,20);
             const char* mk="";     // finger marker on the channel each finger peaks at
             for(int s=0;s<2;s++)
                 if(tracked[s].alive&&i==tracked[s].peak_ch)mk=(s==0)?"F1":"F2";
-            hw.PrintLine(" %02d | %5d | %s  %s",i,(int)delta[i],bar,mk);
+            usb_log(" %02d | %5d | %s  %s",i,(int)delta[i],bar,mk);
         }
 
         make_pos_bar(pos_bar,40);
-        hw.PrintLine("\nPOS  %s",pos_bar);
+        usb_log("\nPOS  %s",pos_bar);
 
         // Always print both finger rows — inactive shows dashes so line count is stable
         for(int slot=0;slot<2;slot++){
             if(tracked[slot].alive){
                 make_bar(bar,tracked[slot].pressure,100,16);
-                hw.PrintLine(" F%d  pos:%4d  prs:%3d%%  %s",
+                usb_log(" F%d  pos:%4d  prs:%3d%%  %s",
                     slot+1,(int)tracked[slot].pos,(int)tracked[slot].pressure,bar);
             } else {
-                hw.PrintLine(" F%d  pos: ---  prs: --%%  [                ]",slot+1);
+                usb_log(" F%d  pos: ---  prs: --%%  [                ]",slot+1);
             }
         }
 
@@ -912,7 +913,7 @@ int main()
         int fsr_pct = (int)((1.0f - vol) * 100.0f + 0.5f);
         if(fsr_pct < 0) fsr_pct = 0; else if(fsr_pct > 100) fsr_pct = 100;
         make_bar(bar, fsr_pct, 100, 16);
-        hw.PrintLine(" FSR pressure  %3d%%  %s", fsr_pct, bar);
+        usb_log(" FSR pressure  %3d%%  %s", fsr_pct, bar);
 
         // Audio param display — fixed width, always same line count
         int freq_i  = (int)g_target_freq;
@@ -920,13 +921,13 @@ int main()
         int det_i10 = (int)(g_target_detune*10);
         int bc_i    = (int)(g_bitcrush*100);
         int vib_i   = (int)(g_vibrato_depth*100);
-        hw.PrintLine("  freq:%4dHz  cut:%5dHz  det:%c%d.%ds  fx:%2d%%  vib:%2d%%",
+        usb_log("  freq:%4dHz  cut:%5dHz  det:%c%d.%ds  fx:%2d%%  vib:%2d%%",
             freq_i, cut_i,
             det_i10<0?'-':'+',
             det_i10<0?(-det_i10)/10:det_i10/10,
             det_i10<0?(-det_i10)%10:det_i10%10,
             bc_i, vib_i);
-        hw.PrintLine("--------------------------------------------");
+        usb_log("--------------------------------------------");
 
         System::Delay(CONTROL_DELAY_MS);
     }

@@ -1,0 +1,1095 @@
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"usb_glue.cpp"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.usb_fs_init,"ax",%progbits
+  19              		.align	1
+  20              		.p2align 2,,3
+  21              		.global	usb_fs_init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	usb_fs_init:
+  27              	.LFB624:
+  28              		.file 1 "src/usb_glue.cpp"
+   1:src/usb_glue.cpp **** // TinyUSB glue — see usb_glue.h. STM32H750 USB Full-Speed device (USB2_OTG_FS
+   2:src/usb_glue.cpp **** // on PA11/PA12 = TinyUSB rhport 0).
+   3:src/usb_glue.cpp **** #include "tusb.h"
+   4:src/usb_glue.cpp **** #include "usb_glue.h"
+   5:src/usb_glue.cpp **** #include <stdarg.h>
+   6:src/usb_glue.cpp **** #include <stdio.h>
+   7:src/usb_glue.cpp **** extern "C" {
+   8:src/usb_glue.cpp **** #include "stm32h7xx_hal.h"
+   9:src/usb_glue.cpp **** }
+  10:src/usb_glue.cpp **** 
+  11:src/usb_glue.cpp **** // ── Board glue + device init ─────────────────────�
+  12:src/usb_glue.cpp **** extern "C" void usb_fs_init(void)
+  13:src/usb_glue.cpp **** {
+  29              		.loc 1 13 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 32
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  14:src/usb_glue.cpp ****     // hw.Init() already configured the USB clock source (HSI48) and VDDUSB; here we
+  15:src/usb_glue.cpp ****     // do only the MSP-level setup libDaisy would otherwise do in its USBD MspInit.
+  16:src/usb_glue.cpp ****     __HAL_RCC_GPIOA_CLK_ENABLE();
+  33              		.loc 1 16 5 view .LVU1
+  34              	.LBB25:
+  35              		.loc 1 16 5 view .LVU2
+  36              		.loc 1 16 5 view .LVU3
+  37              	.LBE25:
+  13:src/usb_glue.cpp ****     // hw.Init() already configured the USB clock source (HSI48) and VDDUSB; here we
+  38              		.loc 1 13 1 is_stmt 0 view .LVU4
+  39 0000 30B5     		push	{r4, r5, lr}
+  40              		.cfi_def_cfa_offset 12
+  41              		.cfi_offset 4, -12
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 2
+
+
+  42              		.cfi_offset 5, -8
+  43              		.cfi_offset 14, -4
+  44              	.LBB26:
+  45              		.loc 1 16 5 view .LVU5
+  46 0002 194C     		ldr	r4, .L4
+  47              	.LBE26:
+  13:src/usb_glue.cpp ****     // hw.Init() already configured the USB clock source (HSI48) and VDDUSB; here we
+  48              		.loc 1 13 1 view .LVU6
+  49 0004 89B0     		sub	sp, sp, #36
+  50              		.cfi_def_cfa_offset 48
+  17:src/usb_glue.cpp ****     GPIO_InitTypeDef g = {};
+  18:src/usb_glue.cpp ****     g.Pin       = GPIO_PIN_11 | GPIO_PIN_12;     // OTG_FS DM / DP
+  51              		.loc 1 18 17 view .LVU7
+  52 0006 4FF4C052 		mov	r2, #6144
+  19:src/usb_glue.cpp ****     g.Mode      = GPIO_MODE_AF_PP;
+  53              		.loc 1 19 17 view .LVU8
+  54 000a 0221     		movs	r1, #2
+  55              	.LBB27:
+  16:src/usb_glue.cpp ****     GPIO_InitTypeDef g = {};
+  56              		.loc 1 16 5 view .LVU9
+  57 000c D4F8E030 		ldr	r3, [r4, #224]
+  58              	.LBE27:
+  17:src/usb_glue.cpp ****     GPIO_InitTypeDef g = {};
+  59              		.loc 1 17 22 view .LVU10
+  60 0010 0025     		movs	r5, #0
+  20:src/usb_glue.cpp ****     g.Pull      = GPIO_NOPULL;
+  21:src/usb_glue.cpp ****     g.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
+  22:src/usb_glue.cpp ****     g.Alternate = GPIO_AF10_OTG1_FS;
+  23:src/usb_glue.cpp ****     HAL_GPIO_Init(GPIOA, &g);
+  61              		.loc 1 23 18 view .LVU11
+  62 0012 1648     		ldr	r0, .L4+4
+  63              	.LBB28:
+  16:src/usb_glue.cpp ****     GPIO_InitTypeDef g = {};
+  64              		.loc 1 16 5 view .LVU12
+  65 0014 43F00103 		orr	r3, r3, #1
+  66 0018 C4F8E030 		str	r3, [r4, #224]
+  16:src/usb_glue.cpp ****     GPIO_InitTypeDef g = {};
+  67              		.loc 1 16 5 is_stmt 1 view .LVU13
+  68 001c D4F8E030 		ldr	r3, [r4, #224]
+  69              	.LBE28:
+  18:src/usb_glue.cpp ****     g.Mode      = GPIO_MODE_AF_PP;
+  70              		.loc 1 18 17 is_stmt 0 view .LVU14
+  71 0020 0392     		str	r2, [sp, #12]
+  21:src/usb_glue.cpp ****     g.Alternate = GPIO_AF10_OTG1_FS;
+  72              		.loc 1 21 17 view .LVU15
+  73 0022 0322     		movs	r2, #3
+  74              	.LBB29:
+  16:src/usb_glue.cpp ****     GPIO_InitTypeDef g = {};
+  75              		.loc 1 16 5 view .LVU16
+  76 0024 03F00103 		and	r3, r3, #1
+  77              	.LBE29:
+  19:src/usb_glue.cpp ****     g.Pull      = GPIO_NOPULL;
+  78              		.loc 1 19 17 view .LVU17
+  79 0028 0491     		str	r1, [sp, #16]
+  80              		.loc 1 23 18 view .LVU18
+  81 002a 03A9     		add	r1, sp, #12
+  21:src/usb_glue.cpp ****     g.Alternate = GPIO_AF10_OTG1_FS;
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 3
+
+
+  82              		.loc 1 21 17 view .LVU19
+  83 002c 0692     		str	r2, [sp, #24]
+  84              	.LBB30:
+  16:src/usb_glue.cpp ****     GPIO_InitTypeDef g = {};
+  85              		.loc 1 16 5 view .LVU20
+  86 002e 0193     		str	r3, [sp, #4]
+  16:src/usb_glue.cpp ****     GPIO_InitTypeDef g = {};
+  87              		.loc 1 16 5 is_stmt 1 view .LVU21
+  88              	.LBE30:
+  22:src/usb_glue.cpp ****     HAL_GPIO_Init(GPIOA, &g);
+  89              		.loc 1 22 17 is_stmt 0 view .LVU22
+  90 0030 0A23     		movs	r3, #10
+  91              	.LBB31:
+  16:src/usb_glue.cpp ****     GPIO_InitTypeDef g = {};
+  92              		.loc 1 16 5 view .LVU23
+  93 0032 019A     		ldr	r2, [sp, #4]
+  94              	.LBE31:
+  17:src/usb_glue.cpp ****     g.Pin       = GPIO_PIN_11 | GPIO_PIN_12;     // OTG_FS DM / DP
+  95              		.loc 1 17 5 is_stmt 1 view .LVU24
+  18:src/usb_glue.cpp ****     g.Mode      = GPIO_MODE_AF_PP;
+  96              		.loc 1 18 5 view .LVU25
+  19:src/usb_glue.cpp ****     g.Pull      = GPIO_NOPULL;
+  97              		.loc 1 19 5 view .LVU26
+  20:src/usb_glue.cpp ****     g.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
+  98              		.loc 1 20 5 view .LVU27
+  21:src/usb_glue.cpp ****     g.Alternate = GPIO_AF10_OTG1_FS;
+  99              		.loc 1 21 5 view .LVU28
+  22:src/usb_glue.cpp ****     HAL_GPIO_Init(GPIOA, &g);
+ 100              		.loc 1 22 5 view .LVU29
+  22:src/usb_glue.cpp ****     HAL_GPIO_Init(GPIOA, &g);
+ 101              		.loc 1 22 17 is_stmt 0 view .LVU30
+ 102 0034 0793     		str	r3, [sp, #28]
+ 103              		.loc 1 23 5 is_stmt 1 view .LVU31
+  17:src/usb_glue.cpp ****     g.Pin       = GPIO_PIN_11 | GPIO_PIN_12;     // OTG_FS DM / DP
+ 104              		.loc 1 17 22 is_stmt 0 view .LVU32
+ 105 0036 0595     		str	r5, [sp, #20]
+ 106              		.loc 1 23 18 view .LVU33
+ 107 0038 FFF7FEFF 		bl	HAL_GPIO_Init
+ 108              	.LVL0:
+  24:src/usb_glue.cpp **** 
+  25:src/usb_glue.cpp ****     __HAL_RCC_USB_OTG_FS_CLK_ENABLE();
+ 109              		.loc 1 25 5 is_stmt 1 view .LVU34
+ 110              	.LBB32:
+ 111              		.loc 1 25 5 view .LVU35
+ 112              		.loc 1 25 5 view .LVU36
+ 113 003c D4F8D830 		ldr	r3, [r4, #216]
+ 114              	.LBE32:
+  26:src/usb_glue.cpp ****     // Below the audio DMA IRQ so streaming is never starved by USB servicing.
+  27:src/usb_glue.cpp ****     HAL_NVIC_SetPriority(OTG_FS_IRQn, 6, 0);
+ 115              		.loc 1 27 25 is_stmt 0 view .LVU37
+ 116 0040 2A46     		mov	r2, r5
+ 117 0042 0621     		movs	r1, #6
+ 118 0044 6520     		movs	r0, #101
+ 119              	.LBB33:
+  25:src/usb_glue.cpp ****     // Below the audio DMA IRQ so streaming is never starved by USB servicing.
+ 120              		.loc 1 25 5 view .LVU38
+ 121 0046 43F00063 		orr	r3, r3, #134217728
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 4
+
+
+ 122 004a C4F8D830 		str	r3, [r4, #216]
+  25:src/usb_glue.cpp ****     // Below the audio DMA IRQ so streaming is never starved by USB servicing.
+ 123              		.loc 1 25 5 is_stmt 1 view .LVU39
+ 124 004e D4F8D830 		ldr	r3, [r4, #216]
+ 125 0052 03F00063 		and	r3, r3, #134217728
+ 126 0056 0293     		str	r3, [sp, #8]
+  25:src/usb_glue.cpp ****     // Below the audio DMA IRQ so streaming is never starved by USB servicing.
+ 127              		.loc 1 25 5 view .LVU40
+ 128 0058 029B     		ldr	r3, [sp, #8]
+ 129              	.LBE33:
+ 130              		.loc 1 27 5 view .LVU41
+ 131              		.loc 1 27 25 is_stmt 0 view .LVU42
+ 132 005a FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 133              	.LVL1:
+  28:src/usb_glue.cpp **** 
+  29:src/usb_glue.cpp ****     tud_init(BOARD_TUD_RHPORT);                  // enables the NVIC IRQ internally
+ 134              		.loc 1 29 5 is_stmt 1 view .LVU43
+ 135              		.loc 1 29 13 is_stmt 0 view .LVU44
+ 136 005e 2846     		mov	r0, r5
+ 137 0060 FFF7FEFF 		bl	tud_init
+ 138              	.LVL2:
+  30:src/usb_glue.cpp **** }
+ 139              		.loc 1 30 1 view .LVU45
+ 140 0064 09B0     		add	sp, sp, #36
+ 141              		.cfi_def_cfa_offset 12
+ 142              		@ sp needed
+ 143 0066 30BD     		pop	{r4, r5, pc}
+ 144              	.L5:
+ 145              		.align	2
+ 146              	.L4:
+ 147 0068 00440258 		.word	1476543488
+ 148 006c 00000258 		.word	1476526080
+ 149              		.cfi_endproc
+ 150              	.LFE624:
+ 152              		.section	.text.OTG_FS_IRQHandler,"ax",%progbits
+ 153              		.align	1
+ 154              		.p2align 2,,3
+ 155              		.global	OTG_FS_IRQHandler
+ 156              		.syntax unified
+ 157              		.thumb
+ 158              		.thumb_func
+ 160              	OTG_FS_IRQHandler:
+ 161              	.LFB625:
+  31:src/usb_glue.cpp **** 
+  32:src/usb_glue.cpp **** // USB global interrupt → TinyUSB. This is the strong override of the startup weak
+  33:src/usb_glue.cpp **** // OTG_FS_IRQHandler; works only because we no longer link libDaisy's USB (usb.cpp),
+  34:src/usb_glue.cpp **** // which would otherwise define this same symbol.
+  35:src/usb_glue.cpp **** extern "C" void OTG_FS_IRQHandler(void) { tud_int_handler(0); }
+ 162              		.loc 1 35 41 is_stmt 1 view -0
+ 163              		.cfi_startproc
+ 164              		@ args = 0, pretend = 0, frame = 0
+ 165              		@ frame_needed = 0, uses_anonymous_args = 0
+ 166              		@ link register save eliminated.
+ 167              		.loc 1 35 43 view .LVU47
+ 168              		.loc 1 35 58 is_stmt 0 view .LVU48
+ 169 0000 0020     		movs	r0, #0
+ 170 0002 FFF7FEBF 		b	dcd_int_handler
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 5
+
+
+ 171              	.LVL3:
+ 172              		.cfi_endproc
+ 173              	.LFE625:
+ 175 0006 00BF     		.section	.text.usb_task,"ax",%progbits
+ 176              		.align	1
+ 177              		.p2align 2,,3
+ 178              		.global	usb_task
+ 179              		.syntax unified
+ 180              		.thumb
+ 181              		.thumb_func
+ 183              	usb_task:
+ 184              	.LFB626:
+  36:src/usb_glue.cpp **** 
+  37:src/usb_glue.cpp **** extern "C" void usb_task(void) { tud_task(); }
+ 185              		.loc 1 37 32 is_stmt 1 view -0
+ 186              		.cfi_startproc
+ 187              		@ args = 0, pretend = 0, frame = 0
+ 188              		@ frame_needed = 0, uses_anonymous_args = 0
+ 189              		@ link register save eliminated.
+ 190              		.loc 1 37 34 view .LVU50
+ 191              	.LBB34:
+ 192              	.LBI34:
+ 193              		.file 2 "lib/tinyusb/src/device/usbd.h"
+   1:lib/tinyusb/src/device/usbd.h **** /*
+   2:lib/tinyusb/src/device/usbd.h ****  * The MIT License (MIT)
+   3:lib/tinyusb/src/device/usbd.h ****  *
+   4:lib/tinyusb/src/device/usbd.h ****  * Copyright (c) 2019 Ha Thach (tinyusb.org)
+   5:lib/tinyusb/src/device/usbd.h ****  *
+   6:lib/tinyusb/src/device/usbd.h ****  * Permission is hereby granted, free of charge, to any person obtaining a copy
+   7:lib/tinyusb/src/device/usbd.h ****  * of this software and associated documentation files (the "Software"), to deal
+   8:lib/tinyusb/src/device/usbd.h ****  * in the Software without restriction, including without limitation the rights
+   9:lib/tinyusb/src/device/usbd.h ****  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  10:lib/tinyusb/src/device/usbd.h ****  * copies of the Software, and to permit persons to whom the Software is
+  11:lib/tinyusb/src/device/usbd.h ****  * furnished to do so, subject to the following conditions:
+  12:lib/tinyusb/src/device/usbd.h ****  *
+  13:lib/tinyusb/src/device/usbd.h ****  * The above copyright notice and this permission notice shall be included in
+  14:lib/tinyusb/src/device/usbd.h ****  * all copies or substantial portions of the Software.
+  15:lib/tinyusb/src/device/usbd.h ****  *
+  16:lib/tinyusb/src/device/usbd.h ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  17:lib/tinyusb/src/device/usbd.h ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  18:lib/tinyusb/src/device/usbd.h ****  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  19:lib/tinyusb/src/device/usbd.h ****  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  20:lib/tinyusb/src/device/usbd.h ****  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  21:lib/tinyusb/src/device/usbd.h ****  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  22:lib/tinyusb/src/device/usbd.h ****  * THE SOFTWARE.
+  23:lib/tinyusb/src/device/usbd.h ****  *
+  24:lib/tinyusb/src/device/usbd.h ****  * This file is part of the TinyUSB stack.
+  25:lib/tinyusb/src/device/usbd.h ****  */
+  26:lib/tinyusb/src/device/usbd.h **** 
+  27:lib/tinyusb/src/device/usbd.h **** #ifndef _TUSB_USBD_H_
+  28:lib/tinyusb/src/device/usbd.h **** #define _TUSB_USBD_H_
+  29:lib/tinyusb/src/device/usbd.h **** 
+  30:lib/tinyusb/src/device/usbd.h **** #include "common/tusb_common.h"
+  31:lib/tinyusb/src/device/usbd.h **** 
+  32:lib/tinyusb/src/device/usbd.h **** #ifdef __cplusplus
+  33:lib/tinyusb/src/device/usbd.h **** extern "C" {
+  34:lib/tinyusb/src/device/usbd.h **** #endif
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 6
+
+
+  35:lib/tinyusb/src/device/usbd.h **** 
+  36:lib/tinyusb/src/device/usbd.h **** //--------------------------------------------------------------------+
+  37:lib/tinyusb/src/device/usbd.h **** // Application API
+  38:lib/tinyusb/src/device/usbd.h **** //--------------------------------------------------------------------+
+  39:lib/tinyusb/src/device/usbd.h **** 
+  40:lib/tinyusb/src/device/usbd.h **** // Init device stack on roothub port
+  41:lib/tinyusb/src/device/usbd.h **** bool tud_init (uint8_t rhport);
+  42:lib/tinyusb/src/device/usbd.h **** 
+  43:lib/tinyusb/src/device/usbd.h **** // Deinit device stack on roothub port
+  44:lib/tinyusb/src/device/usbd.h **** bool tud_deinit(uint8_t rhport);
+  45:lib/tinyusb/src/device/usbd.h **** 
+  46:lib/tinyusb/src/device/usbd.h **** // Check if device stack is already initialized
+  47:lib/tinyusb/src/device/usbd.h **** bool tud_inited(void);
+  48:lib/tinyusb/src/device/usbd.h **** 
+  49:lib/tinyusb/src/device/usbd.h **** // Task function should be called in main/rtos loop, extended version of tud_task()
+  50:lib/tinyusb/src/device/usbd.h **** // - timeout_ms: millisecond to wait, zero = no wait, 0xFFFFFFFF = wait forever
+  51:lib/tinyusb/src/device/usbd.h **** // - in_isr: if function is called in ISR
+  52:lib/tinyusb/src/device/usbd.h **** void tud_task_ext(uint32_t timeout_ms, bool in_isr);
+  53:lib/tinyusb/src/device/usbd.h **** 
+  54:lib/tinyusb/src/device/usbd.h **** // Task function should be called in main/rtos loop
+  55:lib/tinyusb/src/device/usbd.h **** TU_ATTR_ALWAYS_INLINE static inline
+  56:lib/tinyusb/src/device/usbd.h **** void tud_task (void) {
+ 194              		.loc 2 56 6 view .LVU51
+ 195              	.LBB35:
+  57:lib/tinyusb/src/device/usbd.h ****   tud_task_ext(UINT32_MAX, false);
+ 196              		.loc 2 57 3 view .LVU52
+ 197              		.loc 2 57 15 is_stmt 0 view .LVU53
+ 198 0000 0021     		movs	r1, #0
+ 199 0002 4FF0FF30 		mov	r0, #-1
+ 200 0006 FFF7FEBF 		b	tud_task_ext
+ 201              	.LVL4:
+ 202              	.LBE35:
+ 203              	.LBE34:
+ 204              		.cfi_endproc
+ 205              	.LFE626:
+ 207 000a 00BF     		.section	.text.usb_log,"ax",%progbits
+ 208              		.align	1
+ 209              		.p2align 2,,3
+ 210              		.global	usb_log
+ 211              		.syntax unified
+ 212              		.thumb
+ 213              		.thumb_func
+ 215              	usb_log:
+ 216              	.LVL5:
+ 217              	.LFB628:
+  38:src/usb_glue.cpp **** 
+  39:src/usb_glue.cpp **** // ── CDC TX (printf-style logger) ────────────────────
+  40:src/usb_glue.cpp **** static void cdc_write_all(const char *data, uint32_t len)
+  41:src/usb_glue.cpp **** {
+  42:src/usb_glue.cpp ****     if(!tud_cdc_connected()) return;             // no host listening → drop
+  43:src/usb_glue.cpp ****     uint32_t off = 0, guard = 0;
+  44:src/usb_glue.cpp ****     while(off < len) {
+  45:src/usb_glue.cpp ****         uint32_t avail = tud_cdc_write_available();
+  46:src/usb_glue.cpp ****         if(avail) {
+  47:src/usb_glue.cpp ****             uint32_t chunk = (len - off < avail) ? (len - off) : avail;
+  48:src/usb_glue.cpp ****             off += tud_cdc_write(data + off, chunk);
+  49:src/usb_glue.cpp ****         } else {
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 7
+
+
+  50:src/usb_glue.cpp ****             tud_cdc_write_flush();
+  51:src/usb_glue.cpp ****             tud_task();                          // pump so the IN endpoint drains
+  52:src/usb_glue.cpp ****             if(++guard > 2000) break;            // host stalled → give up, don't hang
+  53:src/usb_glue.cpp ****         }
+  54:src/usb_glue.cpp ****     }
+  55:src/usb_glue.cpp ****     tud_cdc_write_flush();
+  56:src/usb_glue.cpp **** }
+  57:src/usb_glue.cpp **** 
+  58:src/usb_glue.cpp **** extern "C" void usb_log(const char *fmt, ...)
+  59:src/usb_glue.cpp **** {
+ 218              		.loc 1 59 1 is_stmt 1 view -0
+ 219              		.cfi_startproc
+ 220              		@ args = 4, pretend = 16, frame = 264
+ 221              		@ frame_needed = 0, uses_anonymous_args = 1
+  60:src/usb_glue.cpp ****     char buf[256];
+ 222              		.loc 1 60 5 view .LVU55
+  61:src/usb_glue.cpp ****     va_list ap; va_start(ap, fmt);
+ 223              		.loc 1 61 5 view .LVU56
+ 224              		.loc 1 61 17 view .LVU57
+  59:src/usb_glue.cpp ****     char buf[256];
+ 225              		.loc 1 59 1 is_stmt 0 view .LVU58
+ 226 0000 0FB4     		push	{r0, r1, r2, r3}
+ 227              		.cfi_def_cfa_offset 16
+ 228              		.cfi_offset 0, -16
+ 229              		.cfi_offset 1, -12
+ 230              		.cfi_offset 2, -8
+ 231              		.cfi_offset 3, -4
+ 232 0002 F0B5     		push	{r4, r5, r6, r7, lr}
+ 233              		.cfi_def_cfa_offset 36
+ 234              		.cfi_offset 4, -36
+ 235              		.cfi_offset 5, -32
+ 236              		.cfi_offset 6, -28
+ 237              		.cfi_offset 7, -24
+ 238              		.cfi_offset 14, -20
+ 239 0004 C3B0     		sub	sp, sp, #268
+ 240              		.cfi_def_cfa_offset 304
+  62:src/usb_glue.cpp ****     int n = vsnprintf(buf, sizeof(buf) - 2, fmt, ap);
+ 241              		.loc 1 62 22 view .LVU59
+ 242 0006 FE21     		movs	r1, #254
+  59:src/usb_glue.cpp ****     char buf[256];
+ 243              		.loc 1 59 1 view .LVU60
+ 244 0008 48AB     		add	r3, sp, #288
+ 245              		.loc 1 62 22 view .LVU61
+ 246 000a 02A8     		add	r0, sp, #8
+  59:src/usb_glue.cpp ****     char buf[256];
+ 247              		.loc 1 59 1 view .LVU62
+ 248 000c 53F8042B 		ldr	r2, [r3], #4
+  61:src/usb_glue.cpp ****     va_list ap; va_start(ap, fmt);
+ 249              		.loc 1 61 17 view .LVU63
+ 250 0010 0193     		str	r3, [sp, #4]
+ 251              		.loc 1 62 5 is_stmt 1 view .LVU64
+ 252              		.loc 1 62 22 is_stmt 0 view .LVU65
+ 253 0012 FFF7FEFF 		bl	vsnprintf
+ 254              	.LVL6:
+  63:src/usb_glue.cpp ****     va_end(ap);
+ 255              		.loc 1 63 5 is_stmt 1 view .LVU66
+  64:src/usb_glue.cpp ****     if(n < 0) return;
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 8
+
+
+ 256              		.loc 1 64 5 view .LVU67
+ 257 0016 061E     		subs	r6, r0, #0
+ 258 0018 34DB     		blt	.L8
+  65:src/usb_glue.cpp ****     if(n > (int)sizeof(buf) - 2) n = sizeof(buf) - 2;
+ 259              		.loc 1 65 5 view .LVU68
+ 260 001a FE2E     		cmp	r6, #254
+  66:src/usb_glue.cpp ****     buf[n++] = '\r';
+  67:src/usb_glue.cpp ****     buf[n++] = '\n';
+ 261              		.loc 1 67 14 is_stmt 0 view .LVU69
+ 262 001c 02AB     		add	r3, sp, #8
+  66:src/usb_glue.cpp ****     buf[n++] = '\r';
+ 263              		.loc 1 66 14 view .LVU70
+ 264 001e 4FF00D01 		mov	r1, #13
+ 265              		.loc 1 67 14 view .LVU71
+ 266 0022 4FF00A02 		mov	r2, #10
+ 267 0026 A8BF     		it	ge
+ 268 0028 FE26     		movge	r6, #254
+ 269              	.LVL7:
+  66:src/usb_glue.cpp ****     buf[n++] = '\r';
+ 270              		.loc 1 66 5 is_stmt 1 view .LVU72
+  66:src/usb_glue.cpp ****     buf[n++] = '\r';
+ 271              		.loc 1 66 14 is_stmt 0 view .LVU73
+ 272 002a 02AC     		add	r4, sp, #8
+ 273              	.LBB53:
+ 274              	.LBB54:
+ 275              	.LBB55:
+ 276              	.LBB56:
+ 277              		.file 3 "lib/tinyusb/src/class/cdc/cdc_device.h"
+   1:lib/tinyusb/src/class/cdc/cdc_device.h **** /*
+   2:lib/tinyusb/src/class/cdc/cdc_device.h ****  * The MIT License (MIT)
+   3:lib/tinyusb/src/class/cdc/cdc_device.h ****  *
+   4:lib/tinyusb/src/class/cdc/cdc_device.h ****  * Copyright (c) 2019 Ha Thach (tinyusb.org)
+   5:lib/tinyusb/src/class/cdc/cdc_device.h ****  *
+   6:lib/tinyusb/src/class/cdc/cdc_device.h ****  * Permission is hereby granted, free of charge, to any person obtaining a copy
+   7:lib/tinyusb/src/class/cdc/cdc_device.h ****  * of this software and associated documentation files (the "Software"), to deal
+   8:lib/tinyusb/src/class/cdc/cdc_device.h ****  * in the Software without restriction, including without limitation the rights
+   9:lib/tinyusb/src/class/cdc/cdc_device.h ****  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  10:lib/tinyusb/src/class/cdc/cdc_device.h ****  * copies of the Software, and to permit persons to whom the Software is
+  11:lib/tinyusb/src/class/cdc/cdc_device.h ****  * furnished to do so, subject to the following conditions:
+  12:lib/tinyusb/src/class/cdc/cdc_device.h ****  *
+  13:lib/tinyusb/src/class/cdc/cdc_device.h ****  * The above copyright notice and this permission notice shall be included in
+  14:lib/tinyusb/src/class/cdc/cdc_device.h ****  * all copies or substantial portions of the Software.
+  15:lib/tinyusb/src/class/cdc/cdc_device.h ****  *
+  16:lib/tinyusb/src/class/cdc/cdc_device.h ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  17:lib/tinyusb/src/class/cdc/cdc_device.h ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  18:lib/tinyusb/src/class/cdc/cdc_device.h ****  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  19:lib/tinyusb/src/class/cdc/cdc_device.h ****  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  20:lib/tinyusb/src/class/cdc/cdc_device.h ****  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  21:lib/tinyusb/src/class/cdc/cdc_device.h ****  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  22:lib/tinyusb/src/class/cdc/cdc_device.h ****  * THE SOFTWARE.
+  23:lib/tinyusb/src/class/cdc/cdc_device.h ****  *
+  24:lib/tinyusb/src/class/cdc/cdc_device.h ****  * This file is part of the TinyUSB stack.
+  25:lib/tinyusb/src/class/cdc/cdc_device.h ****  */
+  26:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  27:lib/tinyusb/src/class/cdc/cdc_device.h **** #ifndef TUSB_CDC_DEVICE_H_
+  28:lib/tinyusb/src/class/cdc/cdc_device.h **** #define TUSB_CDC_DEVICE_H_
+  29:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 9
+
+
+  30:lib/tinyusb/src/class/cdc/cdc_device.h **** #include "cdc.h"
+  31:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  32:lib/tinyusb/src/class/cdc/cdc_device.h **** //--------------------------------------------------------------------+
+  33:lib/tinyusb/src/class/cdc/cdc_device.h **** // Class Driver Configuration
+  34:lib/tinyusb/src/class/cdc/cdc_device.h **** //--------------------------------------------------------------------+
+  35:lib/tinyusb/src/class/cdc/cdc_device.h **** #if !defined(CFG_TUD_CDC_EP_BUFSIZE) && defined(CFG_TUD_CDC_EPSIZE)
+  36:lib/tinyusb/src/class/cdc/cdc_device.h ****   #warning CFG_TUD_CDC_EPSIZE is renamed to CFG_TUD_CDC_EP_BUFSIZE, please update to use the new na
+  37:lib/tinyusb/src/class/cdc/cdc_device.h ****   #define CFG_TUD_CDC_EP_BUFSIZE    CFG_TUD_CDC_EPSIZE
+  38:lib/tinyusb/src/class/cdc/cdc_device.h **** #endif
+  39:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  40:lib/tinyusb/src/class/cdc/cdc_device.h **** #ifndef CFG_TUD_CDC_EP_BUFSIZE
+  41:lib/tinyusb/src/class/cdc/cdc_device.h ****   #define CFG_TUD_CDC_EP_BUFSIZE    (TUD_OPT_HIGH_SPEED ? 512 : 64)
+  42:lib/tinyusb/src/class/cdc/cdc_device.h **** #endif
+  43:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  44:lib/tinyusb/src/class/cdc/cdc_device.h **** #ifdef __cplusplus
+  45:lib/tinyusb/src/class/cdc/cdc_device.h ****  extern "C" {
+  46:lib/tinyusb/src/class/cdc/cdc_device.h **** #endif
+  47:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  48:lib/tinyusb/src/class/cdc/cdc_device.h **** //--------------------------------------------------------------------+
+  49:lib/tinyusb/src/class/cdc/cdc_device.h **** // Driver Configuration
+  50:lib/tinyusb/src/class/cdc/cdc_device.h **** //--------------------------------------------------------------------+
+  51:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  52:lib/tinyusb/src/class/cdc/cdc_device.h **** typedef struct TU_ATTR_PACKED {
+  53:lib/tinyusb/src/class/cdc/cdc_device.h ****   uint8_t rx_persistent : 1; // keep rx fifo on bus reset or disconnect
+  54:lib/tinyusb/src/class/cdc/cdc_device.h ****   uint8_t tx_persistent : 1; // keep tx fifo on bus reset or disconnect
+  55:lib/tinyusb/src/class/cdc/cdc_device.h **** } tud_cdc_configure_fifo_t;
+  56:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  57:lib/tinyusb/src/class/cdc/cdc_device.h **** // Configure CDC FIFOs behavior
+  58:lib/tinyusb/src/class/cdc/cdc_device.h **** bool tud_cdc_configure_fifo(tud_cdc_configure_fifo_t const* cfg);
+  59:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  60:lib/tinyusb/src/class/cdc/cdc_device.h **** //--------------------------------------------------------------------+
+  61:lib/tinyusb/src/class/cdc/cdc_device.h **** // Application API (Multiple Ports) i.e. CFG_TUD_CDC > 1
+  62:lib/tinyusb/src/class/cdc/cdc_device.h **** //--------------------------------------------------------------------+
+  63:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  64:lib/tinyusb/src/class/cdc/cdc_device.h **** // Check if interface is ready
+  65:lib/tinyusb/src/class/cdc/cdc_device.h **** bool tud_cdc_n_ready(uint8_t itf);
+  66:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  67:lib/tinyusb/src/class/cdc/cdc_device.h **** // Check if terminal is connected to this port
+  68:lib/tinyusb/src/class/cdc/cdc_device.h **** bool tud_cdc_n_connected(uint8_t itf);
+  69:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  70:lib/tinyusb/src/class/cdc/cdc_device.h **** // Get current line state. Bit 0:  DTR (Data Terminal Ready), Bit 1: RTS (Request to Send)
+  71:lib/tinyusb/src/class/cdc/cdc_device.h **** uint8_t tud_cdc_n_get_line_state(uint8_t itf);
+  72:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  73:lib/tinyusb/src/class/cdc/cdc_device.h **** // Get current line encoding: bit rate, stop bits parity etc ..
+  74:lib/tinyusb/src/class/cdc/cdc_device.h **** void tud_cdc_n_get_line_coding(uint8_t itf, cdc_line_coding_t* coding);
+  75:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  76:lib/tinyusb/src/class/cdc/cdc_device.h **** // Set special character that will trigger tud_cdc_rx_wanted_cb() callback on receiving
+  77:lib/tinyusb/src/class/cdc/cdc_device.h **** void tud_cdc_n_set_wanted_char(uint8_t itf, char wanted);
+  78:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  79:lib/tinyusb/src/class/cdc/cdc_device.h **** // Get the number of bytes available for reading
+  80:lib/tinyusb/src/class/cdc/cdc_device.h **** uint32_t tud_cdc_n_available(uint8_t itf);
+  81:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  82:lib/tinyusb/src/class/cdc/cdc_device.h **** // Read received bytes
+  83:lib/tinyusb/src/class/cdc/cdc_device.h **** uint32_t tud_cdc_n_read(uint8_t itf, void* buffer, uint32_t bufsize);
+  84:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  85:lib/tinyusb/src/class/cdc/cdc_device.h **** // Read a byte, return -1 if there is none
+  86:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline int32_t tud_cdc_n_read_char(uint8_t itf) {
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 10
+
+
+  87:lib/tinyusb/src/class/cdc/cdc_device.h ****   uint8_t ch;
+  88:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_read(itf, &ch, 1) ? (int32_t) ch : -1;
+  89:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+  90:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  91:lib/tinyusb/src/class/cdc/cdc_device.h **** // Clear the received FIFO
+  92:lib/tinyusb/src/class/cdc/cdc_device.h **** void tud_cdc_n_read_flush(uint8_t itf);
+  93:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  94:lib/tinyusb/src/class/cdc/cdc_device.h **** // Get a byte from FIFO without removing it
+  95:lib/tinyusb/src/class/cdc/cdc_device.h **** bool tud_cdc_n_peek(uint8_t itf, uint8_t* ui8);
+  96:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+  97:lib/tinyusb/src/class/cdc/cdc_device.h **** // Write bytes to TX FIFO, data may remain in the FIFO for a while
+  98:lib/tinyusb/src/class/cdc/cdc_device.h **** uint32_t tud_cdc_n_write(uint8_t itf, void const* buffer, uint32_t bufsize);
+  99:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 100:lib/tinyusb/src/class/cdc/cdc_device.h **** // Write a byte
+ 101:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tud_cdc_n_write_char(uint8_t itf, char ch) {
+ 102:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_write(itf, &ch, 1);
+ 103:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 104:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 105:lib/tinyusb/src/class/cdc/cdc_device.h **** // Write a null-terminated string
+ 106:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tud_cdc_n_write_str(uint8_t itf, char const* str) {
+ 107:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_write(itf, str, strlen(str));
+ 108:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 109:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 110:lib/tinyusb/src/class/cdc/cdc_device.h **** // Force sending data if possible, return number of forced bytes
+ 111:lib/tinyusb/src/class/cdc/cdc_device.h **** uint32_t tud_cdc_n_write_flush(uint8_t itf);
+ 112:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 113:lib/tinyusb/src/class/cdc/cdc_device.h **** // Return the number of bytes (characters) available for writing to TX FIFO buffer in a single n_wr
+ 114:lib/tinyusb/src/class/cdc/cdc_device.h **** uint32_t tud_cdc_n_write_available(uint8_t itf);
+ 115:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 116:lib/tinyusb/src/class/cdc/cdc_device.h **** // Clear the transmit FIFO
+ 117:lib/tinyusb/src/class/cdc/cdc_device.h **** bool tud_cdc_n_write_clear(uint8_t itf);
+ 118:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 119:lib/tinyusb/src/class/cdc/cdc_device.h **** //--------------------------------------------------------------------+
+ 120:lib/tinyusb/src/class/cdc/cdc_device.h **** // Application API (Single Port)
+ 121:lib/tinyusb/src/class/cdc/cdc_device.h **** //--------------------------------------------------------------------+
+ 122:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 123:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline bool tud_cdc_ready(void) {
+ 124:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_ready(0);
+ 125:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 126:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 127:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline bool tud_cdc_connected(void) {
+ 128:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_connected(0);
+ 278              		.loc 3 128 29 view .LVU74
+ 279 002c 0020     		movs	r0, #0
+ 280              	.LBE56:
+ 281              	.LBE55:
+ 282              	.LBE54:
+ 283              	.LBE53:
+ 284              		.loc 1 67 14 view .LVU75
+ 285 002e 3344     		add	r3, r3, r6
+  66:src/usb_glue.cpp ****     buf[n++] = '\r';
+ 286              		.loc 1 66 14 view .LVU76
+ 287 0030 A155     		strb	r1, [r4, r6]
+ 288              		.loc 1 67 5 is_stmt 1 view .LVU77
+ 289              	.LVL8:
+ 290              		.loc 1 67 14 is_stmt 0 view .LVU78
+ 291 0032 5A70     		strb	r2, [r3, #1]
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 11
+
+
+  68:src/usb_glue.cpp ****     cdc_write_all(buf, (uint32_t)n);
+ 292              		.loc 1 68 5 is_stmt 1 view .LVU79
+ 293              	.LVL9:
+ 294              	.LBB86:
+ 295              	.LBI53:
+  40:src/usb_glue.cpp **** {
+ 296              		.loc 1 40 13 view .LVU80
+ 297              	.LBB84:
+  42:src/usb_glue.cpp ****     uint32_t off = 0, guard = 0;
+ 298              		.loc 1 42 5 view .LVU81
+ 299              	.LBB58:
+ 300              	.LBI55:
+ 127:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_connected(0);
+ 301              		.loc 3 127 42 view .LVU82
+ 302              	.LBB57:
+ 303              		.loc 3 128 3 view .LVU83
+ 304              		.loc 3 128 29 is_stmt 0 view .LVU84
+ 305 0034 FFF7FEFF 		bl	tud_cdc_n_connected
+ 306              	.LVL10:
+ 307              	.LBE57:
+ 308              	.LBE58:
+  42:src/usb_glue.cpp ****     uint32_t off = 0, guard = 0;
+ 309              		.loc 1 42 5 view .LVU85
+ 310 0038 20B3     		cbz	r0, .L8
+  43:src/usb_glue.cpp ****     while(off < len) {
+ 311              		.loc 1 43 23 view .LVU86
+ 312 003a 0027     		movs	r7, #0
+ 313              	.LBE84:
+ 314              	.LBE86:
+  67:src/usb_glue.cpp ****     cdc_write_all(buf, (uint32_t)n);
+ 315              		.loc 1 67 10 view .LVU87
+ 316 003c 0236     		adds	r6, r6, #2
+ 317              	.LVL11:
+ 318              	.LBB87:
+ 319              	.LBB85:
+  43:src/usb_glue.cpp ****     while(off < len) {
+ 320              		.loc 1 43 14 view .LVU88
+ 321 003e 3D46     		mov	r5, r7
+ 322 0040 09E0     		b	.L11
+ 323              	.LVL12:
+ 324              	.L20:
+ 325              	.LBB59:
+ 326              	.LBB60:
+ 327              	.LBB61:
+ 328              	.LBB62:
+ 329              	.LBB63:
+ 129:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 130:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 131:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t tud_cdc_get_line_state(void) {
+ 132:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_get_line_state(0);
+ 133:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 134:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 135:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline void tud_cdc_get_line_coding(cdc_line_coding_t* coding) {
+ 136:lib/tinyusb/src/class/cdc/cdc_device.h ****   tud_cdc_n_get_line_coding(0, coding);
+ 137:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 138:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 139:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline void tud_cdc_set_wanted_char(char wanted) {
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 12
+
+
+ 140:lib/tinyusb/src/class/cdc/cdc_device.h ****   tud_cdc_n_set_wanted_char(0, wanted);
+ 141:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 142:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 143:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tud_cdc_available(void) {
+ 144:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_available(0);
+ 145:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 146:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 147:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline int32_t tud_cdc_read_char(void) {
+ 148:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_read_char(0);
+ 149:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 150:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 151:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tud_cdc_read(void* buffer, uint32_t bufsize) {
+ 152:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_read(0, buffer, bufsize);
+ 153:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 154:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 155:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline void tud_cdc_read_flush(void) {
+ 156:lib/tinyusb/src/class/cdc/cdc_device.h ****   tud_cdc_n_read_flush(0);
+ 157:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 158:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 159:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline bool tud_cdc_peek(uint8_t* ui8) {
+ 160:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_peek(0, ui8);
+ 161:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 162:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 163:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tud_cdc_write_char(char ch) {
+ 164:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_write_char(0, ch);
+ 165:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 166:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 167:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tud_cdc_write(void const* buffer, uint32_t bufsize) {
+ 168:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_write(0, buffer, bufsize);
+ 330              		.loc 3 168 25 view .LVU89
+ 331 0042 A242     		cmp	r2, r4
+ 332 0044 4FF00000 		mov	r0, #0
+ 333              	.LVL13:
+ 334              		.loc 3 168 25 view .LVU90
+ 335 0048 28BF     		it	cs
+ 336 004a 2246     		movcs	r2, r4
+ 337 004c FFF7FEFF 		bl	tud_cdc_n_write
+ 338              	.LVL14:
+ 339              		.loc 3 168 25 view .LVU91
+ 340              	.LBE63:
+ 341              	.LBE62:
+  48:src/usb_glue.cpp ****         } else {
+ 342              		.loc 1 48 17 view .LVU92
+ 343 0050 0544     		add	r5, r5, r0
+ 344              	.LVL15:
+ 345              	.L13:
+  48:src/usb_glue.cpp ****         } else {
+ 346              		.loc 1 48 17 view .LVU93
+ 347              	.LBE61:
+ 348              	.LBE60:
+ 349              	.LBE59:
+  44:src/usb_glue.cpp ****         uint32_t avail = tud_cdc_write_available();
+ 350              		.loc 1 44 5 is_stmt 1 view .LVU94
+  44:src/usb_glue.cpp ****         uint32_t avail = tud_cdc_write_available();
+ 351              		.loc 1 44 15 view .LVU95
+ 352 0052 AE42     		cmp	r6, r5
+ 353 0054 13D9     		bls	.L14
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 13
+
+
+ 354              	.LVL16:
+ 355              	.L11:
+ 356              	.LBB81:
+  45:src/usb_glue.cpp ****         if(avail) {
+ 357              		.loc 1 45 9 view .LVU96
+ 358              	.LBB77:
+ 359              	.LBI77:
+ 169:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 170:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 171:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tud_cdc_write_str(char const* str) {
+ 172:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_write_str(0, str);
+ 173:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 174:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 175:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tud_cdc_write_flush(void) {
+ 176:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_write_flush(0);
+ 177:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 178:lib/tinyusb/src/class/cdc/cdc_device.h **** 
+ 179:lib/tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tud_cdc_write_available(void) {
+ 360              		.loc 3 179 46 view .LVU97
+ 361              	.LBB78:
+ 180:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_write_available(0);
+ 362              		.loc 3 180 3 view .LVU98
+ 363              		.loc 3 180 35 is_stmt 0 view .LVU99
+ 364 0056 0020     		movs	r0, #0
+ 365 0058 FFF7FEFF 		bl	tud_cdc_n_write_available
+ 366              	.LVL17:
+ 367              	.LBE78:
+ 368              	.LBE77:
+ 369              	.LBB79:
+ 370              	.LBB68:
+  47:src/usb_glue.cpp ****             off += tud_cdc_write(data + off, chunk);
+ 371              		.loc 1 47 13 is_stmt 1 view .LVU100
+ 372              	.LBE68:
+  50:src/usb_glue.cpp ****             tud_task();                          // pump so the IN endpoint drains
+ 373              		.loc 1 50 13 view .LVU101
+ 374              	.LBB69:
+ 375              	.LBI69:
+ 175:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_write_flush(0);
+ 376              		.loc 3 175 46 view .LVU102
+ 377              	.LBB70:
+ 176:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 378              		.loc 3 176 3 view .LVU103
+ 176:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 379              		.loc 3 176 3 is_stmt 0 view .LVU104
+ 380              	.LBE70:
+ 381              	.LBE69:
+ 382              	.LBE79:
+  46:src/usb_glue.cpp ****             uint32_t chunk = (len - off < avail) ? (len - off) : avail;
+ 383              		.loc 1 46 9 is_stmt 1 view .LVU105
+ 384              	.LBB80:
+ 385              	.LBB72:
+ 386              	.LBB66:
+ 387              	.LBB64:
+ 168:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 388              		.loc 3 168 25 is_stmt 0 view .LVU106
+ 389 005c 02AB     		add	r3, sp, #8
+ 390              	.LBE64:
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 14
+
+
+ 391              	.LBE66:
+  47:src/usb_glue.cpp ****             off += tud_cdc_write(data + off, chunk);
+ 392              		.loc 1 47 35 view .LVU107
+ 393 005e 721B     		subs	r2, r6, r5
+ 394              	.LBE72:
+  46:src/usb_glue.cpp ****             uint32_t chunk = (len - off < avail) ? (len - off) : avail;
+ 395              		.loc 1 46 9 view .LVU108
+ 396 0060 0446     		mov	r4, r0
+ 397              	.LVL18:
+ 398              	.LBB73:
+  48:src/usb_glue.cpp ****         } else {
+ 399              		.loc 1 48 13 is_stmt 1 view .LVU109
+ 400              	.LBB67:
+ 401              	.LBI62:
+ 167:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_write(0, buffer, bufsize);
+ 402              		.loc 3 167 46 view .LVU110
+ 403              	.LBB65:
+ 168:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 404              		.loc 3 168 3 view .LVU111
+ 168:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 405              		.loc 3 168 25 is_stmt 0 view .LVU112
+ 406 0062 5919     		adds	r1, r3, r5
+ 407              	.LBE65:
+ 408              	.LBE67:
+ 409              	.LBE73:
+  46:src/usb_glue.cpp ****             uint32_t chunk = (len - off < avail) ? (len - off) : avail;
+ 410              		.loc 1 46 9 view .LVU113
+ 411 0064 0028     		cmp	r0, #0
+ 412 0066 ECD1     		bne	.L20
+  52:src/usb_glue.cpp ****         }
+ 413              		.loc 1 52 24 view .LVU114
+ 414 0068 0137     		adds	r7, r7, #1
+ 415              	.LVL19:
+ 416              	.LBB74:
+ 417              	.LBB71:
+ 176:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 418              		.loc 3 176 31 view .LVU115
+ 419 006a FFF7FEFF 		bl	tud_cdc_n_write_flush
+ 420              	.LVL20:
+ 176:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 421              		.loc 3 176 31 view .LVU116
+ 422              	.LBE71:
+ 423              	.LBE74:
+  51:src/usb_glue.cpp ****             if(++guard > 2000) break;            // host stalled → give up, don't hang
+ 424              		.loc 1 51 13 is_stmt 1 view .LVU117
+ 425              	.LBB75:
+ 426              	.LBI75:
+  56:lib/tinyusb/src/device/usbd.h ****   tud_task_ext(UINT32_MAX, false);
+ 427              		.loc 2 56 6 view .LVU118
+ 428              	.LBB76:
+ 429              		.loc 2 57 3 view .LVU119
+ 430              		.loc 2 57 15 is_stmt 0 view .LVU120
+ 431 006e 2146     		mov	r1, r4
+ 432 0070 4FF0FF30 		mov	r0, #-1
+ 433 0074 FFF7FEFF 		bl	tud_task_ext
+ 434              	.LVL21:
+ 435              	.LBE76:
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 15
+
+
+ 436              	.LBE75:
+  52:src/usb_glue.cpp ****         }
+ 437              		.loc 1 52 13 is_stmt 1 view .LVU121
+  52:src/usb_glue.cpp ****         }
+ 438              		.loc 1 52 13 is_stmt 0 view .LVU122
+ 439 0078 B7F5FA6F 		cmp	r7, #2000
+ 440 007c E9D9     		bls	.L13
+ 441              	.LVL22:
+ 442              	.L14:
+  52:src/usb_glue.cpp ****         }
+ 443              		.loc 1 52 13 view .LVU123
+ 444              	.LBE80:
+ 445              	.LBE81:
+  55:src/usb_glue.cpp **** }
+ 446              		.loc 1 55 5 is_stmt 1 view .LVU124
+ 447              	.LBB82:
+ 448              	.LBI82:
+ 175:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_write_flush(0);
+ 449              		.loc 3 175 46 view .LVU125
+ 450              	.LBB83:
+ 176:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 451              		.loc 3 176 3 view .LVU126
+ 176:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 452              		.loc 3 176 31 is_stmt 0 view .LVU127
+ 453 007e 0020     		movs	r0, #0
+ 454 0080 FFF7FEFF 		bl	tud_cdc_n_write_flush
+ 455              	.LVL23:
+ 456              	.L8:
+ 176:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 457              		.loc 3 176 31 view .LVU128
+ 458              	.LBE83:
+ 459              	.LBE82:
+ 460              	.LBE85:
+ 461              	.LBE87:
+  69:src/usb_glue.cpp **** }
+ 462              		.loc 1 69 1 view .LVU129
+ 463 0084 43B0     		add	sp, sp, #268
+ 464              		.cfi_def_cfa_offset 36
+ 465              		@ sp needed
+ 466 0086 BDE8F040 		pop	{r4, r5, r6, r7, lr}
+ 467              		.cfi_restore 14
+ 468              		.cfi_restore 7
+ 469              		.cfi_restore 6
+ 470              		.cfi_restore 5
+ 471              		.cfi_restore 4
+ 472              		.cfi_def_cfa_offset 16
+ 473 008a 04B0     		add	sp, sp, #16
+ 474              		.cfi_restore 3
+ 475              		.cfi_restore 2
+ 476              		.cfi_restore 1
+ 477              		.cfi_restore 0
+ 478              		.cfi_def_cfa_offset 0
+ 479 008c 7047     		bx	lr
+ 480              		.cfi_endproc
+ 481              	.LFE628:
+ 483 008e 00BF     		.section	.text.usb_cdc_read_avail,"ax",%progbits
+ 484              		.align	1
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 16
+
+
+ 485              		.p2align 2,,3
+ 486              		.global	usb_cdc_read_avail
+ 487              		.syntax unified
+ 488              		.thumb
+ 489              		.thumb_func
+ 491              	usb_cdc_read_avail:
+ 492              	.LVL24:
+ 493              	.LFB629:
+  70:src/usb_glue.cpp **** 
+  71:src/usb_glue.cpp **** // ── CDC RX ───────────────────────────�
+  72:src/usb_glue.cpp **** extern "C" int usb_cdc_read_avail(char *buf, int maxlen)
+  73:src/usb_glue.cpp **** {
+ 494              		.loc 1 73 1 is_stmt 1 view -0
+ 495              		.cfi_startproc
+ 496              		@ args = 0, pretend = 0, frame = 0
+ 497              		@ frame_needed = 0, uses_anonymous_args = 0
+  74:src/usb_glue.cpp ****     if(maxlen <= 0 || !tud_cdc_available()) return 0;
+ 498              		.loc 1 74 5 view .LVU131
+  73:src/usb_glue.cpp ****     if(maxlen <= 0 || !tud_cdc_available()) return 0;
+ 499              		.loc 1 73 1 is_stmt 0 view .LVU132
+ 500 0000 38B5     		push	{r3, r4, r5, lr}
+ 501              		.cfi_def_cfa_offset 16
+ 502              		.cfi_offset 3, -16
+ 503              		.cfi_offset 4, -12
+ 504              		.cfi_offset 5, -8
+ 505              		.cfi_offset 14, -4
+ 506              		.loc 1 74 20 view .LVU133
+ 507 0002 0C1E     		subs	r4, r1, #0
+ 508 0004 04DD     		ble	.L23
+ 509              	.LBB88:
+ 510              	.LBI88:
+ 143:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_available(0);
+ 511              		.loc 3 143 46 is_stmt 1 view .LVU134
+ 512              	.LBB89:
+ 144:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 513              		.loc 3 144 3 view .LVU135
+ 514 0006 0546     		mov	r5, r0
+ 144:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 515              		.loc 3 144 29 is_stmt 0 view .LVU136
+ 516 0008 0020     		movs	r0, #0
+ 517              	.LVL25:
+ 144:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 518              		.loc 3 144 29 view .LVU137
+ 519 000a FFF7FEFF 		bl	tud_cdc_n_available
+ 520              	.LVL26:
+ 144:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 521              		.loc 3 144 29 view .LVU138
+ 522              	.LBE89:
+ 523              	.LBE88:
+ 524              		.loc 1 74 20 view .LVU139
+ 525 000e 08B9     		cbnz	r0, .L29
+ 526              	.LVL27:
+ 527              	.L23:
+  75:src/usb_glue.cpp ****     return (int)tud_cdc_read(buf, (uint32_t)maxlen);
+  76:src/usb_glue.cpp **** }
+ 528              		.loc 1 76 1 view .LVU140
+ 529 0010 0020     		movs	r0, #0
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 17
+
+
+ 530 0012 38BD     		pop	{r3, r4, r5, pc}
+ 531              	.LVL28:
+ 532              	.L29:
+  75:src/usb_glue.cpp ****     return (int)tud_cdc_read(buf, (uint32_t)maxlen);
+ 533              		.loc 1 75 5 is_stmt 1 view .LVU141
+ 534              	.LBB90:
+ 535              	.LBI90:
+ 151:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_read(0, buffer, bufsize);
+ 536              		.loc 3 151 46 view .LVU142
+ 537              	.LBB91:
+ 152:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 538              		.loc 3 152 3 view .LVU143
+ 152:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 539              		.loc 3 152 24 is_stmt 0 view .LVU144
+ 540 0014 2246     		mov	r2, r4
+ 541 0016 2946     		mov	r1, r5
+ 542 0018 0020     		movs	r0, #0
+ 543              	.LBE91:
+ 544              	.LBE90:
+ 545              		.loc 1 76 1 view .LVU145
+ 546 001a BDE83840 		pop	{r3, r4, r5, lr}
+ 547              		.cfi_restore 14
+ 548              		.cfi_restore 5
+ 549              		.cfi_restore 4
+ 550              		.cfi_restore 3
+ 551              		.cfi_def_cfa_offset 0
+ 552              	.LVL29:
+ 553              	.LBB93:
+ 554              	.LBB92:
+ 152:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 555              		.loc 3 152 24 view .LVU146
+ 556 001e FFF7FEBF 		b	tud_cdc_n_read
+ 557              	.LVL30:
+ 152:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 558              		.loc 3 152 24 view .LVU147
+ 559              	.LBE92:
+ 560              	.LBE93:
+ 561              		.cfi_endproc
+ 562              	.LFE629:
+ 564 0022 00BF     		.section	.text.usb_cdc_is_connected,"ax",%progbits
+ 565              		.align	1
+ 566              		.p2align 2,,3
+ 567              		.global	usb_cdc_is_connected
+ 568              		.syntax unified
+ 569              		.thumb
+ 570              		.thumb_func
+ 572              	usb_cdc_is_connected:
+ 573              	.LFB630:
+  77:src/usb_glue.cpp **** 
+  78:src/usb_glue.cpp **** extern "C" int usb_cdc_is_connected(void) { return tud_cdc_connected() ? 1 : 0; }
+ 574              		.loc 1 78 43 is_stmt 1 view -0
+ 575              		.cfi_startproc
+ 576              		@ args = 0, pretend = 0, frame = 0
+ 577              		@ frame_needed = 0, uses_anonymous_args = 0
+ 578              		.loc 1 78 45 view .LVU149
+ 579              	.LBB94:
+ 580              	.LBI94:
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 18
+
+
+ 127:lib/tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_connected(0);
+ 581              		.loc 3 127 42 view .LVU150
+ 582              	.LBB95:
+ 128:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 583              		.loc 3 128 3 view .LVU151
+ 584              	.LBE95:
+ 585              	.LBE94:
+ 586              		.loc 1 78 43 is_stmt 0 view .LVU152
+ 587 0000 08B5     		push	{r3, lr}
+ 588              		.cfi_def_cfa_offset 8
+ 589              		.cfi_offset 3, -8
+ 590              		.cfi_offset 14, -4
+ 591              	.LBB97:
+ 592              	.LBB96:
+ 128:lib/tinyusb/src/class/cdc/cdc_device.h **** }
+ 593              		.loc 3 128 29 view .LVU153
+ 594 0002 0020     		movs	r0, #0
+ 595 0004 FFF7FEFF 		bl	tud_cdc_n_connected
+ 596              	.LVL31:
+ 597              	.LBE96:
+ 598              	.LBE97:
+ 599              		.loc 1 78 81 view .LVU154
+ 600 0008 08BD     		pop	{r3, pc}
+ 601              		.cfi_endproc
+ 602              	.LFE630:
+ 604 000a 00BF     		.text
+ 605              	.Letext0:
+ 606              		.file 4 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32
+ 607              		.file 5 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/machine/_default_types.h"
+ 608              		.file 6 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/sys/_stdint.h"
+ 609              		.file 7 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/cmath"
+ 610              		.file 8 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/std_abs.h"
+ 611              		.file 9 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v7
+ 612              		.file 10 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/math.h"
+ 613              		.file 11 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/math.h"
+ 614              		.file 12 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/STM32H7xx_HAL_Driver
+ 615              		.file 13 "/Library/DaisyToolchain/0.2.0/arm/lib/gcc/arm-none-eabi/10.3.1/include/stdarg.h"
+ 616              		.file 14 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/stdio.h"
+ 617              		.file 15 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/STM32H7xx_HAL_Driver
+ 618              		.file 16 "<built-in>"
+ARM GAS  /tmp/claude-502/ccFyPjaa.s 			page 19
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 usb_glue.cpp
+/tmp/claude-502/ccFyPjaa.s:19     .text.usb_fs_init:0000000000000000 $t
+/tmp/claude-502/ccFyPjaa.s:26     .text.usb_fs_init:0000000000000000 usb_fs_init
+/tmp/claude-502/ccFyPjaa.s:147    .text.usb_fs_init:0000000000000068 $d
+/tmp/claude-502/ccFyPjaa.s:153    .text.OTG_FS_IRQHandler:0000000000000000 $t
+/tmp/claude-502/ccFyPjaa.s:160    .text.OTG_FS_IRQHandler:0000000000000000 OTG_FS_IRQHandler
+/tmp/claude-502/ccFyPjaa.s:176    .text.usb_task:0000000000000000 $t
+/tmp/claude-502/ccFyPjaa.s:183    .text.usb_task:0000000000000000 usb_task
+/tmp/claude-502/ccFyPjaa.s:208    .text.usb_log:0000000000000000 $t
+/tmp/claude-502/ccFyPjaa.s:215    .text.usb_log:0000000000000000 usb_log
+/tmp/claude-502/ccFyPjaa.s:484    .text.usb_cdc_read_avail:0000000000000000 $t
+/tmp/claude-502/ccFyPjaa.s:491    .text.usb_cdc_read_avail:0000000000000000 usb_cdc_read_avail
+/tmp/claude-502/ccFyPjaa.s:565    .text.usb_cdc_is_connected:0000000000000000 $t
+/tmp/claude-502/ccFyPjaa.s:572    .text.usb_cdc_is_connected:0000000000000000 usb_cdc_is_connected
+
+UNDEFINED SYMBOLS
+HAL_GPIO_Init
+HAL_NVIC_SetPriority
+tud_init
+dcd_int_handler
+tud_task_ext
+vsnprintf
+tud_cdc_n_connected
+tud_cdc_n_write
+tud_cdc_n_write_available
+tud_cdc_n_write_flush
+tud_cdc_n_available
+tud_cdc_n_read

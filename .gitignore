@@ -4,3 +4,4 @@ __pycache__/
 
 # PyInstaller macOS app build (tools/build_macapp.sh)
 /build-macapp/
+.DS_Store
