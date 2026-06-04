@@ -101,9 +101,10 @@
 <script>
 // ── Raw history: hash|parents(space-sep)|date|refs|subject ────────────────────
 const RAW = String.raw`
-d313e6659e2898ef6997418bd466f10ba9c4e4c2|6536ac89af78585178bcd467df39bdfaf4b4ea8b dbe2ea862c5304f7bec86f34805d9e03f59f3d90|2026-06-04| (HEAD -> main)|Merge usb-audio into main — composite USB soundcard (v2.0.0)
-6536ac89af78585178bcd467df39bdfaf4b4ea8b|d15c95aacc4847d3cbbfb946d8b64398dbb50ca4|2026-06-04| (tag: v1.0.0, origin/main, origin/HEAD)|docs: release v1.0.0 — the complete instrument + VoiceLab (pre-USB-audio)
-dbe2ea862c5304f7bec86f34805d9e03f59f3d90|d71f02f51b16d580229459c48fd4ac9a5308db75|2026-06-04| (usb-audio)|docs: timeline — add Phase 3 (hardening) to the usb-audio lane
+9ed9cd88d515be61a12d94678c20af6e0208f434|d313e6659e2898ef6997418bd466f10ba9c4e4c2|2026-06-04| (HEAD -> main, tag: v2.0.0, origin/main, origin/HEAD)|docs: release v2.0.0 — USB soundcard (CHANGELOG, timeline, releases)
+d313e6659e2898ef6997418bd466f10ba9c4e4c2|6536ac89af78585178bcd467df39bdfaf4b4ea8b dbe2ea862c5304f7bec86f34805d9e03f59f3d90|2026-06-04||Merge usb-audio into main — composite USB soundcard (v2.0.0)
+6536ac89af78585178bcd467df39bdfaf4b4ea8b|d15c95aacc4847d3cbbfb946d8b64398dbb50ca4|2026-06-04| (tag: v1.0.0)|docs: release v1.0.0 — the complete instrument + VoiceLab (pre-USB-audio)
+dbe2ea862c5304f7bec86f34805d9e03f59f3d90|d71f02f51b16d580229459c48fd4ac9a5308db75|2026-06-04||docs: timeline — add Phase 3 (hardening) to the usb-audio lane
 d71f02f51b16d580229459c48fd4ac9a5308db75|cc19984a2a7fc8aba88c7cd49aa14a50fc67e24c 034e31e05980f8bd8efe92eae285e195ac09e061|2026-06-04||Merge usbaudio phase 3 (hardening) into usb-audio
 034e31e05980f8bd8efe92eae285e195ac09e061|cc19984a2a7fc8aba88c7cd49aa14a50fc67e24c|2026-06-04||feat(usbaudio phase 3): hardening — CPU meter, mute, lower latency
 cc19984a2a7fc8aba88c7cd49aa14a50fc67e24c|e5bd328bd67c3cca13be19541ccea02f56c1e7f9|2026-06-04||docs: timeline — add Phase 2 (UAC2 stereo capture) to the usb-audio lane
@@ -221,11 +222,16 @@ function typeOf(s){
   }
   return 'other';
 }
-function cleanRefs(refs){
+function cleanRefs(refs){   // branch refs only (tags handled separately)
   if(!refs||!refs.trim()) return [];
   return refs.replace(/[()]/g,'').split(',').map(s=>s.trim())
     .map(s=>s.replace(/^HEAD -> /,''))
-    .filter(s=>s && !s.startsWith('origin/') && s!=='HEAD' && s!=='origin/HEAD');
+    .filter(s=>s && !s.startsWith('origin/') && s!=='HEAD' && s!=='origin/HEAD' && !s.startsWith('tag: '));
+}
+function parseTags(refs){   // git annotated/lightweight tags → ["v1.0.0", …]
+  if(!refs) return [];
+  return refs.replace(/[()]/g,'').split(',').map(s=>s.trim())
+    .filter(s=>s.startsWith('tag: ')).map(s=>s.slice(5));
 }
 const BODIES = JSON.parse(document.getElementById('bodies').textContent);
 const lines = RAW.split('\n').filter(l=>l.trim());
@@ -234,7 +240,7 @@ const commits = lines.map(l=>{
   const subject = rest.join('|');
   return { hash, short:hash.slice(0,7),
     parents: parents.trim()? parents.trim().split(' ') : [],
-    date, refs: cleanRefs(refs), subject, type: typeOf(subject) };
+    date, refs: cleanRefs(refs), tags: parseTags(refs), subject, type: typeOf(subject) };
 });
 const byHash = new Map(commits.map(c=>[c.hash,c]));
 
@@ -332,7 +338,7 @@ let labelEnd=0;
 branches.forEach(b=> labelEnd=Math.max(labelEnd, laneX(b.lane)+12 + b.disp.length*BR_CHAR));
 if(hasInteg) labelEnd=Math.max(labelEnd, laneX(integ.lane)+12 + integ.disp.length*BR_CHAR);
 const msgX  = Math.max(laneX(maxLane) + 140, labelEnd + 90);
-const W = msgX + 560;
+const W = msgX + 700;   // room for the message + any release-tag pills
 const H = TOP + order.length*ROW + 24;
 
 // ── Build SVG ──
@@ -425,9 +431,25 @@ commits.forEach(c=>{
   dot.setAttribute('fill', isMerge? '#0c0e14' : TYPES[c.type].c);
   dot.setAttribute('stroke', TYPES[c.type].c); dot.setAttribute('stroke-width', isMerge?2.5:1.5);
   g.appendChild(dot);
+  // release tags: gold pills before the message (shifts the subject right)
+  let mx = msgX;
+  (c.tags||[]).forEach(tg=>{
+    const w = tg.length * 7.0 + 16;
+    const r=document.createElementNS(NS,'rect');
+    r.setAttribute('x',mx); r.setAttribute('y',y-8); r.setAttribute('width',w); r.setAttribute('height',16);
+    r.setAttribute('rx',8); r.setAttribute('fill','#3a2e05'); r.setAttribute('stroke','#f5c518'); r.setAttribute('stroke-width',1);
+    g.appendChild(r);
+    const tt=document.createElementNS(NS,'text');
+    tt.setAttribute('x',mx+w/2); tt.setAttribute('y',y); tt.setAttribute('text-anchor','middle');
+    tt.setAttribute('dominant-baseline','middle'); tt.setAttribute('fill','#f5c518');
+    tt.setAttribute('font-size','11'); tt.setAttribute('font-weight','700');
+    tt.setAttribute('font-family','ui-monospace,Menlo,monospace'); tt.textContent='⌖ '+tg;
+    g.appendChild(tt);
+    mx += w + 8;
+  });
   // message
   const m=document.createElementNS(NS,'text');
-  m.setAttribute('x',msgX); m.setAttribute('y',y); m.setAttribute('class','msg'+(isMerge?' merge':''));
+  m.setAttribute('x',mx); m.setAttribute('y',y); m.setAttribute('class','msg'+(isMerge?' merge':''));
   m.textContent = c.subject.length>78? c.subject.slice(0,77)+'…' : c.subject; g.appendChild(m);
   const h=document.createElementNS(NS,'text');
   h.setAttribute('x',msgX-12); h.setAttribute('y',y); h.setAttribute('text-anchor','end'); h.setAttribute('class','hash');
@@ -485,6 +507,7 @@ function showDetail(c){
     <div class="kv"><div class="k">Date</div><div>${c.date}</div></div>
     <div class="kv"><div class="k">Branch / lane</div><div>${esc(brName(c))}</div></div>
     <div class="kv"><div class="k">Parents</div><div class="v">${c.parents.map(p=>p.slice(0,7)).join('  •  ')||'— (root)'}</div></div>
+    ${c.tags && c.tags.length?`<div class="kv"><div class="k">Release tag</div><div><span class="pill" style="background:#f5c518">${c.tags.map(esc).join(', ')}</span></div></div>`:''}
     ${c.refs.length?`<div class="kv"><div class="k">Refs</div><div class="v">${c.refs.map(esc).join(', ')}</div></div>`:''}`;
 }
 function esc(s){ return s.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
