@@ -76,7 +76,42 @@ Three feature branches, each branch → merge → delete, all pushed to `origin/
 
 ---
 
+## 📅 Jun 4 · Phase 7 — USB audio (in progress, on `usb-audio`) 🎙️
+Goal: make the synth a composite **USB Audio (capture) + CDC** device so it records
+live in a DAW while VoiceLab keeps working. Built on an **integration branch**
+(`usb-audio` off `main`), one sub-branch per phase merging in; **`main` stays
+untouched until the whole project works.** (Design: `docs/usb-audio-plan.md`.)
+- `25bd84d` **plan** — composite UAC + CDC over TinyUSB, run from QSPI/SRAM.
+- **Phase 0 — run from the bootloader** (`feature/usbaudio-qspi`): escape the 128 KB
+  internal-flash wall (was 93.75% full) so there's room for the USB stack.
+- **Phase 0.5 — SRAM boot + persistence** (`feature/usbaudio-persist`): `BOOT_QSPI`
+  broke voice persistence (libDaisy refuses QSPI writes while executing from QSPI),
+  so switched to **`BOOT_SRAM`** (QSPI stays writable), moved the reverb/delay
+  buffers to SDRAM, fixed `SCB->VTOR`, added the `bootvoice` command + VoiceLab
+  **"Set as default"** (yellow ★ on the default voice).
+- **Phase 1 — TinyUSB CDC** (`feature/usbaudio-tinyusb-cdc`): replaced libDaisy's
+  USB logger with a vendored TinyUSB (`lib/tinyusb`); VoiceLab serial now runs over
+  TinyUSB CDC (`usb_log`/`usb_cdc_read_avail`). Verified the full protocol on
+  hardware. The base for the composite UAC device.
+- **Phase 2 — UAC2 stereo capture** (`feature/usbaudio-uac`): composite **CDC +
+  UAC2** device — the Daisy is now a class-compliant **2-ch / 48 kHz** USB
+  soundcard ("GaletSynth Audio"), recordable live in a DAW while VoiceLab tunes,
+  on one cable. Async ring + 47/48/49 clock tracking; the key fix was pumping
+  `tud_task()` from the audio callback (~2 kHz) so the iso IN endpoint isn't
+  starved by the slow control loop. Verified clean capture on macOS. 🎛️
+- **Phase 3 — hardening** (`feature/usbaudio-harden`): a DWT CPU-load meter on the
+  audio callback (**17% avg / 30% max** — confirms pumping USB from the audio
+  callback is safe), host **mute**, and **lower latency** (cushion 256→128 ≈
+  2.7 ms; ring holds steady, zero under/overruns). Confirmed working on macOS **and
+  iOS**.
+- ⏭️ Next: host testing — Android / TP-7 / TX-6 (UAC1 fallback if needed) — then
+  merge `usb-audio` → `main`.
+
+---
+
 ### 🌿 Unmerged side branches
+- `usb-audio` — the in-progress USB-audio integration branch (Phase 7 above); merges
+  to `main` once the soundcard works end to end.
 - `update/sensor-jlc` & `update/sensor-jlc-optimized` — sensor / volume / serial-log
   experiments, never merged to `main`.
 
@@ -84,5 +119,5 @@ Three feature branches, each branch → merge → delete, all pushed to `origin/
 | | |
 |---|---|
 | **Span** | Apr 4 → Jun 4 2026 (~2 months, bulk of the work in 5 days) |
-| **Workflow** | `feature/*` → `--no-ff` merge → delete branch → CHANGELOG |
-| **Arc** | one bass voice → 15-voice bank + poly drum kit → live USB tuner → shipped macOS app |
+| **Workflow** | `feature/*` → `--no-ff` merge → delete branch → CHANGELOG. Bigger efforts (USB audio) use an **integration branch** (`usb-audio`) with per-phase sub-branches, kept off `main` until done |
+| **Arc** | one bass voice → 15-voice bank + poly drum kit → live USB tuner → shipped macOS app → USB-audio soundcard (in progress) |

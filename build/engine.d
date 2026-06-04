@@ -180,7 +180,9 @@ build/engine.o: src/engine.cpp \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/WaveTableLoader.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/fatfs.h \
  /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/util/WavWriter.h \
- src/voice.h src/dsp.h src/touch.h src/persist.h
+ src/voice.h src/dsp.h src/touch.h src/persist.h \
+ /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/dev/sdram.h \
+ src/usb_audio.h src/usb_glue.h
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h:
 /Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/Drivers/CMSIS/Include/core_cm7.h:
@@ -366,3 +368,6 @@ src/voice.h:
 src/dsp.h:
 src/touch.h:
 src/persist.h:
+/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/dev/sdram.h:
+src/usb_audio.h:
+src/usb_glue.h:

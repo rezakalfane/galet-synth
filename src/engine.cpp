@@ -1,5 +1,9 @@
 #include "engine.h"
 #include "persist.h"   // g_bank — the live, editable voice bank the engine plays
+#include "dev/sdram.h" // DSY_SDRAM_BSS — place the big effect buffers in SDRAM
+#include "usb_audio.h" // usb_audio_push — tap the output into the UAC2 capture ring
+#include "usb_glue.h"  // usb_task — pump the USB device stack at audio rate (see below)
+#include <string.h>    // memset — zero the NOLOAD SDRAM buffers at init
 
 using namespace daisy;
 using namespace daisy::seed;
@@ -51,16 +55,35 @@ static float s_phase1c   = 0.0f, s_phase2c = 0.0f; // 5th
 static float s_flt[4]    = {0,0,0,0};
 
 // Shared reverb — one instance, fed by whichever voice has a reverb_send. Its
-// ~66 KB of delay lines live in static storage (zero-initialised = silent). HF
-// damping is fixed for now; tail length / level are the global g_reverb_* params.
-static Reverb s_reverb;
+// ~66 KB of delay lines + the delay's 144 KB buffer live in SDRAM (DSY_SDRAM_BSS):
+// under BOOT_SRAM the program runs from the 480 KB SRAM and data/bss lives in the
+// 128 KB DTCM, so these big audio buffers must go to the 64 MB SDRAM. NOTE:
+// .sdram_bss is NOLOAD (not zeroed by startup), so engine_init() memsets them —
+// the in-struct `= {}` zero-init does NOT apply in this section. HF damping fixed;
+// tail length / level are the global g_reverb_* / g_delay_* params.
+static Reverb DSY_SDRAM_BSS s_reverb;
 static constexpr float REVERB_DAMP = 0.4f;
 
-// Shared delay/echo — one instance, fed by whichever voice has a delay_send. Its
-// 750 ms buffer (~144 KB) is static (zero = silent). Feedback HF damping fixed;
-// time / feedback / level are the global g_delay_* params.
-static Delay s_delay;
+static Delay DSY_SDRAM_BSS s_delay;
 static constexpr float DELAY_DAMP = 0.30f;
+
+// Zero the SDRAM-resident effect buffers (NOLOAD section). Call once after
+// hw.Init() (SDRAM up) and before StartAudio.
+// ── Audio-callback CPU load meter (DWT cycle counter) ─────────────────────────
+// Captures the worst block (the one that also pumps tud_task), so we can see how
+// much deadline headroom the USB servicing leaves. Reported by `astat`.
+volatile float g_cpu_avg = 0.0f;   // % of the block period, smoothed
+volatile float g_cpu_max = 0.0f;   // % peak (resettable)
+
+void engine_init()
+{
+    memset(&s_reverb, 0, sizeof(s_reverb));
+    memset(&s_delay,  0, sizeof(s_delay));
+    // Enable the DWT cycle counter for the CPU meter.
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+    DWT->CYCCNT = 0;
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+}
 
 // White-noise generator state (xorshift32) for the per-voice noise oscillator.
 static uint32_t s_noise_rng = 0x1234567u;
@@ -149,6 +172,7 @@ static float drum_render(DrumHit& h, float sr)
 void AudioCallback(AudioHandle::InputBuffer,
                    AudioHandle::OutputBuffer out, size_t size)
 {
+    uint32_t cyc0 = DWT->CYCCNT;     // CPU-load meter: cycles used this block
     // LED3 fixed-frequency PWM (200 Hz, 240 levels). Per-sample duty smoother
     // (~20 ms TC) interpolates between the main loop's 16 Hz updates so the
     // brightness transitions look continuous even at low intensity.
@@ -433,6 +457,14 @@ void AudioCallback(AudioHandle::InputBuffer,
         out[0][i] = sample;
         out[1][i] = sample;
 
+        // USB audio capture tap: float[-1,1] → int16, pushed to the UAC2 IN ring
+        // (no-op unless a host is streaming). Same signal you hear on the jack.
+        {
+            float s = sample; if(s > 1.0f) s = 1.0f; else if(s < -1.0f) s = -1.0f;
+            int16_t s16 = (int16_t)(s * 32767.0f);
+            usb_audio_push(s16, s16);
+        }
+
         // Advance phases
         s_phase1   += freq_vib*VOICE.osc1_ratio/sr;  if(s_phase1  >=1.0f)s_phase1  -=1.0f;
         s_phase2   += freq2   /sr;  if(s_phase2  >=1.0f)s_phase2  -=1.0f;
@@ -448,4 +480,21 @@ void AudioCallback(AudioHandle::InputBuffer,
         bool desired = (pwm_counter < threshold);
         if(desired != led3_state){ led3.Write(desired); led3_state = desired; }
     }
+
+    // Service the USB device stack from the audio callback (~12 kHz) at ~2 kHz, so
+    // the isochronous audio-IN endpoint is fed every USB frame — the control loop
+    // (~150 Hz) is far too slow and starves it (ring overruns → decimated audio).
+    // Bonus: this runs the capture ring's consumer (pre_load) in the SAME context
+    // as its producer (usb_audio_push above), so the ring is race-free.
+    {
+        static uint32_t usb_div = 0;
+        if(++usb_div >= 6) { usb_div = 0; usb_task(); }
+    }
+
+    // CPU-load meter: cycles used vs cycles available in this block period.
+    uint32_t used  = DWT->CYCCNT - cyc0;
+    float    avail = (float)SystemCoreClock * (float)size / sr;
+    float    pct   = (avail > 1.0f) ? (100.0f * (float)used / avail) : 0.0f;
+    g_cpu_avg += (pct - g_cpu_avg) * 0.01f;
+    if(pct > g_cpu_max) g_cpu_max = pct;
 }

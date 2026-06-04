@@ -59,21 +59,80 @@ the test asserts the envelope, not an idealized curve.
 
 ## Flash
 
-Put Daisy in DFU mode (hold BOOT, tap RESET), then:
+> **The device runs from SRAM via the Daisy bootloader** (since the USB-audio work —
+> see `docs/usb-audio-plan.md`). The app image is stored in QSPI at `0x90040000` and
+> the bootloader **copies it into SRAM** to run (`APP_TYPE=BOOT_SRAM`, now the
+> Makefile default for `src/main`); internal flash holds the bootloader. Power-on
+> shows a **~2.5 s LED breathe** (bootloader) before the synth starts.
+>
+> **Why SRAM, not QSPI-XIP:** running from SRAM keeps QSPI **writable**, so voice
+> persistence (`storage.Save()`) works — under `BOOT_QSPI` libDaisy refuses QSPI
+> writes (you're executing from it) and the selected voice never persists. The big
+> reverb/delay buffers live in **SDRAM** (`DSY_SDRAM_BSS`, zeroed in `engine_init()`)
+> so data fits the 128 KB DTCM. `main()` also points `SCB->VTOR` at the SRAM vector
+> table so libDaisy's `GetProgramMemoryRegion()` reports SRAM (else it sees the QSPI
+> image base and still blocks writes).
 
+**Entering the bootloader's DFU** (this trips people up — there are TWO DFU modes):
+- **Hold BOOT + tap RESET** → the STM32 *ROM* DFU (`@Internal Flash 0x08000000`).
+  Use this **only** to (re)install the bootloader via `program-boot`.
+- **Tap RESET, then tap BOOT during the breathe** → the *Daisy bootloader* DFU
+  (`@Flash 0x90000000…` = QSPI). The LED answers with rapid blinks and holds in DFU
+  indefinitely. **This is the one for flashing the app.** Verify with
+  `dfu-util -l | grep 0x90000000`.
+
+Flash the app (Makefile default `APP_TYPE=BOOT_SRAM`):
 ```bash
-dfu-util -a 0 -s 0x08000000:leave -D build/src/main.bin
-# or for a tool:
-dfu-util -a 0 -s 0x08000000:leave -D build/tools/<name>.bin
+make TARGET=src/main program-dfu \
+  libdaisy_dir=$LIBDAISY SYSTEM_FILES_DIR=$LIBDAISY/core LIBDAISY_DIR=$LIBDAISY
+# writes build/src/main.bin to 0x90040000; you'll see "Transitioning to dfuMANIFEST
+# state" with no error (the `:leave` get_status error only appears in ROM DFU).
 ```
 
-The `dfu-util: Error during download get_status` at the end is normal — the device booted successfully.
+Installing/repairing the **bootloader** itself (once; uses the ROM DFU above):
+```bash
+make program-boot libdaisy_dir=$LIBDAISY SYSTEM_FILES_DIR=$LIBDAISY/core LIBDAISY_DIR=$LIBDAISY
+# flashes dsy_bootloader_v6_2-intdfu-2000ms.bin to internal flash (0x08000000)
+```
+
+To revert to a plain **internal-flash** build (no bootloader): build with
+`APP_TYPE=BOOT_NONE` and, in the ROM DFU, `dfu-util -a 0 -s 0x08000000:leave -D
+build/src/main.bin` (overwrites the bootloader). Tools build/flash as `BOOT_NONE`
+to `0x08000000`.
 
 ## Serial monitor
 
 ```bash
 screen /dev/tty.usbmodem* 115200
 ```
+
+> **USB serial now runs on TinyUSB**, not libDaisy's logger (Phase 1 of the USB-audio
+> work — `docs/usb-audio-plan.md`). The device enumerates as a CDC ACM port
+> "GaletSynth Voice Tuner" (`0483:5740`, e.g. `/dev/tty.usbmodemGS_0001…`). All
+> firmware output goes through `usb_log()` (a `vsnprintf`→CDC logger in
+> `src/usb_glue.cpp`) instead of `hw.PrintLine`, and serialtune reads commands via
+> `usb_cdc_read_avail()`. **Do not call `hw.StartLog()` / `hw.usb_handle`** — that
+> relinks libDaisy's USB stack, which clashes with TinyUSB's `OTG_FS_IRQHandler`.
+> TinyUSB config: `src/tusb_config.h`; descriptors: `src/usb_descriptors.c`; vendored
+> subset: `lib/tinyusb/`.
+
+> **USB audio (Phase 2): composite CDC + UAC2 stereo capture.** The device is also a
+> class-compliant **2-ch / 48 kHz / 16-bit input** ("GaletSynth Audio") — record it
+> live in a DAW while VoiceLab tunes over the same cable. `engine.cpp`'s
+> `AudioCallback` taps its output (`usb_audio_push`, float→int16) into a lock-free
+> ring in `src/usb_audio.c`; the UAC2 IN endpoint drains it in
+> `tud_audio_tx_done_pre_load_cb`, sending 47/48/49 samples/frame to hold the ring
+> near a ~256-frame cushion (async clock tracking — no feedback EP needed).
+>
+> **CRITICAL gotcha — pump `tud_task()` from the audio callback, NOT the control loop.**
+> The isochronous audio IN endpoint must be serviced every USB frame (~1 kHz). The
+> control loop runs at only ~150 Hz (sensor-bound), which starves the endpoint →
+> the ring overruns → badly decimated "2-bit metallic" capture. So `usb_task()` is
+> pumped from `AudioCallback` (~12 kHz, divided to ~2 kHz). This also puts the ring
+> consumer (`pre_load`) in the same context as its producer (`usb_audio_push`) →
+> race-free. Do **not** move the pump back to `serial_tune_poll()`, and don't call
+> `tud_task()` from two contexts (re-entrancy). The `astat` serial command reports
+> ring fill / call-rate / over-/under-run counts for diagnosing this.
 
 The main synth prints a live status display (voice, electrode bars, finger
 pos/pressure, FSR, audio params) — but **throttled to ~8 Hz** so it can't slow

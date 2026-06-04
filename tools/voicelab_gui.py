@@ -37,6 +37,13 @@ def info_tip(title, body):
             f"{html.escape(body)}</div>")
 
 
+def vlabel(i, name):
+    """Voice-picker label with the index right-justified to 2 chars so the names
+    line up (paired with a monospace font on the dropdown). E.g. ' 7: Pad' / '14:
+    Drums'."""
+    return f"{i:>2}: {name}"
+
+
 # A small monochrome glyph per parameter group, shown in its section title (no
 # bundled assets; renders in the theme colour like the toolbar icons). Distinct
 # per oscillator. Keyed by schema.GROUPS titles.
@@ -57,6 +64,15 @@ GROUP_ICONS = {
     "LFO":               "∼",
     "Global FX":         "✦",
 }
+
+
+class VoiceItemDelegate(QtWidgets.QStyledItemDelegate):
+    """Uniform-height rows for the voice picker so each line's number/name/star is
+    vertically centered (the default paint centers content within the item rect)."""
+    def sizeHint(self, opt, index):
+        s = super().sizeHint(opt, index)
+        s.setHeight(24)
+        return s
 
 
 class Bridge(QtCore.QObject):
@@ -296,6 +312,10 @@ class Tuner(QtWidgets.QMainWindow):
         self._block = None   # accumulates the current mon status frame (or None)
         self._busy = False   # a backup/restore is in flight (blocks re-entry)
         self._progress = None
+        self.default_idx = -1            # persisted power-on voice (from dump `boot=`)
+        self._star_icon = self._make_star_icon()
+        _blank = QtGui.QPixmap(16, 16); _blank.fill(QtCore.Qt.transparent)
+        self._blank_icon = QtGui.QIcon(_blank)   # same-size spacer → keeps text aligned
 
         central = QtWidgets.QWidget()
         self.setCentralWidget(central)
@@ -328,12 +348,27 @@ class Tuner(QtWidgets.QMainWindow):
         top.setSpacing(4)
         top.addWidget(QtWidgets.QLabel("Voice:"))
         self.voice = QtWidgets.QComboBox()
-        self.voice.addItems([f"{i}: {n}" for i, n in enumerate(schema.VOICE_NAMES)])
+        self.voice.setFont(QtGui.QFontDatabase.systemFont(QtGui.QFontDatabase.FixedFont))
+        self.voice.setIconSize(QtCore.QSize(14, 14))   # star sits inline with the text
+        self.voice.setItemDelegate(VoiceItemDelegate(self.voice))  # uniform, centered rows
+        self.voice.addItems([vlabel(i, n) for i, n in enumerate(schema.VOICE_NAMES)])
         self.voice.activated.connect(self._select_voice)
         self.voice.setToolTip(info_tip(
             "Voice", "Pick which voice to edit — also switches the active voice on "
-            "the synth so you hear it on the glass."))
+            "the synth so you hear it on the glass. This only auditions: it does "
+            "NOT change the power-on voice (use “Set as default”)."))
         top.addWidget(self.voice)
+        self.default_btn = QtWidgets.QToolButton()
+        self.default_btn.setText("Set as default")
+        self.default_btn.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+        # A yellow ★ icon appears here when the selected voice IS the default
+        # (set in _update_default_marker); blank otherwise.
+        self.default_btn.clicked.connect(self._set_default_voice)
+        self.default_btn.setToolTip(info_tip(
+            "Set as default", "Persist the currently-selected voice as the power-on "
+            "voice (writes flash). The dropdown alone only auditions; this is what "
+            "makes the synth boot into this voice."))
+        top.addWidget(self.default_btn)
         top.addWidget(QtWidgets.QLabel("Name:"))
         self.name = QtWidgets.QLineEdit()
         self.name.setMaxLength(23)
@@ -509,7 +544,7 @@ class Tuner(QtWidgets.QMainWindow):
             return
         for i, n in self.link.names().items():
             if 0 <= i < self.voice.count():
-                self.voice.setItemText(i, f"{i}: {n}")
+                self.voice.setItemText(i, vlabel(i, n))
 
     def _require_link(self):
         if self.link and self.link.alive:
@@ -553,13 +588,57 @@ class Tuner(QtWidgets.QMainWindow):
         self.link.send(f"select {idx}")
         QtCore.QTimer.singleShot(120, self.refresh)
 
+    def _make_star_icon(self):
+        """A small yellow ★ rendered to an icon (no asset files)."""
+        pm = QtGui.QPixmap(16, 16)
+        pm.fill(QtCore.Qt.transparent)
+        p = QtGui.QPainter(pm)
+        f = p.font(); f.setPointSize(13); p.setFont(f)
+        p.setPen(QtGui.QColor("#f5c518"))               # amber/yellow
+        p.drawText(pm.rect(), QtCore.Qt.AlignCenter, "★")
+        p.end()
+        return QtGui.QIcon(pm)
+
+    def _update_default_marker(self):
+        """Show the yellow ★ next to the persisted default voice in the dropdown,
+        and on the button when the *selected* voice is that default. Icons are
+        independent of item text, so this survives relabels."""
+        for i in range(self.voice.count()):
+            self.voice.setItemIcon(
+                i, self._star_icon if i == self.default_idx else self._blank_icon)
+        is_default = (self.voice.currentIndex() == self.default_idx)
+        self.default_btn.setIcon(self._star_icon if is_default else self._blank_icon)
+        self.default_btn.setEnabled(not is_default)   # already the default → nothing to do
+        self.default_btn.setToolTip(info_tip(
+            "Set as default",
+            "This voice is already the power-on default." if is_default else
+            "Persist the currently-selected voice as the power-on voice (writes "
+            "flash). The dropdown alone only auditions."))
+
+    def _set_default_voice(self):
+        """Persist the current selection as the synth's power-on voice (firmware
+        `bootvoice` — writes g_voice_idx to flash without committing live edits)."""
+        if not self._require_link():
+            return
+        i = self.voice.currentIndex()
+        nm = schema.VOICE_NAMES[i] if 0 <= i < len(schema.VOICE_NAMES) else ""
+        if QtWidgets.QMessageBox.question(
+                self, "Set as default",
+                f"Make voice {i} '{nm}' the power-on (startup) voice, saved to "
+                f"flash?") != QtWidgets.QMessageBox.Yes:
+            return
+        self.link.send("bootvoice")
+        self.default_idx = i                 # optimistic: reflect it immediately
+        self._update_default_marker()
+        self.append_log(f"startup voice → {i}: {nm} (saved to flash)")
+
     def _rename(self):
         if not self._require_link():
             return
         nm = self.name.text().strip()
         self.link.send(f"set name {nm}")
         i = self.voice.currentIndex()
-        self.voice.setItemText(i, f"{i}: {nm}")        # reflect the new name in the picker
+        self.voice.setItemText(i, vlabel(i, nm))        # reflect the new name in the picker
 
     def _save(self):
         if not self._require_link():
@@ -577,7 +656,7 @@ class Tuner(QtWidgets.QMainWindow):
         # live name. The two lines are parsed FIFO, so `set name` lands first.
         self.link.send(f"set name {nm}")
         self.link.send("save")
-        self.voice.setItemText(i, f"{i}: {nm}")
+        self.voice.setItemText(i, vlabel(i, nm))
         self.append_log(f"saved → flash ({i}: {nm})")
 
     def _revert(self):
@@ -594,7 +673,7 @@ class Tuner(QtWidgets.QMainWindow):
         # busy writing flash, so a refresh can race); then reload params.
         if 0 <= i < len(schema.VOICE_NAMES):
             self.name.setText(schema.VOICE_NAMES[i])
-            self.voice.setItemText(i, f"{i}: {schema.VOICE_NAMES[i]}")
+            self.voice.setItemText(i, vlabel(i, schema.VOICE_NAMES[i]))
         QtCore.QTimer.singleShot(300, self.refresh)
 
     def _revert_all(self):
@@ -607,7 +686,7 @@ class Tuner(QtWidgets.QMainWindow):
             return
         self.link.send("factory all")
         for i, n in enumerate(schema.VOICE_NAMES):   # repaint every label to factory
-            self.voice.setItemText(i, f"{i}: {n}")
+            self.voice.setItemText(i, vlabel(i, n))
         i = self.voice.currentIndex()
         if 0 <= i < len(schema.VOICE_NAMES):
             self.name.setText(schema.VOICE_NAMES[i])
@@ -632,7 +711,7 @@ class Tuner(QtWidgets.QMainWindow):
         # this name + persists, leaving the active voice / source name untouched —
         # so we just relabel the target here.
         self.link.send(f"copy {dst} {name}")
-        self.voice.setItemText(dst, f"{dst}: {name}")
+        self.voice.setItemText(dst, vlabel(dst, name))
         self.append_log(f"copied “{src_name}” → {dst}: {name} (saved to flash)")
 
     def _on_hw_voice(self, idx):
@@ -684,7 +763,11 @@ class Tuner(QtWidgets.QMainWindow):
             self.voice.setCurrentIndex(idx)
             self.voice.blockSignals(False)
             if not is_multi and name:  # reflect a (possibly renamed) name in the picker
-                self.voice.setItemText(idx, f"{idx}: {name}")
+                self.voice.setItemText(idx, vlabel(idx, name))
+        # Mark the persisted power-on voice (firmware `boot=`) with the yellow star.
+        if kv.get("boot", "").lstrip("-").isdigit():
+            self.default_idx = int(kv["boot"])
+        self._update_default_marker()
         self.append_log(f"reloaded {display}" if display else "reloaded")
         return True
 
