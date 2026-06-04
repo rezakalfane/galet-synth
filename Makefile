@@ -1,9 +1,16 @@
 # Glass Moog Synth — Daisy Seed Makefile
 # Requires libDaisy in the parent directory: ../libDaisy
 # Usage:
-#   make              — build the synth
+#   make              — build the synth (runs from internal flash, APP_TYPE=BOOT_NONE)
 #   make program-dfu  — flash via USB DFU bootloader
 #   make clean        — remove build artifacts
+#
+# QSPI build (runs the app from QSPI flash via the Daisy bootloader — needed once
+# the firmware outgrows the 128 KB internal flash, e.g. for the USB-audio work):
+#   make program-boot                 — install the Daisy bootloader (once, in DFU mode)
+#   make APP_TYPE=BOOT_QSPI ...        — build the app for QSPI (lands at 0x90040000)
+#   make APP_TYPE=BOOT_QSPI program-dfu — load the QSPI app via the bootloader
+# Pass the same libdaisy flags as a normal build. See docs/usb-audio-plan.md (Phase 0).
 #
 # To build a tool instead:
 #   make TARGET=tools/mpr121_reader

@@ -1,4 +1,4 @@
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   28:src/dsp.h     ****     return x*(27.0f+x2)/(27.0f+9.0f*x2);
   29:src/dsp.h     **** }
   30:src/dsp.h     **** 
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 2
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 2
 
 
   31:src/dsp.h     **** // Convert a one-pole time constant in milliseconds to a per-sample slew
@@ -118,7 +118,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   72:src/dsp.h     ****     if(f>0.98f)f=0.98f;
   40              		.loc 1 72 5 view .LVU4
   41 0008 DFEDA87A 		vldr.32	s15, .L30+4
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 3
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 3
 
 
   42              	.LBB101:
@@ -178,7 +178,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   26:src/dsp.h     ****     float x2=x*x;
   83              		.loc 1 26 5 view .LVU20
   84 0038 F8EE087A 		vmov.f32	s15, #-3.0e+0
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 4
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 4
 
 
   85 003c B4EEE70A 		vcmpe.f32	s0, s15
@@ -238,7 +238,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  126 0068 F0EE085A 		vmov.f32	s11, #3.0e+0
  127 006c F4EEE57A 		vcmpe.f32	s15, s11
  128 0070 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 5
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 5
 
 
  129 0074 00F3FF80 		bgt	.L14
@@ -298,7 +298,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  170              	.LBE116:
  171              	.LBE115:
  172              		.loc 1 76 10 view .LVU49
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 6
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 6
 
 
  173 00ac E6EE267A 		vfma.f32	s15, s12, s13
@@ -358,7 +358,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   28:src/dsp.h     **** }
  214              		.loc 1 28 13 view .LVU64
  215 00e4 65EE277A 		vmul.f32	s15, s10, s15
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 7
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 7
 
 
  216              	.LVL17:
@@ -418,7 +418,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  258 011c B2EE024A 		vmov.f32	s8, #9.0e+0
   28:src/dsp.h     **** }
  259              		.loc 1 28 20 view .LVU78
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 8
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 8
 
 
  260 0120 75EE254A 		vadd.f32	s9, s10, s11
@@ -478,7 +478,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  304 0154 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  305 0158 00F1A280 		bmi	.L21
  306              	.LVL24:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 9
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 9
 
 
  307              	.LBB133:
@@ -538,7 +538,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  347 0184 F4EEE57A 		vcmpe.f32	s15, s11
  348 0188 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  349 018c 67DC     		bgt	.L22
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 10
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 10
 
 
   26:src/dsp.h     ****     float x2=x*x;
@@ -598,7 +598,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  391              	.LBE147:
  392              		.loc 1 78 10 view .LVU121
  393 01c0 E6EE267A 		vfma.f32	s15, s12, s13
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 11
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 11
 
 
  394              	.LBB155:
@@ -658,7 +658,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  434              		.loc 1 28 13 view .LVU136
  435 01f4 65EEA75A 		vmul.f32	s11, s11, s15
   28:src/dsp.h     **** }
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 12
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 12
 
 
  436              		.loc 1 28 39 view .LVU137
@@ -718,7 +718,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  477              		.loc 1 28 13 view .LVU150
  478 022c 25EE075A 		vmul.f32	s10, s10, s14
   28:src/dsp.h     **** }
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 13
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 13
 
 
  479              		.loc 1 28 39 view .LVU151
@@ -778,7 +778,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  526              	.LBB153:
  527 0258 F7EE007A 		vmov.f32	s15, #1.0e+0
  528              	.LVL44:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 14
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 14
 
 
   25:src/dsp.h     ****     if(x<-3.0f)return -1.0f;
@@ -838,7 +838,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   26:src/dsp.h     ****     float x2=x*x;
  577              		.loc 1 26 24 view .LVU168
  578 027c BFEE005A 		vmov.f32	s10, #-1.0e+0
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 15
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 15
 
 
  579 0280 10E7     		b	.L5
@@ -898,7 +898,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  627              	.LVL56:
  628              	.L21:
   26:src/dsp.h     ****     float x2=x*x;
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 16
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 16
 
 
  629              		.loc 1 26 24 view .LVU175
@@ -958,7 +958,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   28:src/engine.cpp **** static float s_freq      = 65.41f;
   29:src/engine.cpp **** static float s_cutoff    = 100.0f;
   30:src/engine.cpp **** static float s_detune    = 0.0f;
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 17
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 17
 
 
   31:src/engine.cpp **** static float s_drive     = 1.0f;
@@ -1018,7 +1018,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   85:src/engine.cpp **** static constexpr float SLEW_F2_R   = 0.9990f; // release (~200ms smooth fade)
   86:src/engine.cpp **** 
   87:src/engine.cpp **** 
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 18
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 18
 
 
   88:src/engine.cpp **** // Mono ladder using the shared global state (the monophonic melodic engine).
@@ -1078,7 +1078,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  687 001a 0D46     		mov	r5, r1
  688              	.LVL59:
  100:src/engine.cpp ****     h.freq=freq; h.amp_tgt=amp_tgt; h.cutoff=cutoff; h.drive=drive;
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 19
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 19
 
 
  689              		.loc 2 100 5 is_stmt 1 view .LVU186
@@ -1138,7 +1138,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  727 0042 80ED060A 		vstr.32	s0, [r0, #24]
  103:src/engine.cpp ****     // Fresh ladder state per hit (the cutoff/res are read live in drum_render).
  728              		.loc 2 103 10 view .LVU205
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 20
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 20
 
 
  729 0046 80ED0A0A 		vstr.32	s0, [r0, #40]
@@ -1198,7 +1198,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  767              		.loc 1 35 5 view .LVU222
   35:src/dsp.h     **** }
  768              		.loc 1 35 29 is_stmt 0 view .LVU223
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 21
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 21
 
 
  769 006c DFED2A7A 		vldr.32	s15, .L40+8
@@ -1258,7 +1258,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  811 009c DFED1E7A 		vldr.32	s15, .L40+8
   35:src/dsp.h     **** }
  812              		.loc 1 35 16 view .LVU238
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 22
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 22
 
 
  813 00a0 BFEE000A 		vmov.f32	s0, #-1.0e+0
@@ -1318,7 +1318,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  855 00d0 BFEE000A 		vmov.f32	s0, #-1.0e+0
   35:src/dsp.h     **** }
  856              		.loc 1 35 29 view .LVU253
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 23
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 23
 
 
  857 00d4 27EE877A 		vmul.f32	s14, s15, s14
@@ -1378,7 +1378,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  903 0108 D4E7     		b	.L34
  904              	.LVL76:
  905              	.L38:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 24
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 24
 
 
   34:src/dsp.h     ****     return expf(-1.0f / (ms * 0.001f * sr));
@@ -1438,7 +1438,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  138:src/engine.cpp ****     // Per-drum 4-pole Moog ladder at the latched cutoff with the drum voice's own
  139:src/engine.cpp ****     // resonance — the same filter the mono engine runs, so a kit hit sounds like
  140:src/engine.cpp ****     // selecting that drum and tapping it (not a dulled 1-pole approximation).
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 25
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 25
 
 
  141:src/engine.cpp ****     float filtered = moog_st(mix, clampf(h.cutoff, 20.0f, 20000.0f), V.resonance, sr, h.flt);
@@ -1498,7 +1498,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  966 0012 0E46     		mov	r6, r1
  967 0014 2DED108B 		vpush.64	{d8, d9, d10, d11, d12, d13, d14, d15}
  968              		.cfi_def_cfa_offset 100
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 26
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 26
 
 
  969              		.cfi_offset 80, -100
@@ -1558,7 +1558,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  167:src/engine.cpp ****     float tdrv   = g_target_drive;
  1015              		.loc 2 167 20 view .LVU291
  1016 0046 C94B     		ldr	r3, .L493+16
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 27
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 27
 
 
  168:src/engine.cpp ****     float tvib   = g_vibrato_depth;
@@ -1618,7 +1618,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1053              		.loc 2 170 20 is_stmt 0 view .LVU310
  1054 006e D3ED007A 		vldr.32	s15, [r3]
  1055              	.LVL89:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 28
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 28
 
 
  173:src/engine.cpp ****     float tcr2   = g_chord_ratio2;   // chord 3rd ratio (used only when VOICE.chords)
@@ -1678,7 +1678,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1094              	.LVL96:
  177:src/engine.cpp ****     float sr     = hw.AudioSampleRate();
  1095              		.loc 2 177 38 view .LVU330
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 29
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 29
 
 
  1096 009e BD48     		ldr	r0, .L493+56
@@ -1738,7 +1738,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  179:src/engine.cpp ****     float tdlylv = g_delay_level;    // delay wet return gain
  1129              		.loc 2 179 20 is_stmt 0 view .LVU346
  1130 00cc D3ED007A 		vldr.32	s15, [r3]
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 30
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 30
 
 
  1131              	.LVL101:
@@ -1798,7 +1798,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1168              		.loc 2 194 5 is_stmt 1 view .LVU365
  1169              		.loc 2 194 64 is_stmt 0 view .LVU366
  1170 00fa 0029     		cmp	r1, #0
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 31
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 31
 
 
  1171 00fc 41F08485 		bne	.L300
@@ -1858,7 +1858,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1203              		.loc 2 209 42 is_stmt 0 view .LVU381
  1204 011e D4ED1B7A 		vldr.32	s15, [r4, #108]
  1205              	.LVL108:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 32
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 32
 
 
  1206              	.LBB503:
@@ -1918,7 +1918,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1247 014c F5EEC07A 		vcmpe.f32	s15, #0
  1248              	.LBE509:
  1249              	.LBE508:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 33
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 33
 
 
  209:src/engine.cpp ****         s_atk_c      = ms_to_coeff(VOICE.attack_ms,    sr);
@@ -1978,7 +1978,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1291              		.loc 1 34 5 view .LVU408
  1292 017a F5EEC07A 		vcmpe.f32	s15, #0
  1293              	.LBE516:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 34
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 34
 
 
  1294              	.LBE515:
@@ -2038,7 +2038,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1336              	.LBE523:
  1337              	.LBE522:
  211:src/engine.cpp ****         s_penv_c     = ms_to_coeff(VOICE.pitch_env_ms, sr);
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 35
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 35
 
 
  1338              		.loc 2 211 22 view .LVU422
@@ -2098,7 +2098,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1381 01d4 7D4B     		ldr	r3, .L493+112
  1382 01d6 83ED000A 		vstr.32	s0, [r3]
  213:src/engine.cpp ****         s_penv_start = exp2f(VOICE.pitch_env_oct);   // 1.0 when pitch_env_oct == 0
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 36
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 36
 
 
  1383              		.loc 2 213 9 is_stmt 1 view .LVU436
@@ -2158,7 +2158,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1424              	.LBE530:
  217:src/engine.cpp ****         s_sustain    = (VOICE.decay_ms > 0.0f) ? VOICE.sustain : 1.0f;
  1425              		.loc 2 217 31 view .LVU452
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 37
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 37
 
 
  1426 0210 D4ED257A 		vldr.32	s15, [r4, #148]
@@ -2218,7 +2218,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1458              		.loc 2 217 22 discriminator 4 view .LVU467
  1459 0240 664B     		ldr	r3, .L493+128
  224:src/engine.cpp ****         s_cutoff   = tcut;
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 38
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 38
 
 
  1460              		.loc 2 224 20 discriminator 4 view .LVU468
@@ -2278,7 +2278,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1496              		.loc 2 230 9 is_stmt 1 discriminator 4 view .LVU487
  1497              	.LVL131:
  1498              	.L47:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 39
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 39
 
 
  231:src/engine.cpp ****     }
@@ -2338,7 +2338,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1538              		.loc 1 35 29 view .LVU504
  1539 02a4 67EE877A 		vmul.f32	s15, s15, s14
  1540              	.LVL134:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 40
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 40
 
 
   35:src/dsp.h     **** }
@@ -2398,7 +2398,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1582              		.loc 1 35 16 view .LVU518
  1583 02ce BFEE000A 		vmov.f32	s0, #-1.0e+0
   35:src/dsp.h     **** }
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 41
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 41
 
 
  1584              		.loc 1 35 29 view .LVU519
@@ -2458,7 +2458,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1626              		.loc 1 35 29 is_stmt 0 view .LVU532
  1627 02f8 9FED417A 		vldr.32	s14, .L493+164
   35:src/dsp.h     **** }
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 42
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 42
 
 
  1628              		.loc 1 35 16 view .LVU533
@@ -2518,7 +2518,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1671 0326 41F2BA84 		bls	.L61
  1672              	.LVL145:
  1673              	.LBB554:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 43
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 43
 
 
  1674              	.LBI554:
@@ -2578,7 +2578,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1717 0368 00000000 		.word	.LANCHOR3
  1718 036c 00000000 		.word	.LANCHOR4
  1719 0370 00000000 		.word	.LANCHOR5
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 44
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 44
 
 
  1720 0374 00000000 		.word	.LANCHOR6
@@ -2638,7 +2638,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   35:src/dsp.h     **** }
  1771              		.loc 1 35 29 is_stmt 0 view .LVU565
  1772 0410 1FED057A 		vldr.32	s14, .L493+164
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 45
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 45
 
 
   35:src/dsp.h     **** }
@@ -2698,7 +2698,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1813              	.L57:
  246:src/engine.cpp ****     }
  247:src/engine.cpp **** 
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 46
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 46
 
 
  248:src/engine.cpp ****     // Pitch-envelope trigger: on a note onset (amp target rising from silence),
@@ -2758,7 +2758,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1858 0484 1170     		strb	r1, [r2]
  1859              		.loc 2 257 37 is_stmt 1 view .LVU601
  1860 0486 089A     		ldr	r2, [sp, #32]
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 47
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 47
 
 
  1861 0488 0E2A     		cmp	r2, #14
@@ -2818,7 +2818,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1906              		.loc 2 264 5 is_stmt 1 view .LVU619
  1907              	.LBB1098:
  1908              		.loc 2 264 21 view .LVU620
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 48
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 48
 
 
  1909 04bc 002B     		cmp	r3, #0
@@ -2878,7 +2878,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1913 04c2 C7EE887A 		vdiv.f32	s15, s15, s16
  1914              	.LVL158:
  1915              		.loc 2 314 35 view .LVU622
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 49
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 49
 
 
  1916 04c6 1F4B     		ldr	r3, .L496+36
@@ -2938,7 +2938,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  1964 0528 6F12833A 		.word	981668463
  1965 052c 00000000 		.word	.LANCHOR34
  1966 0530 00000000 		.word	.LANCHOR35
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 50
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 50
 
 
  1967 0534 00000000 		.word	.LANCHOR36
@@ -2998,7 +2998,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  339:src/engine.cpp ****         // inharmonic bell/metallic tones.
  340:src/engine.cpp ****         float freq_rm = freq_vib * VOICE.ringmod_ratio;
  341:src/engine.cpp **** 
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 51
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 51
 
 
  342:src/engine.cpp ****         // Oscillators (mix levels are voice-defined).
@@ -3058,7 +3058,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  396:src/engine.cpp ****         // Moog ladder filter — no attack boost (was causing onset clicks).
  397:src/engine.cpp ****         // Auto-wah: the LFO sweeps the cutoff around its current value (±~90% at
  398:src/engine.cpp ****         // full lfo_filter). Folds away when lfo_filter == 0.
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 52
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 52
 
 
  399:src/engine.cpp ****         float cut = s_cutoff;
@@ -3118,7 +3118,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   94:src/dsp.h     ****     for(int fold = 0; fold < 2; fold++) {
   95:src/dsp.h     ****         x = x * 0.5f + 0.5f;           // shift to 0..1
   96:src/dsp.h     ****         x = x - floorf(x);              // wrap to 0..1
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 53
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 53
 
 
   97:src/dsp.h     ****         x = 1.0f - fabsf(2.0f*x - 1.0f); // triangle fold
@@ -3178,7 +3178,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  2061 05c8 76EEE44A 		vsub.f32	s9, s13, s9
  2062              	.LVL168:
   97:src/dsp.h     ****         x = x * 2.0f - 1.0f;           // back to -1..1
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 54
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 54
 
 
  2063              		.loc 1 97 33 view .LVU658
@@ -3238,7 +3238,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  2100              		.loc 1 98 9 is_stmt 1 view .LVU675
   98:src/dsp.h     ****     }
  2101              		.loc 1 98 11 is_stmt 0 view .LVU676
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 55
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 55
 
 
  2102 0600 A6EE867A 		vfma.f32	s14, s13, s12
@@ -3298,7 +3298,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   25:src/dsp.h     ****     if(x<-3.0f)return -1.0f;
  2147              		.loc 1 25 5 discriminator 4 view .LVU693
  2148 063a B0EE087A 		vmov.f32	s14, #3.0e+0
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 56
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 56
 
 
  2149 063e B4EEC70A 		vcmpe.f32	s0, s14
@@ -3358,7 +3358,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  417:src/engine.cpp ****         // the global g_reverb_* / g_delay_* params.
  418:src/engine.cpp ****         float src = dry;
  419:src/engine.cpp ****         if(VOICE.reverb_send > 0.0f)
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 57
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 57
 
 
  2188              		.loc 2 419 18 view .LVU705
@@ -3418,7 +3418,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  433:src/engine.cpp ****         out[0][i] = sample;
  2225              		.loc 2 433 9 is_stmt 1 view .LVU718
  2226              		.loc 2 433 19 is_stmt 0 view .LVU719
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 58
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 58
 
 
  2227 06b0 3368     		ldr	r3, [r6]
@@ -3478,7 +3478,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  2258              		.loc 2 437 54 is_stmt 1 view .LVU734
  438:src/engine.cpp ****         s_phase_sub+= freq_sub/sr;  if(s_phase_sub>=1.0f)s_phase_sub-=1.0f;
  2259              		.loc 2 438 31 is_stmt 0 view .LVU735
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 59
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 59
 
 
  2260 06e6 DDED027A 		vldr.32	s15, [sp, #8]
@@ -3538,7 +3538,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  2296 0726 37EE8BBA 		vadd.f32	s22, s15, s22
  439:src/engine.cpp ****         s_phase_oct+= freq_oct/sr;  if(s_phase_oct>=1.0f)s_phase_oct-=1.0f;
  2297              		.loc 2 439 37 is_stmt 1 view .LVU754
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 60
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 60
 
 
  440:src/engine.cpp ****         s_phase_rm += freq_rm /sr;  if(s_phase_rm >=1.0f)s_phase_rm -=1.0f;
@@ -3598,7 +3598,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  2333              		.loc 2 441 20 view .LVU773
  2334 0766 37EE8DDA 		vadd.f32	s26, s15, s26
  441:src/engine.cpp **** 
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 61
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 61
 
 
  2335              		.loc 2 441 37 is_stmt 1 view .LVU774
@@ -3658,7 +3658,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  2376 07ac 84BF     		itt	hi
  2377 07ae 634B     		ldrhi	r3, .L498+40
  2378 07b0 0021     		movhi	r1, #0
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 62
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 62
 
 
  2379              		.loc 2 448 14 view .LVU792
@@ -3718,7 +3718,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  267:src/engine.cpp ****         // Cutoff: fast when opening (smoothed), slow when closing (with release)
  2424              		.loc 2 267 48 view .LVU808
  2425 07e2 DDED045A 		vldr.32	s11, [sp, #16]
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 63
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 63
 
 
  267:src/engine.cpp ****         // Cutoff: fast when opening (smoothed), slow when closing (with release)
@@ -3778,7 +3778,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  2465              	.LVL199:
  270:src/engine.cpp ****         s_drive   = s_drive   * SLEW_MISC + tdrv * (1.0f - SLEW_MISC);
  2466              		.loc 2 270 11 is_stmt 1 discriminator 4 view .LVU824
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 64
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 64
 
 
  2467              	.LBE755:
@@ -3838,7 +3838,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  272:src/engine.cpp ****         // Finger 2 params: fast attack, slow release
  2510              		.loc 2 272 43 discriminator 4 view .LVU836
  2511 0848 91ED003A 		vldr.32	s6, [r1]
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 65
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 65
 
 
  271:src/engine.cpp ****         s_vibdepth= s_vibdepth* SLEW_MISC + tvib * (1.0f - SLEW_MISC);
@@ -3898,7 +3898,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  2553 0880 D0ED003A 		vldr.32	s7, [r0]
  278:src/engine.cpp ****           s_ringmod  = s_ringmod  * sa + trm  * (1.0f - sa); }
  2554              		.loc 2 278 44 discriminator 4 view .LVU850
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 66
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 66
 
 
  2555 0884 9DED079A 		vldr.32	s18, [sp, #28]
@@ -3958,7 +3958,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  2598              		.loc 2 283 27 discriminator 4 view .LVU861
  2599 08bc 1099     		ldr	r1, [sp, #64]
  2600              	.LBB780:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 67
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 67
 
 
  278:src/engine.cpp ****           s_ringmod  = s_ringmod  * sa + trm  * (1.0f - sa); }
@@ -4018,7 +4018,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  276:src/engine.cpp ****           s_bitcrush = s_bitcrush * sa + tbc  * (1.0f - sa); }
  2640              		.loc 2 276 11 discriminator 4 view .LVU877
  2641              	.LVL201:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 68
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 68
 
 
  277:src/engine.cpp ****         { float sa = trm      > s_ringmod  ? SLEW_F2_A : SLEW_F2_R;
@@ -4078,7 +4078,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  2681              	.L500:
  2682 0912 00BF     		.align	2
  2683              	.L498:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 69
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 69
 
 
  2684 0914 00000000 		.word	.LANCHOR32
@@ -4138,7 +4138,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  2729 098c 00F3BA82 		bgt	.L79
  288:src/engine.cpp ****         s_amp = s_amp * slew_amp + eff_tamp * (1.0f - slew_amp);
  2730              		.loc 2 288 62 discriminator 4 view .LVU902
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 70
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 70
 
 
  2731 0990 DF4B     		ldr	r3, .L501
@@ -4198,7 +4198,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  2769 09ce E7EE824A 		vfma.f32	s9, s15, s4
  297:src/engine.cpp ****             s_flt[0] *= 0.999f;
  2770              		.loc 2 297 9 discriminator 6 view .LVU919
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 71
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 71
 
 
  2771 09d2 DFEDD27A 		vldr.32	s15, .L501+12
@@ -4258,7 +4258,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  306:src/engine.cpp ****             // Pull cutoff toward silence-floor proportional to amp decay
  2809              		.loc 2 306 9 is_stmt 1 view .LVU936
  2810              	.LBB793:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 72
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 72
 
 
  2811 0a22 DFEDBE7A 		vldr.32	s15, .L501+12
@@ -4318,7 +4318,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  2852 0a6c B6EE004A 		vmov.f32	s8, #5.0e-1
  2853              	.LBE796:
  2854              	.LBE795:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 73
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 73
 
 
  315:src/engine.cpp ****         float lfo = tri(s_lfo_phase); // -1..1
@@ -4378,7 +4378,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  2894 0aa4 65EE825A 		vmul.f32	s11, s11, s4
  321:src/engine.cpp **** 
  2895              		.loc 2 321 41 view .LVU965
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 74
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 74
 
 
  2896 0aa8 E5EE843A 		vfma.f32	s7, s11, s8
@@ -4438,7 +4438,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  2935              	.LBB804:
   58:src/dsp.h     ****         case WAVE_SINE:   return osc_sine(ph);
  2936              		.loc 1 58 5 view .LVU981
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 75
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 75
 
 
  2937 0adc 0229     		cmp	r1, #2
@@ -4498,7 +4498,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  2978              	.LBE1098:
   62:src/dsp.h     ****         default:          return tri(ph);
  2979              		.loc 1 62 9 is_stmt 1 view .LVU995
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 76
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 76
 
 
   63:src/dsp.h     ****     }
@@ -4558,7 +4558,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  344:src/engine.cpp ****         float sub     = osc(s_phase_sub,VOICE.sub_wave)  * VOICE.sub_level;
  3023              		.loc 2 344 9 is_stmt 1 view .LVU1007
  344:src/engine.cpp ****         float sub     = osc(s_phase_sub,VOICE.sub_wave)  * VOICE.sub_level;
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 77
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 77
 
 
  3024              		.loc 2 344 28 is_stmt 0 view .LVU1008
@@ -4618,7 +4618,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3068              	.LVL226:
  3069              	.L112:
   41:src/dsp.h     **** }
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 78
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 78
 
 
  3070              		.loc 1 41 19 view .LVU1019
@@ -4678,7 +4678,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3113              	.LBE1084:
  3114              	.LBE1100:
   62:src/dsp.h     ****         default:          return tri(ph);
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 79
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 79
 
 
  3115              		.loc 1 62 9 is_stmt 1 view .LVU1031
@@ -4738,7 +4738,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3158              	.LVL231:
  346:src/engine.cpp **** 
  3159              		.loc 2 346 9 is_stmt 1 view .LVU1043
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 80
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 80
 
 
  346:src/engine.cpp **** 
@@ -4798,7 +4798,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3203 0bdc AAEE041A 		vfma.f32	s2, s20, s8
  3204              	.LVL234:
  3205              	.L132:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 81
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 81
 
 
   41:src/dsp.h     **** }
@@ -4858,7 +4858,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  354:src/engine.cpp ****             s_noise_rng ^= s_noise_rng << 5;
  3245              		.loc 2 354 25 view .LVU1070
  3246 0c0a 83EA5343 		eor	r3, r3, r3, lsr #17
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 82
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 82
 
 
  355:src/engine.cpp ****             float white = (float)(int32_t)s_noise_rng * (1.0f/2147483648.0f);
@@ -4918,7 +4918,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3283              	.LVL239:
  362:src/engine.cpp ****         }
  3284              		.loc 2 362 13 is_stmt 1 view .LVU1089
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 83
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 83
 
 
  362:src/engine.cpp ****         }
@@ -4978,7 +4978,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  376:src/engine.cpp ****             float f5 = freq_vib * tcr3;   // 5th
  3325              		.loc 2 376 19 view .LVU1104
  3326 0c72 64EEA34A 		vmul.f32	s9, s9, s7
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 84
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 84
 
 
  3327              	.LVL243:
@@ -5038,7 +5038,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3368              	.LBB1010:
  3369              	.LBB919:
  3370              	.LBB912:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 85
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 85
 
 
  3371              	.LBB901:
@@ -5098,7 +5098,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3416              	.LBB922:
  3417              	.LBI922:
   57:src/dsp.h     ****     switch(w){
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 86
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 86
 
 
  3418              		.loc 1 57 21 view .LVU1127
@@ -5158,7 +5158,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3462 0cee 1C4B     		ldr	r3, .L501+80
  3463              	.LBB946:
  3464              	.LBB947:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 87
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 87
 
 
   58:src/dsp.h     ****         case WAVE_SINE:   return osc_sine(ph);
@@ -5218,7 +5218,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3512 0d60 00000000 		.word	.LANCHOR50
  3513              	.L502:
  3514              	.LVL254:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 88
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 88
 
 
  3515              	.LBB948:
@@ -5278,7 +5278,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3559 0d84 C949     		ldr	r1, .L504
  3560              	.LBB969:
  3561              	.LBB970:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 89
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 89
 
 
   58:src/dsp.h     ****         case WAVE_SINE:   return osc_sine(ph);
@@ -5338,7 +5338,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3605              		.loc 1 41 5 view .LVU1165
   41:src/dsp.h     **** }
  3606              		.loc 1 41 19 is_stmt 0 view .LVU1166
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 90
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 90
 
 
  3607 0d9c B6EE00EA 		vmov.f32	s28, #5.0e-1
@@ -5398,7 +5398,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3648 0de4 76EE806A 		vadd.f32	s13, s13, s0
  383:src/engine.cpp ****             s_phase2b += f3*VOICE.osc2_ratio/sr; if(s_phase2b>=1.0f)s_phase2b-=1.0f;
  3649              		.loc 2 383 50 is_stmt 1 view .LVU1180
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 91
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 91
 
 
  3650 0de8 F4EEED6A 		vcmpe.f32	s13, s27
@@ -5458,7 +5458,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  386:src/engine.cpp ****         }
  3688              		.loc 2 386 23 view .LVU1197
  3689 0e3a 76EE846A 		vadd.f32	s13, s13, s8
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 92
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 92
 
 
  386:src/engine.cpp ****         }
@@ -5518,7 +5518,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3731              		.loc 1 41 19 view .LVU1210
  3732              	.LBE1023:
  3733              	.LBE1025:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 93
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 93
 
 
  391:src/engine.cpp **** 
@@ -5578,7 +5578,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   27:src/dsp.h     ****     return x*(27.0f+x2)/(27.0f+9.0f*x2);
  3775              		.loc 1 27 5 view .LVU1224
   28:src/dsp.h     **** }
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 94
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 94
 
 
  3776              		.loc 1 28 20 is_stmt 0 view .LVU1225
@@ -5638,7 +5638,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3815 0edc DFED756A 		vldr.32	s13, .L504+8
  3816 0ee0 B7EE007A 		vmov.f32	s14, #1.0e+0
  3817 0ee4 A7EEA67A 		vfma.f32	s14, s15, s13
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 95
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 95
 
 
  400:src/engine.cpp ****         float eff_cutoff = clampf(cut, 20.0f, 20000.0f);
@@ -5698,7 +5698,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3861 0f16 DFED690A 		vldr.32	s1, .L504+16
  269:src/engine.cpp ****           s_cutoff = s_cutoff * sc + tcut * (1.0f - sc); }
  3862              		.loc 2 269 40 view .LVU1252
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 96
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 96
 
 
  3863 0f1a DFED695A 		vldr.32	s11, .L504+20
@@ -5758,7 +5758,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  115:src/dsp.h     ****     static constexpr int COMB_MAX = 1760;   // largest comb delay
  116:src/dsp.h     ****     static constexpr int AP_MAX   = 605;    // largest allpass delay
  117:src/dsp.h     ****     float comb_buf[NCOMB][COMB_MAX] = {};
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 97
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 97
 
 
  118:src/dsp.h     ****     float ap_buf[NAP][AP_MAX]       = {};
@@ -5818,7 +5818,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  422:src/engine.cpp ****         float sample = dry * s_master_vol;
  3903              		.loc 2 422 35 view .LVU1263
  3904 0f40 62EEA77A 		vmul.f32	s15, s5, s15
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 98
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 98
 
 
  3905              	.LVL283:
@@ -5878,7 +5878,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3951 0f76 25EE877A 		vmul.f32	s14, s11, s14
  165:src/dsp.h     ****         damp_state = out*(1.0f - damp) + damp_state*damp;   // darken each repeat
  3952              		.loc 1 165 15 view .LVU1282
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 99
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 99
 
 
  3953 0f7a 93ED006A 		vldr.32	s12, [r3]
@@ -5938,7 +5938,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  3994              		.loc 2 423 9 is_stmt 1 view .LVU1301
  3995              	.LBB1044:
  427:src/engine.cpp ****             float m = 0.0f;
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 100
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 100
 
 
  3996              		.loc 2 427 9 is_stmt 0 view .LVU1302
@@ -5998,7 +5998,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4038              	.LVL297:
  119:src/engine.cpp ****     h.amp = h.amp*c + tgt*(1.0f-c);
  4039              		.loc 2 119 5 is_stmt 1 view .LVU1315
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 101
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 101
 
 
  119:src/engine.cpp ****     h.amp = h.amp*c + tgt*(1.0f-c);
@@ -6058,7 +6058,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4079 1030 37EE677A 		vsub.f32	s14, s14, s15
  123:src/engine.cpp ****     float f = h.freq * h.pmult;
  4080              		.loc 2 123 20 view .LVU1331
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 102
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 102
 
 
  4081 1034 B0EE673A 		vmov.f32	s6, s15
@@ -6118,7 +6118,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4122              	.LBE599:
  4123              	.LBE604:
  4124              	.LBE583:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 103
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 103
 
 
  4125              	.LBE582:
@@ -6178,7 +6178,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4171              		.loc 2 420 13 is_stmt 1 view .LVU1352
  4172              	.LBB1047:
  4173              	.LBI1047:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 104
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 104
 
 
  124:src/dsp.h     ****         static constexpr int CL[NCOMB] = {1215,1293,1390,1476,1548,1623,1695,1760};
@@ -6238,7 +6238,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4217 10c8 00000000 		.word	_ZL7s_delay
  4218 10cc 9A99993E 		.word	1050253722
  4219 10d0 3333333F 		.word	1060320051
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 105
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 105
 
 
  4220 10d4 34000000 		.word	.LANCHOR53+52
@@ -6298,7 +6298,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4260              	.LBE1050:
  129:src/dsp.h     ****             float y = comb_buf[c][ci[c]];
  4261              		.loc 1 129 9 view .LVU1378
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 106
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 106
 
 
  4262 1126 01F10101 		add	r1, r1, #1
@@ -6358,7 +6358,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4300              	.LBE1052:
  4301              	.LBB1053:
  136:src/dsp.h     ****             float bufout = ap_buf[a][ai[a]];
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 107
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 107
 
 
  4302              		.loc 1 136 17 is_stmt 0 view .LVU1395
@@ -6418,7 +6418,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4340              		.loc 1 139 36 is_stmt 0 view .LVU1411
  4341 118a A7EE256A 		vfma.f32	s12, s14, s11
  138:src/dsp.h     ****             ap_buf[a][ai[a]] = out + bufout*0.5f;
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 108
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 108
 
 
  4342              		.loc 1 138 19 view .LVU1412
@@ -6478,7 +6478,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  143:src/dsp.h     ****     }
  4383              		.loc 1 143 9 is_stmt 0 view .LVU1426
  4384              	.LBE1058:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 109
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 109
 
 
  4385              	.LBE1060:
@@ -6538,7 +6538,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4425              		.loc 1 52 43 view .LVU1440
   52:src/dsp.h     **** static inline float osc_saw(float ph){ return 2.0f*ph - 1.0f; }
  4426              		.loc 1 52 58 is_stmt 0 view .LVU1441
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 110
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 110
 
 
  4427 11d4 F6EE007A 		vmov.f32	s15, #5.0e-1
@@ -6598,7 +6598,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4467              		.loc 1 47 50 view .LVU1455
  4468 120c F5EEC07A 		vcmpe.f32	s15, #0
   47:src/dsp.h     ****     y = 0.225f*(y*(y<0?-y:y) - y) + y;         // one refinement pass
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 111
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 111
 
 
  4469              		.loc 1 47 43 view .LVU1456
@@ -6658,7 +6658,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4509              		.loc 1 53 21 view .LVU1470
  4510              	.LBB878:
   53:src/dsp.h     **** 
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 112
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 112
 
 
  4511              		.loc 1 53 40 view .LVU1471
@@ -6718,7 +6718,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4553              		.loc 1 44 21 view .LVU1483
  4554              	.LBB855:
   45:src/dsp.h     ****     float x = ph*2.0f*PI - PI;                 // -π..π (angle shifted by π)
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 113
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 113
 
 
  4555              		.loc 1 45 5 view .LVU1484
@@ -6778,7 +6778,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4594 12bc E0EE047A 		vfma.f32	s15, s0, s8
   48:src/dsp.h     ****     return -y;                                 // undo the π shift: sin(x+π) = -sin(x)
  4595              		.loc 1 48 7 view .LVU1500
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 114
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 114
 
 
  4596 12c0 9FED994A 		vldr.32	s8, .L506+28
@@ -6838,7 +6838,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4635              		.loc 1 52 43 view .LVU1515
   52:src/dsp.h     **** static inline float osc_saw(float ph){ return 2.0f*ph - 1.0f; }
  4636              		.loc 1 52 58 is_stmt 0 view .LVU1516
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 115
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 115
 
 
  4637 12dc F6EE007A 		vmov.f32	s15, #5.0e-1
@@ -6898,7 +6898,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4677              		.loc 1 47 43 view .LVU1530
  4678 1314 67EEA55A 		vmul.f32	s11, s15, s11
   47:src/dsp.h     ****     y = 0.225f*(y*(y<0?-y:y) - y) + y;         // one refinement pass
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 116
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 116
 
 
  4679              		.loc 1 47 26 view .LVU1531
@@ -6958,7 +6958,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   53:src/dsp.h     **** 
  4720              		.loc 1 53 40 view .LVU1545
   53:src/dsp.h     **** 
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 117
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 117
 
 
  4721              		.loc 1 53 57 is_stmt 0 view .LVU1546
@@ -7018,7 +7018,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   45:src/dsp.h     ****     float x = ph*2.0f*PI - PI;                 // -π..π (angle shifted by π)
  4764              		.loc 1 45 5 view .LVU1558
   46:src/dsp.h     ****     float y = 1.27323954f*x - 0.405284735f*x*(x<0?-x:x);
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 118
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 118
 
 
  4765              		.loc 1 46 5 view .LVU1559
@@ -7078,7 +7078,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4804 13cc DFED566A 		vldr.32	s13, .L506+28
  4805 13d0 E7EEA64A 		vfma.f32	s9, s15, s13
  4806              	.LVL358:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 119
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 119
 
 
   49:src/dsp.h     **** }
@@ -7138,7 +7138,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4850              	.LBB727:
  4851              	.LBB719:
  4852              	.LBB711:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 120
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 120
 
 
  115:src/engine.cpp ****     const Voice& V = g_bank[h.vidx];
@@ -7198,7 +7198,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4895              	.LBB731:
   27:src/dsp.h     ****     return x*(27.0f+x2)/(27.0f+9.0f*x2);
  4896              		.loc 1 27 5 view .LVU1598
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 121
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 121
 
 
   28:src/dsp.h     **** }
@@ -7258,7 +7258,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4941              	.LBB831:
  4942              	.LBB830:
   41:src/dsp.h     **** }
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 122
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 122
 
 
  4943              		.loc 1 41 19 view .LVU1609
@@ -7318,7 +7318,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  4994 1480 FFF78EBB 		b	.L122
  4995              	.LVL375:
  4996              	.L485:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 123
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 123
 
 
   41:src/dsp.h     **** }
@@ -7378,7 +7378,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  5035              		.loc 1 47 26 view .LVU1628
  5036 14a8 2EEE8EEA 		vmul.f32	s28, s29, s28
   47:src/dsp.h     ****     y = 0.225f*(y*(y<0?-y:y) - y) + y;         // one refinement pass
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 124
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 124
 
 
  5037              		.loc 1 47 50 view .LVU1629
@@ -7438,7 +7438,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   53:src/dsp.h     **** 
  5079              		.loc 1 53 40 view .LVU1642
   53:src/dsp.h     **** 
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 125
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 125
 
 
  5080              		.loc 1 53 57 is_stmt 0 view .LVU1643
@@ -7498,7 +7498,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  5125              	.L484:
   52:src/dsp.h     **** static inline float osc_saw(float ph){ return 2.0f*ph - 1.0f; }
  5126              		.loc 1 52 58 view .LVU1653
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 126
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 126
 
 
  5127              	.LBE982:
@@ -7558,7 +7558,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  5166              	.LVL387:
   48:src/dsp.h     ****     return -y;                                 // undo the π shift: sin(x+π) = -sin(x)
  5167              		.loc 1 48 5 is_stmt 1 view .LVU1669
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 127
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 127
 
 
   48:src/dsp.h     ****     return -y;                                 // undo the π shift: sin(x+π) = -sin(x)
@@ -7618,7 +7618,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  5209              	.LBE956:
  5210              	.LBE964:
  5211              	.LBE996:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 128
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 128
 
 
  381:src/engine.cpp ****                   + osc(s_phase2c, VOICE.osc2_wave) * VOICE.osc2_level) * cl;
@@ -7678,7 +7678,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   46:src/dsp.h     ****     float y = 1.27323954f*x - 0.405284735f*x*(x<0?-x:x);
  5252              		.loc 1 46 17 is_stmt 0 view .LVU1697
  5253 15b4 71EE01EA 		vadd.f32	s29, s2, s2
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 129
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 129
 
 
   46:src/dsp.h     ****     float y = 1.27323954f*x - 0.405284735f*x*(x<0?-x:x);
@@ -7738,7 +7738,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  5293              		.loc 1 49 5 is_stmt 0 view .LVU1712
  5294              	.LBE929:
  5295              	.LBE928:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 130
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 130
 
 
  5296              	.LBE939:
@@ -7798,7 +7798,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   52:src/dsp.h     **** static inline float osc_saw(float ph){ return 2.0f*ph - 1.0f; }
  5337              		.loc 1 52 43 view .LVU1726
   52:src/dsp.h     **** static inline float osc_saw(float ph){ return 2.0f*ph - 1.0f; }
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 131
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 131
 
 
  5338              		.loc 1 52 58 is_stmt 0 view .LVU1727
@@ -7858,7 +7858,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   47:src/dsp.h     ****     y = 0.225f*(y*(y<0?-y:y) - y) + y;         // one refinement pass
  5379              		.loc 1 47 26 view .LVU1741
  5380 165c 64EE211A 		vmul.f32	s3, s8, s3
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 132
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 132
 
 
   47:src/dsp.h     ****     y = 0.225f*(y*(y<0?-y:y) - y) + y;         // one refinement pass
@@ -7918,7 +7918,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  5422              	.LBB905:
   53:src/dsp.h     **** 
  5423              		.loc 1 53 40 view .LVU1755
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 133
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 133
 
 
   53:src/dsp.h     **** 
@@ -7978,7 +7978,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  451:src/engine.cpp **** }
  5467              		.loc 2 451 1 view .LVU1766
  5468 16c4 1FB0     		add	sp, sp, #124
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 134
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 134
 
 
  5469              		.cfi_remember_state
@@ -8038,7 +8038,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  5516              		.loc 1 46 11 view .LVU1774
  5517 16d2 5FED6F7A 		vldr.32	s15, .L506+12
  5518 16d6 5FED6F6A 		vldr.32	s13, .L506+16
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 135
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 135
 
 
  5519 16da E7EE276A 		vfma.f32	s13, s14, s15
@@ -8098,7 +8098,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   49:src/dsp.h     **** }
  5559              		.loc 1 49 13 view .LVU1789
  5560              	.LBE593:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 136
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 136
 
 
  5561              	.LBE592:
@@ -8158,7 +8158,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  5604              	.LBE744:
  5605              	.LBE1074:
  5606              	.LBE1092:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 137
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 137
 
 
  5607              	.LBE1108:
@@ -8218,7 +8218,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   53:src/dsp.h     **** 
  5651              		.loc 1 53 21 view .LVU1811
  5652              	.LBB595:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 138
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 138
 
 
   53:src/dsp.h     **** 
@@ -8278,7 +8278,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  5694              	.LBB615:
  5695              	.LBI615:
   44:src/dsp.h     ****     constexpr float PI = 3.14159265f;
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 139
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 139
 
 
  5696              		.loc 1 44 21 view .LVU1825
@@ -8338,7 +8338,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  5735 17cc B0EE476A 		vmovpl.f32	s12, s14
  5736 17d0 B0EE666A 		vmovmi.f32	s12, s13
   48:src/dsp.h     ****     return -y;                                 // undo the π shift: sin(x+π) = -sin(x)
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 140
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 140
 
 
  5737              		.loc 1 48 30 view .LVU1841
@@ -8398,7 +8398,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  5778 17fe 032D     		cmp	r5, #3
  5779 1800 73D0     		beq	.L242
  5780 1802 012D     		cmp	r5, #1
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 141
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 141
 
 
  5781 1804 23D0     		beq	.L491
@@ -8458,7 +8458,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  5826              		.loc 1 41 19 view .LVU1863
  5827              	.LBE635:
  5828              	.LBE634:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 142
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 142
 
 
  5829              	.LBE638:
@@ -8518,7 +8518,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  5869 1842 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  5870 1846 58BF     		it	pl
  5871 1848 B0EE667A 		vmovpl.f32	s14, s13
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 143
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 143
 
 
  5872 184c CAE7     		b	.L238
@@ -8578,7 +8578,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  5911 1876 48BF     		it	mi
  5912 1878 B1EE466A 		vnegmi.f32	s12, s12
  5913              	.LVL443:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 144
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 144
 
 
   47:src/dsp.h     ****     y = 0.225f*(y*(y<0?-y:y) - y) + y;         // one refinement pass
@@ -8638,7 +8638,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  5954              		.loc 1 57 21 is_stmt 1 view .LVU1906
  5955              	.LBB656:
   58:src/dsp.h     ****         case WAVE_SINE:   return osc_sine(ph);
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 145
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 145
 
 
  5956              		.loc 1 58 5 view .LVU1907
@@ -8698,7 +8698,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   41:src/dsp.h     **** }
  6002              		.loc 1 41 5 view .LVU1916
   41:src/dsp.h     **** }
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 146
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 146
 
 
  6003              		.loc 1 41 19 is_stmt 0 view .LVU1917
@@ -8758,7 +8758,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6046              	.LBB644:
   52:src/dsp.h     **** static inline float osc_saw(float ph){ return 2.0f*ph - 1.0f; }
  6047              		.loc 1 52 43 view .LVU1929
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 147
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 147
 
 
   52:src/dsp.h     **** static inline float osc_saw(float ph){ return 2.0f*ph - 1.0f; }
@@ -8818,7 +8818,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   47:src/dsp.h     ****     y = 0.225f*(y*(y<0?-y:y) - y) + y;         // one refinement pass
  6089              		.loc 1 47 50 view .LVU1943
  6090 192c B5EEC06A 		vcmpe.f32	s12, #0
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 148
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 148
 
 
   47:src/dsp.h     ****     y = 0.225f*(y*(y<0?-y:y) - y) + y;         // one refinement pass
@@ -8878,7 +8878,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6132              		.loc 2 130 10 view .LVU1956
  6133 1976 D5ED145A 		vldr.32	s11, [r5, #80]
  6134              	.LBE679:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 149
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 149
 
 
  129:src/engine.cpp ****     if(V.noise_level > 0.0f){
@@ -8938,7 +8938,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6172 19b4 07EE105A 		vmov	s14, r5	@ int
  131:src/engine.cpp ****         float white  = (float)(int32_t)s_noise_rng * (1.0f/2147483648.0f);
  6173              		.loc 2 131 85 view .LVU1974
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 150
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 150
 
 
  6174 19b8 CCF80050 		str	r5, [ip]
@@ -8998,7 +8998,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6211              		.loc 1 25 5 view .LVU1991
  6212 19e8 B0EE087A 		vmov.f32	s14, #3.0e+0
  6213              	.LBE684:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 151
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 151
 
 
  6214              	.LBE683:
@@ -9058,7 +9058,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6255 1a28 87EE860A 		vdiv.f32	s0, s15, s12
  6256              	.L263:
  6257              	.LVL471:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 152
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 152
 
 
   28:src/dsp.h     **** }
@@ -9118,7 +9118,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6299 1a62 CD18     		adds	r5, r1, r3
  142:src/engine.cpp ****     h.ph2 += f*V.osc2_ratio/sr; if(h.ph2>=1.0f)h.ph2-=1.0f;
  6300              		.loc 2 142 15 view .LVU2018
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 153
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 153
 
 
  6301 1a64 23EE277A 		vmul.f32	s14, s6, s15
@@ -9178,7 +9178,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6338              		.loc 2 143 33 is_stmt 1 view .LVU2035
  6339 1aae B7EE007A 		vmov.f32	s14, #1.0e+0
  6340 1ab2 F4EEC77A 		vcmpe.f32	s15, s14
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 154
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 154
 
 
  6341 1ab6 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
@@ -9238,7 +9238,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6378              		.loc 2 145 33 is_stmt 1 view .LVU2052
  6379 1b02 B7EE007A 		vmov.f32	s14, #1.0e+0
  6380 1b06 F4EEC77A 		vcmpe.f32	s15, s14
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 155
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 155
 
 
  6381 1b0a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
@@ -9298,7 +9298,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
   28:src/dsp.h     **** }
  6422              		.loc 1 28 20 view .LVU2066
  6423 1b50 77EE877A 		vadd.f32	s15, s15, s14
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 156
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 156
 
 
  6424              	.LVL481:
@@ -9358,7 +9358,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6469              	.L252:
   25:src/dsp.h     ****     if(x<-3.0f)return -1.0f;
  6470              		.loc 1 25 24 view .LVU2076
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 157
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 157
 
 
  6471              	.LBE698:
@@ -9418,7 +9418,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6512              	.LVL491:
  6513              	.L348:
   52:src/dsp.h     **** static inline float osc_saw(float ph){ return 2.0f*ph - 1.0f; }
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 158
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 158
 
 
  6514              		.loc 1 52 58 view .LVU2090
@@ -9478,7 +9478,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6559              	.LBB926:
  6560              	.LBB925:
   41:src/dsp.h     **** }
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 159
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 159
 
 
  6561              		.loc 1 41 19 view .LVU2100
@@ -9538,7 +9538,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6610              	.LBB974:
   41:src/dsp.h     **** }
  6611              		.loc 1 41 19 view .LVU2106
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 160
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 160
 
 
  6612 1be0 B0EE08EA 		vmov.f32	s28, #3.0e+0
@@ -9598,7 +9598,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6659              	.LBE1078:
  6660              	.LBE1095:
  6661              	.LBE1111:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 161
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 161
 
 
  194:src/engine.cpp **** 
@@ -9658,7 +9658,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6712 1c22 B0EE087A 		vmov.f32	s14, #3.0e+0
  6713 1c26 A6EEC67A 		vfms.f32	s14, s13, s12
  6714 1c2a DBE5     		b	.L238
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 162
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 162
 
 
  6715              	.LVL504:
@@ -9718,7 +9718,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  216:src/engine.cpp ****         s_sustain    = (VOICE.decay_ms > 0.0f) ? VOICE.sustain : 1.0f;
  6760              		.loc 2 216 48 view .LVU2127
  6761 1c4a F5EEC07A 		vcmpe.f32	s15, #0
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 163
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 163
 
 
  213:src/engine.cpp ****         // decay_ms == 0 → no decay: floor 1.0 so s_decay stays pinned at 1 (the
@@ -9778,7 +9778,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6806              	.LVL512:
   34:src/dsp.h     ****     return expf(-1.0f / (ms * 0.001f * sr));
  6807              		.loc 1 34 27 view .LVU2138
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 164
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 164
 
 
  6808 1c7a FEF764BA 		b	.L49
@@ -9838,7 +9838,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  242:src/engine.cpp ****         s_decay_c    = (VOICE.decay_ms > 0.0f) ? ms_to_coeff(VOICE.decay_ms, sr) : 0.0f;
  6853              		.loc 2 242 29 is_stmt 0 view .LVU2148
  6854 1ca8 FFF7FEFF 		bl	exp2f
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 165
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 165
 
 
  6855              	.LVL518:
@@ -9898,7 +9898,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6900              	.LBE1118:
  6901              	.LBB1119:
  6902              	.LBB543:
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 166
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 166
 
 
  6903 1d0c 1FED020A 		vldr.32	s0, .L508+52
@@ -9958,7 +9958,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  6966              	_ZL10s_noise_lp:
  6967 0000 00000000 		.space	4
  6968              		.section	.bss._ZL10s_phase_rm,"aw",%nobits
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 167
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 167
 
 
  6969              		.align	2
@@ -10018,7 +10018,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  7036 0000 00000000 		.space	4
  7037              		.section	.bss._ZL8s_phase2,"aw",%nobits
  7038              		.align	2
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 168
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 168
 
 
  7039              		.set	.LANCHOR43,. + 0
@@ -10078,7 +10078,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  7111 0000 00000000 		.space	4
  7112              		.section	.bss._ZZ13AudioCallbackPKPKfPPfjE12s_penv_start,"aw",%nobits
  7113              		.align	2
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 169
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 169
 
 
  7114              		.set	.LANCHOR23,. + 0
@@ -10138,7 +10138,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  7192 0000 00       		.space	1
  7193              		.section	.bss.g_led3_duty,"aw",%nobits
  7194              		.align	2
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 170
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 170
 
 
  7195              		.set	.LANCHOR0,. + 0
@@ -10198,7 +10198,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  7271              		.set	.LANCHOR38,. + 0
  7274              	_ZZ13AudioCallbackPKPKfPPfjE7s_decay:
  7275 0000 0000803F 		.word	1065353216
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 171
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 171
 
 
  7276              		.section	.data._ZZ13AudioCallbackPKPKfPPfjE7s_pmult,"aw"
@@ -10258,7 +10258,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  7344 0048 00000000 		.word	0
  7345 004c 00000000 		.word	0
  7346 0050 0000803F 		.word	1065353216
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 172
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 172
 
 
  7347 0054 00       		.byte	0
@@ -10318,7 +10318,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  7401 0114 00000000 		.word	0
  7402 0118 00000000 		.word	0
  7403 011c 00000000 		.word	0
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 173
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 173
 
 
  7404 0120 00000000 		.word	0
@@ -10378,7 +10378,7 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  7470              		.file 13 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v
  7471              		.file 14 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/algorithmfwd.h"
  7472              		.file 15 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/stl_pair.h"
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 174
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 174
 
 
  7473              		.file 16 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/c++/10.3.1/bits/exception_ptr.h"
@@ -10416,163 +10416,163 @@ ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 1
  7505              		.file 48 "src/engine.h"
  7506              		.file 49 "src/persist.h"
  7507              		.file 50 "<built-in>"
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 175
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 175
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 engine.cpp
-/tmp/claude-502/cc8ZZF6O.s:19     .text._ZL7moog_stffffPf:0000000000000000 $t
-/tmp/claude-502/cc8ZZF6O.s:25     .text._ZL7moog_stffffPf:0000000000000000 _ZL7moog_stffffPf
-/tmp/claude-502/cc8ZZF6O.s:639    .text._ZL7moog_stffffPf:00000000000002a8 $d
-/tmp/claude-502/cc8ZZF6O.s:647    .text._Z12drum_triggerR7DrumHitifffff:0000000000000000 $t
-/tmp/claude-502/cc8ZZF6O.s:654    .text._Z12drum_triggerR7DrumHitifffff:0000000000000000 _Z12drum_triggerR7DrumHitifffff
-/tmp/claude-502/cc8ZZF6O.s:916    .text._Z12drum_triggerR7DrumHitifffff:0000000000000110 $d
-/tmp/claude-502/cc8ZZF6O.s:925    .text._Z13AudioCallbackPKPKfPPfj:0000000000000000 $t
-/tmp/claude-502/cc8ZZF6O.s:932    .text._Z13AudioCallbackPKPKfPPfj:0000000000000000 _Z13AudioCallbackPKPKfPPfj
-/tmp/claude-502/cc8ZZF6O.s:1714   .text._Z13AudioCallbackPKPKfPPfj:000000000000035c $d
-/tmp/claude-502/cc8ZZF6O.s:1758   .text._Z13AudioCallbackPKPKfPPfj:0000000000000404 $t
-/tmp/claude-502/cc8ZZF6O.s:1962   .text._Z13AudioCallbackPKPKfPPfj:0000000000000520 $d
-/tmp/claude-502/cc8ZZF6O.s:1986   .text._Z13AudioCallbackPKPKfPPfj:000000000000056c $t
-/tmp/claude-502/cc8ZZF6O.s:2684   .text._Z13AudioCallbackPKPKfPPfj:0000000000000914 $d
-/tmp/claude-502/cc8ZZF6O.s:2708   .text._Z13AudioCallbackPKPKfPPfj:0000000000000968 $t
-/tmp/claude-502/cc8ZZF6O.s:3492   .text._Z13AudioCallbackPKPKfPPfj:0000000000000d10 $d
-/tmp/claude-502/cc8ZZF6O.s:3542   .text._Z13AudioCallbackPKPKfPPfj:0000000000000d64 $t
-/tmp/claude-502/cc8ZZF6O.s:4210   .text._Z13AudioCallbackPKPKfPPfj:00000000000010ac $d
-/tmp/claude-502/cc8ZZF6O.s:7021   .bss._ZL7s_delay:0000000000000000 _ZL7s_delay
-/tmp/claude-502/cc8ZZF6O.s:7048   .bss._ZL8s_reverb:0000000000000000 _ZL8s_reverb
-/tmp/claude-502/cc8ZZF6O.s:6945   .rodata._ZZN6Reverb7processEfffE2CL:0000000000000000 _ZZN6Reverb7processEfffE2CL
-/tmp/claude-502/cc8ZZF6O.s:4233   .text._Z13AudioCallbackPKPKfPPfj:00000000000010f8 $t
-/tmp/claude-502/cc8ZZF6O.s:5116   .text._Z13AudioCallbackPKPKfPPfj:000000000000150c $d
-/tmp/claude-502/cc8ZZF6O.s:6935   .rodata._ZZN6Reverb7processEfffE2AL:0000000000000000 _ZZN6Reverb7processEfffE2AL
-/tmp/claude-502/cc8ZZF6O.s:5142   .text._Z13AudioCallbackPKPKfPPfj:000000000000152c $t
-/tmp/claude-502/cc8ZZF6O.s:6882   .text._Z13AudioCallbackPKPKfPPfj:0000000000001cd4 $d
-/tmp/claude-502/cc8ZZF6O.s:6903   .text._Z13AudioCallbackPKPKfPPfj:0000000000001d0c $t
-/tmp/claude-502/cc8ZZF6O.s:7323   .data.g_hits:0000000000000000 g_hits
-/tmp/claude-502/cc8ZZF6O.s:7309   .data.g_delay_level:0000000000000000 g_delay_level
-/tmp/claude-502/cc8ZZF6O.s:7302   .data.g_delay_feedback:0000000000000000 g_delay_feedback
-/tmp/claude-502/cc8ZZF6O.s:7316   .data.g_delay_time_ms:0000000000000000 g_delay_time_ms
-/tmp/claude-502/cc8ZZF6O.s:7435   .data.g_reverb_level:0000000000000000 g_reverb_level
-/tmp/claude-502/cc8ZZF6O.s:7428   .data.g_reverb_decay:0000000000000000 g_reverb_decay
-/tmp/claude-502/cc8ZZF6O.s:7295   .data.g_chord_ratio3:0000000000000000 g_chord_ratio3
-/tmp/claude-502/cc8ZZF6O.s:7288   .data.g_chord_ratio2:0000000000000000 g_chord_ratio2
-/tmp/claude-502/cc8ZZF6O.s:7421   .data.g_master_vol:0000000000000000 g_master_vol
-/tmp/claude-502/cc8ZZF6O.s:7198   .bss.g_led3_duty:0000000000000000 g_led3_duty
-/tmp/claude-502/cc8ZZF6O.s:7204   .bss.g_retrig:0000000000000000 g_retrig
-/tmp/claude-502/cc8ZZF6O.s:7179   .bss.g_amp_target:0000000000000000 g_amp_target
-/tmp/claude-502/cc8ZZF6O.s:7191   .bss.g_finger_on:0000000000000000 g_finger_on
-/tmp/claude-502/cc8ZZF6O.s:7211   .bss.g_ringmod:0000000000000000 g_ringmod
-/tmp/claude-502/cc8ZZF6O.s:7186   .bss.g_bitcrush:0000000000000000 g_bitcrush
-/tmp/claude-502/cc8ZZF6O.s:7225   .bss.g_vibrato_depth:0000000000000000 g_vibrato_depth
-/tmp/claude-502/cc8ZZF6O.s:7449   .data.g_target_drive:0000000000000000 g_target_drive
-/tmp/claude-502/cc8ZZF6O.s:7218   .bss.g_target_detune:0000000000000000 g_target_detune
-/tmp/claude-502/cc8ZZF6O.s:7442   .data.g_target_cutoff:0000000000000000 g_target_cutoff
-/tmp/claude-502/cc8ZZF6O.s:7456   .data.g_target_freq:0000000000000000 g_target_freq
-/tmp/claude-502/cc8ZZF6O.s:6932   .rodata._ZZN6Reverb7processEfffE2AL:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:6942   .rodata._ZZN6Reverb7processEfffE2CL:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:6955   .bss._ZL10s_bitcrush:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:6959   .bss._ZL10s_bitcrush:0000000000000000 _ZL10s_bitcrush
-/tmp/claude-502/cc8ZZF6O.s:6962   .bss._ZL10s_noise_lp:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:6966   .bss._ZL10s_noise_lp:0000000000000000 _ZL10s_noise_lp
-/tmp/claude-502/cc8ZZF6O.s:6969   .bss._ZL10s_phase_rm:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:6973   .bss._ZL10s_phase_rm:0000000000000000 _ZL10s_phase_rm
-/tmp/claude-502/cc8ZZF6O.s:6976   .bss._ZL10s_vibdepth:0000000000000000 $d
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 176
+/tmp/claude-502/cc8R1D6c.s:19     .text._ZL7moog_stffffPf:0000000000000000 $t
+/tmp/claude-502/cc8R1D6c.s:25     .text._ZL7moog_stffffPf:0000000000000000 _ZL7moog_stffffPf
+/tmp/claude-502/cc8R1D6c.s:639    .text._ZL7moog_stffffPf:00000000000002a8 $d
+/tmp/claude-502/cc8R1D6c.s:647    .text._Z12drum_triggerR7DrumHitifffff:0000000000000000 $t
+/tmp/claude-502/cc8R1D6c.s:654    .text._Z12drum_triggerR7DrumHitifffff:0000000000000000 _Z12drum_triggerR7DrumHitifffff
+/tmp/claude-502/cc8R1D6c.s:916    .text._Z12drum_triggerR7DrumHitifffff:0000000000000110 $d
+/tmp/claude-502/cc8R1D6c.s:925    .text._Z13AudioCallbackPKPKfPPfj:0000000000000000 $t
+/tmp/claude-502/cc8R1D6c.s:932    .text._Z13AudioCallbackPKPKfPPfj:0000000000000000 _Z13AudioCallbackPKPKfPPfj
+/tmp/claude-502/cc8R1D6c.s:1714   .text._Z13AudioCallbackPKPKfPPfj:000000000000035c $d
+/tmp/claude-502/cc8R1D6c.s:1758   .text._Z13AudioCallbackPKPKfPPfj:0000000000000404 $t
+/tmp/claude-502/cc8R1D6c.s:1962   .text._Z13AudioCallbackPKPKfPPfj:0000000000000520 $d
+/tmp/claude-502/cc8R1D6c.s:1986   .text._Z13AudioCallbackPKPKfPPfj:000000000000056c $t
+/tmp/claude-502/cc8R1D6c.s:2684   .text._Z13AudioCallbackPKPKfPPfj:0000000000000914 $d
+/tmp/claude-502/cc8R1D6c.s:2708   .text._Z13AudioCallbackPKPKfPPfj:0000000000000968 $t
+/tmp/claude-502/cc8R1D6c.s:3492   .text._Z13AudioCallbackPKPKfPPfj:0000000000000d10 $d
+/tmp/claude-502/cc8R1D6c.s:3542   .text._Z13AudioCallbackPKPKfPPfj:0000000000000d64 $t
+/tmp/claude-502/cc8R1D6c.s:4210   .text._Z13AudioCallbackPKPKfPPfj:00000000000010ac $d
+/tmp/claude-502/cc8R1D6c.s:7021   .bss._ZL7s_delay:0000000000000000 _ZL7s_delay
+/tmp/claude-502/cc8R1D6c.s:7048   .bss._ZL8s_reverb:0000000000000000 _ZL8s_reverb
+/tmp/claude-502/cc8R1D6c.s:6945   .rodata._ZZN6Reverb7processEfffE2CL:0000000000000000 _ZZN6Reverb7processEfffE2CL
+/tmp/claude-502/cc8R1D6c.s:4233   .text._Z13AudioCallbackPKPKfPPfj:00000000000010f8 $t
+/tmp/claude-502/cc8R1D6c.s:5116   .text._Z13AudioCallbackPKPKfPPfj:000000000000150c $d
+/tmp/claude-502/cc8R1D6c.s:6935   .rodata._ZZN6Reverb7processEfffE2AL:0000000000000000 _ZZN6Reverb7processEfffE2AL
+/tmp/claude-502/cc8R1D6c.s:5142   .text._Z13AudioCallbackPKPKfPPfj:000000000000152c $t
+/tmp/claude-502/cc8R1D6c.s:6882   .text._Z13AudioCallbackPKPKfPPfj:0000000000001cd4 $d
+/tmp/claude-502/cc8R1D6c.s:6903   .text._Z13AudioCallbackPKPKfPPfj:0000000000001d0c $t
+/tmp/claude-502/cc8R1D6c.s:7323   .data.g_hits:0000000000000000 g_hits
+/tmp/claude-502/cc8R1D6c.s:7309   .data.g_delay_level:0000000000000000 g_delay_level
+/tmp/claude-502/cc8R1D6c.s:7302   .data.g_delay_feedback:0000000000000000 g_delay_feedback
+/tmp/claude-502/cc8R1D6c.s:7316   .data.g_delay_time_ms:0000000000000000 g_delay_time_ms
+/tmp/claude-502/cc8R1D6c.s:7435   .data.g_reverb_level:0000000000000000 g_reverb_level
+/tmp/claude-502/cc8R1D6c.s:7428   .data.g_reverb_decay:0000000000000000 g_reverb_decay
+/tmp/claude-502/cc8R1D6c.s:7295   .data.g_chord_ratio3:0000000000000000 g_chord_ratio3
+/tmp/claude-502/cc8R1D6c.s:7288   .data.g_chord_ratio2:0000000000000000 g_chord_ratio2
+/tmp/claude-502/cc8R1D6c.s:7421   .data.g_master_vol:0000000000000000 g_master_vol
+/tmp/claude-502/cc8R1D6c.s:7198   .bss.g_led3_duty:0000000000000000 g_led3_duty
+/tmp/claude-502/cc8R1D6c.s:7204   .bss.g_retrig:0000000000000000 g_retrig
+/tmp/claude-502/cc8R1D6c.s:7179   .bss.g_amp_target:0000000000000000 g_amp_target
+/tmp/claude-502/cc8R1D6c.s:7191   .bss.g_finger_on:0000000000000000 g_finger_on
+/tmp/claude-502/cc8R1D6c.s:7211   .bss.g_ringmod:0000000000000000 g_ringmod
+/tmp/claude-502/cc8R1D6c.s:7186   .bss.g_bitcrush:0000000000000000 g_bitcrush
+/tmp/claude-502/cc8R1D6c.s:7225   .bss.g_vibrato_depth:0000000000000000 g_vibrato_depth
+/tmp/claude-502/cc8R1D6c.s:7449   .data.g_target_drive:0000000000000000 g_target_drive
+/tmp/claude-502/cc8R1D6c.s:7218   .bss.g_target_detune:0000000000000000 g_target_detune
+/tmp/claude-502/cc8R1D6c.s:7442   .data.g_target_cutoff:0000000000000000 g_target_cutoff
+/tmp/claude-502/cc8R1D6c.s:7456   .data.g_target_freq:0000000000000000 g_target_freq
+/tmp/claude-502/cc8R1D6c.s:6932   .rodata._ZZN6Reverb7processEfffE2AL:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:6942   .rodata._ZZN6Reverb7processEfffE2CL:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:6955   .bss._ZL10s_bitcrush:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:6959   .bss._ZL10s_bitcrush:0000000000000000 _ZL10s_bitcrush
+/tmp/claude-502/cc8R1D6c.s:6962   .bss._ZL10s_noise_lp:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:6966   .bss._ZL10s_noise_lp:0000000000000000 _ZL10s_noise_lp
+/tmp/claude-502/cc8R1D6c.s:6969   .bss._ZL10s_phase_rm:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:6973   .bss._ZL10s_phase_rm:0000000000000000 _ZL10s_phase_rm
+/tmp/claude-502/cc8R1D6c.s:6976   .bss._ZL10s_vibdepth:0000000000000000 $d
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 176
 
 
-/tmp/claude-502/cc8ZZF6O.s:6980   .bss._ZL10s_vibdepth:0000000000000000 _ZL10s_vibdepth
-/tmp/claude-502/cc8ZZF6O.s:6983   .bss._ZL11s_lfo_phase:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:6987   .bss._ZL11s_lfo_phase:0000000000000000 _ZL11s_lfo_phase
-/tmp/claude-502/cc8ZZF6O.s:6990   .bss._ZL11s_phase_oct:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:6994   .bss._ZL11s_phase_oct:0000000000000000 _ZL11s_phase_oct
-/tmp/claude-502/cc8ZZF6O.s:6997   .bss._ZL11s_phase_sub:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7001   .bss._ZL11s_phase_sub:0000000000000000 _ZL11s_phase_sub
-/tmp/claude-502/cc8ZZF6O.s:7004   .bss._ZL5s_amp:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7008   .bss._ZL5s_amp:0000000000000000 _ZL5s_amp
-/tmp/claude-502/cc8ZZF6O.s:7011   .bss._ZL5s_flt:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7015   .bss._ZL5s_flt:0000000000000000 _ZL5s_flt
-/tmp/claude-502/cc8ZZF6O.s:7018   .bss._ZL7s_delay:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7024   .bss._ZL8s_detune:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7028   .bss._ZL8s_detune:0000000000000000 _ZL8s_detune
-/tmp/claude-502/cc8ZZF6O.s:7031   .bss._ZL8s_phase1:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7035   .bss._ZL8s_phase1:0000000000000000 _ZL8s_phase1
-/tmp/claude-502/cc8ZZF6O.s:7038   .bss._ZL8s_phase2:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7042   .bss._ZL8s_phase2:0000000000000000 _ZL8s_phase2
-/tmp/claude-502/cc8ZZF6O.s:7045   .bss._ZL8s_reverb:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7051   .bss._ZL9s_phase1b:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7055   .bss._ZL9s_phase1b:0000000000000000 _ZL9s_phase1b
-/tmp/claude-502/cc8ZZF6O.s:7058   .bss._ZL9s_phase1c:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7062   .bss._ZL9s_phase1c:0000000000000000 _ZL9s_phase1c
-/tmp/claude-502/cc8ZZF6O.s:7065   .bss._ZL9s_phase2b:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7069   .bss._ZL9s_phase2b:0000000000000000 _ZL9s_phase2b
-/tmp/claude-502/cc8ZZF6O.s:7072   .bss._ZL9s_phase2c:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7076   .bss._ZL9s_phase2c:0000000000000000 _ZL9s_phase2c
-/tmp/claude-502/cc8ZZF6O.s:7079   .bss._ZL9s_ringmod:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7083   .bss._ZL9s_ringmod:0000000000000000 _ZL9s_ringmod
-/tmp/claude-502/cc8ZZF6O.s:7089   .bss._ZZ13AudioCallbackPKPKfPPfjE10led3_state:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE10led3_state
-/tmp/claude-502/cc8ZZF6O.s:7090   .bss._ZZ13AudioCallbackPKPKfPPfjE10led3_state:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7092   .bss._ZZ13AudioCallbackPKPKfPPfjE11pwm_counter:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7096   .bss._ZZ13AudioCallbackPKPKfPPfjE11pwm_counter:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE11pwm_counter
-/tmp/claude-502/cc8ZZF6O.s:7099   .bss._ZZ13AudioCallbackPKPKfPPfjE11s_live_seen:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7103   .bss._ZZ13AudioCallbackPKPKfPPfjE11s_live_seen:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE11s_live_seen
-/tmp/claude-502/cc8ZZF6O.s:7106   .bss._ZZ13AudioCallbackPKPKfPPfjE11s_prev_tamp:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7110   .bss._ZZ13AudioCallbackPKPKfPPfjE11s_prev_tamp:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE11s_prev_tamp
-/tmp/claude-502/cc8ZZF6O.s:7113   .bss._ZZ13AudioCallbackPKPKfPPfjE12s_penv_start:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7117   .bss._ZZ13AudioCallbackPKPKfPPfjE12s_penv_start:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE12s_penv_start
-/tmp/claude-502/cc8ZZF6O.s:7123   .bss._ZZ13AudioCallbackPKPKfPPfjE12s_was_tuning:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE12s_was_tuning
-/tmp/claude-502/cc8ZZF6O.s:7124   .bss._ZZ13AudioCallbackPKPKfPPfjE12s_was_tuning:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7126   .bss._ZZ13AudioCallbackPKPKfPPfjE16led3_duty_smooth:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7130   .bss._ZZ13AudioCallbackPKPKfPPfjE16led3_duty_smooth:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE16led3_duty_smooth
-/tmp/claude-502/cc8ZZF6O.s:7133   .bss._ZZ13AudioCallbackPKPKfPPfjE7s_atk_c:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7137   .bss._ZZ13AudioCallbackPKPKfPPfjE7s_atk_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE7s_atk_c
-/tmp/claude-502/cc8ZZF6O.s:7140   .bss._ZZ13AudioCallbackPKPKfPPfjE7s_rel_c:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7144   .bss._ZZ13AudioCallbackPKPKfPPfjE7s_rel_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE7s_rel_c
-/tmp/claude-502/cc8ZZF6O.s:7147   .bss._ZZ13AudioCallbackPKPKfPPfjE8s_penv_c:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7151   .bss._ZZ13AudioCallbackPKPKfPPfjE8s_penv_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE8s_penv_c
-/tmp/claude-502/cc8ZZF6O.s:7154   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_decay_c:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7158   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_decay_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE9s_decay_c
-/tmp/claude-502/cc8ZZF6O.s:7161   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_glide_c:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7165   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_glide_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE9s_glide_c
-/tmp/claude-502/cc8ZZF6O.s:7168   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_sustain:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7172   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_sustain:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE9s_sustain
-/tmp/claude-502/cc8ZZF6O.s:7175   .bss.g_amp_target:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7182   .bss.g_bitcrush:0000000000000000 $d
-ARM GAS  /tmp/claude-502/cc8ZZF6O.s 			page 177
+/tmp/claude-502/cc8R1D6c.s:6980   .bss._ZL10s_vibdepth:0000000000000000 _ZL10s_vibdepth
+/tmp/claude-502/cc8R1D6c.s:6983   .bss._ZL11s_lfo_phase:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:6987   .bss._ZL11s_lfo_phase:0000000000000000 _ZL11s_lfo_phase
+/tmp/claude-502/cc8R1D6c.s:6990   .bss._ZL11s_phase_oct:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:6994   .bss._ZL11s_phase_oct:0000000000000000 _ZL11s_phase_oct
+/tmp/claude-502/cc8R1D6c.s:6997   .bss._ZL11s_phase_sub:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7001   .bss._ZL11s_phase_sub:0000000000000000 _ZL11s_phase_sub
+/tmp/claude-502/cc8R1D6c.s:7004   .bss._ZL5s_amp:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7008   .bss._ZL5s_amp:0000000000000000 _ZL5s_amp
+/tmp/claude-502/cc8R1D6c.s:7011   .bss._ZL5s_flt:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7015   .bss._ZL5s_flt:0000000000000000 _ZL5s_flt
+/tmp/claude-502/cc8R1D6c.s:7018   .bss._ZL7s_delay:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7024   .bss._ZL8s_detune:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7028   .bss._ZL8s_detune:0000000000000000 _ZL8s_detune
+/tmp/claude-502/cc8R1D6c.s:7031   .bss._ZL8s_phase1:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7035   .bss._ZL8s_phase1:0000000000000000 _ZL8s_phase1
+/tmp/claude-502/cc8R1D6c.s:7038   .bss._ZL8s_phase2:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7042   .bss._ZL8s_phase2:0000000000000000 _ZL8s_phase2
+/tmp/claude-502/cc8R1D6c.s:7045   .bss._ZL8s_reverb:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7051   .bss._ZL9s_phase1b:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7055   .bss._ZL9s_phase1b:0000000000000000 _ZL9s_phase1b
+/tmp/claude-502/cc8R1D6c.s:7058   .bss._ZL9s_phase1c:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7062   .bss._ZL9s_phase1c:0000000000000000 _ZL9s_phase1c
+/tmp/claude-502/cc8R1D6c.s:7065   .bss._ZL9s_phase2b:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7069   .bss._ZL9s_phase2b:0000000000000000 _ZL9s_phase2b
+/tmp/claude-502/cc8R1D6c.s:7072   .bss._ZL9s_phase2c:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7076   .bss._ZL9s_phase2c:0000000000000000 _ZL9s_phase2c
+/tmp/claude-502/cc8R1D6c.s:7079   .bss._ZL9s_ringmod:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7083   .bss._ZL9s_ringmod:0000000000000000 _ZL9s_ringmod
+/tmp/claude-502/cc8R1D6c.s:7089   .bss._ZZ13AudioCallbackPKPKfPPfjE10led3_state:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE10led3_state
+/tmp/claude-502/cc8R1D6c.s:7090   .bss._ZZ13AudioCallbackPKPKfPPfjE10led3_state:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7092   .bss._ZZ13AudioCallbackPKPKfPPfjE11pwm_counter:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7096   .bss._ZZ13AudioCallbackPKPKfPPfjE11pwm_counter:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE11pwm_counter
+/tmp/claude-502/cc8R1D6c.s:7099   .bss._ZZ13AudioCallbackPKPKfPPfjE11s_live_seen:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7103   .bss._ZZ13AudioCallbackPKPKfPPfjE11s_live_seen:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE11s_live_seen
+/tmp/claude-502/cc8R1D6c.s:7106   .bss._ZZ13AudioCallbackPKPKfPPfjE11s_prev_tamp:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7110   .bss._ZZ13AudioCallbackPKPKfPPfjE11s_prev_tamp:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE11s_prev_tamp
+/tmp/claude-502/cc8R1D6c.s:7113   .bss._ZZ13AudioCallbackPKPKfPPfjE12s_penv_start:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7117   .bss._ZZ13AudioCallbackPKPKfPPfjE12s_penv_start:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE12s_penv_start
+/tmp/claude-502/cc8R1D6c.s:7123   .bss._ZZ13AudioCallbackPKPKfPPfjE12s_was_tuning:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE12s_was_tuning
+/tmp/claude-502/cc8R1D6c.s:7124   .bss._ZZ13AudioCallbackPKPKfPPfjE12s_was_tuning:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7126   .bss._ZZ13AudioCallbackPKPKfPPfjE16led3_duty_smooth:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7130   .bss._ZZ13AudioCallbackPKPKfPPfjE16led3_duty_smooth:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE16led3_duty_smooth
+/tmp/claude-502/cc8R1D6c.s:7133   .bss._ZZ13AudioCallbackPKPKfPPfjE7s_atk_c:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7137   .bss._ZZ13AudioCallbackPKPKfPPfjE7s_atk_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE7s_atk_c
+/tmp/claude-502/cc8R1D6c.s:7140   .bss._ZZ13AudioCallbackPKPKfPPfjE7s_rel_c:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7144   .bss._ZZ13AudioCallbackPKPKfPPfjE7s_rel_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE7s_rel_c
+/tmp/claude-502/cc8R1D6c.s:7147   .bss._ZZ13AudioCallbackPKPKfPPfjE8s_penv_c:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7151   .bss._ZZ13AudioCallbackPKPKfPPfjE8s_penv_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE8s_penv_c
+/tmp/claude-502/cc8R1D6c.s:7154   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_decay_c:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7158   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_decay_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE9s_decay_c
+/tmp/claude-502/cc8R1D6c.s:7161   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_glide_c:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7165   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_glide_c:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE9s_glide_c
+/tmp/claude-502/cc8R1D6c.s:7168   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_sustain:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7172   .bss._ZZ13AudioCallbackPKPKfPPfjE9s_sustain:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE9s_sustain
+/tmp/claude-502/cc8R1D6c.s:7175   .bss.g_amp_target:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7182   .bss.g_bitcrush:0000000000000000 $d
+ARM GAS  /tmp/claude-502/cc8R1D6c.s 			page 177
 
 
-/tmp/claude-502/cc8ZZF6O.s:7192   .bss.g_finger_on:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7194   .bss.g_led3_duty:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7205   .bss.g_retrig:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7207   .bss.g_ringmod:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7214   .bss.g_target_detune:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7221   .bss.g_vibrato_depth:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7228   .data._ZL11s_noise_rng:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7232   .data._ZL11s_noise_rng:0000000000000000 _ZL11s_noise_rng
-/tmp/claude-502/cc8ZZF6O.s:7235   .data._ZL12s_master_vol:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7239   .data._ZL12s_master_vol:0000000000000000 _ZL12s_master_vol
-/tmp/claude-502/cc8ZZF6O.s:7242   .data._ZL6s_freq:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7246   .data._ZL6s_freq:0000000000000000 _ZL6s_freq
-/tmp/claude-502/cc8ZZF6O.s:7249   .data._ZL7s_drive:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7253   .data._ZL7s_drive:0000000000000000 _ZL7s_drive
-/tmp/claude-502/cc8ZZF6O.s:7256   .data._ZL8s_cutoff:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7260   .data._ZL8s_cutoff:0000000000000000 _ZL8s_cutoff
-/tmp/claude-502/cc8ZZF6O.s:7263   .data._ZZ13AudioCallbackPKPKfPPfjE10s_coeff_vi:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7267   .data._ZZ13AudioCallbackPKPKfPPfjE10s_coeff_vi:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE10s_coeff_vi
-/tmp/claude-502/cc8ZZF6O.s:7270   .data._ZZ13AudioCallbackPKPKfPPfjE7s_decay:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7274   .data._ZZ13AudioCallbackPKPKfPPfjE7s_decay:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE7s_decay
-/tmp/claude-502/cc8ZZF6O.s:7277   .data._ZZ13AudioCallbackPKPKfPPfjE7s_pmult:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7281   .data._ZZ13AudioCallbackPKPKfPPfjE7s_pmult:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE7s_pmult
-/tmp/claude-502/cc8ZZF6O.s:7284   .data.g_chord_ratio2:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7291   .data.g_chord_ratio3:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7298   .data.g_delay_feedback:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7305   .data.g_delay_level:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7312   .data.g_delay_time_ms:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7319   .data.g_hits:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7417   .data.g_master_vol:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7424   .data.g_reverb_decay:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7431   .data.g_reverb_level:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7438   .data.g_target_cutoff:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7445   .data.g_target_drive:0000000000000000 $d
-/tmp/claude-502/cc8ZZF6O.s:7452   .data.g_target_freq:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7192   .bss.g_finger_on:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7194   .bss.g_led3_duty:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7205   .bss.g_retrig:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7207   .bss.g_ringmod:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7214   .bss.g_target_detune:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7221   .bss.g_vibrato_depth:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7228   .data._ZL11s_noise_rng:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7232   .data._ZL11s_noise_rng:0000000000000000 _ZL11s_noise_rng
+/tmp/claude-502/cc8R1D6c.s:7235   .data._ZL12s_master_vol:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7239   .data._ZL12s_master_vol:0000000000000000 _ZL12s_master_vol
+/tmp/claude-502/cc8R1D6c.s:7242   .data._ZL6s_freq:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7246   .data._ZL6s_freq:0000000000000000 _ZL6s_freq
+/tmp/claude-502/cc8R1D6c.s:7249   .data._ZL7s_drive:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7253   .data._ZL7s_drive:0000000000000000 _ZL7s_drive
+/tmp/claude-502/cc8R1D6c.s:7256   .data._ZL8s_cutoff:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7260   .data._ZL8s_cutoff:0000000000000000 _ZL8s_cutoff
+/tmp/claude-502/cc8R1D6c.s:7263   .data._ZZ13AudioCallbackPKPKfPPfjE10s_coeff_vi:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7267   .data._ZZ13AudioCallbackPKPKfPPfjE10s_coeff_vi:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE10s_coeff_vi
+/tmp/claude-502/cc8R1D6c.s:7270   .data._ZZ13AudioCallbackPKPKfPPfjE7s_decay:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7274   .data._ZZ13AudioCallbackPKPKfPPfjE7s_decay:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE7s_decay
+/tmp/claude-502/cc8R1D6c.s:7277   .data._ZZ13AudioCallbackPKPKfPPfjE7s_pmult:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7281   .data._ZZ13AudioCallbackPKPKfPPfjE7s_pmult:0000000000000000 _ZZ13AudioCallbackPKPKfPPfjE7s_pmult
+/tmp/claude-502/cc8R1D6c.s:7284   .data.g_chord_ratio2:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7291   .data.g_chord_ratio3:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7298   .data.g_delay_feedback:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7305   .data.g_delay_level:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7312   .data.g_delay_time_ms:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7319   .data.g_hits:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7417   .data.g_master_vol:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7424   .data.g_reverb_decay:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7431   .data.g_reverb_level:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7438   .data.g_target_cutoff:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7445   .data.g_target_drive:0000000000000000 $d
+/tmp/claude-502/cc8R1D6c.s:7452   .data.g_target_freq:0000000000000000 $d
 
 UNDEFINED SYMBOLS
 expf

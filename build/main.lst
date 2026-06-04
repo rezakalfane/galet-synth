@@ -1,4 +1,4 @@
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   34              		@ link register save eliminated.
   35              	.LBB318:
   36              	.LBI318:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 2
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 2
 
 
   37              		.file 2 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/system.h"
@@ -118,7 +118,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   54:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/system.h **** 
   55:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/system.h ****         SysClkFreq cpu_freq;
   56:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/system.h ****         bool       use_dcache;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 3
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 3
 
 
   57:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/sys/system.h ****         bool       use_icache;
@@ -178,7 +178,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
    8:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/usb.h **** /** @addtogroup human_interface
    9:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/usb.h ****     @{
   10:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/usb.h **** */
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 4
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 4
 
 
   11:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/usb.h **** 
@@ -238,7 +238,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   17:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h **** /* While there may not be many configuration options here,
   18:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h **** using a struct like this allows us to add more configuration
   19:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h **** later without breaking existing functionality.
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 5
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 5
 
 
   20:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h **** */
@@ -298,7 +298,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   74:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h ****     void InitMux(dsy_gpio_pin    adc_pin,
   75:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h ****                  size_t          mux_channels,
   76:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h ****                  dsy_gpio_pin    mux_0,
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 6
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 6
 
 
   77:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/adc.h ****                  dsy_gpio_pin    mux_1 = {DSY_GPIOX, 0},
@@ -358,7 +358,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   15:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****  *           you will have to take the following steps:
   16:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****  *             1. Create and Initialize an SaiHandle or two depending on your requirements
   17:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****  *             2. Initialize the Audio Handle with the desired settings and the Initialized SaiHand
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 7
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 7
 
 
   18:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****  *             3. If the connected codec requires special configuration or initialization, do so
@@ -418,7 +418,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   72:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****      */
   73:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****     typedef void (*AudioCallback)(InputBuffer  in,
   74:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****                                   OutputBuffer out,
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 8
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 8
 
 
   75:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****                                   size_t       size);
@@ -478,7 +478,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   13:src/main.cpp  ****  *               + Ring mod amount (extreme pressure adds metallic edge)
   14:src/main.cpp  ****  *
   15:src/main.cpp  ****  * EXPRESSION:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 9
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 9
 
 
   16:src/main.cpp  ****  *   - Note quantize on initial touch, then free pitch bend on slide
@@ -538,7 +538,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   83 0000 0028     		cmp	r0, #0
   84 0002 40D0     		beq	.L11
   85 0004 0029     		cmp	r1, #0
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 10
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 10
 
 
   63:src/main.cpp  ****     if(!scale || scale_len <= 0) return midi;
@@ -598,7 +598,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  128              		.loc 6 70 5 view .LVU24
  129              	.LBB328:
  130              		.loc 6 70 18 view .LVU25
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 11
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 11
 
 
  131              	.L7:
@@ -658,7 +658,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  178 0060 E9DC     		bgt	.L7
  179              	.LBE328:
   74:src/main.cpp  ****     }
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 12
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 12
 
 
   75:src/main.cpp  ****     float q=(float)(oct*12+best_deg);
@@ -718,7 +718,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  223              	.L14:
  224 0088 ABAAAA2A 		.word	715827883
  225              		.cfi_endproc
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 13
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 13
 
 
  226              	.LFE2580:
@@ -778,7 +778,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  273              		.loc 6 87 5 is_stmt 1 discriminator 4 view .LVU66
  274              	.LBB333:
   88:src/main.cpp  ****     for(int i=0;i<w;i++)out[1+i]=(i<n)?'#':' ';
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 14
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 14
 
 
  275              		.loc 6 88 18 is_stmt 0 discriminator 4 view .LVU67
@@ -838,7 +838,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  325 004e 4FF0000C 		mov	ip, #0
  326 0052 E0E7     		b	.L17
  327              		.cfi_endproc
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 15
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 15
 
 
  328              	.LFE2581:
@@ -898,7 +898,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  376 0012 0130     		adds	r0, r0, #1
  377              	.LVL31:
  378              		.loc 6 95 33 view .LVU97
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 16
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 16
 
 
  379 0014 FFF7FEFF 		bl	memset
@@ -958,7 +958,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  426              		.loc 6 100 20 view .LVU116
  427 0050 3246     		mov	r2, r6
  428 0052 B342     		cmp	r3, r6
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 17
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 17
 
 
  101:src/main.cpp  ****         out[1+p]=(char)('1'+slot);
@@ -1018,7 +1018,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  473      3D3D3D3D 
  473      3D3D3D3D 
  473      00
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 18
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 18
 
 
  474 0031 000000   		.align	2
@@ -1078,7 +1078,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  498      63652073 
  498      656C6563 
  498      745D2025 
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 19
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 19
 
 
  498      73202825 
@@ -1138,7 +1138,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  523      7C204445 
  523      4C544120 
  523      7C204241 
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 20
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 20
 
 
  523      5200
@@ -1198,7 +1198,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  548      2D2D2D2D 
  548      2D2D2D2D 
  548      2D2D2D2D 
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 21
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 21
 
 
  549              		.section	.text.startup.main,"ax",%progbits
@@ -1258,7 +1258,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  597 0010 FFF7FEFF 		bl	_ZN5daisy9DaisySeed4InitEb
  598              	.LVL38:
  109:src/main.cpp  ****     hw.SetAudioBlockSize(4);
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 22
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 22
 
 
  599              		.loc 6 109 5 is_stmt 1 view .LVU131
@@ -1318,7 +1318,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  132:src/main.cpp  ****     // ── DAC LEDs (pin 30 = DAC1, pin 31 = DAC2) + PWM LED (A0 = pin 22) ──────
  133:src/main.cpp  ****     DacHandle::Config dac_cfg;
  630              		.loc 6 133 5 is_stmt 1 view .LVU144
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 23
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 23
 
 
  134:src/main.cpp  ****     dac_cfg.bitdepth   = DacHandle::BitDepth::BITS_12;
@@ -1378,7 +1378,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  670              	.LVL46:
  142:src/main.cpp  ****     led3.Write(false);
  671              		.loc 6 142 5 is_stmt 1 view .LVU162
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 24
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 24
 
 
  672              		.loc 6 142 15 is_stmt 0 view .LVU163
@@ -1438,7 +1438,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  172:src/main.cpp  ****     auto calibrate_fsr_silent = [&]() {
  173:src/main.cpp  ****         uint32_t start = System::GetNow();
  174:src/main.cpp  ****         uint32_t acc = 0; int n = 0;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 25
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 25
 
 
  697              		.loc 6 174 18 view .LVU169
@@ -1498,7 +1498,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  179:src/main.cpp  ****         }
  180:src/main.cpp  ****         commit_fsr_avg(acc, n);
  181:src/main.cpp  ****     };
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 26
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 26
 
 
  182:src/main.cpp  **** 
@@ -1558,7 +1558,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  234:src/main.cpp  **** 
  235:src/main.cpp  ****             // Exit on any touch.
  236:src/main.cpp  ****             read_electrodes(scan);
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 27
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 27
 
 
  237:src/main.cpp  ****             int32_t max_d = 0;
@@ -1618,7 +1618,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  765 00e0 0346     		mov	r3, r0
  178:src/main.cpp  ****         }
  766              		.loc 6 178 26 view .LVU193
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 28
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 28
 
 
  767 00e2 0A20     		movs	r0, #10
@@ -1678,7 +1678,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  805              	.LVL61:
  161:src/main.cpp  ****         uint16_t avg = (uint16_t)(acc / n);
  806              		.loc 6 161 9 is_stmt 0 view .LVU210
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 29
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 29
 
 
  807              	.LBE641:
@@ -1738,7 +1738,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  845              		.loc 6 167 26 view .LVU226
  846 0134 FCEEC77A 		vcvt.u32.f32	s15, s14
  847 0138 17EE903A 		vmov	r3, s15	@ int
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 30
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 30
 
 
  848 013c 9BB2     		uxth	r3, r3
@@ -1798,7 +1798,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  262:src/main.cpp  ****     g_target_cutoff = 100.0f;
  882              		.loc 6 262 5 is_stmt 1 view .LVU239
  263:src/main.cpp  ****     g_amp_target    = 0.0f;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 31
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 31
 
 
  883              		.loc 6 263 21 is_stmt 0 view .LVU240
@@ -1858,7 +1858,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  921              		.loc 6 269 5 is_stmt 1 view .LVU260
  922              		.loc 6 269 18 is_stmt 0 view .LVU261
  923 018c FFF7FEFF 		bl	_ZN5daisy6System5DelayEm
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 32
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 32
 
 
  924              	.LVL68:
@@ -1918,7 +1918,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   58:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****     the specified callback will get called whenever
   59:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****     new data is ready to be prepared.
   60:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****     */
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 33
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 33
 
 
   61:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****     void StartAudio(AudioHandle::InterleavingAudioCallback cb);
@@ -1978,7 +1978,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  115:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****     /** Print formatted debug log message
  116:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****      */
  117:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****     template <typename... VA>
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 34
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 34
 
 
  118:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****     static void Print(const char* format, VA... va)
@@ -2038,7 +2038,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  126:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****     {
  966              		.loc 1 126 17 view .LVU279
  967              	.LBB653:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 35
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 35
 
 
  128:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****     }
@@ -2098,7 +2098,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   38:src/voice.h   ****   // ── Extras (appended so existing field order stays stable) ──────────�
   39:src/voice.h   ****   float noise_level;   // white noise mixed into the oscillator stack (0 = none)
   40:src/voice.h   ****   float keytrack;      // 0..1 — how much the cutoff follows pitch (1 = full)
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 36
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 36
 
 
   41:src/voice.h   ****   float ringmod_ratio; // ring-mod carrier pitch ratio (1.0 = unison; non-int =
@@ -2158,7 +2158,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   95:src/voice.h   ****   // positional initializers of the existing presets are unchanged.
   96:src/voice.h   ****   float decay_ms;
   97:src/voice.h   ****   float sustain;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 37
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 37
 
 
   98:src/voice.h   **** 
@@ -2218,7 +2218,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  152:src/voice.h   ****   if (!scale || n <= 0) {
  153:src/voice.h   ****     semis_third = 4;
  154:src/voice.h   ****     semis_fifth = 7;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 38
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 38
 
 
  155:src/voice.h   ****     return;
@@ -2278,7 +2278,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  209:src/voice.h   ****     WAVE_TRI,            // sub   — one octave below
  210:src/voice.h   ****     // OCTAVE OSCILLATOR
  211:src/voice.h   ****     2.0f,
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 39
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 39
 
 
  212:src/voice.h   ****     0.15f,
@@ -2338,7 +2338,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  266:src/voice.h   ****     1.0f,                // less drive — keep it clean and round
  267:src/voice.h   ****     // NOISE
  268:src/voice.h   ****     0.0f,                // noise level
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 40
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 40
 
 
  269:src/voice.h   ****     1.0f,                // keytrack
@@ -2398,7 +2398,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  323:src/voice.h   ****     // PITCH QUANTIZE
  324:src/voice.h   **** };
  325:src/voice.h   **** 
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 41
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 41
 
 
  326:src/voice.h   **** // ── Voice 3: rich power-chord bass with mixed waveforms + huge filter sweep ────
@@ -2458,7 +2458,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  380:src/voice.h   ****     "Organ",
  381:src/voice.h   ****     // FREQUENCY RANGE
  382:src/voice.h   ****     65.0f,
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 42
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 42
 
 
  383:src/voice.h   ****     520.0f,
@@ -2518,7 +2518,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  437:src/voice.h   **** };
  438:src/voice.h   **** 
  439:src/voice.h   **** // ── Voice 5: screaming aggressive lead ──────────────────
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 43
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 43
 
 
  440:src/voice.h   **** //   Detuned sawtooth stack (root + a hair-sharp twin + octave) for a thick,
@@ -2578,7 +2578,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  494:src/voice.h   **** //   (decay_ms/sustain below) so each note plucks and rings out over ~1.2 s while
  495:src/voice.h   **** //   held — like a struck string, not an organ. Quantized to a major scale so
  496:src/voice.h   **** //   tapped chords land in key. For a BASS guitar instead: drop freq_low/high ~½,
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 44
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 44
 
 
  497:src/voice.h   **** //   cut drive to ~1.5, use WAVE_TRI, and raise `sustain` if you want it to hold.
@@ -2638,7 +2638,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  551:src/voice.h   **** //   moderate, low-resonance filter keeps it warm rather than bright. The pad
  552:src/voice.h   **** //   character comes from the envelope: a slow ~2.2 s swell in and a long ~2 s
  553:src/voice.h   **** //   tail, so notes bloom and linger. A whisper of noise adds air.
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 45
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 45
 
 
  554:src/voice.h   **** static constexpr Voice VOICE_PAD = {
@@ -2698,7 +2698,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  608:src/voice.h   ****     // OSCILLATOR STACK
  609:src/voice.h   ****     1.0f,
  610:src/voice.h   ****     0.22f,
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 46
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 46
 
 
  611:src/voice.h   ****     WAVE_SINE,           // osc1  — body (lower mode)
@@ -2758,7 +2758,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  665:src/voice.h   ****     0.98083f,            // 30–80 Hz, ln(2.67) — deep, position tunes the kick
  666:src/voice.h   ****     // OSCILLATOR STACK
  667:src/voice.h   ****     1.0f,
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 47
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 47
 
 
  668:src/voice.h   ****     0.55f,
@@ -2818,7 +2818,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  722:src/voice.h   ****     500.0f,
  723:src/voice.h   ****     1.20397f,            // 150–500 Hz, ln(3.33) — snare tuning range
  724:src/voice.h   ****     // OSCILLATOR STACK
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 48
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 48
 
 
  725:src/voice.h   ****     1.0f,
@@ -2878,7 +2878,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  779:src/voice.h   ****     4000.0f,
  780:src/voice.h   ****     11000.0f,
  781:src/voice.h   ****     1.01160f,            // 4000–11000 Hz, ln(2.75) — metallic edge pitch
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 49
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 49
 
 
  782:src/voice.h   ****     // OSCILLATOR STACK
@@ -2938,7 +2938,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  836:src/voice.h   **** //   while slides bend the whole chord. Bass + leads. (Major twin: VOICE_SH101_MAJ.)
  837:src/voice.h   **** static constexpr Voice VOICE_SH101 = {
  838:src/voice.h   ****     "SH-101 min",
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 50
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 50
 
 
  839:src/voice.h   ****     // FREQUENCY RANGE
@@ -2998,7 +2998,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  893:src/voice.h   **** //   Identical to VOICE_SH101 in every way except the quantize scale: MAJOR, so
  894:src/voice.h   **** //   the diatonic triads come out bright (I, ii, iii, IV…) instead of the minor
  895:src/voice.h   **** //   set. Cycle to it to switch the chord flavor live — no other change.
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 51
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 51
 
 
  896:src/voice.h   **** static constexpr Voice VOICE_SH101_MAJ = {
@@ -3058,7 +3058,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  950:src/voice.h   **** // ── Voice 14: MultiVoice "Drums" ────────────────────
  951:src/voice.h   **** //   A meta-voice: when selected, the slider splits into 4 equal zones, each
  952:src/voice.h   **** //   triggering one drum on tap, with the fine position snapping the pitch to an
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 52
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 52
 
 
  953:src/voice.h   **** //   interval (see MULTI_* below). This struct is just a placeholder so it lives
@@ -3118,7 +3118,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
 1007:src/voice.h   **** 
 1008:src/voice.h   **** // ── Voice bank ──────────────────────────
 1009:src/voice.h   **** // All voices, in cycle order. Holding the FSR pressed steps through these live
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 53
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 53
 
 
 1010:src/voice.h   **** // (see the voice-switch gesture in the main loop). Edit the order here to taste.
@@ -3178,7 +3178,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  991 01b2 0E2B     		cmp	r3, #14
  992 01b4 1D46     		mov	r5, r3
  993 01b6 A8BF     		it	ge
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 54
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 54
 
 
  994 01b8 0E25     		movge	r5, #14
@@ -3238,7 +3238,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  1038              	.LBB664:
 1045:src/voice.h   ****   for (int i = 0; i < NUM_VOICES; i++)
  1039              		.loc 7 1045 7 view .LVU301
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 55
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 55
 
 
  1040 01d6 0022     		movs	r2, #0
@@ -3298,7 +3298,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  126:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****     {
  1081              		.loc 1 126 17 is_stmt 1 view .LVU315
  1082              	.LBE669:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 56
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 56
 
 
  280:src/main.cpp  ****                  cycle_pos(g_voice_idx), cycle_total(),
@@ -3358,7 +3358,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  1126 0216 FFF7FEFF 		bl	_ZN5daisy6LoggerILNS_17LoggerDestinationE1EE9PrintLineEPKcz
  1127              	.LVL85:
  128:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****     }
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 57
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 57
 
 
  1128              		.loc 1 128 23 view .LVU328
@@ -3418,7 +3418,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  1168 0232 FFF7FEFF 		bl	_ZN5daisy6LoggerILNS_17LoggerDestinationE1EE9PrintLineEPKcz
  1169              	.LVL89:
  128:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****     }
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 58
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 58
 
 
  1170              		.loc 1 128 23 view .LVU341
@@ -3478,7 +3478,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  303:src/main.cpp  **** 
  304:src/main.cpp  ****     // Control loop runs as fast as the sensor allows (~150-200 Hz) for tight
  305:src/main.cpp  ****     // timing; the serial display is throttled to a readable rate independently.
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 59
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 59
 
 
  306:src/main.cpp  ****     static constexpr uint32_t PRINT_INTERVAL_MS = 120;  // ~8 display refreshes/sec
@@ -3538,7 +3538,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  354:src/main.cpp  **** 
  355:src/main.cpp  ****     // Blocking flash used only at startup to announce the boot/restored voice.
  356:src/main.cpp  ****     auto flash_voice_leds = [&](int count){
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 60
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 60
 
 
  357:src/main.cpp  ****         for(int f = 0; f < count; f++){
@@ -3598,7 +3598,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  1237              		.loc 6 356 5 view .LVU385
  1238              		.loc 6 365 5 view .LVU386
  1239              		.loc 6 365 21 is_stmt 0 view .LVU387
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 61
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 61
 
 
  1240 0250 1B68     		ldr	r3, [r3]
@@ -3658,7 +3658,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  1282              		.loc 7 1053 3 is_stmt 1 view .LVU401
 1053:src/voice.h   ****     if (!VOICES[i].no_cycle)
  1283              		.loc 7 1053 28 view .LVU402
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 62
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 62
 
 
  1284 0272 9842     		cmp	r0, r3
@@ -3718,7 +3718,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  1327 0296 4D48     		ldr	r0, .L554+88
  1328 0298 FFF7FEFF 		bl	_ZN5daisy9DacHandle10WriteValueENS0_7ChannelEt
  1329              	.LVL107:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 63
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 63
 
 
  341:src/main.cpp  ****     };
@@ -3778,7 +3778,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  1369              		.loc 6 341 21 is_stmt 0 view .LVU428
  1370 02ba 0023     		movs	r3, #0
  1371              	.LBE700:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 64
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 64
 
 
  1372              	.LBE699:
@@ -3838,7 +3838,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  373:src/main.cpp  ****     // dropout shorter than TAP_GAP_MS is treated as a flicker — the note keeps
  374:src/main.cpp  ****     // holding, no spurious retrigger. While HELD, a sharp pressure rise
  375:src/main.cpp  ****     // re-attacks but is rate-limited by the voice's retrig_ms.
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 65
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 65
 
 
  376:src/main.cpp  ****     static constexpr uint32_t TAP_GAP_MS  = 40;    // min off-time to count as a real lift
@@ -3898,7 +3898,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  430:src/main.cpp  ****         // pressure increases down to FSR_MIN.
  431:src/main.cpp  ****         uint16_t fsr_raw = hw.adc.Get(0);
  432:src/main.cpp  ****         float    vol;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 66
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 66
 
 
  433:src/main.cpp  ****         if(fsr_raw >= fsr_dead)     vol = 1.0f;
@@ -3958,7 +3958,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  1444              		.loc 6 335 14 view .LVU459
  1445 0310 CDE90A33 		strd	r3, r3, [sp, #40]
  328:src/main.cpp  ****     uint32_t drum2_at      = 0;      // scheduled 2nd drum hit (snare) for the kit preview
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 67
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 67
 
 
  1446              		.loc 6 328 14 view .LVU460
@@ -4018,7 +4018,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  437:src/main.cpp  **** 
  438:src/main.cpp  ****         // Schmitt-latch "FSR pressed to the floor" (hysteresis so a steady hard
  439:src/main.cpp  ****         // press doesn't chatter the tap edge). Note the FSR reads INVERSELY: a
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 68
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 68
 
 
  440:src/main.cpp  ****         // hard press drives fsr_raw down to/below FSR_MIN (vol -> 0), while easing
@@ -4078,7 +4078,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  1522 036e 1946     		mov	r1, r3
  1523 0370 1393     		str	r3, [sp, #76]
  1524 0372 3FE0     		b	.L69
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 69
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 69
 
 
  1525              	.L555:
@@ -4138,7 +4138,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  1572 03f2 0ED0     		beq	.L511
  1573              	.LVL124:
  1574              	.L69:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 70
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 70
 
 
  451:src/main.cpp  ****             delta[i]=(int32_t)baseline[i]-(int32_t)data[i];
@@ -4198,7 +4198,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  1613              		.loc 6 457 9 is_stmt 1 view .LVU516
  458:src/main.cpp  **** 
  459:src/main.cpp  ****         // ── FSR voice-select gesture (hold FSR + tap/play the glass) ────────
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 71
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 71
 
 
  460:src/main.cpp  ****         // ENTER: press the FSR fully (to the mute floor) with NO glass touch for
@@ -4258,7 +4258,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  480:src/main.cpp  ****                     idle_since = now; last_touch_ms = now;   // freeze idle/rebaseline
  481:src/main.cpp  ****                     if(now - full_since >= VOICE_SELECT_ENTER_MS){
  482:src/main.cpp  ****                         sel_mode     = 1;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 72
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 72
 
 
  483:src/main.cpp  ****                         g_amp_target = 0.0f;                 // silence any held note
@@ -4318,7 +4318,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  1671 0454 F31A     		subs	r3, r6, r3
  510:src/main.cpp  ****                                (int32_t)(now - last_tap_ms) >= (int32_t)VOICE_SELECT_TAP_GAP_MS;
  1672              		.loc 6 510 51 discriminator 1 view .LVU538
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 73
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 73
 
 
  1673 0456 952B     		cmp	r3, #149
@@ -4378,7 +4378,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  1693              		.loc 6 544 13 is_stmt 0 view .LVU547
  1694              	.LBE706:
  545:src/main.cpp  ****         }
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 74
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 74
 
 
  546:src/main.cpp  **** 
@@ -4438,7 +4438,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  574:src/main.cpp  ****         bool f1_on = tracked[0].alive;
  1721              		.loc 6 574 9 is_stmt 1 view .LVU557
  1722              		.loc 6 574 14 is_stmt 0 view .LVU558
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 75
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 75
 
 
  1723 0480 9BF80030 		ldrb	r3, [fp]	@ zero_extendqisi2
@@ -4498,7 +4498,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  591:src/main.cpp  ****         bool     deb_alive[MAX_FINGERS] = {};
  1761              		.loc 6 591 9 is_stmt 1 view .LVU569
  1762              		.loc 6 591 18 is_stmt 0 view .LVU570
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 76
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 76
 
 
  1763 04b4 4793     		str	r3, [sp, #284]
@@ -4558,7 +4558,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  1804              		.loc 6 595 39 discriminator 1 view .LVU582
  1805 04e2 C2F800E0 		str	lr, [r2]
  597:src/main.cpp  ****             deb_alive[i] = deb;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 77
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 77
 
 
  1806              		.loc 6 597 13 is_stmt 1 discriminator 1 view .LVU583
@@ -4618,7 +4618,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  1846              		.loc 6 611 27 view .LVU600
  1847 0506 C6ED007A 		vstr.32	s15, [r6]
  1848              		.loc 6 611 34 is_stmt 1 view .LVU601
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 78
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 78
 
 
  1849              		.loc 6 611 66 is_stmt 0 view .LVU602
@@ -4678,7 +4678,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  627:src/main.cpp  ****                 else if(!deb_alive[i] && hit_was_alive[i])    g_hits[i].gate = false;  // lifted �
  628:src/main.cpp  ****             }
  629:src/main.cpp  ****             g_amp_target = 0.0f;   // mono engine silent; the poly drums play in the callback
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 79
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 79
 
 
  630:src/main.cpp  ****         } else {
@@ -4738,7 +4738,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  638:src/main.cpp  ****         // Bind the active voice (last-hit drum in MultiVoice mode) for finger-2 / header.
  639:src/main.cpp  ****         const Voice& VOICE = g_live_tune ? g_live_voice : g_bank[g_active_voice];
  1931              		.loc 6 639 9 discriminator 3 view .LVU633
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 80
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 80
 
 
  1932              		.loc 6 639 30 is_stmt 0 discriminator 3 view .LVU634
@@ -4798,7 +4798,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  1968              		.loc 8 13 16 is_stmt 0 view .LVU646
  1969 058e F5EEC07A 		vcmpe.f32	s15, #0
  1970 0592 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 81
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 81
 
 
  1971 0596 00F13187 		bmi	.L324
@@ -4858,7 +4858,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  2017              		.loc 6 650 44 view .LVU662
  2018 05e2 F7EE00AA 		vmov.f32	s21, #1.0e+0
  649:src/main.cpp  ****             float ex   = 1.0f + earg*(1.0f + earg*(0.5f + earg*0.1667f));
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 82
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 82
 
 
  2019              		.loc 6 649 19 view .LVU663
@@ -4918,7 +4918,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  659:src/main.cpp  ****             float midi_raw = 69.0f + 17.3123f * ln_ratio; // 17.3123 = 12/ln(2)
  2061              		.loc 6 659 13 view .LVU681
  660:src/main.cpp  **** 
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 83
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 83
 
 
  661:src/main.cpp  ****             float freq; // final frequency to use
@@ -4978,7 +4978,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  2082 062c F4EECCAA 		vcmpe.f32	s21, s24
  2083 0630 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  2084 0634 40F1FD86 		bpl	.L289
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 84
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 84
 
 
  2085              	.LBE1101:
@@ -5038,7 +5038,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  712:src/main.cpp  ****                 return x*x*x*(x*(x*6.0f - 15.0f) + 10.0f);
  2108              		.loc 6 712 30 view .LVU698
  2109 0648 F7EE007A 		vmov.f32	s15, #1.0e+0
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 85
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 85
 
 
  2110 064c B4EEE7BA 		vcmpe.f32	s22, s15
@@ -5098,7 +5098,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  2149 068e B6EE007A 		vmov.f32	s14, #5.0e-1
  722:src/main.cpp  ****             // Keytracking: how much the cutoff base follows pitch. keytrack=1 is
  723:src/main.cpp  ****             // full tracking (cutoff ∝ freq); <1 holds the cutoff lower as pitch
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 86
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 86
 
 
  724:src/main.cpp  ****             // rises, for a more consistent tone across the range. (constexpr →
@@ -5158,7 +5158,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  2191              	.LVL178:
  2192              	.LBB1114:
  2193              	.LBI1110:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 87
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 87
 
 
   12:src/dsp.h     ****     return v<lo?lo:v>hi?hi:v;
@@ -5218,7 +5218,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  707:src/main.cpp  ****                 x = x<0?0:x>1?1:x;
  2242              		.loc 6 707 31 view .LVU748
  2243              	.LBB1120:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 88
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 88
 
 
  708:src/main.cpp  ****                 return x*x*(3.0f - 2.0f*x);
@@ -5278,7 +5278,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  2284              	.L558:
  2285              		.align	2
  2286              	.L556:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 89
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 89
 
 
  2287 0744 9A99593F 		.word	1062836634
@@ -5338,7 +5338,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  2331 07ba 069B     		ldr	r3, [sp, #24]
  736:src/main.cpp  **** 
  2332              		.loc 6 736 60 view .LVU771
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 90
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 90
 
 
  2333 07bc A7EE27CA 		vfma.f32	s24, s14, s15
@@ -5398,7 +5398,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  2367              		.loc 6 746 37 view .LVU790
  2368 07de 77EEC77A 		vsub.f32	s15, s15, s14
  748:src/main.cpp  ****             g_target_cutoff  = cutoff;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 91
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 91
 
 
  2369              		.loc 6 748 30 view .LVU791
@@ -5458,7 +5458,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  762:src/main.cpp  ****             // Do NOT reset cutoff here — let it close with the amplitude
  763:src/main.cpp  ****             // in the audio callback to avoid discontinuity clicks
  764:src/main.cpp  ****         }
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 92
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 92
 
 
  765:src/main.cpp  **** 
@@ -5518,7 +5518,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  2436              	.LBB1159:
  339:src/main.cpp  ****         hw.dac.WriteValue(DacHandle::Channel::TWO, on ? (uint16_t)LED2_MAX : 0);
  2437              		.loc 6 339 9 view .LVU818
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 93
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 93
 
 
  2438              	.LBE1159:
@@ -5578,7 +5578,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  2480              		.loc 6 340 9 is_stmt 1 view .LVU830
  340:src/main.cpp  ****         g_led3_duty = on ? LED3_INTENSITY : 0.0f;
  2481              		.loc 6 340 26 is_stmt 0 view .LVU831
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 94
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 94
 
 
  2482 083e 0022     		movs	r2, #0
@@ -5638,7 +5638,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  805:src/main.cpp  ****             hw.dac.WriteValue(DacHandle::Channel::ONE, (uint16_t)(s_led1 * LED1_MAX));
  806:src/main.cpp  ****             hw.dac.WriteValue(DacHandle::Channel::TWO, (uint16_t)(s_led2 * LED2_MAX));
  807:src/main.cpp  ****             g_led3_duty = s_led3;  // audio callback sigma-delta's this onto A0
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 95
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 95
 
 
  808:src/main.cpp  ****         }
@@ -5698,7 +5698,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  2544 088e F0EE085A 		vmov.f32	s11, #3.0e+0
  2545              		.loc 6 820 40 view .LVU854
  2546 0892 37EE677A 		vsub.f32	s14, s14, s15
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 96
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 96
 
 
  2547              	.LVL202:
@@ -5758,7 +5758,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  2586              	.LBI1242:
  711:src/main.cpp  ****                 x = x<0?0:x>1?1:x;
  2587              		.loc 6 711 33 view .LVU869
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 97
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 97
 
 
  2588              	.LBB1243:
@@ -5818,7 +5818,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  713:src/main.cpp  ****             };
  2627              		.loc 6 713 27 view .LVU885
  2628 08ea 27EE277A 		vmul.f32	s14, s14, s15
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 98
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 98
 
 
  713:src/main.cpp  ****             };
@@ -5878,7 +5878,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  713:src/main.cpp  ****             };
  2665              		.loc 6 713 17 is_stmt 1 view .LVU898
  2666              	.LBE1259:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 99
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 99
 
 
  2667              	.LBE1266:
@@ -5938,7 +5938,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  2709              	.LBE1244:
  2710              	.LBE1275:
  2711              	.LBB1276:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 100
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 100
 
 
  2712              	.LBB1271:
@@ -5998,7 +5998,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  836:src/main.cpp  ****             };
  2754              		.loc 6 836 34 is_stmt 0 view .LVU925
  2755 096e B0EE006A 		vmov.f32	s12, #2.0e+0
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 101
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 101
 
 
  2756              	.LVL214:
@@ -6058,7 +6058,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  854:src/main.cpp  ****             g_ringmod       = 0.0f;
  855:src/main.cpp  ****         }
  856:src/main.cpp  **** 
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 102
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 102
 
 
  857:src/main.cpp  ****         // ── Serial display (throttled; the control loop above runs much faster) ─
@@ -6118,7 +6118,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  2831              	.LBB1305:
  2832              	.LBB1306:
 1052:src/voice.h   ****   for (int i = 0; i <= idx && i < NUM_VOICES; i++)
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 103
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 103
 
 
  2833              		.loc 7 1052 7 view .LVU957
@@ -6178,7 +6178,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  2875              		.loc 7 1053 28 view .LVU972
  2876 09e8 BB42     		cmp	r3, r7
  2877 09ea F7DD     		ble	.L251
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 104
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 104
 
 
  2878              	.LVL228:
@@ -6238,7 +6238,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  2918              	.LBI1313:
  126:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****     {
  2919              		.loc 1 126 17 is_stmt 1 view .LVU987
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 105
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 105
 
 
  2920              	.LBE1313:
@@ -6298,7 +6298,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  2964              	.LBB1325:
  2965              	.LBB1326:
   85:src/main.cpp  ****     if(n>w)n=w;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 106
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 106
 
 
  2966              		.loc 6 85 42 view .LVU999
@@ -6358,7 +6358,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3010              		.loc 6 877 21 is_stmt 0 view .LVU1012
  3011 0a36 5AF8042B 		ldr	r2, [r10], #4
  3012              	.LVL237:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 107
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 107
 
 
  3013              	.LBB1331:
@@ -6418,7 +6418,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3052              		.loc 6 88 39 is_stmt 0 view .LVU1027
  3053 0a62 E918     		adds	r1, r5, r3
  3054 0a64 8142     		cmp	r1, r0
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 108
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 108
 
 
  3055 0a66 ACBF     		ite	ge
@@ -6478,7 +6478,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3096              	.L257:
  3097              	.LVL244:
  3098              	.LBB1333:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 109
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 109
 
 
  879:src/main.cpp  ****                 if(tracked[s].alive&&i==tracked[s].peak_ch)mk=(s==0)?"F1":"F2";
@@ -6538,7 +6538,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3142              	.LBE1337:
  3143              	.LBE1340:
  876:src/main.cpp  ****             make_bar(bar,delta[i],max_delta,20);
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 110
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 110
 
 
  3144              		.loc 6 876 9 is_stmt 1 view .LVU1055
@@ -6598,7 +6598,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3182              	.LVL252:
   96:src/main.cpp  ****     for(int slot=0;slot<MAX_FINGERS;slot++){
  3183              		.loc 6 96 26 view .LVU1070
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 111
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 111
 
 
  3184 0ad6 0023     		movs	r3, #0
@@ -6658,7 +6658,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   98:src/main.cpp  ****         int p=(int)(((int64_t)tracked[slot].pos*(w-1)+500)/1000);
  3231              		.loc 6 98 9 is_stmt 0 view .LVU1078
  3232 0b50 96F800E0 		ldrb	lr, [r6]	@ zero_extendqisi2
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 112
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 112
 
 
   99:src/main.cpp  ****         if(p<0)p=0;if(p>=w)p=w-1;
@@ -6718,7 +6718,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3274              	.LBE1349:
  3275              	.LBB1356:
  3276              	.LBB1357:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 113
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 113
 
 
  128:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****     }
@@ -6778,7 +6778,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  890:src/main.cpp  ****                 make_bar(bar,tracked[slot].pressure,100,16);
  3318              		.loc 6 890 17 view .LVU1104
  3319              		.loc 6 890 25 is_stmt 0 view .LVU1105
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 114
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 114
 
 
  3320 0bb4 D8F80830 		ldr	r3, [r8, #8]
@@ -6838,7 +6838,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3359              		.loc 6 88 39 is_stmt 0 view .LVU1120
  3360 0bda 5019     		adds	r0, r2, r5
  3361 0bdc 8842     		cmp	r0, r1
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 115
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 115
 
 
  3362 0bde ACBF     		ite	ge
@@ -6898,7 +6898,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3404 0c00 8DF84621 		strb	r2, [sp, #326]
  3405              	.LVL265:
   89:src/main.cpp  **** }
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 116
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 116
 
 
  3406              		.loc 6 89 26 view .LVU1133
@@ -6958,7 +6958,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3444 0c2e 17EE901A 		vmov	r1, s15	@ int
  3445 0c32 642B     		cmp	r3, #100
  3446 0c34 A8BF     		it	ge
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 117
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 117
 
 
  3447 0c36 6421     		movge	r1, #100
@@ -7018,7 +7018,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   88:src/main.cpp  ****     out[1+w]=']';out[2+w]='\0';
  3486              		.loc 6 88 25 view .LVU1163
   88:src/main.cpp  ****     out[1+w]=']';out[2+w]='\0';
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 118
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 118
 
 
  3487              		.loc 6 88 39 is_stmt 0 view .LVU1164
@@ -7078,7 +7078,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3529              	.LBI1387:
  126:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****     {
  3530              		.loc 1 126 17 view .LVU1177
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 119
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 119
 
 
  3531              	.LBB1389:
@@ -7138,7 +7138,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3567 0ca2 65EEA45A 		vmul.f32	s11, s11, s9
  906:src/main.cpp  ****         int det_i10 = (int)(g_target_detune*10);
  3568              		.loc 6 906 28 view .LVU1195
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 120
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 120
 
 
  3569 0ca6 16EE902A 		vmov	r2, s13	@ int
@@ -7198,7 +7198,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  574:src/main.cpp  ****         if(f1_on) f1_last_seen_ms = System::GetNow();
  3613              		.loc 6 574 14 is_stmt 0 discriminator 12 view .LVU1212
  3614 0ce8 0598     		ldr	r0, [sp, #20]
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 121
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 121
 
 
  3615              	.LBB1395:
@@ -7258,7 +7258,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3653 0d0e FFF703BB 		b	.L58
  3654              	.LVL286:
  3655              	.L146:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 122
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 122
 
 
  3656              	.LBB1399:
@@ -7318,7 +7318,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3694              		.loc 8 12 21 is_stmt 1 view .LVU1239
  3695              	.LBB936:
  3696              		.loc 8 13 5 view .LVU1240
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 123
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 123
 
 
  3697              		.loc 8 13 16 is_stmt 0 view .LVU1241
@@ -7378,7 +7378,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3742              		.loc 6 604 39 view .LVU1251
  3743              	.LBE943:
  3744              	.LBE962:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 124
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 124
 
 
  606:src/main.cpp  ****             float prs = (float)tracked[i].pressure;
@@ -7438,7 +7438,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3789              	.LBB954:
  3790              	.LBB951:
  615:src/main.cpp  ****                 if(rms > 0.0f && (prs_sm[i] - prev) > RISE_THRESH
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 125
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 125
 
 
  3791              		.loc 6 615 50 view .LVU1262
@@ -7498,7 +7498,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3830              		.loc 6 617 40 view .LVU1277
  3831 0dd2 AEEB0000 		sub	r0, lr, r0
  617:src/main.cpp  ****                     reatk[i] = true; last_retrig[i] = now_ms;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 126
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 126
 
 
  3832              		.loc 6 617 20 view .LVU1278
@@ -7558,7 +7558,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  443:src/main.cpp  ****         else if(vol >= 0.4f)   full_state = false;   // clearly eased off
  3871              		.loc 6 443 9 view .LVU1294
  3872 0e02 0793     		str	r3, [sp, #28]
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 127
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 127
 
 
  3873              	.LVL297:
@@ -7618,7 +7618,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3912              		.loc 6 574 14 view .LVU1309
  3913 0e2c 0693     		str	r3, [sp, #24]
  862:src/main.cpp  ****             continue;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 128
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 128
 
 
  3914              		.loc 6 862 26 view .LVU1310
@@ -7678,7 +7678,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  3963              	.LBB1404:
  475:src/main.cpp  **** 
  3964              		.loc 6 475 13 is_stmt 1 view .LVU1316
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 129
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 129
 
 
  475:src/main.cpp  **** 
@@ -7738,7 +7738,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4005 0eb8 BA4A     		ldr	r2, .L564
  4006 0eba 1360     		str	r3, [r2]	@ float
  484:src/main.cpp  ****                           hw.PrintLine("[voice select] %s (%d/%d) - tap/slide glass; release FSR to
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 130
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 130
 
 
  4007              		.loc 6 484 25 is_stmt 1 view .LVU1331
@@ -7798,7 +7798,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4048              		.loc 7 1054 5 is_stmt 0 view .LVU1345
  4049 0ede 92F87C10 		ldrb	r1, [r2, #124]	@ zero_extendqisi2
 1053:src/voice.h   ****     if (!VOICES[i].no_cycle)
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 131
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 131
 
 
  4050              		.loc 7 1053 3 view .LVU1346
@@ -7858,7 +7858,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4091              		.loc 6 338 23 view .LVU1361
  4092              	.LBB881:
  339:src/main.cpp  ****         hw.dac.WriteValue(DacHandle::Channel::TWO, on ? (uint16_t)LED2_MAX : 0);
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 132
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 132
 
 
  4093              		.loc 6 339 9 view .LVU1362
@@ -7918,7 +7918,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4136              	.LVL321:
  345:src/main.cpp  ****         else     { leds_write(false); blink_on = false; }
  4137              		.loc 6 345 47 view .LVU1374
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 133
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 133
 
 
  4138 0f26 0B93     		str	r3, [sp, #44]
@@ -7978,7 +7978,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  564:src/main.cpp  ****             idle_chase_and_calibrate();
  4179              		.loc 6 564 32 discriminator 1 view .LVU1388
  4180 0f52 41F28733 		movw	r3, #4999
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 134
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 134
 
 
  4181 0f56 9842     		cmp	r0, r3
@@ -8038,7 +8038,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  200:src/main.cpp  ****             if(g_live_tune) break;
  4219              		.loc 6 200 29 view .LVU1405
  4220 0f74 FFF7FEFF 		bl	_Z16serial_tune_pollv
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 135
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 135
 
 
  4221              	.LVL332:
@@ -8098,7 +8098,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4259 0fb0 20EE070A 		vmul.f32	s0, s0, s14
  4260 0fb4 FFF7FEFF 		bl	cosf
  4261              	.LVL336:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 136
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 136
 
 
  208:src/main.cpp  **** 
@@ -8158,7 +8158,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4298 0ff4 F5EEC0AA 		vcmpe.f32	s21, #0
  211:src/main.cpp  ****             float l3_raw = 2.0f * p01 - 1.0f;                 if(l3_raw < 0) l3_raw = 0;
  4299              		.loc 6 211 85 view .LVU1440
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 137
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 137
 
 
  4300 0ff8 48BF     		it	mi
@@ -8218,7 +8218,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4343              	.LVL344:
  4344              	.L133:
  216:src/main.cpp  ****             hw.dac.WriteValue(DacHandle::Channel::ONE, (uint16_t)(led1 * LED1_MAX));
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 138
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 138
 
 
  4345              		.loc 6 216 13 is_stmt 1 view .LVU1452
@@ -8278,7 +8278,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4387 10a8 FFF7FEFF 		bl	_ZN5daisy9DacHandle10WriteValueENS0_7ChannelEt
  4388              	.LVL348:
  219:src/main.cpp  **** 
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 139
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 139
 
 
  4389              		.loc 6 219 13 is_stmt 1 view .LVU1465
@@ -8338,7 +8338,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4428              	.LBB1506:
  4429              	.LBB1440:
  4430              	.LBB1435:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 140
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 140
 
 
  4431              	.LBB1430:
@@ -8398,7 +8398,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4473              		.loc 6 167 45 view .LVU1492
  4474 10ea 07EE903A 		vmov	s15, r3	@ int
  167:src/main.cpp  ****         fsr_active_inv = 1.0f / (float)(fsr_dead - FSR_MIN);
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 141
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 141
 
 
  4475              		.loc 6 167 71 view .LVU1493
@@ -8458,7 +8458,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4512              	.L140:
  168:src/main.cpp  ****     };
  4513              		.loc 6 168 24 view .LVU1511
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 142
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 142
 
 
  4514              	.LBE1414:
@@ -8518,7 +8518,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4554              	.LVL363:
  239:src/main.cpp  ****                 if(d > max_d) max_d = d;
  4555              		.loc 6 239 25 view .LVU1526
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 143
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 143
 
 
  4556              	.LBE1421:
@@ -8578,7 +8578,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4593 115e 0022     		movs	r2, #0
  4594 1160 1448     		ldr	r0, .L564+16
  4595 1162 DDF820B0 		ldr	fp, [sp, #32]
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 144
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 144
 
 
  4596 1166 1146     		mov	r1, r2
@@ -8638,7 +8638,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4636              		.loc 6 568 13 view .LVU1557
  4637 1190 0028     		cmp	r0, #0
  4638 1192 7FF471A9 		bne	.L113
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 145
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 145
 
 
  568:src/main.cpp  ****         }
@@ -8698,7 +8698,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4685              	.LVL380:
  641:src/main.cpp  ****         {
  4686              		.loc 6 641 9 is_stmt 1 view .LVU1566
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 146
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 146
 
 
  4687              	.LBB1443:
@@ -8758,7 +8758,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4727 1214 109B     		ldr	r3, [sp, #64]
  4728 1216 C31A     		subs	r3, r0, r3
  350:src/main.cpp  ****         if(blink_on){ leds_write(false); blink_on = false; blink_left--; blink_t = now + 140; }
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 147
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 147
 
 
  4729              		.loc 6 350 9 view .LVU1581
@@ -8818,7 +8818,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  340:src/main.cpp  ****         g_led3_duty = on ? LED3_INTENSITY : 0.0f;
  4771              		.loc 6 340 26 is_stmt 0 view .LVU1594
  4772 1238 40F6FF72 		movw	r2, #4095
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 148
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 148
 
 
  4773 123c 0121     		movs	r1, #1
@@ -8878,7 +8878,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  575:src/main.cpp  ****         bool f1_fresh = !f1_was_on && (System::GetNow() - f1_last_seen_ms >= F1_REQUANTIZE_MS);
  4816              		.loc 6 575 51 is_stmt 0 discriminator 1 view .LVU1606
  4817 1268 FFF7FEFF 		bl	_ZN5daisy6System6GetNowEv
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 149
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 149
 
 
  4818              	.LVL393:
@@ -8938,7 +8938,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  783:src/main.cpp  ****                 float pr01     = clampf((float)tracked[0].pressure / 100.0f, 0.0f, 1.0f);
  4861              		.loc 6 783 40 view .LVU1618
  4862 1290 87EEA67A 		vdiv.f32	s14, s15, s13
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 150
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 150
 
 
  4863              	.LVL398:
@@ -8998,7 +8998,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4908              	.LVL402:
  787:src/main.cpp  ****                 float l2_raw   = 1.0f - 2.0f * fabsf(p01 - 0.5f);   if(l2_raw < 0) l2_raw = 0;
  4909              		.loc 6 787 23 view .LVU1634
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 151
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 151
 
 
  4910 12d4 BFEE00CA 		vmov.f32	s24, #-1.0e+0
@@ -9058,7 +9058,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4948              	.LVL405:
  788:src/main.cpp  ****                 led1_target    = sqrtf(sqrtf(l2_raw)) * prs_mult;  // middle tent
  4949              		.loc 6 788 17 is_stmt 1 view .LVU1651
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 152
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 152
 
 
  788:src/main.cpp  ****                 led1_target    = sqrtf(sqrtf(l2_raw)) * prs_mult;  // middle tent
@@ -9118,7 +9118,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  4993 1370 B5EE400A 		vcmp.f32	s0, #0
  4994 1374 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  4995 1378 00F15287 		bmi	.L497
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 153
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 153
 
 
  4996 137c F1EEC07A 		vsqrt.f32	s15, s0
@@ -9178,7 +9178,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5038 13a0 DFED6AAA 		vldr.32	s21, .L566+44
  805:src/main.cpp  ****             hw.dac.WriteValue(DacHandle::Channel::TWO, (uint16_t)(s_led2 * LED2_MAX));
  5039              		.loc 6 805 30 view .LVU1675
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 154
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 154
 
 
  5040 13a4 0021     		movs	r1, #0
@@ -9238,7 +9238,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5080              		.loc 6 443 43 is_stmt 0 view .LVU1689
  5081 13e8 0123     		movs	r3, #1
  5082 13ea 0793     		str	r3, [sp, #28]
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 155
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 155
 
 
  5083              	.LVL417:
@@ -9298,7 +9298,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5130              	.LBE1117:
  5131              	.LBE1132:
  5132              	.LBB1133:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 156
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 156
 
 
  5133              	.LBB1123:
@@ -9358,7 +9358,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5177 1428 F0EE4CAA 		vmov.f32	s21, s24
  5178              	.LBE1084:
  5179              	.LBE1083:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 157
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 157
 
 
  5180              	.LBB1087:
@@ -9418,7 +9418,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5224 144c DFED3D7A 		vldr.32	s15, .L566+36
  5225 1450 FFF711B9 		b	.L183
  5226              	.LVL430:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 158
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 158
 
 
  5227              	.L328:
@@ -9478,7 +9478,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  521:src/main.cpp  ****                         g_finger_on = false; g_amp_target = 0.0f;   // silent cycling
  5277              		.loc 6 521 21 is_stmt 1 view .LVU1736
  526:src/main.cpp  ****                         // Drums kit: a tap fires a kick + snare "one-two" (one-shots).
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 159
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 159
 
 
  5278              		.loc 6 526 21 view .LVU1737
@@ -9538,7 +9538,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5320 1482 801B     		subs	r0, r0, r6
  551:src/main.cpp  ****                 tracked[0].alive=tracked[1].alive=false;
  5321              		.loc 6 551 13 view .LVU1750
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 160
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 160
 
 
  5322 1484 B0F5FA6F 		cmp	r0, #2000
@@ -9598,7 +9598,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  555:src/main.cpp  ****             }
  5363              		.loc 6 555 42 view .LVU1764
  5364 14ae 0B24     		movs	r4, #11
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 161
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 161
 
 
  5365              	.LVL447:
@@ -9658,7 +9658,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  713:src/main.cpp  ****             };
  5405              		.loc 6 713 50 view .LVU1779
  5406 14c4 F2EE047A 		vmov.f32	s15, #1.0e+1
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 162
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 162
 
 
  713:src/main.cpp  ****             };
@@ -9718,7 +9718,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5447              		.loc 6 712 24 view .LVU1793
  5448              	.LBE1253:
  5449              	.LBE1288:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 163
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 163
 
 
  5450              	.LBB1289:
@@ -9778,7 +9778,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5502 1548 CDCC4C3D 		.word	1028443341
  5503 154c 00F07F45 		.word	1166012416
  5504 1550 00000000 		.word	g_master_vol
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 164
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 164
 
 
  5505 1554 00000000 		.word	.LANCHOR3
@@ -9838,7 +9838,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5547 1584 08F11408 		add	r8, r8, #20
  5548 1588 042D     		cmp	r5, #4
  5549 158a EFD1     		bne	.L166
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 165
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 165
 
 
  5550              	.LBE977:
@@ -9898,7 +9898,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5586 15ac 9DF81F31 		ldrb	r3, [sp, #287]	@ zero_extendqisi2
  5587 15b0 8DF88330 		strb	r3, [sp, #131]
  636:src/main.cpp  **** 
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 166
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 166
 
 
  5588              		.loc 6 636 9 is_stmt 1 view .LVU1830
@@ -9958,7 +9958,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  383:src/main.cpp  ****         int   zone = (int)(p * 4.0f); if(zone > 3) zone = 3;
  5631              		.loc 6 383 9 discriminator 1 view .LVU1842
  383:src/main.cpp  ****         int   zone = (int)(p * 4.0f); if(zone > 3) zone = 3;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 167
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 167
 
 
  5632              		.loc 6 383 28 is_stmt 0 discriminator 1 view .LVU1843
@@ -10018,7 +10018,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5675 1624 B0EE677A 		vmov.f32	s14, s15
  5676 1628 BEEECF7A 		vcvt.s32.f32	s14, s14, #2
  5677 162c 17EE101A 		vmov	r1, s14	@ int
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 168
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 168
 
 
  390:src/main.cpp  ****         float v    = FIX_DRUM ? 1.0f : clampf((float)pressure / 100.0f, 0.0f, 1.0f);
@@ -10078,7 +10078,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5714              	.LVL470:
  391:src/main.cpp  ****         float amp  = 0.72f * ((1.0f - V.vel_sens) + V.vel_sens * v);
  5715              		.loc 6 391 9 is_stmt 1 view .LVU1876
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 169
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 169
 
 
  5716              	.LBB985:
@@ -10138,7 +10138,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5758              		.loc 6 394 9 is_stmt 1 view .LVU1892
  5759              	.LBB988:
  5760              	.LBI988:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 170
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 170
 
 
   14:src/dsp.h     **** }
@@ -10198,7 +10198,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5795              		.loc 6 396 47 view .LVU1909
  5796 16e0 A7EEA67A 		vfma.f32	s14, s15, s13
  396:src/main.cpp  ****         float tf = (V.keytrack >= 0.999f) ? freq
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 171
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 171
 
 
  5797              		.loc 6 396 36 view .LVU1910
@@ -10258,7 +10258,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5837              		.loc 8 13 16 is_stmt 0 view .LVU1924
  5838 171a F4EEE7AA 		vcmpe.f32	s21, s15
  5839 171e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 172
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 172
 
 
  5840 1722 00F19F81 		bmi	.L319
@@ -10318,7 +10318,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5882 175c ABEE667A 		vfms.f32	s14, s22, s13
   16:src/dsp.h     **** }
  5883              		.loc 8 16 49 view .LVU1937
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 173
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 173
 
 
  5884 1760 67EE877A 		vmul.f32	s15, s15, s14
@@ -10378,7 +10378,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5928              		.loc 8 19 48 is_stmt 0 view .LVU1948
  5929 17a6 F1EE084A 		vmov.f32	s9, #6.0e+0
  5930              	.LBE990:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 174
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 174
 
 
  5931              	.LBE1010:
@@ -10438,7 +10438,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  5978              	.LBB1016:
   18:src/dsp.h     ****     x = x<0?0:x>1?1:x; return x*x*x*(x*(x*6.0f - 15.0f) + 10.0f);
  5979              		.loc 8 18 21 view .LVU1962
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 175
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 175
 
 
  5980              	.LBB996:
@@ -10498,7 +10498,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6025              		.loc 6 802 24 discriminator 4 view .LVU1973
  6026 1800 EAEE066A 		vfma.f32	s13, s20, s12
  803:src/main.cpp  ****             }
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 176
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 176
 
 
  6027              		.loc 6 803 24 discriminator 4 view .LVU1974
@@ -10558,7 +10558,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6070              	.L339:
  845:src/main.cpp  ****             g_bitcrush      = bc;
  6071              		.loc 6 845 42 view .LVU1986
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 177
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 177
 
 
  6072              	.LBE1301:
@@ -10618,7 +10618,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  655:src/main.cpp  ****             float y = (freq_ratio - 1.0f) / (freq_ratio + 1.0f);
  6122              		.loc 6 655 19 view .LVU1991
  6123 18a4 CAEE857A 		vdiv.f32	s15, s21, s10
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 178
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 178
 
 
  6124              	.LVL498:
@@ -10678,7 +10678,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6162              		.loc 6 658 43 view .LVU2007
  6163 18dc E6EE245A 		vfma.f32	s11, s12, s9
  6164              	.LBB1146:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 179
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 179
 
 
  6165              	.LBB1096:
@@ -10738,7 +10738,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   12:src/dsp.h     ****     return v<lo?lo:v>hi?hi:v;
  6204              		.loc 8 12 21 is_stmt 1 view .LVU2023
  6205              	.LBB1085:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 180
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 180
 
 
   13:src/dsp.h     **** }
@@ -10798,7 +10798,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6247 1942 B0FA80FE 		clz	lr, r0
  6248 1946 4FEA5E1E 		lsr	lr, lr, #5
  6249 194a 0028     		cmp	r0, #0
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 181
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 181
 
 
  6250 194c 00F0A183 		beq	.L331
@@ -10858,7 +10858,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6291              	.LBB1063:
  160:src/voice.h   ****     int d = scale[i] - pc;
  6292              		.loc 7 160 21 view .LVU2050
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 182
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 182
 
 
  160:src/voice.h   ****     int d = scale[i] - pc;
@@ -10918,7 +10918,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6333              		.loc 7 169 27 view .LVU2064
  6334              	.LBE1066:
  6335              	.LBE1065:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 183
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 183
 
 
  171:src/voice.h   ****   semis_fifth = deg(idx + 4) - base;
@@ -10978,7 +10978,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6376              	.LBB1071:
  6377              	.LBB1072:
  169:src/voice.h   ****   int base = deg(idx);
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 184
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 184
 
 
  6378              		.loc 7 169 42 view .LVU2079
@@ -11038,7 +11038,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6417              		.loc 6 682 43 view .LVU2094
  6418 19ec B2EE08CA 		vmov.f32	s24, #1.2e+1
  681:src/main.cpp  ****                     g_chord_ratio2 = exp2f((float)third / 12.0f);
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 185
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 185
 
 
  6419              		.loc 6 681 33 view .LVU2095
@@ -11098,7 +11098,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6461              	.LVL529:
  6462              	.L498:
  683:src/main.cpp  ****                 }
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 186
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 186
 
 
  6463              		.loc 6 683 36 view .LVU2108
@@ -11158,7 +11158,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6507              	.LBB1261:
  712:src/main.cpp  ****                 return x*x*x*(x*(x*6.0f - 15.0f) + 10.0f);
  6508              		.loc 6 712 17 view .LVU2119
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 187
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 187
 
 
  6509 1a60 FEF759BF 		b	.L232
@@ -11218,7 +11218,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6553              	.LBE1019:
  6554              	.LBB1020:
  6555              	.LBB987:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 188
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 188
 
 
   13:src/dsp.h     **** }
@@ -11278,7 +11278,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  507:src/main.cpp  ****                     blink_start(cycle_pos(g_voice_idx), now); // confirm saved voice (non-blocking)
  6600              		.loc 6 507 21 view .LVU2140
  507:src/main.cpp  ****                     blink_start(cycle_pos(g_voice_idx), now); // confirm saved voice (non-blocking)
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 189
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 189
 
 
  6601              		.loc 6 507 35 view .LVU2141
@@ -11338,7 +11338,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
 1054:src/voice.h   ****       p++;
  6641              		.loc 7 1054 5 view .LVU2156
  6642 1ab6 09B9     		cbnz	r1, .L90
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 190
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 190
 
 
 1055:src/voice.h   ****   return p;
@@ -11398,7 +11398,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6684              	.LBE814:
  6685              	.LBE813:
  6686 1ad4 0997     		str	r7, [sp, #36]
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 191
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 191
 
 
  6687              	.LVL549:
@@ -11458,7 +11458,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6729              	.LBB829:
  345:src/main.cpp  ****         else     { leds_write(false); blink_on = false; }
  6730              		.loc 6 345 69 view .LVU2184
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 192
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 192
 
 
  6731 1af4 1093     		str	r3, [sp, #64]
@@ -11518,7 +11518,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6777              	.LVL557:
  639:src/main.cpp  **** 
  6778              		.loc 6 639 80 view .LVU2193
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 193
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 193
 
 
  6779 1b0e 574B     		ldr	r3, .L570+52
@@ -11578,7 +11578,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6819              		.loc 6 788 91 is_stmt 0 view .LVU2207
  6820 1b40 F6EE08BA 		vmov.f32	s23, #7.5e-1
  6821 1b44 9FED427A 		vldr.32	s14, .L570+24
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 194
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 194
 
 
  6822 1b48 FFF7ECBB 		b	.L206
@@ -11638,7 +11638,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6869 1b66 40D0     		beq	.L106
  533:src/main.cpp  ****                             preview_drum(1, MULTI_ZONES[1]);            // delayed snare
  6870              		.loc 6 533 54 is_stmt 0 discriminator 1 view .LVU2215
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 195
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 195
 
 
  6871 1b68 F31A     		subs	r3, r6, r3
@@ -11698,7 +11698,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6910 1b88 B4EEE78A 		vcmpe.f32	s16, s15
  6911 1b8c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  6912 1b90 00F1D082 		bmi	.L306
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 196
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 196
 
 
   13:src/dsp.h     **** }
@@ -11758,7 +11758,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6956              		.loc 6 535 38 view .LVU2241
  6957 1be0 1B93     		str	r3, [sp, #108]
  6958              	.LVL576:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 197
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 197
 
 
  6959              	.LBB724:
@@ -11818,7 +11818,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  6999              		.loc 6 338 23 view .LVU2255
  7000              	.LBB728:
  339:src/main.cpp  ****         hw.dac.WriteValue(DacHandle::Channel::TWO, on ? (uint16_t)LED2_MAX : 0);
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 198
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 198
 
 
  7001              		.loc 6 339 9 view .LVU2256
@@ -11878,7 +11878,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7044 1c22 1360     		str	r3, [r2]	@ float
  7045              	.LVL583:
  341:src/main.cpp  ****     };
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 199
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 199
 
 
  7046              		.loc 6 341 21 view .LVU2268
@@ -11938,7 +11938,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7087 1c3c ABAAAAAA 		.word	-1431655765
  7088 1c40 00000000 		.word	g_chord_ratio2
  7089 1c44 00000000 		.word	g_chord_ratio3
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 200
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 200
 
 
  7090 1c48 9A99593F 		.word	1062836634
@@ -11998,7 +11998,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7133              		.loc 7 1060 27 view .LVU2291
  7134              	.LBB749:
  7135              		.loc 7 1061 9 is_stmt 0 view .LVU2292
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 201
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 201
 
 
  7136 1c9e DFF874C3 		ldr	ip, .L572+108
@@ -12058,7 +12058,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7181              	.L97:
  519:src/main.cpp  ****                     }
  7182              		.loc 6 519 25 is_stmt 1 view .LVU2305
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 202
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 202
 
 
  7183              	.LVL591:
@@ -12118,7 +12118,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7222              	.LBE755:
  7223              	.LBE754:
  526:src/main.cpp  ****                         // Drums kit: a tap fires a kick + snare "one-two" (one-shots).
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 203
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 203
 
 
  7224              		.loc 6 526 36 view .LVU2321
@@ -12178,7 +12178,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7267              	.LBB1470:
  7268              	.LBB1043:
  7269              	.LBB1039:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 204
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 204
 
 
  7270              	.LBB1035:
@@ -12238,7 +12238,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7315              		.loc 6 888 28 view .LVU2341
  7316              	.LBE1471:
  7317              	.LBB1472:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 205
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 205
 
 
  7318              	.LBB1225:
@@ -12298,7 +12298,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7360              	.LBB1198:
  7361              	.LBB1191:
  7362              	.LBB1186:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 206
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 206
 
 
   13:src/dsp.h     **** }
@@ -12358,7 +12358,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  786:src/main.cpp  ****                 float l3_raw   = 2.0f * p01 - 1.0f;                 if(l3_raw < 0) l3_raw = 0;
  7405              		.loc 6 786 91 view .LVU2366
  7406 1daa 9FED9BBA 		vldr.32	s22, .L572+112
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 207
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 207
 
 
  7407 1dae C7E6     		b	.L276
@@ -12418,7 +12418,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7450              	.LVL610:
  7451              	.LBB826:
  7452              	.LBB824:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 208
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 208
 
 
  339:src/main.cpp  ****         hw.dac.WriteValue(DacHandle::Channel::TWO, on ? (uint16_t)LED2_MAX : 0);
@@ -12478,7 +12478,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7493              		.loc 6 409 15 is_stmt 0 view .LVU2391
  7494 1ddc 7C4B     		ldr	r3, .L572+40
  412:src/main.cpp  ****         float drive  = 1.0f + 0.6f * V.drive_max;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 209
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 209
 
 
  7495              		.loc 6 412 30 view .LVU2392
@@ -12538,7 +12538,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7537              		.loc 6 407 25 view .LVU2404
  7538              	.LBB776:
  408:src/main.cpp  ****         float freq   = V.freq_low;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 210
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 210
 
 
  7539              		.loc 6 408 9 view .LVU2405
@@ -12598,7 +12598,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7581              	.LBE777:
  7582              	.LBE785:
  7583              	.LBB786:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 211
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 211
 
 
  7584              	.LBB762:
@@ -12658,7 +12658,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7627              	.LVL622:
  420:src/main.cpp  ****     };
  7628              		.loc 6 420 27 view .LVU2429
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 212
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 212
 
 
  7629              	.LBE779:
@@ -12718,7 +12718,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7668              	.LVL624:
  339:src/main.cpp  ****         hw.dac.WriteValue(DacHandle::Channel::TWO, on ? (uint16_t)LED2_MAX : 0);
  7669              		.loc 6 339 26 view .LVU2445
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 213
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 213
 
 
  7670 1e76 4F48     		ldr	r0, .L572+12
@@ -12778,7 +12778,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7711 1e96 0B97     		str	r7, [sp, #44]
  7712              	.LBE890:
  7713              	.LBE891:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 214
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 214
 
 
  7714              	.LBE894:
@@ -12838,7 +12838,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7762              	.LBE1385:
  7763              	.LBE1478:
  7764              	.LBB1479:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 215
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 215
 
 
  7765              	.LBB926:
@@ -12898,7 +12898,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7806              	.LVL636:
 1053:src/voice.h   ****     if (!VOICES[i].no_cycle)
  7807              		.loc 7 1053 28 view .LVU2478
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 216
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 216
 
 
  7808 1ece C032     		adds	r2, r2, #192
@@ -12958,7 +12958,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7847              		.loc 7 1046 21 view .LVU2493
  7848 1ee6 4448     		ldr	r0, .L572+80
  7849 1ee8 9842     		cmp	r0, r3
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 217
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 217
 
 
  7850 1eea F7D1     		bne	.L88
@@ -13018,7 +13018,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7891              	.LBB857:
  7892              	.LBB858:
  128:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h ****     }
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 218
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 218
 
 
  7893              		.loc 1 128 23 view .LVU2507
@@ -13078,7 +13078,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  7938              		.loc 6 485 27 is_stmt 1 view .LVU2516
  486:src/main.cpp  ****                         blink_start(cycle_pos(g_voice_idx), now);  // blink the current voice numbe
  7939              		.loc 6 486 45 is_stmt 0 view .LVU2517
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 219
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 219
 
 
  7940 1f30 1E4A     		ldr	r2, .L572+4
@@ -13138,7 +13138,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
 1054:src/voice.h   ****       p++;
  7981              		.loc 7 1054 5 is_stmt 0 view .LVU2531
  7982 1f56 90F87C20 		ldrb	r2, [r0, #124]	@ zero_extendqisi2
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 220
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 220
 
 
 1053:src/voice.h   ****     if (!VOICES[i].no_cycle)
@@ -13198,7 +13198,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8022 1f76 0BB9     		cbnz	r3, .L77
 1048:src/voice.h   ****   return n;
  8023              		.loc 7 1048 8 view .LVU2547
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 221
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 221
 
 
  8024 1f78 0CF1010C 		add	ip, ip, #1
@@ -13258,7 +13258,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8068 1f9e 9FED1E7A 		vldr.32	s14, .L572+112
  8069 1fa2 B0EE67CA 		vmov.f32	s24, s15
  8070 1fa6 E6E6     		b	.L287
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 222
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 222
 
 
  8071              	.L573:
@@ -13318,7 +13318,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8120 2034 F0EE67BA 		vmov.f32	s23, s15
  8121 2038 FFF750B9 		b	.L509
  8122              	.LVL665:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 223
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 223
 
 
  8123              	.L368:
@@ -13378,7 +13378,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8164 2058 0E27     		movge	r7, #14
  8165 205a 002B     		cmp	r3, #0
  8166 205c 09DB     		blt	.L243
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 224
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 224
 
 
  8167 205e 864A     		ldr	r2, .L574+4
@@ -13438,7 +13438,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
 1048:src/voice.h   ****   return n;
  8207              		.loc 7 1048 7 view .LVU2590
 1047:src/voice.h   ****       n++;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 225
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 225
 
 
  8208              		.loc 7 1047 5 is_stmt 0 view .LVU2591
@@ -13498,7 +13498,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8250              	.LBB1093:
  8251              	.LBB1082:
  8252              	.LBB1080:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 226
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 226
 
 
  8253              	.LBB1077:
@@ -13558,7 +13558,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8297              	.LVL680:
  8298              	.L100:
 1054:src/voice.h   ****       p++;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 227
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 227
 
 
  8299              		.loc 7 1054 5 is_stmt 1 view .LVU2614
@@ -13618,7 +13618,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8338 20c8 C033     		adds	r3, r3, #192
 1047:src/voice.h   ****       n++;
  8339              		.loc 7 1047 5 view .LVU2630
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 228
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 228
 
 
  8340 20ca 00B9     		cbnz	r0, .L101
@@ -13678,7 +13678,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8381 20e2 6A48     		ldr	r0, .L574+24
  8382 20e4 FFF7FEFF 		bl	_ZN5daisy6LoggerILNS_17LoggerDestinationE1EE9PrintLineEPKcz
  8383              	.LVL689:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 229
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 229
 
 
  129:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h **** 
@@ -13738,7 +13738,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8427              		.loc 6 348 23 view .LVU2654
  8428              	.LBB736:
  352:src/main.cpp  ****     };
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 230
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 230
 
 
  8429              		.loc 6 352 34 view .LVU2655
@@ -13798,7 +13798,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8471              		.loc 6 352 52 is_stmt 1 view .LVU2667
  352:src/main.cpp  ****     };
  8472              		.loc 6 352 69 view .LVU2668
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 231
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 231
 
 
  352:src/main.cpp  ****     };
@@ -13858,7 +13858,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8520              	.LVL701:
  8521              	.L491:
  788:src/main.cpp  ****                 led1_target    = sqrtf(sqrtf(l2_raw)) * prs_mult;  // middle tent
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 232
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 232
 
 
  8522              		.loc 6 788 58 view .LVU2676
@@ -13918,7 +13918,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8563              	.L478:
  129:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_seed.h **** 
  8564              		.loc 1 129 5 view .LVU2690
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 233
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 233
 
 
  8565              	.LBE1508:
@@ -13978,7 +13978,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8609              	.LBB873:
  8610              	.LBB862:
  8611              	.LBB848:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 234
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 234
 
 
 1052:src/voice.h   ****   for (int i = 0; i <= idx && i < NUM_VOICES; i++)
@@ -14038,7 +14038,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8660              	.LBB1202:
  791:src/main.cpp  ****             }
  8661              		.loc 6 791 39 view .LVU2707
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 235
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 235
 
 
  8662 21c4 B0EE4C0A 		vmov.f32	s0, s24
@@ -14098,7 +14098,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8709 2200 9FED293A 		vldr.32	s6, .L574+52
  842:src/main.cpp  ****             float rm    = smoothstep2(rm_in) * VOICE.ringmod_max;
  8710              		.loc 6 842 41 view .LVU2715
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 236
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 236
 
 
  8711 2204 36EE634A 		vsub.f32	s8, s12, s7
@@ -14158,7 +14158,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8756              		.loc 6 216 33 view .LVU2724
  8757 222c FFF7FEFF 		bl	sqrtf
  8758              	.LVL726:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 237
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 237
 
 
  8759 2230 B0EE407A 		vmov.f32	s14, s0
@@ -14218,7 +14218,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8804              	.LVL735:
  8805              	.L484:
  215:src/main.cpp  ****             float led3   = sqrtf(sqrtf(l3_raw)) * LED3_INTENSITY; // pos 1 (PWM A0)
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 238
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 238
 
 
  8806              		.loc 6 215 33 view .LVU2734
@@ -14278,7 +14278,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8858              	.LBB1541:
  8859              	.LBI1541:
  8860              		.loc 6 920 1 view .LVU2738
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 239
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 239
 
 
  8861              	.LVL740:
@@ -14338,7 +14338,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   45:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****          *  \param E_SWITCHING_MODES - An error was encountered while switching QSPI peripheral mod
   46:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****          *  \param E_INVALID_MODE - QSPI should not be written to while the program is executing fr
   47:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****          */
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 240
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 240
 
 
   48:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****     enum Status
@@ -14398,7 +14398,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  102:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h **** 
  103:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****     /** Returns the current config. */
  104:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****     const Config& GetConfig() const;
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 241
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 241
 
 
  105:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h **** 
@@ -14458,7 +14458,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  159:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****      *  to write to it use the Write function.
  160:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****      * 
  161:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****      *  \param offset returns the pointer starting this 
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 242
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 242
 
 
  162:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/qspi.h ****      *                many bytes into the memory
@@ -14518,7 +14518,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8916              		.loc 5 95 35 is_stmt 0 view .LVU2747
  8917 000c 4461     		str	r4, [r0, #20]
  8918              	.LVL742:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 243
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 243
 
 
   95:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/audio.h ****     ~AudioHandle() {}
@@ -14578,7 +14578,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   40:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/dac.h ****      **
   41:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/dac.h ****      ** Polling mode uses the blocking mode to transmit a single value at a time.
   42:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/dac.h ****      **
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 244
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 244
 
 
   43:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/dac.h ****      ** DMA mode uses a buffer, and periodically transmits it triggering a 
@@ -14638,7 +14638,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   40:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/usb.h **** 
  8943              		.loc 3 40 5 is_stmt 1 view .LVU2754
   40:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/usb.h **** 
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 245
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 245
 
 
  8944              		.loc 3 40 5 is_stmt 0 view .LVU2755
@@ -14698,7 +14698,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   43:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h **** {
   44:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h ****   public:
   45:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h ****     /** Contains settings for initialising an SAI Interface */
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 246
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 246
 
 
   46:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h ****     struct Config
@@ -14758,7 +14758,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  100:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h **** 
  101:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h ****     /** Return values for SAI functions */
  102:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h ****     enum class Result
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 247
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 247
 
 
  103:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/sai.h ****     {
@@ -14818,7 +14818,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   30:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         ANALOG,    /**< Analog for connection to ADC or DAC peripheral */
   31:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     };
   32:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h **** 
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 248
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 248
 
 
   33:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****     /** @brief Configures whether an internal Pull up or Pull down resistor is used. 
@@ -14878,7 +14878,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
    2:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #ifndef DSY_CORE_HW_H
    3:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define DSY_CORE_HW_H /**< & */
    4:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #include <stdint.h>
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 249
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 249
 
 
    5:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #include <stdlib.h>
@@ -14938,7 +14938,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
   59:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** 
   60:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** /** shorthand macro for simplifying the reading of the right 
   61:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  channel of a non-interleaved input buffer named in */
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 250
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 250
 
 
   62:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** #define IN_R in[1]
@@ -14998,7 +14998,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  116:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     Converts Signed 16-bit to float
  117:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     \param x Number to be scaled.
  118:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****     \return Scaled number.
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 251
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 251
 
 
  119:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** */
@@ -15058,7 +15058,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  173:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  the hardware.
  174:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  * 
  175:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  This along with the dsy_gpio_pin class should no longer be used.
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 252
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 252
 
 
  176:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  They are available for backwards compatability. 
@@ -15118,7 +15118,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  230:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  * 
  231:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  *  Please use Pin struct instead.
  232:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h ****  */
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 253
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 253
 
 
  233:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/daisy_core.h **** FORCE_INLINE uint8_t dsy_pin_cmp(dsy_gpio_pin *a, dsy_gpio_pin *b)
@@ -15178,7 +15178,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  8995 001c C3E90244 		strd	r4, r4, [r3, #8]
  8996              	.LVL746:
   69:/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/per/gpio.h ****         {
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 254
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 254
 
 
  8997              		.loc 12 69 73 view .LVU2768
@@ -15238,7 +15238,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  9044      616D00
  9045 0037 00       		.align	2
  9046              	.LC35:
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 255
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 255
 
 
  9047 0038 47756974 		.ascii	"Guitar\000"
@@ -15298,7 +15298,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  9088              		.set	.LANCHOR5,. + 0
  9091              	g_active_voice:
  9092 0000 02000000 		.word	2
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 256
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 256
 
 
  9093              		.section	.data.g_voice_idx,"aw"
@@ -15358,7 +15358,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  9157 003d 01       		.byte	1
  9158 003e 0000     		.space	2
  9159 0040 9A99993E 		.word	1050253722
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 257
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 257
 
 
  9160 0044 00004041 		.word	1094713344
@@ -15418,7 +15418,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  9206 0180 10000000 		.word	.LC31
  9207 0184 00002042 		.word	1109393408
  9208 0188 00003443 		.word	1127481344
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 258
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 258
 
 
  9209 018c B285C03F 		.word	1069581746
@@ -15478,7 +15478,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  9259 027d 00       		.byte	0
  9260 027e 0000     		.space	2
  9261 0280 CDCC4C3E 		.word	1045220557
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 259
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 259
 
 
  9262 0284 00005041 		.word	1095761920
@@ -15538,7 +15538,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  9312 0380 00000000 		.word	0
  9313 0384 00000000 		.word	0
  9314 0388 01       		.byte	1
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 260
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 260
 
 
  9315 0389 000000   		.space	3
@@ -15598,7 +15598,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  9362 0484 0000A042 		.word	1117782016
  9363 0488 0000A043 		.word	1134559232
  9364 048c F371B13F 		.word	1068593651
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 261
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 261
 
 
  9365 0490 0000803F 		.word	1065353216
@@ -15658,7 +15658,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  9415 0559 000000   		.space	3
  9416 055c 9CC4803F 		.word	1065403548
  9417 0560 9A99993E 		.word	1050253722
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 262
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 262
 
 
  9418 0564 03       		.byte	3
@@ -15718,7 +15718,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  9468 0654 9A99993E 		.word	1050253722
  9469 0658 0000803F 		.word	1065353216
  9470 065c 00000000 		.word	0
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 263
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 263
 
 
  9471 0660 CDCCCC3D 		.word	1036831949
@@ -15778,7 +15778,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  9521 0740 9A99593F 		.word	1062836634
  9522 0744 0000C843 		.word	1137180672
  9523 0748 00000000 		.space	56
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 264
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 264
 
 
  9523      00000000 
@@ -15838,7 +15838,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  9570 0854 CDCCCC3D 		.word	1036831949
  9571 0858 02       		.byte	2
  9572 0859 000000   		.space	3
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 265
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 265
 
 
  9573 085c 3D0AD73F 		.word	1071057469
@@ -15898,7 +15898,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  9623 0938 00000000 		.word	0
  9624 093c 02       		.byte	2
  9625 093d 00       		.byte	0
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 266
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 266
 
 
  9626 093e 0000     		.space	2
@@ -15958,7 +15958,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  9676 09fd 00       		.byte	0
  9677 09fe 0000     		.space	2
  9678 0a00 CDCC4C3F 		.word	1061997773
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 267
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 267
 
 
  9679 0a04 00001041 		.word	1091567616
@@ -16018,7 +16018,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  9729 0ac0 00004040 		.word	1077936128
  9730 0ac4 00000040 		.word	1073741824
  9731 0ac8 CDCC4C3E 		.word	1045220557
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 268
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 268
 
 
  9732 0acc 0000803F 		.word	1065353216
@@ -16078,7 +16078,7 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  9784              		.file 43 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/hid/logger.h"
  9785              		.file 44 "/Users/reza.kalfane/Workspaces/Daisy/DaisyExamples/libDaisy/src/dev/sdram.h"
  9786              		.file 45 "/Library/DaisyToolchain/0.2.0/arm/lib/gcc/arm-none-eabi/10.3.1/include/stdarg.h"
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 269
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 269
 
 
  9787              		.file 46 "/Library/DaisyToolchain/0.2.0/arm/arm-none-eabi/include/stdio.h"
@@ -16091,74 +16091,74 @@ ARM GAS  /tmp/claude-502/ccENeznH.s 			page 1
  9794              		.file 53 "src/serialtune.h"
  9795              		.file 54 "src/persist.h"
  9796              		.file 55 "<built-in>"
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 270
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 270
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 main.cpp
-/tmp/claude-502/ccENeznH.s:19     .text._ZN5daisy9DaisySeedD2Ev:0000000000000000 $t
-/tmp/claude-502/ccENeznH.s:26     .text._ZN5daisy9DaisySeedD2Ev:0000000000000000 _ZN5daisy9DaisySeedD2Ev
-/tmp/claude-502/ccENeznH.s:26     .text._ZN5daisy9DaisySeedD2Ev:0000000000000000 _ZN5daisy9DaisySeedD1Ev
-/tmp/claude-502/ccENeznH.s:67     .text._Z13quantize_midifPKai:0000000000000000 $t
-/tmp/claude-502/ccENeznH.s:74     .text._Z13quantize_midifPKai:0000000000000000 _Z13quantize_midifPKai
-/tmp/claude-502/ccENeznH.s:224    .text._Z13quantize_midifPKai:0000000000000088 $d
-/tmp/claude-502/ccENeznH.s:229    .text._Z8make_barPclli:0000000000000000 $t
-/tmp/claude-502/ccENeznH.s:236    .text._Z8make_barPclli:0000000000000000 _Z8make_barPclli
-/tmp/claude-502/ccENeznH.s:332    .text._Z12make_pos_barPci:0000000000000000 $t
-/tmp/claude-502/ccENeznH.s:339    .text._Z12make_pos_barPci:0000000000000000 _Z12make_pos_barPci
-/tmp/claude-502/ccENeznH.s:454    .text._Z12make_pos_barPci:000000000000006c $d
-/tmp/claude-502/ccENeznH.s:459    .rodata.main.str1.4:0000000000000000 $d
-/tmp/claude-502/ccENeznH.s:550    .text.startup.main:0000000000000000 $t
-/tmp/claude-502/ccENeznH.s:557    .text.startup.main:0000000000000000 main
-/tmp/claude-502/ccENeznH.s:754    .text.startup.main:00000000000000c4 $d
-/tmp/claude-502/ccENeznH.s:763    .text.startup.main:00000000000000dc $t
-/tmp/claude-502/ccENeznH.s:1528   .text.startup.main:0000000000000374 $d
-/tmp/claude-502/ccENeznH.s:1559   .text.startup.main:00000000000003e4 $t
-/tmp/claude-502/ccENeznH.s:2287   .text.startup.main:0000000000000744 $d
-/tmp/claude-502/ccENeznH.s:2309   .text.startup.main:0000000000000790 $t
-/tmp/claude-502/ccENeznH.s:3195   .text.startup.main:0000000000000ae4 $d
-/tmp/claude-502/ccENeznH.s:3232   .text.startup.main:0000000000000b50 $t
-/tmp/claude-502/ccENeznH.s:3936   .text.startup.main:0000000000000e40 $d
-/tmp/claude-502/ccENeznH.s:3966   .text.startup.main:0000000000000e88 $t
-/tmp/claude-502/ccENeznH.s:4657   .text.startup.main:00000000000011a4 $d
-/tmp/claude-502/ccENeznH.s:4679   .text.startup.main:00000000000011e4 $t
-/tmp/claude-502/ccENeznH.s:5492   .text.startup.main:0000000000001520 $d
-/tmp/claude-502/ccENeznH.s:5515   .text.startup.main:0000000000001560 $t
-/tmp/claude-502/ccENeznH.s:6083   .text.startup.main:000000000000182c $d
-/tmp/claude-502/ccENeznH.s:6116   .text.startup.main:0000000000001898 $t
-/tmp/claude-502/ccENeznH.s:7086   .text.startup.main:0000000000001c38 $d
-/tmp/claude-502/ccENeznH.s:7115   .text.startup.main:0000000000001c94 $t
-/tmp/claude-502/ccENeznH.s:8074   .text.startup.main:0000000000001fa8 $d
-/tmp/claude-502/ccENeznH.s:8106   .text.startup.main:000000000000201c $t
-/tmp/claude-502/ccENeznH.s:8823   .text.startup.main:0000000000002274 $d
-/tmp/claude-502/ccENeznH.s:8846   .text.startup._GLOBAL__sub_I_g_voice_idx:0000000000000000 $t
-/tmp/claude-502/ccENeznH.s:8852   .text.startup._GLOBAL__sub_I_g_voice_idx:0000000000000000 _GLOBAL__sub_I_g_voice_idx
-/tmp/claude-502/ccENeznH.s:9012   .text.startup._GLOBAL__sub_I_g_voice_idx:0000000000000028 $d
-/tmp/claude-502/ccENeznH.s:9020   .init_array:0000000000000000 $d
-/tmp/claude-502/ccENeznH.s:9084   .bss.led3:0000000000000000 led3
-/tmp/claude-502/ccENeznH.s:9077   .bss.hw:0000000000000000 hw
-/tmp/claude-502/ccENeznH.s:9091   .data.g_active_voice:0000000000000000 g_active_voice
-/tmp/claude-502/ccENeznH.s:9098   .data.g_voice_idx:0000000000000000 g_voice_idx
-/tmp/claude-502/ccENeznH.s:9027   .rodata.str1.4:0000000000000000 $d
-/tmp/claude-502/ccENeznH.s:9073   .bss.hw:0000000000000000 $d
-/tmp/claude-502/ccENeznH.s:9080   .bss.led3:0000000000000000 $d
-/tmp/claude-502/ccENeznH.s:9087   .data.g_active_voice:0000000000000000 $d
-/tmp/claude-502/ccENeznH.s:9094   .data.g_voice_idx:0000000000000000 $d
-/tmp/claude-502/ccENeznH.s:9101   .rodata._ZL11MULTI_ZONES:0000000000000000 $d
-/tmp/claude-502/ccENeznH.s:9105   .rodata._ZL11MULTI_ZONES:0000000000000000 _ZL11MULTI_ZONES
-/tmp/claude-502/ccENeznH.s:9111   .rodata._ZL11SCALE_MAJOR:0000000000000000 $d
-/tmp/claude-502/ccENeznH.s:9114   .rodata._ZL11SCALE_MAJOR:0000000000000000 _ZL11SCALE_MAJOR
-/tmp/claude-502/ccENeznH.s:9117   .rodata._ZL11SCALE_MINOR:0000000000000000 $d
-/tmp/claude-502/ccENeznH.s:9120   .rodata._ZL11SCALE_MINOR:0000000000000000 _ZL11SCALE_MINOR
-/tmp/claude-502/ccENeznH.s:9123   .rodata._ZL15MULTI_INTERVALS:0000000000000000 $d
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 271
+/tmp/claude-502/ccEhnz3I.s:19     .text._ZN5daisy9DaisySeedD2Ev:0000000000000000 $t
+/tmp/claude-502/ccEhnz3I.s:26     .text._ZN5daisy9DaisySeedD2Ev:0000000000000000 _ZN5daisy9DaisySeedD2Ev
+/tmp/claude-502/ccEhnz3I.s:26     .text._ZN5daisy9DaisySeedD2Ev:0000000000000000 _ZN5daisy9DaisySeedD1Ev
+/tmp/claude-502/ccEhnz3I.s:67     .text._Z13quantize_midifPKai:0000000000000000 $t
+/tmp/claude-502/ccEhnz3I.s:74     .text._Z13quantize_midifPKai:0000000000000000 _Z13quantize_midifPKai
+/tmp/claude-502/ccEhnz3I.s:224    .text._Z13quantize_midifPKai:0000000000000088 $d
+/tmp/claude-502/ccEhnz3I.s:229    .text._Z8make_barPclli:0000000000000000 $t
+/tmp/claude-502/ccEhnz3I.s:236    .text._Z8make_barPclli:0000000000000000 _Z8make_barPclli
+/tmp/claude-502/ccEhnz3I.s:332    .text._Z12make_pos_barPci:0000000000000000 $t
+/tmp/claude-502/ccEhnz3I.s:339    .text._Z12make_pos_barPci:0000000000000000 _Z12make_pos_barPci
+/tmp/claude-502/ccEhnz3I.s:454    .text._Z12make_pos_barPci:000000000000006c $d
+/tmp/claude-502/ccEhnz3I.s:459    .rodata.main.str1.4:0000000000000000 $d
+/tmp/claude-502/ccEhnz3I.s:550    .text.startup.main:0000000000000000 $t
+/tmp/claude-502/ccEhnz3I.s:557    .text.startup.main:0000000000000000 main
+/tmp/claude-502/ccEhnz3I.s:754    .text.startup.main:00000000000000c4 $d
+/tmp/claude-502/ccEhnz3I.s:763    .text.startup.main:00000000000000dc $t
+/tmp/claude-502/ccEhnz3I.s:1528   .text.startup.main:0000000000000374 $d
+/tmp/claude-502/ccEhnz3I.s:1559   .text.startup.main:00000000000003e4 $t
+/tmp/claude-502/ccEhnz3I.s:2287   .text.startup.main:0000000000000744 $d
+/tmp/claude-502/ccEhnz3I.s:2309   .text.startup.main:0000000000000790 $t
+/tmp/claude-502/ccEhnz3I.s:3195   .text.startup.main:0000000000000ae4 $d
+/tmp/claude-502/ccEhnz3I.s:3232   .text.startup.main:0000000000000b50 $t
+/tmp/claude-502/ccEhnz3I.s:3936   .text.startup.main:0000000000000e40 $d
+/tmp/claude-502/ccEhnz3I.s:3966   .text.startup.main:0000000000000e88 $t
+/tmp/claude-502/ccEhnz3I.s:4657   .text.startup.main:00000000000011a4 $d
+/tmp/claude-502/ccEhnz3I.s:4679   .text.startup.main:00000000000011e4 $t
+/tmp/claude-502/ccEhnz3I.s:5492   .text.startup.main:0000000000001520 $d
+/tmp/claude-502/ccEhnz3I.s:5515   .text.startup.main:0000000000001560 $t
+/tmp/claude-502/ccEhnz3I.s:6083   .text.startup.main:000000000000182c $d
+/tmp/claude-502/ccEhnz3I.s:6116   .text.startup.main:0000000000001898 $t
+/tmp/claude-502/ccEhnz3I.s:7086   .text.startup.main:0000000000001c38 $d
+/tmp/claude-502/ccEhnz3I.s:7115   .text.startup.main:0000000000001c94 $t
+/tmp/claude-502/ccEhnz3I.s:8074   .text.startup.main:0000000000001fa8 $d
+/tmp/claude-502/ccEhnz3I.s:8106   .text.startup.main:000000000000201c $t
+/tmp/claude-502/ccEhnz3I.s:8823   .text.startup.main:0000000000002274 $d
+/tmp/claude-502/ccEhnz3I.s:8846   .text.startup._GLOBAL__sub_I_g_voice_idx:0000000000000000 $t
+/tmp/claude-502/ccEhnz3I.s:8852   .text.startup._GLOBAL__sub_I_g_voice_idx:0000000000000000 _GLOBAL__sub_I_g_voice_idx
+/tmp/claude-502/ccEhnz3I.s:9012   .text.startup._GLOBAL__sub_I_g_voice_idx:0000000000000028 $d
+/tmp/claude-502/ccEhnz3I.s:9020   .init_array:0000000000000000 $d
+/tmp/claude-502/ccEhnz3I.s:9084   .bss.led3:0000000000000000 led3
+/tmp/claude-502/ccEhnz3I.s:9077   .bss.hw:0000000000000000 hw
+/tmp/claude-502/ccEhnz3I.s:9091   .data.g_active_voice:0000000000000000 g_active_voice
+/tmp/claude-502/ccEhnz3I.s:9098   .data.g_voice_idx:0000000000000000 g_voice_idx
+/tmp/claude-502/ccEhnz3I.s:9027   .rodata.str1.4:0000000000000000 $d
+/tmp/claude-502/ccEhnz3I.s:9073   .bss.hw:0000000000000000 $d
+/tmp/claude-502/ccEhnz3I.s:9080   .bss.led3:0000000000000000 $d
+/tmp/claude-502/ccEhnz3I.s:9087   .data.g_active_voice:0000000000000000 $d
+/tmp/claude-502/ccEhnz3I.s:9094   .data.g_voice_idx:0000000000000000 $d
+/tmp/claude-502/ccEhnz3I.s:9101   .rodata._ZL11MULTI_ZONES:0000000000000000 $d
+/tmp/claude-502/ccEhnz3I.s:9105   .rodata._ZL11MULTI_ZONES:0000000000000000 _ZL11MULTI_ZONES
+/tmp/claude-502/ccEhnz3I.s:9111   .rodata._ZL11SCALE_MAJOR:0000000000000000 $d
+/tmp/claude-502/ccEhnz3I.s:9114   .rodata._ZL11SCALE_MAJOR:0000000000000000 _ZL11SCALE_MAJOR
+/tmp/claude-502/ccEhnz3I.s:9117   .rodata._ZL11SCALE_MINOR:0000000000000000 $d
+/tmp/claude-502/ccEhnz3I.s:9120   .rodata._ZL11SCALE_MINOR:0000000000000000 _ZL11SCALE_MINOR
+/tmp/claude-502/ccEhnz3I.s:9123   .rodata._ZL15MULTI_INTERVALS:0000000000000000 $d
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 271
 
 
-/tmp/claude-502/ccENeznH.s:9127   .rodata._ZL15MULTI_INTERVALS:0000000000000000 _ZL15MULTI_INTERVALS
-/tmp/claude-502/ccENeznH.s:9133   .rodata._ZL6VOICES:0000000000000000 $d
-/tmp/claude-502/ccENeznH.s:9137   .rodata._ZL6VOICES:0000000000000000 _ZL6VOICES
-/tmp/claude-502/ccENeznH.s:9746   .rodata._ZN5daisy4seedL2A0E:0000000000000000 $d
-/tmp/claude-502/ccENeznH.s:9750   .rodata._ZN5daisy4seedL2A0E:0000000000000000 _ZN5daisy4seedL2A0E
+/tmp/claude-502/ccEhnz3I.s:9127   .rodata._ZL15MULTI_INTERVALS:0000000000000000 _ZL15MULTI_INTERVALS
+/tmp/claude-502/ccEhnz3I.s:9133   .rodata._ZL6VOICES:0000000000000000 $d
+/tmp/claude-502/ccEhnz3I.s:9137   .rodata._ZL6VOICES:0000000000000000 _ZL6VOICES
+/tmp/claude-502/ccEhnz3I.s:9746   .rodata._ZN5daisy4seedL2A0E:0000000000000000 $d
+/tmp/claude-502/ccEhnz3I.s:9750   .rodata._ZN5daisy4seedL2A0E:0000000000000000 _ZN5daisy4seedL2A0E
                            .group:0000000000000000 _ZN5daisy9DaisySeedD5Ev
 
 UNDEFINED SYMBOLS
@@ -16211,7 +16211,7 @@ _Z16capture_baselinePt
 powf
 _ZN5daisy9DaisySeed15AudioSampleRateEv
 _Z12drum_triggerR7DrumHitifffff
-ARM GAS  /tmp/claude-502/ccENeznH.s 			page 272
+ARM GAS  /tmp/claude-502/ccEhnz3I.s 			page 272
 
 
 g_hits
