@@ -164,7 +164,11 @@ class FieldRow:
         self._loading = True
         try:
             if self.typ in ("f", "i"):
-                v = float(kv[self.field])
+                try:
+                    v = float(kv[self.field])
+                except (ValueError, TypeError):
+                    return                 # garbled dump value (USB glitch) → skip;
+                                           # a later refresh reloads it cleanly
                 self.spin.setValue(int(v) if self.typ == "i" else v)
                 self.slider.setValue(self._to_slider(v))
             elif self.typ == "b":
@@ -560,29 +564,34 @@ class Tuner(QtWidgets.QMainWindow):
     def _save(self):
         if not self._require_link():
             return
+        nm = self.name.text().strip()
+        i = self.voice.currentIndex()
+        if QtWidgets.QMessageBox.question(
+                self, "Save to flash",
+                f"Save voice {i} '{nm}' to flash, overwriting the stored version "
+                f"in the bank?") != QtWidgets.QMessageBox.Yes:
+            return
         # Push the current name first — don't rely on the line-edit's
         # editingFinished having fired (clicking a button doesn't reliably emit
         # it before the click handler on macOS), or `save` commits the stale
         # live name. The two lines are parsed FIFO, so `set name` lands first.
-        nm = self.name.text().strip()
         self.link.send(f"set name {nm}")
         self.link.send("save")
-        i = self.voice.currentIndex()
         self.voice.setItemText(i, f"{i}: {nm}")
-        self.append_log(f"saved → flash ({nm})")
+        self.append_log(f"saved → flash ({i}: {nm})")
 
     def _revert(self):
         if not self._require_link():
             return
+        i = self.voice.currentIndex()
         if QtWidgets.QMessageBox.question(
                 self, "Revert to factory",
-                f"Reset '{self.name.text().strip()}' to its source default and "
-                f"overwrite the saved version in flash?") != QtWidgets.QMessageBox.Yes:
+                f"Reset voice {i} '{self.name.text().strip()}' to its source "
+                f"default and overwrite the saved version in flash?") != QtWidgets.QMessageBox.Yes:
             return
         self.link.send("factory")
         # Repaint the name immediately from the known factory name (the device is
         # busy writing flash, so a refresh can race); then reload params.
-        i = self.voice.currentIndex()
         if 0 <= i < len(schema.VOICE_NAMES):
             self.name.setText(schema.VOICE_NAMES[i])
             self.voice.setItemText(i, f"{i}: {schema.VOICE_NAMES[i]}")
@@ -784,10 +793,16 @@ class Tuner(QtWidgets.QMainWindow):
             self.bridge.finished.emit("restore", e)
 
     def _on_progress(self, done, total, name):
-        if self._progress:
-            self._progress.setMaximum(total)
-            self._progress.setValue(done)
-            self._progress.setLabelText(f"{done}/{total}  {name}")
+        # A modal QProgressDialog.setValue() pumps the event loop, which can
+        # deliver the queued `finished` signal mid-call → _on_finished clears
+        # self._progress. Hold a local ref and call setValue() LAST, so nothing
+        # here touches a dialog that was cleared out from under us.
+        dlg = self._progress
+        if dlg is None:
+            return
+        dlg.setMaximum(total)
+        dlg.setLabelText(f"{done}/{total}  {name}")
+        dlg.setValue(done)
 
     def _on_finished(self, op, payload):
         if self._progress:

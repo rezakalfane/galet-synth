@@ -4,6 +4,21 @@ All notable changes to GaletSynth are documented here.
 
 ## [Unreleased]
 
+### Added / Fixed — `feat: VoiceLab save confirmation + robustness`
+- **Save confirmation** (`voicelab_gui.py`): the **Save to flash** button now asks
+  for confirmation (same pattern as Revert / Revert all) before overwriting the
+  stored voice. The Save and Revert dialogs name the **voice number** too
+  (e.g. "Save voice 9 'Kick' to flash…").
+- **Fixed a `float()` crash on a garbled dump** (`galetsynth/link.py`,
+  `voicelab_gui.py`): a USB framing glitch can merge two reply lines into one
+  (e.g. `osc1_ratio=1.0000\r$$oct_wave=sine`). `dump()` now splits on any embedded
+  CR/LF so each `key=value` parses cleanly, and the row `load()` skips an
+  unparseable value (a later refresh reloads it) instead of taking down the GUI.
+- **Fixed a backup/restore progress-dialog crash** (`voicelab_gui.py`): the modal
+  `QProgressDialog.setValue()` pumps the event loop, which could deliver the
+  `finished` signal mid-update and clear `self._progress` → `AttributeError` on the
+  next line. `_on_progress` now holds a local ref and calls `setValue()` last.
+
 ### Changed — `feat: Drums kit plays the real drum voices`
 - **`engine.cpp` / `engine.h`**: each polyphonic `DrumHit` now runs the **4-pole
   Moog ladder with its drum voice's own `resonance`** (the same filter the mono
