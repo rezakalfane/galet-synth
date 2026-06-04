@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GaletSynth — Interactive Development Timeline</title>
+<style>
+  :root{
+    --bg:#0c0e14; --panel:#141822; --panel2:#1b2030; --ink:#e7ecf5; --muted:#8b97ad;
+    --line:#2a3142; --main:#cbd5e1;
+    --feat:#4f8cff; --fix:#ff6b6b; --docs:#a78bfa; --refactor:#f5a623;
+    --test:#22c55e; --chore:#94a3b8; --merge:#e879f9; --other:#5eead4;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  body{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+  a{color:var(--feat)}
+  header{flex:none;padding:22px 30px 12px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#11151f,#0c0e14)}
+  h1{margin:0 0 4px;font-size:23px;letter-spacing:.2px}
+  h1 .tag{font-size:12px;font-weight:600;color:#0c0e14;background:var(--merge);
+    padding:2px 8px;border-radius:20px;vertical-align:middle;margin-left:8px}
+  .sub{color:var(--muted);font-size:13px}
+  .stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:8px 14px;min-width:96px}
+  .stat b{display:block;font-size:20px;line-height:1.1}
+  .stat span{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+  .toolbar{flex:none;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+    padding:12px 30px;border-bottom:1px solid var(--line);
+    background:rgba(12,14,20,.92);z-index:20}
+  .toolbar .lbl{color:var(--muted);font-size:12px;margin-right:2px}
+  .chip{cursor:pointer;user-select:none;border:1px solid var(--line);
+    background:var(--panel);border-radius:20px;padding:5px 11px;font-size:12px;
+    display:inline-flex;align-items:center;gap:6px;transition:.15s}
+  .chip:hover{border-color:#3a455c}
+  .chip .dot{width:9px;height:9px;border-radius:50%}
+  .chip.off{opacity:.35}
+  .wrap{flex:1;min-height:0;display:flex;align-items:stretch;overflow:hidden}
+  #graph{flex:1;min-width:0;overflow:auto;padding:10px 0 30px}
+  svg{display:block}
+  .commit{cursor:pointer}
+  .commit .ring{opacity:0;transition:.15s}
+  .commit:hover .ring{opacity:1}
+  .dim{opacity:.12 !important;transition:.2s}
+  .bandlabel{fill:var(--muted);font-size:12px;font-weight:600}
+  .msg{fill:var(--ink);font-size:12.5px;dominant-baseline:middle}
+  .msg.merge{fill:var(--muted);font-style:italic}
+  .hash{fill:var(--muted);font-size:10.5px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .brlabel{font-size:10.5px;font-weight:700;font-family:ui-monospace,Menlo,monospace}
+  .panel{width:330px;flex:none;border-left:1px solid var(--line);background:var(--panel);
+    overflow:auto}
+  .panel .inner{padding:18px}
+  .panel h3{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;color:#0c0e14}
+  .kv{margin:10px 0;font-size:13px}
+  .kv .k{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+  .kv .v{font-family:ui-monospace,Menlo,monospace;word-break:break-all}
+  .kv .desc{white-space:pre-wrap;line-height:1.5;color:#cdd6e6;font-size:12.5px;
+    background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 11px;margin-top:4px}
+  .empty{color:var(--muted);font-size:13px;line-height:1.6}
+  #tip{position:fixed;pointer-events:none;z-index:50;max-width:340px;
+    background:#0a0c12;border:1px solid #313a4f;border-radius:8px;padding:9px 11px;
+    font-size:12.5px;opacity:0;transition:opacity .12s;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+  #tip .t{font-weight:600;margin-bottom:3px}
+  #tip .m{color:var(--muted);font-size:11px;font-family:ui-monospace,Menlo,monospace}
+  .legend-note{color:var(--muted);font-size:11px;margin-left:auto}
+  footer{color:var(--muted);font-size:12px;padding:18px 30px 40px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎛️ GaletSynth — Development Timeline <span class="tag">interactive</span></h1>
+  <div class="sub">Glass touch bass synth · Daisy Seed + MPR121 → 15-voice bank, poly drum kit & a macOS voice tuner. Every commit, branch and merge.</div>
+  <div class="stats" id="stats"></div>
+</header>
+
+<div class="toolbar" id="toolbar">
+  <span class="lbl">Filter commit type:</span>
+  <!-- chips injected -->
+  <span class="legend-note">oldest at top, newest at bottom · hover a node for details · click to pin</span>
+</div>
+
+<div class="wrap">
+  <div id="graph"></div>
+  <aside class="panel">
+    <div class="inner" id="detail">
+      <h3>Commit detail</h3>
+      <div class="empty">Click any commit on the graph to see its full description, hash, date, branch and parents here.<br><br>
+      Lanes are <b>branches</b> (feature branches fan out from <code>main</code> and merge back). Node colour = <b>commit type</b>.</div>
+    </div>
+  </aside>
+</div>
+
+<div id="tip"></div>
+
+<script type="application/json" id="bodies">
+{"8b0c5c2":"VoiceLab: save-to-flash confirmation (with voice numbers), dump CR/LF\nde-merge + defensive load, and the backup/restore progress-dialog\nre-entrancy fix.","ff0d005":"- Save to flash now asks for confirmation (matching Revert / Revert all);\n  the Save and Revert dialogs name the voice number too.\n- link.py dump(): split on any embedded CR/LF so a USB framing glitch that\n  merges two reply lines (e.g. \"osc1_ratio=1.0000\\r$$oct_wave=sine\") no longer\n  feeds a bad string to float(); the row load() also skips an unparseable\n  value instead of crashing the GUI.\n- _on_progress: the modal QProgressDialog.setValue() pumps the event loop and\n  could deliver `finished` mid-update, clearing self._progress -\u003e AttributeError.\n  Hold a local ref and call setValue() last.","936aae8":"Drums kit now runs the real per-drum Moog ladder + resonance (matching the\nmono path) and responds to velocity (FIX_DRUM=false).","756c9b6":"Each polyphonic DrumHit now runs the 4-pole Moog ladder with its drum\nvoice's own resonance (the same filter the mono engine uses) instead of a\ncheap 1-pole lowpass. The oscillator/noise/envelope content and the\nvelocity-\u003ecutoff/drive curve already matched the mono path, so a kit hit now\nsounds like selecting that drum and tapping it — tuner edits to\nKick/Snare/Tom/HiHat carry through to the kit.\n\nAlso default FIX_DRUM to false so drum taps respond to velocity (loudness +\nbrightness + drive, scaled by each drum's vel_sens) rather than every tap\nbeing a fixed 100% hit.","e10c957":"Per-voice LFO (vibrato / auto-wah / tremolo) + the persistence/GUI fixes\nfound bringing it up on hardware.","fd9d74b":"Add one triangle LFO per Voice with three independently-routed destinations:\nlfo_pitch (vibrato, sums with the finger-pressure vibrato), lfo_filter\n(auto-wah, sweeps the Moog cutoff), lfo_amp (tremolo); lfo_rate sets the\nshared speed (0 -\u003e the classic 6 Hz). All default 0 so existing presets are\nunchanged. Live-editable via the tuner (serialtune field table, schema, GUI\n\"LFO\" group).\n\nFixes found while bringing the feature up on hardware:\n- persist.cpp: bump BANK_MAGIC 'GVB1'-\u003e'GVB2'. Growing Voice changed the\n  StoredBank layout; the stale QSPI blob was being misread as the new layout\n  (no sound, Drums reading as Kick, saves reverting). Bump -\u003e fall back to\n  factory + re-save clean.\n- voicelab_gui.py: clamp _to_slider to [0,1000] so a garbage/NaN dump can't\n  overflow QSlider.setValue and crash the GUI.\n- galetsynth/link.py: dump() resets on the 'dump name=' marker so it can't mix\n  an idx and a name from different async replies.\n- voicelab_gui.py: don't relabel the Drums meta-voice picker entry / name field\n  with its remapped Kick zone — both stay \"Drums\".","932c526":"tools/build_macapp.sh: one-command PyInstaller build of the PySide6 tuner into a\nself-contained VoiceLab.app (bundles its own Python + PySide6 + pyserial + the\ngaletsynth package, so it runs independently of the repo/.venv). `--install`\ncopies it to /Applications. Work files go to build-macapp/ (git-ignored), kept\nout of the firmware build/ dir.\n\ntools/make_icon.py + tools/voicelab.icns: a synth-voice app icon (glowing\noscillator waveform on a violet→indigo squircle), drawn with PySide6's painter\nand packed via iconutil. The build wires it in with --icon and regenerates it if\nmissing.","1b09634":"GUI-only (no firmware).\n\n- Toolbar: top actions are now compact flat icon+text QToolButtons grouped by\n  feature with vertical separators (sync · save/copy/revert · backup/restore ·\n  export); mon pushed to the far right. Icons from the Qt style (standardIcon,\n  fromTheme first) — no bundled assets. Tooltips are rich-text info boxes.\n- Group sections: each parameter group's title gets a monochrome glyph (distinct\n  per oscillator: ∿/≈/↓/↑) plus a clear gap above each title.\n- Export offline: builds the C++ Voice{…} from the on-screen controls (deriving\n  log_freq_ratio from the freq range) instead of dumping the device, so Export\n  no longer requires the Galet to be connected.","05065c7":"Firmware (serialtune.cpp): new `copy \u003cn\u003e [name]` command — duplicates the\ncurrent live voice into bank slot n and persists it, without changing the active\nvoice or interrupting audio. The optional trailing name (spaces ok) names the\ncopy; omitted keeps the live voice's name. The source voice's name is untouched.\n\nGUI: a Copy to… button opens one dialog with a target-slot dropdown + a Name\nfield (prefilled + selected with the source name) so the copy can be renamed on\nthe way out. The voice being edited stays put.\n\nCLI: copy \u003cn\u003e passes through (tab-completion + help updated).","9978878":"Dashboard alignment:\n- link.py stripped leading spaces off every line, collapsing the firmware's\n  right-aligned status columns. Keep leading spaces (trim only the terminator +\n  trailing padding) — fixes alignment with no reflash.\n- Firmware polish: zero-pad channels (00–11); label the touched-channel marker\n  and finger rows F1/F2.\n\nClean disconnect (no more reboot needed):\n- libDaisy's USB logger switches to blocking transmit once a host has drained it,\n  so any autonomous PrintLine to a port whose host has gone away spins forever and\n  freezes the synth. New g_serial_quiet flag + a `bye` command: the CLI/GUI send\n  `bye` on exit, which leaves tune mode (synth resumes normal play + idle chase)\n  and silences all autonomous serial (dashboard, rebaseline/recal, voice-gesture\n  events) so nothing blocks on the closed port. `tune 1` clears it on reconnect.\n  Folded the quiet flag into serial_display_muted() and gated the FSR-gesture\n  prints.","fcf5a7e":"Back up and restore the entire editable voice bank to a portable local JSON\nfile, plus tuner-GUI tooltips and a firmware fix so the synth stays responsive\nto the host while idle.\n\nBackup / restore (host-side, drives the existing tuning protocol):\n- New shared tools/galetsynth/bank.py: backup_bank() reads every editable slot\n  (select + dump) into a JSON doc; restore_bank() replays one back (select + set\n  + save per slot, so each lands in flash). The Drums meta-voice is skipped\n  (select remaps it to the Kick slot; its fields are an unused placeholder) — the\n  4 raw drums it plays are ordinary slots and ARE included. Globals (reverb_*/\n  delay_*) are stored once and re-applied. restore_bank() takes only=\u003cindices\u003e +\n  do_globals for selective restore.\n- GUI: Backup… / Restore… buttons run on a worker thread (window stays live) with\n  a modal QProgressDialog advancing per voice. Backup confirms the filename at the\n  end, defaulting to YYYYMMDDhhmmss-Galet-Backup.json. Restore opens a modal pick\n  list (checkbox per voice + Select all/none + optional globals) so you choose\n  which voices to import.\n- CLI: backup [file] (auto-names) / restore \u003cfile\u003e with a textual progress bar.\n\nGUI tooltips:\n- Per-parameter, per-group (ⓘ on each section title) and per-button rich-text\n  tooltip boxes (bold header + wrapped body, 4px padding). Help text lives in\n  schema.py (HELP / GROUP_HELP), HTML-escaped (descriptions contain \u003c/\u003e).\n\nFirmware fix (src/main.cpp):\n- idle_chase_and_calibrate() spun until touch/FSR without polling serial, so a\n  connected tuner's commands sat unparsed — the GUI wouldn't sync at boot and\n  Backup stalled until you touched the glass. The chase now polls\n  serial_tune_poll() and bails the instant tune mode is entered, and the synth no\n  longer enters the chase while a host tuner is connected (g_live_tune). The\n  CLI/GUI send `tune 0` on a clean exit so normal idle behavior resumes.","c3ce5ac":"Turn the read-only constexpr VOICES[] into a mutable, flash-backed bank the\nengine plays from, so voices can be reshaped and *kept* across power cycles —\nnot just tuned live.\n\nFirmware:\n- New src/persist.{h,cpp}: g_bank[] (RAM copy of the factory VOICES[]) is what\n  the engine, control loop and tuner now read. persist_init() builds the factory\n  bank then overlays any saved edits from QSPI; persist_save_bank() serializes\n  the whole bank (+ g_voice_idx) back, writing only on change (wear). The Voice's\n  name/scale pointers can't go to flash verbatim, so the stored form keeps a\n  portable name string + a scale id and fixes the pointers up on load (each bank\n  voice's name points into a RAM buffer so it's editable). A BANK_MAGIC guards\n  against old/foreign blobs (falls back to factory). Replaces the old voice-idx-\n  only PersistentStorage in main.cpp.\n- serialtune: new `save` (commit live voice incl. name into its bank slot + flash),\n  `factory [all]` (revert a slot or the whole bank to source defaults), `names`\n  (list every slot's current name), and `set name \u003ctext\u003e` (rename, spaces ok).\n  dump now also emits `idx=` so the host syncs by slot, rename-proof.\n\nTools:\n- GUI: name field + Save to flash / Revert / Revert all buttons; picker labels\n  follow saved (not just factory) names via `names`; a connection watchdog\n  reconnects + re-syncs if the synth is power-cycled. _save() pushes the current\n  name explicitly before `save` (clicking a button doesn't reliably fire the\n  line-edit's editingFinished first on macOS, which was committing the stale\n  factory name to flash).\n- link.py: generic _capture() helper; names(); send() survives a disconnect.\n- voicelab.py CLI: bare `save` persists the bank to flash; `factory`/`name`\n  completions.","cf50ccb":"Firmware: emit a clean \"voice \u003cn\u003e\" event when the FSR gesture commits a\nvoice change, so a connected host tuner can follow it.\n\nGUI: parse that event and switch the picker + reload that voice's params\n(_on_hw_voice). On connect, retry the initial sync until the synth answers\n(_initial_sync) so the GUI opens on the synth's actual loaded voice instead\nof the default; refresh() now returns success for the retry loop.","f8a0283":"Refresh dumped the live working copy, so it just echoed the edits already\nshown (looked like a no-op). Now it re-snapshots the active bank voice on\nthe device (tune 1) before dumping, so the controls repopulate from that\nvoice — even when it's the one already selected — and the voice picker\nre-syncs to what the device reports. (Re-snapshot reverts live edits to the\nstored preset, i.e. reload/revert.)","b8a2eb1":"CLAUDE.md: add serialtune module + the Python tuner tools to the project\nmap, and a Voice tuner section (protocol, the g_live_voice seam, the flash\nbudget gotchas, and the shared galetsynth core / how to add a field).\nREADME: tuner files + a \"Live voice tuning\" quickstart. CHANGELOG entry.","9a099eb":"Add schema.GROUPS (Range, Osc 1/2, Sub, Octave, Filter, Drive/Noise,\nRing/Fold, Envelope, Pitch Env, Dynamics, Quantize/Chords, Sends, Global FX)\nmirroring the Voice struct sections. The GUI lays each group in a QGroupBox,\nbalanced across 3 columns so the whole voice is visible at once instead of\none long scroll. Widened the default window to suit.","18698e5":"Put the log in a vertical QSplitter so it's freely draggable/resizable\n(was a fixed 110px box). Monospace font so the mon bars/columns align.\n\nWhen mon is toggled on, render the firmware's repeating status frame in\nplace (replace each completed frame instead of appending) so it reads as a\nsmooth, stable dashboard, and auto-size the pane to fit the frame's line\ncount (~24 lines); shrink back to a few lines when mon is off. The handle\nstays draggable either way.","77ab462":"Extract the serial link, field schema, and C++ exporter out of voicelab.py\ninto a shared tools/galetsynth package (link.py / schema.py / codegen.py) so\nthe CLI and GUI share one protocol, one field model, one codegen. voicelab.py\nis now a thin REPL over that core.\n\nAdd tools/voicelab_gui.py — a PySide6 desktop tuner: a slider/checkbox/combo\nper Voice field (+ global effects), driven live over USB; Refresh loads the\ndevice state, the voice picker switches voices, Export writes a paste-ready\nC++ Voice{...} block. Reuses galetsynth, so nothing is duplicated.\n\nAdd .gitignore for .venv / __pycache__ (pyserial + PySide6 live in a project\nvenv because Homebrew Python blocks system installs, PEP 668).","7e15f1f":"Firmware: add a USB CDC receive path (src/serialtune.{h,cpp}) and a small\nline protocol so a laptop can reshape the active voice in real time on the\nhardware. While `tune 1` is active the engine + control loop play a mutable\ng_live_voice (engine.h seam) instead of the const bank voice; `set \u003cfield\u003e\n\u003cvalue\u003e` edits it live (floats/ints/bools/waveforms/scale + the global\neffect params), g_live_rev triggers a coeff recompute without a state snap\nso glide/cutoff stay smooth. Commands: tune/set/select/dump/mon/help. The\nstatus display + rebaseline/recal prints are suppressed in tune mode (mon 1\nre-enables) to keep the channel clean.\n\nKept it tiny for the 128 KB internal flash: reuse StartLog for TX (just add\nan RX callback), no stdio/snprintf, hand-rolled number parsing instead of\natof/atoi. FLASH 93.3%.\n\nLaptop: tools/voicelab.py — a pyserial REPL with local echo, field-name tab\ncompletion, and a client-side `export`/`save` that turns a `dump` into a\npaste-ready C++ Voice{...} block.","c8a2fa1":"Add a compact mono Freeverb (8 damped combs + 4 allpass) and a mono\nfeedback delay with HF-damped repeats as DSP structs in dsp.h. One shared\ninstance of each lives in the engine; voices feed them via new per-voice\nreverb_send / delay_send fields as parallel aux sends off the clean\nsignal (no cascade), each skipped when the send is 0.\n\nThe effect character is global — g_reverb_decay/level and\ng_delay_time_ms/feedback/level engine params, meant to be made playable\nlater. Organ is the first voice wired up (reverb_send 0.6, delay_send\n0.45); all other voices zero-init to dry. SRAM use ~45% (delay-line\nbuffers). Host tests cover the send ranges.","c0d3e07":"Move the two hardcoded chord settings onto the Voice struct: chord_level\n(was the CHORD_UPPER_LEVEL engine constant) and chord_spread (was a\nhardcoded +12 octave lift in the control loop). Both SH-101 twins set\nchord_level=0.9, chord_spread=1, so the sound is unchanged — chord\nbalance and voicing width are now tunable per voice like every other\ntone parameter. Host test asserts chord voices set chord_level \u003e 0.","5878a18":"Spread the diatonic triad from a tight root-3rd-5th cluster to a\nroot-5th-10th open voicing by lifting the 3rd an octave when computing\nthe chord ratios. Reads clearer over the root's sub-osc. Applies to both\nSH-101 twins.","0c93bfa":"Add a per-voice `chords` boolean: when true the voice plays a 3-note\ndiatonic triad instead of a single note. The control loop snaps the root\nto the voice's scale as before, then diatonic_triad() (new, in voice.h)\nstacks scale-thirds (degrees i, i+2, i+4) to get the 3rd and 5th; the\noffsets become frequency ratios (g_chord_ratio2/3) the engine multiplies\nthe root by, so chords stay in key and change quality with position.\n\nEngine renders the upper two notes as extra osc1+osc2 voices above the\nroot (sub-osc and noise stay on the root for a tight low end) at\nCHORD_UPPER_LEVEL (0.9x), riding the root's glide/vibrato through one\nladder filter. The if(VOICE.chords) branch is skipped for single-note\nvoices.\n\nVOICE_SH101 (\"SH-101 min\") sets chords=true and quantizes to SCALE_MINOR\n(was chromatic — stacked thirds over chromatic are a whole-tone cluster).\nVOICE_SH101_MAJ (\"SH-101 maj\") added as the major-scale twin; cycling\nbetween the two flips the chord flavor live. NUM_VOICES 14-\u003e15, cyclable\n10-\u003e11, MULTI_ZONES (drum indices 8-11) unaffected.\n\nHost test added for diatonic_triad (triad shapes, octave wrap, off-scale\nsnap, no-scale fallback) + a bank invariant (chord voices must use a\nnon-chromatic scale). Docs synced (README, CLAUDE.md, CHANGELOG).","b7889dc":"README: add VOICE_GUITAR (had replaced VOICE_BASS_CLOSED, still listed)\nand VOICE_SH101; renumber Drums to 14. Replace old auto-advance voice-\nswitch text with the FSR-hold + tap-the-glass gesture. Drop shipped items\nfrom Possible Extensions (voice persistence, pitch envelope). Update stale\nPRESSURE_MAX_REF values and remove the gone PRESSURE_DEAD_ZONE block (floor\nis now the scalar TOUCH_THRESHOLD).\n\nCLAUDE.md: fix TOUCH_THRESHOLD (=10, in config.h), drop nonexistent\nPRESSURE_MIN_REF row, repoint touch constants at config.h.","57f7515":"Add VOICE_SH101 (\"SH-101\"): saw + unison square (pulse) over a square\nsub-oscillator one octave down — the fat single-VCO SH-101 stack — through the\nresonant 4-pole ladder. Cutoff sits closed-ish and finger pressure sweeps it\nwide open with high resonance for the squelchy acid \"wow\"; portamento glide +\nchromatic quantize keep acid lines in tune with bendable slides.\n\nPlaced after the raw drums in the bank so the drum indices (and MULTI_ZONES)\nstay put; it's cyclable and appears after Pad in the FSR cycle. Updated the\nhost-test bank-size asserts (NUM_VOICES 13-\u003e14, cyclable 9-\u003e10).","2898143":"- Add VOICE_GUITAR (\"Guitar\") in the bank slot before Pad (replaces\n  VOICE_BASS_CLOSED): a driven sawtooth power chord (root + fixed 5th +\n  octave-down body + octave-up jangle), quantized to a major scale so tapped\n  chords land in key, with overdrive, a resonant mid \"quack\", a fast pitch-env\n  pick-attack twang, and a little pick-grit noise on the onset.\n- Add per-voice amp decay-to-sustain (Voice::decay_ms / Voice::sustain): after\n  the attack the gated level falls to `sustain` over `decay_ms`, so a note can\n  pluck and ring out. decay_ms = 0 (default, every other voice) = no decay,\n  identical to before. Guitar uses decay_ms = 1200, sustain = 0. Implemented as\n  an s_decay multiplier on the gated amp target in engine.cpp.","18a345c":"Voice selection & preview\n- Replace the timed FSR-hold auto-advance with a hold-FSR + tap-the-glass\n  gesture: press the FSR to the mute floor (no glass touch) 2 s to enter\n  select; each glass tap advances to the next cyclable voice (wraps); release\n  the FSR to keep + persist the shown voice.\n- Live preview: the selected mono voice plays through the REAL note path while\n  the finger is down — actual pressure drives the Moog cutoff, position slides\n  the pitch, finger-2 adds detune/wavefold/ring-mod; the Drums kit fires a\n  kick+snare one-shot \"one-two\". Gated by VOICE_PREVIEW_ENABLED (config.h).\n- LEDs follow the finger during preview; the non-blocking blinker overlays only\n  while animating (entry position count, per-advance tick, saved-voice confirm),\n  so the save blink no longer blocks playing.\n- Idle chase (5 s no-touch pulse) now also exits on an FSR press, so select can\n  be entered straight from idle without touching the glass first.\n- Fix: preview drums fire as one-shots (full amp + immediately ungate) so they\n  decay instead of sustaining (the \"Drums noise at 100%\" bug).\n- Constants: VOICE_SWITCH_FIRST_MS/_REPEAT_MS -\u003e VOICE_SELECT_ENTER_MS/_TAP_GAP_MS.\n\nPer-voice quantize + scale\n- Quantize is now a Voice field (only the Organ enables it); QUANTIZE_ENABLED is\n  a master switch. Each voice carries its own scale (SCALE_CHROMATIC/MAJOR/MINOR);\n  removed the global SCALE[]/SCALE_LEN. quantize_midi() takes the voice's scale.\n\nvoice.h formatting\n- Reformat every preset one-field-per-line with section headers, wrapped in\n  clang-format off/on so the layout survives clang-format.","ebbca38":"Quantization is now a Voice property (new `quantize` field, default false)\ninstead of a global. Only VOICE_ORGAN enables it: the Organ snaps finger-1\nto the nearest chromatic note on touch-down then bends freely on slide; all\nother voices play fully continuous pitch.\n\nQUANTIZE_ENABLED in config.h becomes a master switch — the touch-down snap\ngates on `QUANTIZE_ENABLED && VOICE.quantize`.","400c74d":"Add LED1_LEVEL/LED2_LEVEL/LED3_LEVEL in config.h, applied to all LED writes.\nLowering an LED's level cuts its current, reducing the switching noise coupled\ninto the audio (worst on battery). LED3 (the 200 Hz software-PWM LED) is the\nmain contributor, so it's set to 50%; the analog DAC LEDs stay at 100%.","f2f104a":"REG_CONFIG2 was 0x4C, whose ESI bits decode to 16ms — the sensor refreshed\nelectrode values only ~62x/sec, blurring/dropping quick taps (and the comment\nwrongly said \"ESI=1ms\"). Set to 0x48 (ESI=1ms, CDT/SFI unchanged) so the sensor\nrefreshes ~16x faster. Fast tapping/rolls now register reliably; verified stable\non the glass.","1b68870":"- On boot (after the grace period and audio start) flash the LEDs N times = the\n  boot/restored voice's cycle position, like a live voice switch — shows which\n  voice is selected (useful with the persisted voice).\n- FSR master volume gains a 10% deadzone (FSR_DEADZONE): light pressure stays at\n  full volume; past 10% of travel it ramps to 0 at FSR_MIN. The deadzone tracks\n  fsr_max so it recalibrates with the idle re-cal.","8261208":"Add test/ (test_main.cpp + Makefile, run with `make -C test`) — compiles dsp.h,\nvoice.h and touch on the host (no Daisy, no gtest; plain assertions) and runs\n~200 checks across oscillators/filters/ms_to_coeff, detect_raw/update_tracked/\ncentroid/pressure_pct, and the voice cycle_*/MultiVoice logic.\n\nSurfaced a pre-existing quirk: pressure_pct's integer Newton-sqrt converges\npoorly and saturates to 100 before the electrode max. Left as-is (the pressure\nmappings were tuned around it); the test asserts the envelope, not the curve.\n\nAlso add the project src/ dir to .clangd so editor/clangd resolves the project\nheaders (config.h etc.) from test/ files.","43a701e":"Extract the audio engine into engine.{h,cpp}: the g_* control params, per-sample\nDSP state, moog(), the polyphonic drum voices (DrumHit, g_hits[], drum_trigger,\ndrum_render), and AudioCallback. The g_* params are the explicit control-loop ↔\naudio-callback seam (extern in engine.h); hw/led3/g_voice_idx/g_active_voice\nstay in main.cpp and are extern'd to the engine.\n\nmain.cpp is now just the app (init, persistence, control loop, display):\n1855 -\u003e 768 lines across the three phases. Behavior unchanged; verified on\nhardware.","61f6004":"Extract two compiled translation units:\n- mpr121.{h,cpp} — bit-bang I2C + MPR121 driver (mpr_init, read_electrodes,\n  capture_baseline), owns the SDA/SCL GPIO; exposes mpr_idle_pins().\n- touch.{h,cpp} — finger detection/tracking (detect_raw, update_tracked,\n  pressure_pct, centroid_window) and the tracked[] state. Pure logic over\n  electrode deltas — unit-testable off-target.\n\nMakefile adds the units only for TARGET=src/main (tools stay standalone).\nmain.cpp: 1327 -\u003e ~1120 lines. Behavior unchanged; verified on hardware.","190b305":"Extract three header-only modules from main.cpp:\n- config.h — tuning constants (touch, LEDs, musical mapping)\n- dsp.h — pure DSP/math: oscillators, filters (moog_st), fast_tanh,\n  ms_to_coeff, Waveform\n- voice.h — Voice struct, all presets, VOICES[] bank, MULTI_*, cycle helpers\n\nStill one translation unit (headers included by main.cpp), so the built binary\nis byte-identical to before — pure reorganization, no behavior change.\nmain.cpp: 1855 -\u003e 1327 lines.","32a38c9":"Store g_voice_idx in QSPI flash via libDaisy PersistentStorage. Restored at\nboot (first boot writes the default), saved on each FSR-gesture voice switch\n(only writes if changed → minimal wear). Out-of-range stored values fall back to\nthe default. Works because the app runs from internal flash, leaving QSPI free.","08d2a95":"Multitouch: detect_raw finds up to MAX_FINGERS (4) separated fingers; tracked[4].\nMono melodic path unchanged (uses [0]/[1]).\n\nPolyphony in Drums mode: a pool of independent DrumHit voices (own oscillators,\nnoise, 1-pole lowpass, amp/pitch envelopes) summed in the callback — up to 4\ndrums at once. The Moog ladder is bypassed in Drums mode for a cheap per-drum\n1-pole lowpass (keeps Kick/Tom dark, Snare/Hat bright) so 4 voices stay light.\n\nFIX_DRUM (default true): every tap is full 100% pressure. Retrigger model:\ngenuine taps (off \u003e= TAP_GAP_MS) fire with no limit; sub-gap dropouts are\ndebounced as flickers; a held pressure bounce (RISE_THRESH) re-attacks, capped\nper voice by retrig_ms. New Voice fields vel_sens, retrig_ms; moog_st variant.\nBoot voice = OpenBass. Docs updated.","ad5c24e":"Decouple the control loop from the serial display: the display prints throttled\n(PRINT_INTERVAL_MS ~8 Hz) instead of every frame with a 60 ms delay, so the\ncontrol loop runs as fast as the sensor allows (~150-200 Hz, capped by\nCONTROL_DELAY_MS). ~10x finer tap-onset timing and pitch/cutoff updates.\n\nAdd per-voice velocity sensitivity (vel_sens, 0..1): onset hit strength (peak\npressure, latched at the tap via VEL_WINDOW_MS=0 = instant) scales loudness,\nfloor = 1 - vel_sens. Drums set 0.85 for accents/ghost notes; default 0 keeps\nthe sustained instruments at fixed loudness. Boot voice = OpenBass. Docs updated.","50c4d6e":"Add a no_cycle Voice field; the FSR-hold gesture skips voices that set it (still\nreachable as boot voice or via the Drums MultiVoice). The four raw drums are\nflagged no_cycle, so the gesture now cycles the 8 instruments + Drums (9 stops)\ninstead of all 13. LED flash count and the serial voice number are the position\nin the cycle (cycle_pos/cycle_total), not the raw bank index. Docs updated.","97f13b3":"When the active voice changed (notably between MultiVoice drum taps), the\ncontinuous slewed state (cutoff/pitch/drive/detune/bitcrush/ring-mod) and the\nMoog ladder filter's stored energy carried over from the previous voice — so a\nKick after a Hat sounded bright, etc. On a voice change these are now snapped to\nthe new voice's targets and the filter is cleared. Switches only happen while\nsilent (gesture) or at a tap onset, so the snap is click-free.","36132ac":"Add VOICE_DRUMS, a meta-voice: when selected, the slider splits into 4 equal\nzones (MULTI_ZONES: Kick, Snare, Tom, Hat) and each tap triggers the zone's\ndrum. Fine position within a zone snaps the pitch to MULTI_INTERVALS (root /\n4th / 5th / octave) above the drum's base.\n\nSplit the active voice into g_voice_idx (selected — gesture/header) and\ng_active_voice (what the engine plays); they match except in MultiVoice mode,\nwhere each tap routes g_active_voice to the zone's drum and latches drum + pitch\nfor the hit. VOICE_DRUMS is a Kick-like placeholder kept last in the bank\n(MULTI_IDX = NUM_VOICES-1) so it shows as \"Drums\" in the cycle/header. Boot\nvoice set to Drums. Docs (CLAUDE.md, README, CHANGELOG) updated.","9059676":"Add two reusable per-voice parameters:\n- pitch envelope (pitch_env_oct / pitch_env_ms): pitch starts N octaves above\n  the note at onset and decays back, retriggered each note onset. The kick\n  \"boom\", tom thump, snare snap. No-op when octaves = 0.\n- noise_hp: blends the noise oscillator from white (\"shhh\") to high-passed\n  (\"tsss\") via a one-pole high-pass (global NOISE_HP_COEF corner).\n\nAdd tap-to-play percussion voices completing a drum kit: VOICE_KICK,\nVOICE_SNARE, VOICE_HIHAT, plus a pitch drop on VOICE_TOM. Boot voice = HiHat.\nDocs (CLAUDE.md, README, CHANGELOG) updated.","fcc7135":"A tap-to-play drum built on the noise oscillator over two low sine modes (body +\nan inharmonic 1.6x ring) and a sub thump. Instant attack + short ~150ms release\nper tap; a dark, fairly closed filter keeps it round (tom). Finger-1 position\ntunes it across 40-400 Hz. Boot voice set to Tom.","9ed8c9d":"Two detuned saws (1.006x) for ensemble width, a soft triangle sub and an airy\nsine octave, through a dark low-resonance filter. Pad character comes from the\nenvelope: a very slow ~2.2s attack swell and a ~2s release tail, plus a whisper\nof noise. Boot voice set to Pad; the FSR gesture cycles all 8 voices.","a2fcebc":"Add a \"VOICE n/total  Name  (lo-hiHz)\" header that tracks live voice switches,\nand an \"FSR pressure NNN%\" row with a bar (inverse of master volume: 0%\nunpressed, 100% pressed to the mute floor).","d882fb0":"Make voices runtime-switchable: all presets live in a VOICES[] bank selected by\na volatile g_voice_idx (was a single compile-time constexpr VOICE). The audio\ncallback snapshots the voice once per block so a mid-block switch can't tear\nfields, and envelope/glide coefficients recompute on voice change.\n\nAdd the gesture: hold the FSR pressed to the mute floor and the voice advances\nafter 5s, then every 2s while still held; releasing re-arms. Each switch flashes\nthe LEDs N times (N = voice number) and prints [voice n/total]. The gesture\nfreezes the idle-chase/rebaseline timers while held.\n\nDocs (CLAUDE.md, README, CHANGELOG) updated for runtime switching + the gesture.","f5d4c15":"Promote per-voice control of amp attack/release and pitch glide (specified in\nms, converted to slew coefficients once at startup) and filter keytracking,\nreplacing the former global SLEW_FREQ/SLEW_AMP_A/SLEW_AMP_R. Add per-voice\neffect params: white-noise oscillator, ring-mod carrier ratio (inharmonic\nbell/metallic tones), and ring-mod/wavefold ceilings. Revoice the presets to\nuse them (Organ breath + fast on/off, Scream metallic 2.5x ring-mod + snappy\nattack, ClosedBass soft attack/long tail/reduced keytrack).\n\nDocument the full Voice system: CLAUDE.md gains an authoritative Voices section\n(field reference, presets, how to switch/add); README sound sections rewritten\nto reference Voice fields instead of the removed globals; CHANGELOG updated.","5a95be0":"Three new presets exploiting the per-oscillator waveform and filter params:\n- VOICE_ORGAN: clean all-sine organ/flute, melodic register, 1.005x detuned\n  unison for slow chorus shimmer\n- VOICE_SCREAM: aggressive detuned-saw lead, high register, heavy drive and\n  near-self-oscillation resonance\n- VOICE_BASS_CLOSED: deep muffled sub bass, filter near the fundamental with\n  almost no pressure sweep\n\nAlso slows the cutoff opening slew (SLEW_CUT 0.9800 -\u003e 0.9994, ~1ms -\u003e ~35ms)\nso the filter interpolates smoothly across the coarse, integer-quantized\npressure targets instead of stair-stepping.","f2905a8":"Bundle a sound's full definition into a Voice struct: per-oscillator pitch\nratio/level/waveform, filter character (base cutoff, sweep depth, resonance),\ndrive, and pitch range. Switch sounds by editing a single constexpr line, so\nselection is compile-time with zero runtime cost.\n\nAdds a Waveform enum (tri/sine/square/saw) set per oscillator and four presets:\nLEAD (original), BASS (dark power chord), BASS_OPEN (wider sweep), and\nBASS_RICH (mixed waveforms + 13-octave resonant pressure sweep).","702aae3":"Captures build flags, flash command, serial monitor, the LDFLAGS gotcha,\nkey constant locations, hardware summary and branching convention.","1cceffe":"- Files table: add test-slider and mpr121_calibrate, fix paths to src/tools\n- Build instructions: document explicit libDaisy path flags and dfu-util command\n- Touch tuning: replace single constants with per-electrode arrays (PRESSURE_MAX_REF,\n  PRESSURE_DEAD_ZONE), update TOUCH_THRESHOLD to 10, MIN_FINGER_SEP to 4\n- Document new QUANTIZE_ENABLED flag\n- Serial monitor: note that main synth no longer prints; point to test-slider\n- Slew rates table: update SLEW_FREQ to 0.9985 (~14ms)\n- Troubleshooting: update MIN_FINGER_SEP reference from 3 to 4","3eabfd1":"Stripped-down sensor display tool with no audio — shows live electrode\ndelta bars, two-finger position bar and pressure for all 12 channels.\nRefreshes at 10 Hz to avoid serial stalls. Useful for tuning touch\nconstants without reflashing the synth.\n\nAlso adds tools/test-slider and tools/mpr121_calibrate to Makefile comments.","21ae1df":"Set QUANTIZE_ENABLED = false for fully continuous pitch from first touch.\nWhen true (default), touch-down snaps to the nearest chromatic note as before.","5b72465":"- Per-electrode PRESSURE_MAX_REF and PRESSURE_DEAD_ZONE arrays\n  (higher dead zone on edge channels 0 and 11 to match their naturally\n  higher sensitivity through glass)\n- MIN_FINGER_SEP raised to 4 to suppress false second-finger detection\n- pressure_pct() now takes channel index for per-electrode mapping\n- SLEW_FREQ increased to 0.9985 for smoother pitch glide\n- Re-quantize guard: pitch only snaps to scale on genuinely fresh touch\n  (finger off \u003e200ms), preventing re-quantization during brief threshold\n  dropouts while sliding\n- Remove duplicate LDFLAGS from Makefile (caused duplicate --specs error)","7e80166":"Updated the synthesizer name and adjusted filter descriptions."}
+</script>
+<script>
+// ── Raw history: hash|parents(space-sep)|date|refs|subject ────────────────────
+const RAW = String.raw`
+cb4a72f277766dc99a83c5f66fbfef2b1be3feaf|8b0c5c28204a27cc367c3f82b8100ef0b719896d|2026-06-04| (HEAD -> main, origin/main, origin/HEAD)|docs: add TIMELINE.md — development history by phase
+8b0c5c28204a27cc367c3f82b8100ef0b719896d|936aae8a3a1276eb9c47c33d6355f5299e52049b ff0d00558a3a45a7c52aa4f7fbe30f6966ed5df9|2026-06-04||Merge feature/voicelab-save-confirm-fixes into main
+ff0d00558a3a45a7c52aa4f7fbe30f6966ed5df9|936aae8a3a1276eb9c47c33d6355f5299e52049b|2026-06-04||feat: VoiceLab save confirmation + parsing/UI robustness fixes
+936aae8a3a1276eb9c47c33d6355f5299e52049b|e10c9576831f95a0e68904de8c150e6b4f9ea319 756c9b61f92ae9a29172465178e59d33e6efd61e|2026-06-04||Merge feature/drums-real-voices into main
+756c9b61f92ae9a29172465178e59d33e6efd61e|e10c9576831f95a0e68904de8c150e6b4f9ea319|2026-06-04||feat: Drums kit plays the real drum voices
+e10c9576831f95a0e68904de8c150e6b4f9ea319|134042a8ce986200edbe04b87c8aa5a225adea46 fd9d74b7ab4c6edf5859b1559581e666002f793a|2026-06-04||Merge feature/lfo into main
+fd9d74b7ab4c6edf5859b1559581e666002f793a|134042a8ce986200edbe04b87c8aa5a225adea46|2026-06-04||feat: per-voice LFO (vibrato / auto-wah / tremolo)
+134042a8ce986200edbe04b87c8aa5a225adea46|a2158f28c2e87546351d4d7bbd4cf80ab108b2c1|2026-06-03||docs: document the macOS app packaging (README + CLAUDE.md)
+a2158f28c2e87546351d4d7bbd4cf80ab108b2c1|349b8e68fc28bd319b427715b39da90cfa479481 932c5263b768c417b9db6490bede1b7e42707e80|2026-06-03||Merge feat/macapp-packaging into main
+932c5263b768c417b9db6490bede1b7e42707e80|349b8e68fc28bd319b427715b39da90cfa479481|2026-06-03||feat: package the voice tuner as a macOS .app (VoiceLab)
+349b8e68fc28bd319b427715b39da90cfa479481|562b8c685bcb16c6dab1230d5237713b567f7d3c 1b09634c480719f1a505f42ba255a42b4a882d53|2026-06-03||Merge feat/gui-polish into main
+1b09634c480719f1a505f42ba255a42b4a882d53|562b8c685bcb16c6dab1230d5237713b567f7d3c|2026-06-03||feat: voice-tuner GUI polish (toolbar, group icons, offline export)
+562b8c685bcb16c6dab1230d5237713b567f7d3c|51b63cf781cb960ca66868438782206605f8d8be 05065c771c65c06955d49f0556e80c49c5257823|2026-06-02||Merge feat/copy-voice into main
+05065c771c65c06955d49f0556e80c49c5257823|51b63cf781cb960ca66868438782206605f8d8be|2026-06-02||feat: copy a voice to another slot (rename + save to flash)
+51b63cf781cb960ca66868438782206605f8d8be|066fb1bf3df073d06d6e88534904ad82f1b3616d 99788783a4d069a0100df680a0b0d0d21f3b981c|2026-06-02||Merge fix/mon-display-and-disconnect into main
+99788783a4d069a0100df680a0b0d0d21f3b981c|066fb1bf3df073d06d6e88534904ad82f1b3616d|2026-06-02||fix: status dashboard alignment + clean tuner disconnect
+066fb1bf3df073d06d6e88534904ad82f1b3616d|f98ee9f56a8ac82092db7e55b0cf2dd3d13092bf fcf5a7e6a3feb5e6f85b06501c59c392ca7e3523|2026-06-02||Merge feature/bank-backup-json into main
+fcf5a7e6a3feb5e6f85b06501c59c392ca7e3523|f98ee9f56a8ac82092db7e55b0cf2dd3d13092bf|2026-06-02||feat: whole-bank backup/restore to JSON, GUI tooltips, idle serial fix
+f98ee9f56a8ac82092db7e55b0cf2dd3d13092bf|5cb81c8f7b97f11e7189be0b11523c3058a7d95b|2026-06-02||docs: document the persistent voice bank + tuner GUI screenshot
+5cb81c8f7b97f11e7189be0b11523c3058a7d95b|0ee170beb62e8078e1f01948b3612304c98bf56b|2026-06-02||docs: changelog for editable + persistent voice bank
+0ee170beb62e8078e1f01948b3612304c98bf56b|cf50ccbfb1188e957eebfc34932c5bd53bbd8048 c3ce5acdcf84b7eaeb6ba470694c555ee39adef4|2026-06-02||Merge feature/editable-voice-bank into main
+c3ce5acdcf84b7eaeb6ba470694c555ee39adef4|cf50ccbfb1188e957eebfc34932c5bd53bbd8048|2026-06-02||feat: editable + persistent voice bank (rename/save/revert via tuner & GUI)
+cf50ccbfb1188e957eebfc34932c5bd53bbd8048|f8a028396454320140c3ea04eb506da2895b6050|2026-06-02||feat: hardware<->GUI voice sync + reliable refresh on connect
+f8a028396454320140c3ea04eb506da2895b6050|701fecd1b1486eb762906dede909725fb9fd8bb3|2026-06-02||fix(gui): Refresh truly reloads the current voice's parameters
+701fecd1b1486eb762906dede909725fb9fd8bb3|cc038c9fc9bf8635a22a14161ed71015fc5af01a b8a2eb101ea60b84aa744c98e98524a51788eb7c|2026-06-02||Merge feature/voice-tuner into main
+b8a2eb101ea60b84aa744c98e98524a51788eb7c|9a099ebe98a0ce74aae7bf2cf629a72f79299a48|2026-06-02||docs: document the live voice tuner (CLAUDE.md, README, CHANGELOG)
+9a099ebe98a0ce74aae7bf2cf629a72f79299a48|18698e5816660f00d81b6255ea72061127f9c28a|2026-06-02||feat(gui): group params into labeled sections across columns
+18698e5816660f00d81b6255ea72061127f9c28a|77ab4628aca9a07d061a29271df60e01a6359a51|2026-06-02||feat(gui): resizable log pane via splitter + in-place mon dashboard
+77ab4628aca9a07d061a29271df60e01a6359a51|7e15f1f65dc4aa28abcbfb2e8722ac09779a1545|2026-06-02||feat: PySide6 GUI tuner + shared galetsynth core (no duplication)
+7e15f1f65dc4aa28abcbfb2e8722ac09779a1545|cc038c9fc9bf8635a22a14161ed71015fc5af01a|2026-06-02||feat: live voice tuner over USB serial + voicelab.py
+cc038c9fc9bf8635a22a14161ed71015fc5af01a|c0d3e07e9dfe1e23e7866791fe68047004f02dbc c8a2fa1d004abc415eae54de8f9f1eec3472dce6|2026-06-02||Merge feature/reverb-delay into main
+c8a2fa1d004abc415eae54de8f9f1eec3472dce6|c0d3e07e9dfe1e23e7866791fe68047004f02dbc|2026-06-02||feat: shared reverb + delay with per-voice sends (Organ first)
+c0d3e07e9dfe1e23e7866791fe68047004f02dbc|5878a187f9b03220130e0cb7b85339ee6057c338|2026-06-02||refactor: chord level + voicing are per-voice fields
+5878a187f9b03220130e0cb7b85339ee6057c338|47ec8ce162f39557e0bd50d6fc6cfd656f9265b8|2026-06-02||feat: SH-101 chords use an open voicing (3rd up an octave)
+47ec8ce162f39557e0bd50d6fc6cfd656f9265b8|b7889dcd55e4598ead257fae8ff84f44acfc0898 0c93bfab47fea343ad85ea435dbee09f35322ffd|2026-06-02||Merge feature/sh101-chords into main
+0c93bfab47fea343ad85ea435dbee09f35322ffd|b7889dcd55e4598ead257fae8ff84f44acfc0898|2026-06-02||feat: diatonic chord voices — SH-101 plays triads (minor + major twins)
+b7889dcd55e4598ead257fae8ff84f44acfc0898|885e87ec953aaf257f5b5f04a2ca4a9557faed15|2026-06-02||docs: sync README + CLAUDE.md with current voices/gesture/constants
+885e87ec953aaf257f5b5f04a2ca4a9557faed15|3aec3c23ec5057a0a4738fa4a60f956e1d892c7c 57f75156c334085d18fd355b1b2a80a7cfa5c2ac|2026-06-02||Merge feature/sh101-voice into main
+57f75156c334085d18fd355b1b2a80a7cfa5c2ac|3aec3c23ec5057a0a4738fa4a60f956e1d892c7c|2026-06-02||feat: SH-101-style mono synth voice
+3aec3c23ec5057a0a4738fa4a60f956e1d892c7c|d3d910a7bb0e9db02b3f87deaf2baa5f501519e9 28981432b0f737901d91783421cfdb8a46977bff|2026-06-02||Merge feature/guitar-voice into main
+28981432b0f737901d91783421cfdb8a46977bff|d3d910a7bb0e9db02b3f87deaf2baa5f501519e9|2026-06-02||feat: electric guitar voice + per-voice amp decay-to-sustain
+d3d910a7bb0e9db02b3f87deaf2baa5f501519e9|ebbca38ea24cd2388abb312219842375e32893aa 18a345cca237edd0347c55e7ca91efc109d1d525|2026-06-02||Merge feature/voice-select-preview into main
+18a345cca237edd0347c55e7ca91efc109d1d525|ebbca38ea24cd2388abb312219842375e32893aa|2026-06-02||feat: tap-the-glass voice select with live preview + per-voice quantize/scale
+ebbca38ea24cd2388abb312219842375e32893aa|400c74dc4aff0f70fadd022caa768013efc1ae81|2026-06-01||feat: per-voice pitch quantize (Organ only)
+400c74dc4aff0f70fadd022caa768013efc1ae81|f2f104a924a9f610d1f2397c5440e449e92e3bc7|2026-06-01||feat: per-LED brightness levels (reduce LED→audio noise)
+f2f104a924a9f610d1f2397c5440e449e92e3bc7|1b68870649dc54e71de68cf4f7a9a78672bd82c4|2026-06-01||fix: MPR121 ESI 16ms -> 1ms for fast-tap response
+1b68870649dc54e71de68cf4f7a9a78672bd82c4|82612088e867911d9782a5ff330fa026bbc04e2e|2026-06-01||feat: startup voice-blink + FSR volume deadzone
+82612088e867911d9782a5ff330fa026bbc04e2e|43a701e36a6e6f6b0cfec0508fde5ab214684411|2026-06-01||test: host unit-test harness for the pure modules (phase 4)
+43a701e36a6e6f6b0cfec0508fde5ab214684411|61f60048fd4ec3bccaad73106bb1a59e616f7451|2026-06-01||refactor: split main.cpp into modules (phase 3 — audio engine unit)
+61f60048fd4ec3bccaad73106bb1a59e616f7451|190b305d98b41f909ffb72f846d9c23320cb71d0|2026-06-01||refactor: split main.cpp into modules (phase 2 — mpr121 + touch units)
+190b305d98b41f909ffb72f846d9c23320cb71d0|32a38c98a1cd3fefbf1e1a0b75a6a5f087d9d321|2026-06-01||refactor: split main.cpp into modules (phase 1 — config/dsp/voice headers)
+32a38c98a1cd3fefbf1e1a0b75a6a5f087d9d321|08d2a956328535a286c9be4d065813188044dc8d|2026-06-01||feat: persist the selected voice across power cycles
+08d2a956328535a286c9be4d065813188044dc8d|ffad25ac9ad2809d9f733f3faccd1c4ab1a93bd7|2026-06-01||feat: 4-voice polyphonic Drums MultiVoice + multitouch
+ffad25ac9ad2809d9f733f3faccd1c4ab1a93bd7|ad5c24e0dde004f2c965271db197a639997403b5|2026-06-01||tweak: voice-cycle gesture first switch 5s -> 3s
+ad5c24e0dde004f2c965271db197a639997403b5|50c4d6ee2048adc960714aa8813e30006a7344b7|2026-06-01||feat: faster control loop + per-voice velocity sensitivity
+50c4d6ee2048adc960714aa8813e30006a7344b7|9ad76b502820253c34ab63b4f1f5d6a8dbd25ae3|2026-06-01||feat: per-voice no_cycle flag — exclude voices from the FSR cycle
+9ad76b502820253c34ab63b4f1f5d6a8dbd25ae3|97f13b3380bf4404e494d8616d5a0cbbe55e0ba0|2026-06-01||chore: set boot voice to OpenBass
+97f13b3380bf4404e494d8616d5a0cbbe55e0ba0|36132aca44e55198bef611493bd1a88a79caa9b7|2026-06-01||fix: snap DSP state on voice change so voices don't bleed
+36132aca44e55198bef611493bd1a88a79caa9b7|90596766f6a1e6a3c37cb6cddeccdbfe80aaba98|2026-06-01||feat: MultiVoice "Drums" — 4-zone playable drum kit across the slider
+90596766f6a1e6a3c37cb6cddeccdbfe80aaba98|fcc713541e9cff4bee30b10df766ebd86b55ef6a|2026-05-31||feat: drum kit (Kick/Snare/Hi-Hat) + pitch-envelope and noise high-pass params
+fcc713541e9cff4bee30b10df766ebd86b55ef6a|9ed8c9d79d4d50e35e83a466648965735165befa|2026-05-31||feat: add VOICE_TOM — noise-driven tap percussion
+9ed8c9d79d4d50e35e83a466648965735165befa|a2fcebce702ebe74cc1381003f432ca4fcff9077|2026-05-31||feat: add VOICE_PAD — warm ensemble pad
+a2fcebce702ebe74cc1381003f432ca4fcff9077|d882fb0fad9e6c638bd69c463281d6b93fa43b70|2026-05-31||feat: show active voice and FSR pressure on the serial screen
+d882fb0fad9e6c638bd69c463281d6b93fa43b70|f5d4c151148460759e9825a7c0da1f5b61911a72|2026-05-31||feat: live voice switching via FSR-hold gesture
+f5d4c151148460759e9825a7c0da1f5b61911a72|5a95be03a293626c31fbfbd873a20f39355983b9|2026-05-31||feat: per-voice envelope/glide/keytracking + new effect colors; document voices
+5a95be03a293626c31fbfbd873a20f39355983b9|f2905a81de63f7476edd6675ef235446a80e2bc7|2026-05-31||feat: add Organ, Scream, ClosedBass voices; smooth cutoff under pressure
+f2905a81de63f7476edd6675ef235446a80e2bc7|65edf15fa313b66fd794575c48d890b72781af50|2026-05-31||feat: Voice abstraction with switchable presets and per-oscillator waveforms
+65edf15fa313b66fd794575c48d890b72781af50|d08134d3025ee55abaaf5068e0582adef7fde316|2026-05-31||added fsr sensor and leds
+2ff904fecf30d631e071258a9e25f4afa7b244d1|7ae0959c8571fe428d35f5d187c5189eeab9b859|2026-04-30| (origin/update/sensor-jlc-optimized, update/sensor-jlc-optimized)|update: volume
+7ae0959c8571fe428d35f5d187c5189eeab9b859|5e90c13fe78ce9cf37c52cb70604afdf3fd14153|2026-04-25||update: min serial log
+5e90c13fe78ce9cf37c52cb70604afdf3fd14153|91e4972941e0ba96b5f8c2173b9fbc7a6168ad78|2026-04-25||chore: removed serial messages
+91e4972941e0ba96b5f8c2173b9fbc7a6168ad78|d08134d3025ee55abaaf5068e0582adef7fde316|2026-04-25| (origin/update/sensor-jlc, update/sensor-jlc)|chore: updated sensor
+d08134d3025ee55abaaf5068e0582adef7fde316|702aae3a3a0b0df87b2092ee6a5e670d4818077d|2026-04-07||chore: updated clangd to remove import warnings
+702aae3a3a0b0df87b2092ee6a5e670d4818077d|1cceffe22303646ed19e2549820485d0f7aa616c|2026-04-07||docs: add CLAUDE.md with project context for Claude Code sessions
+1cceffe22303646ed19e2549820485d0f7aa616c|5316bcd1260b37208583d00aef1c09b33d5a06bf|2026-04-07||docs: update README to reflect current state
+5316bcd1260b37208583d00aef1c09b33d5a06bf|3eabfd13660cf4fe7c3adcdf7db81dbd02247baf|2026-04-07||docs: update CHANGELOG with test-slider entry
+3eabfd13660cf4fe7c3adcdf7db81dbd02247baf|bd74f6f78fb105be03bf157da44e141236b5ef4e|2026-04-07||feat: add test-slider diagnostic tool
+bd74f6f78fb105be03bf157da44e141236b5ef4e|21ae1df4c2222d39474a85f3e0920ec9afc9d611|2026-04-07||update: changelog
+21ae1df4c2222d39474a85f3e0920ec9afc9d611|5b7246559d6797ff3b01ea68f10d09096047e046|2026-04-07||feat: add QUANTIZE_ENABLED flag to disable pitch quantization
+5b7246559d6797ff3b01ea68f10d09096047e046|f88324d9fdd4aebaba93ab0ae5bb6b4c24f3b74d|2026-04-07||feat: per-electrode pressure calibration and smooth pitch sliding
+f88324d9fdd4aebaba93ab0ae5bb6b4c24f3b74d|7e80166af6bd82fe245949a01a9418df96d85945|2026-04-07||added: calibration tool
+7e80166af6bd82fe245949a01a9418df96d85945|06d2b81335ee8c505e796bcb30c3121ab040025b|2026-04-04||chore: update
+06d2b81335ee8c505e796bcb30c3121ab040025b||2026-04-04||Initial commit — glass touch bass synth for Daisy Seed + MPR121
+`.trim();
+
+// ── Parse ─────────────────────────────────────────────────────────────────────
+const TYPES = {
+  feat:{c:'#4f8cff',label:'feat'}, fix:{c:'#ff6b6b',label:'fix'},
+  docs:{c:'#a78bfa',label:'docs'}, refactor:{c:'#f5a623',label:'refactor'},
+  test:{c:'#22c55e',label:'test'}, chore:{c:'#94a3b8',label:'chore'},
+  merge:{c:'#e879f9',label:'merge'}, other:{c:'#5eead4',label:'other'}
+};
+function typeOf(s){
+  if(/^Merge /.test(s)) return 'merge';
+  const m = s.match(/^([a-z]+)(\([^)]*\))?:/);
+  if(m){ const t=m[1];
+    if(t in TYPES) return t;
+    if(t==='tweak'||t==='update') return 'chore';
+    return 'other';
+  }
+  return 'other';
+}
+function cleanRefs(refs){
+  if(!refs||!refs.trim()) return [];
+  return refs.replace(/[()]/g,'').split(',').map(s=>s.trim())
+    .map(s=>s.replace(/^HEAD -> /,''))
+    .filter(s=>s && !s.startsWith('origin/') && s!=='HEAD' && s!=='origin/HEAD');
+}
+const BODIES = JSON.parse(document.getElementById('bodies').textContent);
+const lines = RAW.split('\n').filter(l=>l.trim());
+const commits = lines.map(l=>{
+  const [hash,parents,date,refs,...rest] = l.split('|');
+  const subject = rest.join('|');
+  return { hash, short:hash.slice(0,7),
+    parents: parents.trim()? parents.trim().split(' ') : [],
+    date, refs: cleanRefs(refs), subject, type: typeOf(subject) };
+});
+const byHash = new Map(commits.map(c=>[c.hash,c]));
+
+// children map
+const children = new Map(commits.map(c=>[c.hash,[]]));
+commits.forEach(c=>c.parents.forEach(p=>{ if(children.has(p)) children.get(p).push(c.hash); }));
+
+// ── Row order: oldest at top. git --all is reverse-topo (child→parent); reverse it. ──
+const order = [...commits].reverse();
+order.forEach((c,i)=> c.row = i);
+
+// ── main chain (first-parent from HEAD/main) ──
+const HEAD = commits[0].hash;            // cb4a72f (main tip)
+const mainSet = new Set();
+(function(){ let h=HEAD; while(h && byHash.has(h)){ mainSet.add(h); h = byHash.get(h).parents[0]; }})();
+
+// ── Branch detection ──
+const branches = [];   // {name, set:Set, branchPoint, merge, unmerged, tip}
+commits.forEach(c=>{
+  if(c.type==='merge' && c.parents.length>=2){
+    const set=new Set(); let h=c.parents[1];
+    while(h && byHash.has(h) && !mainSet.has(h)){ set.add(h); h=byHash.get(h).parents[0]; }
+    const name=(c.subject.match(/Merge\s+(\S+)\s+into/)||[])[1] || 'branch';
+    branches.push({name, set, branchPoint:h, merge:c, unmerged:false, tip:c.parents[1]});
+  }
+});
+// unmerged: anything not on main and not in a merged branch
+const assigned = new Set([...mainSet]); branches.forEach(b=>b.set.forEach(h=>assigned.add(h)));
+const leftover = commits.filter(c=>!assigned.has(c.hash));
+const leftSet = new Set(leftover.map(c=>c.hash));
+leftover.filter(c=> (children.get(c.hash)||[]).every(ch=>!leftSet.has(ch)))  // tips of leftover chains
+  .forEach(tip=>{
+    const set=new Set(); let h=tip.hash;
+    while(h && leftSet.has(h)){ set.add(h); h=byHash.get(h).parents[0]; }
+    branches.push({name:(tip.refs[0]||'side'), set, branchPoint:h, merge:null, unmerged:true, tip:tip.hash});
+  });
+
+// assign branchId on commits
+commits.forEach(c=> c.branchIdx = mainSet.has(c.hash)? -1 : null);
+branches.forEach((b,i)=> b.set.forEach(h=> byHash.get(h).branchIdx=i));
+
+// ── Lane assignment (greedy interval colouring); lane 0 = main ──
+function spanOf(b){
+  let lo=1e9,hi=-1; const touch=h=>{ if(byHash.has(h)){const r=byHash.get(h).row; lo=Math.min(lo,r); hi=Math.max(hi,r);} };
+  b.set.forEach(touch); if(b.branchPoint) touch(b.branchPoint); if(b.merge) touch(b.merge.hash);
+  return [lo,hi];
+}
+branches.forEach(b=> b.span=spanOf(b));
+branches.sort((a,b)=> a.span[0]-b.span[0]);
+const laneBottoms=[];   // index → max row used
+branches.forEach(b=>{
+  let lane=0;
+  for(;lane<laneBottoms.length;lane++){ if(laneBottoms[lane] < b.span[0]) break; }
+  if(lane===laneBottoms.length) laneBottoms.push(-1);
+  laneBottoms[lane]=b.span[1];
+  b.lane=lane+1;                       // +1 → main keeps lane 0
+});
+const PALETTE=['#4f8cff','#22c55e','#f5a623','#e879f9','#5eead4','#ff8fab','#c084fc','#facc15','#38bdf8','#fb923c'];
+branches.forEach((b,i)=> b.color = b.unmerged? '#64748b' : PALETTE[i%PALETTE.length]);
+commits.forEach(c=>{
+  if(c.branchIdx===-1 || c.branchIdx==null){ c.lane=0; c.laneColor=getCSS('--main'); }
+  else { c.lane=branches[c.branchIdx].lane; c.laneColor=branches[c.branchIdx].color; }
+});
+function getCSS(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim()||'#cbd5e1'; }
+const maxLane = Math.max(0,...commits.map(c=>c.lane));
+
+// ── Geometry ──
+const ROW=30, TOP=24, LEFT=250, GAP=30, DOT=6;
+const laneX = l => LEFT + l*GAP;
+const rowY  = r => TOP + r*ROW + ROW/2;
+// Short branch labels (drop the feature/ prefix) drawn just right of their lane.
+const BR_CHAR=6.4;
+branches.forEach(b=> b.disp=(b.unmerged?'⌁ ':'')+b.name.split('/').pop());
+// Start the commit-message column past the widest branch label on ANY lane, so a
+// long name (e.g. on the rightmost lane) can never run into the messages.
+let labelEnd=0;
+branches.forEach(b=> labelEnd=Math.max(labelEnd, laneX(b.lane)+12 + b.disp.length*BR_CHAR));
+const msgX  = Math.max(laneX(maxLane) + 140, labelEnd + 90);
+const W = msgX + 560;
+const H = TOP + order.length*ROW + 24;
+
+// ── Build SVG ──
+const NS='http://www.w3.org/2000/svg';
+const svg=document.createElementNS(NS,'svg');
+svg.setAttribute('width',W); svg.setAttribute('height',H);
+svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+
+// date/phase bands
+const PHASE = {
+  '2026-04-04':'Project start','2026-04-07':'Phase 0 · Foundations — calibration & tooling',
+  '2026-04-25':'Sensor experiments · side branch (unmerged)','2026-04-30':'Sensor experiments · side branch (unmerged)',
+  '2026-05-31':'Phase 1 · The Voice system & sound design',
+  '2026-06-01':'Phase 2 · Polyphony, persistence & modularization',
+  '2026-06-02':'Phases 3–4 · Expressive voices, FX & the Voice Tuner',
+  '2026-06-03':'Phase 5 · Packaging — the macOS app',
+  '2026-06-04':'Phase 6 · LFO, real-voice drums & VoiceLab hardening'
+};
+// contiguous runs of equal date
+let runs=[], cur=null;
+order.forEach(c=>{ if(!cur||cur.date!==c.date){ cur={date:c.date,lo:c.row,hi:c.row}; runs.push(cur);} else cur.hi=c.row; });
+runs.forEach((rn,i)=>{
+  const y0=rowY(rn.lo)-ROW/2, y1=rowY(rn.hi)+ROW/2;
+  const r=document.createElementNS(NS,'rect');
+  r.setAttribute('x',0); r.setAttribute('y',y0); r.setAttribute('width',W); r.setAttribute('height',y1-y0);
+  r.setAttribute('fill', i%2? 'rgba(255,255,255,0.018)':'rgba(255,255,255,0.045)');
+  svg.appendChild(r);
+  const t=document.createElementNS(NS,'text');
+  t.setAttribute('x',12); t.setAttribute('y',y0+15); t.setAttribute('class','bandlabel');
+  t.textContent=rn.date; svg.appendChild(t);
+  const p=document.createElementNS(NS,'text');
+  p.setAttribute('x',12); p.setAttribute('y',y0+30); p.setAttribute('font-size','10');
+  p.setAttribute('fill','#5b6678'); p.setAttribute('font-weight','600');
+  wrapText(p, PHASE[rn.date]||'', 224, y0+30); svg.appendChild(p);
+});
+function wrapText(el,str,maxw,y){
+  const words=str.split(' '); let line='',dy=0; const x=el.getAttribute('x');
+  words.forEach(w=>{ const test=line?line+' '+w:w;
+    if(test.length*5.4>maxw && line){ addTspan(el,line,x,dy); line=w; dy+=11; } else line=test; });
+  addTspan(el,line,x,dy);
+}
+function addTspan(el,txt,x,dy){ const t=document.createElementNS(NS,'tspan');
+  t.setAttribute('x',x); t.setAttribute('dy',dy?11:0); t.textContent=txt; el.appendChild(t); }
+
+// edges (draw under nodes)
+const edgeG=document.createElementNS(NS,'g');
+commits.forEach(c=>{
+  c.parents.forEach(ph=>{
+    if(!byHash.has(ph)) return; const p=byHash.get(ph);
+    const x1=laneX(c.lane), y1=rowY(c.row), x2=laneX(p.lane), y2=rowY(p.row);
+    const col = (c.lane>=p.lane? c.laneColor : p.laneColor);
+    const path=document.createElementNS(NS,'path');
+    let d;
+    if(x1===x2){ d=`M${x1},${y1} L${x2},${y2}`; }
+    else { const my=(y1+y2)/2; d=`M${x1},${y1} C${x1},${my} ${x2},${my} ${x2},${y2}`; }
+    path.setAttribute('d',d); path.setAttribute('fill','none');
+    path.setAttribute('stroke',col); path.setAttribute('stroke-width', c.lane===0&&p.lane===0?2:1.6);
+    const b = (c.branchIdx!=null&&c.branchIdx>=0)?branches[c.branchIdx]:(p.branchIdx>=0?branches[p.branchIdx]:null);
+    if(b&&b.unmerged) path.setAttribute('stroke-dasharray','4 3');
+    path.setAttribute('opacity',.85);
+    edgeG.appendChild(path);
+  });
+});
+svg.appendChild(edgeG);
+
+// branch labels (at branch tip row, to the right of its lane)
+branches.forEach(b=>{
+  const tip=byHash.get(b.tip); if(!tip) return;
+  const t=document.createElementNS(NS,'text');
+  t.setAttribute('x',laneX(b.lane)+12); t.setAttribute('y',rowY(tip.row)-9);
+  t.setAttribute('class','brlabel'); t.setAttribute('fill',b.color);
+  t.textContent = b.disp; svg.appendChild(t);
+});
+
+// nodes
+const nodeG=document.createElementNS(NS,'g');
+commits.forEach(c=>{
+  const x=laneX(c.lane), y=rowY(c.row);
+  const g=document.createElementNS(NS,'g'); g.setAttribute('class','commit'); g.dataset.hash=c.hash; g.dataset.type=c.type;
+  const ring=document.createElementNS(NS,'circle');
+  ring.setAttribute('cx',x); ring.setAttribute('cy',y); ring.setAttribute('r',DOT+4);
+  ring.setAttribute('class','ring'); ring.setAttribute('fill','none');
+  ring.setAttribute('stroke',TYPES[c.type].c); ring.setAttribute('stroke-width',2); g.appendChild(ring);
+  const isMerge=c.type==='merge';
+  const dot=document.createElementNS(NS,'circle');
+  dot.setAttribute('cx',x); dot.setAttribute('cy',y); dot.setAttribute('r', isMerge?DOT+1.5:DOT);
+  dot.setAttribute('fill', isMerge? '#0c0e14' : TYPES[c.type].c);
+  dot.setAttribute('stroke', TYPES[c.type].c); dot.setAttribute('stroke-width', isMerge?2.5:1.5);
+  g.appendChild(dot);
+  // message
+  const m=document.createElementNS(NS,'text');
+  m.setAttribute('x',msgX); m.setAttribute('y',y); m.setAttribute('class','msg'+(isMerge?' merge':''));
+  m.textContent = c.subject.length>78? c.subject.slice(0,77)+'…' : c.subject; g.appendChild(m);
+  const h=document.createElementNS(NS,'text');
+  h.setAttribute('x',msgX-12); h.setAttribute('y',y); h.setAttribute('text-anchor','end'); h.setAttribute('class','hash');
+  h.setAttribute('dominant-baseline','middle'); h.textContent=c.short; g.appendChild(h);
+  nodeG.appendChild(g);
+});
+svg.appendChild(nodeG);
+document.getElementById('graph').appendChild(svg);
+
+// ── Stats ──
+const merges=commits.filter(c=>c.type==='merge').length;
+const feats=branches.filter(b=>!b.unmerged).length;
+document.getElementById('stats').innerHTML = [
+  ['Commits',commits.length],['Merges',merges],['Feature branches',feats],
+  ['Voices in bank','15'],['Span','Apr 4 → Jun 4 2026']
+].map(([s,b])=>`<div class="stat"><b>${b}</b><span>${s}</span></div>`).join('');
+
+// ── Type filter chips ──
+const tb=document.getElementById('toolbar'); const noteEl=tb.querySelector('.legend-note');
+const active=new Set(Object.keys(TYPES));
+Object.entries(TYPES).forEach(([k,v])=>{
+  const chip=document.createElement('span'); chip.className='chip'; chip.dataset.t=k;
+  chip.innerHTML=`<span class="dot" style="background:${v.c}"></span>${v.label}`;
+  chip.onclick=()=>{ chip.classList.toggle('off'); active.has(k)?active.delete(k):active.add(k); applyFilter(); };
+  tb.insertBefore(chip,noteEl);
+});
+function applyFilter(){
+  document.querySelectorAll('.commit').forEach(g=>{
+    g.classList.toggle('dim', !active.has(g.dataset.type));
+  });
+}
+
+// ── Interactivity: tooltip + pin ──
+const tip=document.getElementById('tip');
+function brName(c){ if(c.branchIdx===-1||c.branchIdx==null) return 'main'; return branches[c.branchIdx].name; }
+document.querySelectorAll('.commit').forEach(g=>{
+  const c=byHash.get(g.dataset.hash);
+  g.addEventListener('mousemove',e=>{
+    tip.style.opacity=1; tip.style.left=Math.min(e.clientX+14,innerWidth-360)+'px';
+    tip.style.top=(e.clientY+14)+'px';
+    tip.innerHTML=`<div class="t">${esc(c.subject)}</div><div class="m">${c.short} · ${c.date} · ${esc(brName(c))} · ${c.type}</div>`;
+  });
+  g.addEventListener('mouseleave',()=> tip.style.opacity=0);
+  g.addEventListener('click',()=> showDetail(c));
+});
+function showDetail(c){
+  const v=TYPES[c.type];
+  const body=BODIES[c.short];
+  document.getElementById('detail').innerHTML=`
+    <h3>Commit detail</h3>
+    <span class="pill" style="background:${v.c}">${c.type}</span>
+    <div class="kv"><div class="k">Subject</div><div>${esc(c.subject)}</div></div>
+    ${body?`<div class="kv"><div class="k">Description</div><div class="desc">${esc(body)}</div></div>`:''}
+    <div class="kv"><div class="k">Hash</div><div class="v">${c.hash}</div></div>
+    <div class="kv"><div class="k">Date</div><div>${c.date}</div></div>
+    <div class="kv"><div class="k">Branch / lane</div><div>${esc(brName(c))}</div></div>
+    <div class="kv"><div class="k">Parents</div><div class="v">${c.parents.map(p=>p.slice(0,7)).join('  •  ')||'— (root)'}</div></div>
+    ${c.refs.length?`<div class="kv"><div class="k">Refs</div><div class="v">${c.refs.map(esc).join(', ')}</div></div>`:''}`;
+}
+function esc(s){ return s.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+</script>
+</body>
+</html>
