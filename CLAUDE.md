@@ -106,6 +106,16 @@ to `0x08000000`.
 screen /dev/tty.usbmodem* 115200
 ```
 
+> **USB serial now runs on TinyUSB**, not libDaisy's logger (Phase 1 of the USB-audio
+> work — `docs/usb-audio-plan.md`). The device enumerates as a CDC ACM port
+> "GaletSynth Voice Tuner" (`0483:5740`, e.g. `/dev/tty.usbmodemGS_0001…`). All
+> firmware output goes through `usb_log()` (a `vsnprintf`→CDC logger in
+> `src/usb_glue.cpp`) instead of `hw.PrintLine`, and serialtune reads commands via
+> `usb_cdc_read_avail()`. **Do not call `hw.StartLog()` / `hw.usb_handle`** — that
+> relinks libDaisy's USB stack, which clashes with TinyUSB's `OTG_FS_IRQHandler`.
+> `usb_task()` is pumped from `serial_tune_poll()`. TinyUSB config: `src/tusb_config.h`;
+> descriptors: `src/usb_descriptors.c`; vendored subset: `lib/tinyusb/`.
+
 The main synth prints a live status display (voice, electrode bars, finger
 pos/pressure, FSR, audio params) — but **throttled to ~8 Hz** so it can't slow
 the control loop. The control loop itself runs as fast as the sensor allows
